@@ -1,0 +1,7 @@
+# ide
+.idea/
+
+# node.js
+node_modules/
+flow-typed/
+yarn-*.log

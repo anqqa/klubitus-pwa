@@ -1,0 +1,24 @@
+#!/bin/bash
+git diff --color-words --diff-filter=M --cached
+
+STAGED_FILES=$(git diff --diff-filter=M --cached --name-only | grep '\.jsx\?$')
+
+# Prevent ESLint help message if no files matched
+if [[ $STAGED_FILES = "" ]]; then
+  exit 0
+fi
+
+ESLINT="$(git rev-parse --show-toplevel)/node_modules/.bin/eslint"
+FAILED=0
+
+for FILE in ${STAGED_FILES}; do
+  git show :$FILE | "$ESLINT" --stdin --stdin-filename "$FILE"
+  if [[ $? != 0 ]] ; then
+    FAILED=1
+  fi
+done;
+
+if [[ $FAILED != 0 ]]; then
+  echo "ESLint failed, git commit denied!"
+  exit $FAILED
+fi

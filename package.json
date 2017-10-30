@@ -1,0 +1,12 @@
+{
+  "name": "Klubitus",
+  "version": "9.0.0",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.0.1",
+    "eslint": "^4.10.0",
+    "eslint-plugin-react": "^7.4.0"
+  }
+}
