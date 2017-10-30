@@ -40,6 +40,8 @@
     "feathers-rest": "^1.8.0",
     "feathers-socketio": "^2.0.0",
     "helmet": "^3.9.0",
+    "knex": "^0.13.0",
+    "pg": "^7.3.0",
     "serve-favicon": "^2.4.5",
     "winston": "^2.4.0"
   },
