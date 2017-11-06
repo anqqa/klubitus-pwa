@@ -4,7 +4,12 @@ import { createMuiTheme, MuiThemeProvider } from 'material-ui/styles';
 import { AppBar, Toolbar, Typography } from 'material-ui';
 
 
-const theme = createMuiTheme();
+const theme = createMuiTheme({
+  palette: {
+    type: 'dark'
+  }
+});
+
 
 type Props = {
   children: React.Node;
