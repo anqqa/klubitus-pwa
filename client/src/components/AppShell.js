@@ -1,10 +1,7 @@
 // @flow
 import { createMuiTheme, MuiThemeProvider } from 'material-ui/styles';
 import type { Theme } from 'material-ui/styles';
-import {
-  AppBar, Button, Divider, Drawer, Hidden, IconButton, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography,
-  withStyles
-} from 'material-ui';
+import { AppBar, Divider, Drawer, Hidden, IconButton, MenuItem, Toolbar, Typography, withStyles } from 'material-ui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -69,20 +66,16 @@ class AppShell extends React.Component<ProvidedProps & Props, State> {
 
         <Divider />
 
-        <List>
-          {routes.map((route, index) => (
-            <ListItem className={classes.drawerItem} disableGutters key={index}>
-              <Button activeClassName={classes.drawerButtonActive}
-                      className={classes.drawerButton}
-                      component={Link}
-                      disableRipple
-                      to={route.path}
-                      variant="button">
-                {route.title}
-              </Button>
-            </ListItem>
-          ))}
-        </List>
+        {routes.map((route, index) => (
+          <MenuItem className={classes.drawerButton}
+                    component={Link}
+                    disableRipple
+                    key={index}
+                    to={route.path}>
+            {route.title}
+          </MenuItem>
+        ))}
+
       </div>
     );
 
@@ -178,20 +171,10 @@ const styles = (theme: Theme) => ({
     }
   },
 
-  drawerItem: {
-    paddingBottom: 0,
-    paddingTop:    0,
-  },
-
   drawerButton: {
     borderRadius:   0,
     color:          theme.palette.text.secondary,
     justifyContent: 'flex-start',
-    width:          '100%',
-  },
-
-  drawerButtonActive: {
-    color: theme.palette.text.primary,
   },
 
   content: {

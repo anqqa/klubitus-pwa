@@ -2,7 +2,7 @@
 
 import feathers from 'feathers-client';
 import reduxifyAuthentication from 'feathers-reduxify-authentication';
-import reduxifyServices from 'feathers-reduxify-services';
+import reduxifyServices from 'feathers-redux';
 
 import { API_BASE_URL } from '../utils/constants';
 import { mapServicePathsToNames } from './services';

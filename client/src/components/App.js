@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import AppShell from './AppShell';
 import Welcome from '../pages/Welcome';
 import Events from '../pages/Events';
+import Event from '../pages/Event';
 import Forum from '../pages/Forum';
 import configureStore from '../store';
 
@@ -19,7 +20,8 @@ export default function App() {
         <AppShell>
           <div>
             <Route exact path="/" component={Welcome}/>
-            <Route path="/events" component={Events}/>
+            <Route exact path="/events" component={Events}/>
+            <Route path="/events/:id" component={Event}/>
             <Route path="/forum" component={Forum}/>
           </div>
         </AppShell>
