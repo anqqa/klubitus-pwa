@@ -3,6 +3,7 @@ import type { Theme } from 'material-ui/styles';
 import { AppBar, Divider, Drawer, Hidden, IconButton, MenuItem, Toolbar, Typography, withStyles } from 'material-ui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import AppDrawer from './AppDrawer';
 
 
 type ProvidedProps = {
@@ -19,18 +20,6 @@ type State = {
   drawerOpen: boolean;
 }
 
-
-const routes = [
-  {
-    path:  '/events',
-    title: 'Events',
-  },
-  {
-    path:  '/forum',
-    title: 'Forum',
-  }
-];
-
 class AppFrame extends React.Component<ProvidedProps & Props, State> {
 
   state = {
@@ -45,31 +34,6 @@ class AppFrame extends React.Component<ProvidedProps & Props, State> {
 
   render() {
     const { children, classes } = this.props;
-
-    const drawer = (
-      <div>
-        <Toolbar>
-          <Link to="/">
-            <Typography type="title">
-              klubitus
-            </Typography>
-          </Link>
-        </Toolbar>
-
-        <Divider />
-
-        {routes.map((route, index) => (
-          <MenuItem className={classes.drawerButton}
-                    component={Link}
-                    disableRipple
-                    key={index}
-                    to={route.path}>
-            {route.title}
-          </MenuItem>
-        ))}
-
-      </div>
-    );
 
     return (
       <div className={classes.root}>
@@ -89,23 +53,9 @@ class AppFrame extends React.Component<ProvidedProps & Props, State> {
             </Toolbar>
           </AppBar>
 
-          <Hidden mdUp>
-            <Drawer classes={{ paper: classes.drawerPaper }}
-                    ModalProps={{ keepMounted: true }}
-                    onRequestClose={this.onToggleDrawer}
-                    open={this.state.drawerOpen}
-                    type="temporary">
-              {drawer}
-            </Drawer>
-          </Hidden>
-
-          <Hidden mdDown implementation="css">
-            <Drawer classes={{ paper: classes.drawerPaper }}
-                    open
-                    type="permanent">
-              {drawer}
-            </Drawer>
-          </Hidden>
+          <AppDrawer className={classes.drawer}
+                     isOpen={this.state.drawerOpen}
+                     onRequestClose={this.onToggleDrawer} />
 
           <main id="content" className={classes.content}>
             {children}
@@ -158,36 +108,22 @@ const styles = (theme: Theme) => ({
     }
   },
 
-  drawerHeader: theme.mixins.toolbar,
-
-  drawerPaper:  {
-    width: 250,
-
-    [theme.breakpoints.up('md')]: {
-      height:   '100%',
-      position: 'relative',
-      width:    drawerWidth,
-    }
+  drawer: {
   },
 
-  drawerButton: {
-    borderRadius:   0,
-    color:          theme.palette.text.secondary,
-    justifyContent: 'flex-start',
-  },
-
-  content: {
+  content: theme.mixins.gutters({
     backgroundColor: theme.palette.background.default,
+    flex:            '1 1 100%',
     height:          'calc(100% - 56px)',
     marginTop:       56,
+    maxWidth:        '100%',
     padding:         theme.spacing.unit * 3,
-    width:           '100%',
 
     [theme.breakpoints.up('sm')]: {
       height:    'calc(100% - 64px)',
       marginTop: 64,
     }
-  }
+  })
 
 });
 
