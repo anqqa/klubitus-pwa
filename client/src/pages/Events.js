@@ -1,32 +1,30 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { feathersServices } from '../feathers';
 import { Card, CardContent, CardMedia, Typography, withStyles } from 'material-ui';
 import type { Theme } from 'material-ui/styles';
+import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+
+import { services } from '../store';
+import { compose } from 'redux';
 
 
 type ProvidedProps = {
   classes: Object;
   match:   Object;
-  theme:   *;
+  theme:   Theme;
 }
 
 type ConnectedProps = {
   events: Object;
 }
 
-type DispatchProps = {
-  fetchEvents: Function;
-}
-
-class Events extends React.PureComponent<ProvidedProps & ConnectedProps & DispatchProps> {
+class Events extends React.PureComponent<ProvidedProps & ConnectedProps> {
 
   componentWillMount() {
     const { events } = this.props;
 
     if (!events.isFinished && !events.isLoading) {
-      this.props.fetchEvents();
+      services.events.find();
     }
   }
 
@@ -64,6 +62,7 @@ class Events extends React.PureComponent<ProvidedProps & ConnectedProps & Dispat
 }
 
 
+// Styles
 const styles = (theme: Theme) => ({
 
   card: {
@@ -81,22 +80,14 @@ const styles = (theme: Theme) => ({
 
 });
 
-const styledEvents = withStyles(styles, { withTheme: true })(Events);
+
+// Redux
+const mapStateToProps = state => ({
+  events: state.events,
+});
 
 
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchEvents: () => dispatch(feathersServices.events.find()),
-  };
-};
-
-
-const mapStateToProps = state => {
-  return {
-    events: state.events,
-  };
-};
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(styledEvents);
-
+export default compose(
+  withStyles(styles, { withTheme: true}),
+  connect(mapStateToProps),
+)(Events);

@@ -8,10 +8,8 @@ import Welcome from '../pages/Welcome';
 import Events from '../pages/Events';
 import Event from '../pages/Event';
 import Forum from '../pages/Forum';
-import configureStore from '../store';
+import store from '../store';
 
-
-const store = configureStore();
 
 export default function App() {
   return (
