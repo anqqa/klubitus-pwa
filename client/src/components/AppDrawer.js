@@ -1,6 +1,6 @@
 // @flow
 import type { Theme } from 'material-ui/styles';
-import { AppBar, Divider, Drawer, Hidden, IconButton, MenuItem, Toolbar, Typography, withStyles } from 'material-ui';
+import { Divider, Drawer, Hidden, MenuItem, Toolbar, Typography, withStyles } from 'material-ui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 

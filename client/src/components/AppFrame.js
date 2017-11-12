@@ -1,8 +1,7 @@
 // @flow
 import type { Theme } from 'material-ui/styles';
-import { AppBar, Divider, Drawer, Hidden, IconButton, MenuItem, Toolbar, Typography, withStyles } from 'material-ui';
+import { AppBar, IconButton, Toolbar, Typography, withStyles } from 'material-ui';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import AppDrawer from './AppDrawer';
 
 
@@ -75,10 +74,16 @@ const styles = (theme: Theme) => ({
   '@global': {
     html: {
       background: theme.palette.background.default,
+      // fontSize:   '75%',
     },
+
     body: {
 
     },
+
+    a: {
+      textDecoration: 'none',
+    }
   },
 
   root: {

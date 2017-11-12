@@ -16,12 +16,10 @@ export default function App() {
     <Provider store={store}>
       <Router>
         <AppShell>
-          <div>
-            <Route exact path="/" component={Welcome}/>
-            <Route exact path="/events" component={Events}/>
-            <Route path="/events/:id" component={Event}/>
-            <Route path="/forum" component={Forum}/>
-          </div>
+          <Route exact path="/" component={Welcome}/>
+          <Route exact path="/events" component={Events}/>
+          <Route path="/events/:id" component={Event}/>
+          <Route path="/forum" component={Forum}/>
         </AppShell>
       </Router>
     </Provider>

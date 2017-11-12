@@ -21,43 +21,35 @@ type ConnectedProps = {
 class Events extends React.PureComponent<ProvidedProps & ConnectedProps> {
 
   componentWillMount() {
-    const { events } = this.props;
-
-    if (!events.isFinished && !events.isLoading) {
-      services.events.find();
-    }
+    services.events.find();
   }
+
 
   render() {
     const { classes, events, match } = this.props;
 
-    if (events.isLoading) {
-      return <h1>Loading...</h1>
-    }
-
-    if (events.isError || !events.queryResult) {
+    if (events.isError) {
       return <h1>Fail</h1>
     }
 
-    return (
-      <div>
-        {events.queryResult.data.map((event, index) => (
-          <Card className={classes.card} key={`event-${event.id}`}>
-            <CardMedia className={classes.flyer} image={event.flyer_front_url}>
-            </CardMedia>
+    if (events.isLoading || !events.queryResult) {
+      return <h1>Loading...</h1>
+    }
 
-            <CardContent className={classes.content}>
-              <Link to={`${match.url}/${event.id}`}>
-                <Typography type="headline">{event.name}</Typography>
-              </Link>
-              <Typography type="subheading" color="secondary">
-                @ {event.venue_name}
-              </Typography>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    );
+    return events.queryResult.data.map((event, index) => (
+      <Card className={classes.card} key={`event-${event.id}`}>
+        <CardMedia className={classes.flyer} image={event.flyer_front_url} />
+
+        <CardContent className={classes.content}>
+          <Link to={`${match.url}/${event.id}`}>
+            <Typography type="title">{event.name}</Typography>
+          </Link>
+          <Typography type="subheading" color="secondary">
+            @ {event.venue_name}
+          </Typography>
+        </CardContent>
+      </Card>
+    ));
   }
 }
 
