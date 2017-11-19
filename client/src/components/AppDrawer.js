@@ -1,7 +1,11 @@
 // @flow
 import type { Theme } from 'material-ui/styles';
-import { Divider, Drawer, Hidden, MenuItem, Toolbar, Typography, withStyles } from 'material-ui';
+import {
+  Divider, Drawer, Hidden, ListItemIcon, ListItemText, MenuItem, Toolbar, Typography,
+  withStyles
+} from 'material-ui';
 import * as React from 'react';
+import { Calendar, MessageCircle } from 'react-feather';
 import { Link } from 'react-router-dom';
 
 
@@ -14,10 +18,12 @@ type Props = {
 
 const routes = [
   {
+    icon:  <Calendar />,
     path:  '/events',
     title: 'Events',
   },
   {
+    icon:  <MessageCircle />,
     path:  '/forum',
     title: 'Forum',
   }
@@ -45,7 +51,8 @@ class AppDrawer extends React.Component<Props> {
                     disableRipple
                     key={index}
                     to={route.path}>
-            {route.title}
+            <ListItemIcon>{route.icon}</ListItemIcon>
+            <ListItemText primary={route.title} />
           </MenuItem>
         ))}
 
