@@ -3,9 +3,10 @@ import type { Theme } from 'material-ui/styles';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { compose } from 'redux';
+import slug from 'slug';
 
 import { services } from '../store';
-import { compose } from 'redux';
 
 
 type ProvidedProps = {
@@ -21,7 +22,13 @@ type ConnectedProps = {
 class Events extends React.PureComponent<ProvidedProps & ConnectedProps> {
 
   componentWillMount() {
-    services.events.find();
+    services.events.find({
+      query: {
+        $select: ['id', 'flyer_front_url', 'name', 'venue_name'],
+        $sort:   { begins_at: 1 },
+        ends_at: { $gte: new Date() },
+      },
+    });
   }
 
 
@@ -41,7 +48,7 @@ class Events extends React.PureComponent<ProvidedProps & ConnectedProps> {
         <CardMedia className={classes.flyer} image={event.flyer_front_url} />
 
         <CardContent className={classes.content}>
-          <Link to={`${match.url}/${event.id}`}>
+          <Link to={`${match.url}/${event.id}-${slug(event.name, { lower: true })}`}>
             <Typography type="title">{event.name}</Typography>
           </Link>
           <Typography type="subheading" color="secondary">
@@ -66,8 +73,8 @@ const styles = (theme: Theme) => ({
   },
 
   flyer: {
-    height: 100,
-    width:  100,
+    height: 80,
+    width:  80,
   }
 
 });

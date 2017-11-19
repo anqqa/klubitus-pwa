@@ -22,7 +22,7 @@ class Event extends React.PureComponent<ProvidedProps & ConnectedProps> {
   componentWillMount() {
     const { match } = this.props;
 
-    services.events.get(match.params.id);
+    services.events.get(parseInt(match.params.id));
   }
 
 
