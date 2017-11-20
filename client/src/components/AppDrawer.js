@@ -84,7 +84,7 @@ class AppDrawer extends React.Component<Props> {
 }
 
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const styles = (theme: Theme) => ({
 
@@ -97,7 +97,8 @@ const styles = (theme: Theme) => ({
   header: theme.mixins.toolbar,
 
   paper: {
-    width:  250,
+    height: '100%',
+    width:  drawerWidth,
 
     [theme.breakpoints.up('md')]: {
       height:   '100%',

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import AppShell from './AppShell';
 import Welcome from '../pages/Welcome';
@@ -17,8 +17,13 @@ export default function App() {
       <Router>
         <AppShell>
           <Route exact path="/" component={Welcome}/>
+
           <Route exact path="/events" component={Events}/>
-          <Route path="/events/:id" component={Event}/>
+          <Switch>
+            <Route path="/events/:year/week/:week" component={Events}/>
+            <Route path="/events/:id" component={Event}/>
+          </Switch>
+
           <Route path="/forum" component={Forum}/>
         </AppShell>
       </Router>

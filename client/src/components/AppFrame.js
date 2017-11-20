@@ -67,14 +67,14 @@ class AppFrame extends React.Component<ProvidedProps & Props, State> {
 }
 
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const styles = (theme: Theme) => ({
 
   '@global': {
     html: {
       background: theme.palette.background.default,
-      fontSize:   '75%',
+      fontSize:   '62.5%',  // 10px
     },
 
     body: {
