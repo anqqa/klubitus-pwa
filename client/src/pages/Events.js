@@ -1,3 +1,6 @@
+// @flow
+
+import { DateTime } from 'luxon';
 import { Card, CardContent, CardMedia, Typography, withStyles } from 'material-ui';
 import type { Theme } from 'material-ui/styles';
 import React from 'react';
@@ -7,6 +10,8 @@ import { compose } from 'redux';
 import slug from 'slug';
 
 import { services } from '../store';
+import { dateFromISOWeek, monday } from '../utils/date';
+import Pagination from '../components/Pagination';
 
 
 type ProvidedProps = {
@@ -20,20 +25,114 @@ type ConnectedProps = {
 }
 
 class Events extends React.PureComponent<ProvidedProps & ConnectedProps> {
+  fromDate: DateTime;
+  toDate:   DateTime;
+
 
   componentWillMount() {
-    services.events.find({
-      query: {
-        $select: ['id', 'flyer_front_url', 'name', 'venue_name'],
-        $sort:   { begins_at: 1 },
-        ends_at: { $gte: new Date() },
-      },
+    this.getDateRange();
+    this.fetchEvents();
+  }
+
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.match.params !== nextProps.match.params) {
+      this.getDateRange(nextProps);
+      this.fetchEvents();
+    }
+  }
+
+
+  fetchEvents() {
+    const query = {
+      $limit:    100,
+      $select:   ['begins_at', 'ends_at', 'city_name', 'flyer_front_url', 'id', 'name', 'venue_name'],
+      $sort:     { begins_at: 1 },
+      begins_at: { $lt: this.toDate.toISODate() },
+      ends_at:   { $gte: this.fromDate.toISODate() },
+    };
+
+    services.events.find({ query });
+  }
+
+
+  getDateRange(props?: ProvidedProps) {
+    const { params: { week, year } } = (props || this.props).match;
+
+    if (week && year) {
+      this.fromDate = DateTime.fromJSDate(dateFromISOWeek(week, year));
+    }
+    else {
+      this.fromDate = DateTime.fromJSDate(monday());
+    }
+
+    this.toDate = this.fromDate.plus({ weeks: 1});
+  }
+
+
+  groupEvents(events: Object[]) {
+    const grouped = [];
+    let header    = null;
+
+    // Group events by date
+    events.forEach(event => {
+      const beginsAt = DateTime.fromISO(event.begins_at);
+      const myHeader = beginsAt.toLocaleString(DateTime.DATE_HUGE);
+
+      // New date
+      if (header !== myHeader) {
+        header = myHeader;
+
+        grouped.push({ events: [], header, key: 'group-' + beginsAt.toISOWeekDate() });
+      }
+
+      grouped[grouped.length - 1].events.push(event);
     });
+
+    return grouped;
+  }
+
+
+  renderEvents(props) {
+    const { classes, events } = props;
+
+    const grouped = this.groupEvents(events);
+
+    return grouped.map((group: { events: Object[], header: string, key: string }) => (
+      <div key={group.key}>
+        <Typography gutterBottom>{group.header}</Typography>
+
+        {group.events.map(event => {
+          const beginsAt = DateTime.fromISO(event.begins_at);
+          const endsAt   = DateTime.fromISO(event.ends_at);
+
+          return (
+            <Card className={classes.card} key={`event-${event.id}`}>
+              <CardMedia className={classes.flyer}
+                         image={event.flyer_front_url} />
+
+              <CardContent className={classes.content}>
+                <Typography className={classes.city} type="body2">{event.city_name}</Typography>
+
+                <Link to={`/events/${event.id}-${slug(event.name, { lower: true })}`}>
+                  <Typography type="title">{event.name}</Typography>
+                </Link>
+
+                <Typography color="secondary" type="subheading">
+                  {beginsAt.toLocaleString(DateTime.TIME_24_SIMPLE)} - {endsAt.toLocaleString(DateTime.TIME_24_SIMPLE)}
+                  @ {event.venue_name}
+                </Typography>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+    ));
   }
 
 
   render() {
-    const { classes, events, match } = this.props;
+    const { classes, events } = this.props;
 
     if (events.isError) {
       return <h1>Fail</h1>
@@ -43,20 +142,23 @@ class Events extends React.PureComponent<ProvidedProps & ConnectedProps> {
       return <h1>Loading...</h1>
     }
 
-    return events.queryResult.data.map((event, index) => (
-      <Card className={classes.card} key={`event-${event.id}`}>
-        <CardMedia className={classes.flyer} image={event.flyer_front_url} />
+    // Pagination
+    const previousWeek = this.fromDate.minus({ weeks: 1 });
+    const previousTo   = previousWeek.toFormat("'/events/'yyyy'/week/'W");
+    const nextWeek     = this.fromDate.plus({ weeks: 1 });
+    const nextTo       = nextWeek.toFormat("'/events/'yyyy'/week/'W");
+    const pagination   = <Pagination previous={previousTo}
+                                     previousText="Previous week"
+                                     next={nextTo}
+                                     nextText="Next week" />;
 
-        <CardContent className={classes.content}>
-          <Link to={`${match.url}/${event.id}-${slug(event.name, { lower: true })}`}>
-            <Typography type="title">{event.name}</Typography>
-          </Link>
-          <Typography type="subheading" color="secondary">
-            @ {event.venue_name}
-          </Typography>
-        </CardContent>
-      </Card>
-    ));
+    return <div>
+      {pagination}
+
+      {this.renderEvents({ events: events.queryResult.data, classes })}
+
+      {pagination}
+    </div>;
   }
 }
 
@@ -65,7 +167,13 @@ class Events extends React.PureComponent<ProvidedProps & ConnectedProps> {
 const styles = (theme: Theme) => ({
 
   card: {
-    display: 'flex',
+    display:      'flex',
+    marginBottom: theme.spacing.unit,
+  },
+
+  city: {
+    color:  theme.palette.text.hint,
+    float: 'right',
   },
 
   content: {
@@ -73,9 +181,11 @@ const styles = (theme: Theme) => ({
   },
 
   flyer: {
-    height: 80,
-    width:  80,
-  }
+    backgroundPosition: 'top center',
+    backgroundSize:     'cover',
+    overflow:           'hidden',
+    width:              120,
+  },
 
 });
 

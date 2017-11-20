@@ -1,7 +1,10 @@
+// @flow
+
+import { DateTime } from 'luxon';
 import { Button, Divider, Typography, withStyles } from 'material-ui';
 import type { Theme } from 'material-ui/styles/index';
-import moment from 'moment';
 import React from 'react';
+import { Facebook } from 'react-feather';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
@@ -22,7 +25,7 @@ class Event extends React.PureComponent<ProvidedProps & ConnectedProps> {
   componentWillMount() {
     const { match } = this.props;
 
-    services.events.get(parseInt(match.params.id));
+    services.events.get(parseInt(match.params.id, 10));
   }
 
 
@@ -38,8 +41,8 @@ class Event extends React.PureComponent<ProvidedProps & ConnectedProps> {
     }
 
     const event    = events.data;
-    const beginsAt = moment(event.begins_at);
-    const endsAt   = moment(event.ends_at);
+    const beginsAt = DateTime.fromISO(event.begins_at);
+    const endsAt   = DateTime.fromISO(event.ends_at);
 
     return (
       <div>
@@ -47,20 +50,24 @@ class Event extends React.PureComponent<ProvidedProps & ConnectedProps> {
           <img alt="Flyer" src={event.flyer_front_url} />
 
           <Typography className={classes.date}
-                      type="subheading">{beginsAt.format('dddd, MMMM Do YYYY')}</Typography>
+                      type="subheading">{beginsAt.toLocaleString(DateTime.DATE_HUGE)}</Typography>
 
           <Typography className={classes.title}
                       type="headline">{event.name}</Typography>
 
           <Typography type="body2">
             {event.venue_name} {event.city_name}<br />
-            {beginsAt.format('HH:mm')} - {endsAt.format('HH:mm')}
+            {beginsAt.toLocaleString(DateTime.TIME_24_SIMPLE)} - {endsAt.toLocaleString(DateTime.TIME_24_SIMPLE)}
           </Typography>
 
           {event.facebook_id &&
             <Button color="default"
                     component="a"
-                    href={`https://facebook.com/events/${event.facebook_id}/`}>Facebook Event</Button>}
+                    href={`https://facebook.com/events/${event.facebook_id}/`}
+                    raised
+            >
+              <Facebook className={classes.buttonIcon} /> Facebook Event
+            </Button>}
         </header>
 
         <Divider className={classes.divider} />
@@ -79,6 +86,10 @@ class Event extends React.PureComponent<ProvidedProps & ConnectedProps> {
 
 // Styles
 const styles = (theme: Theme) => ({
+
+  buttonIcon: {
+    marginRight: theme.spacing.unit,
+  },
 
   divider: {
     margin: theme.spacing.unit,
