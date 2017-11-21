@@ -1,6 +1,6 @@
 // @flow
 
-import { DateTime } from 'luxon';
+import { DateTime, Interval } from 'luxon';
 import Card, { CardContent, CardMedia } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
@@ -144,6 +144,7 @@ class Events extends React.PureComponent<ProvidedProps & ConnectedProps> {
       return <h1>Loading...</h1>
     }
 
+
     // Pagination
     const previousWeek = this.fromDate.minus({ weeks: 1 });
     const previousTo   = previousWeek.toFormat("'/events/'yyyy'/week/'W");
@@ -154,7 +155,29 @@ class Events extends React.PureComponent<ProvidedProps & ConnectedProps> {
                                      next={nextTo}
                                      nextText="Next week" />;
 
+    // Header
+    const today  = DateTime.local();
+    const toDate = this.fromDate.plus({ days: 6 });
+
+    const title = Interval.fromDateTimes(this.fromDate, toDate).contains(today)
+      ? 'Events this week' : `Events on week ${this.fromDate.toFormat('W/yyyy')}`;
+
+    const dateParts = [
+      this.fromDate.toLocaleString({
+        day:   'numeric',
+        month: 'short',
+        year:  this.fromDate.year !== toDate.year ? 'numeric' : undefined,
+      }),
+      toDate.toLocaleString({ day: 'numeric', month: 'short', year: 'numeric' }),
+    ];
+
+    const subtitle = dateParts.join(' - ');
+
+
     return <div>
+      <Typography type="title">{title}</Typography>
+      <Typography type="subheading" color="secondary">{subtitle}</Typography>
+
       {pagination}
 
       {this.renderEvents({ events: events.queryResult.data, classes })}

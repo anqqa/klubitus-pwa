@@ -2,12 +2,13 @@
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
 import withStyles from 'material-ui/styles/withStyles';
 import type { Theme } from 'material-ui/styles';
 import * as React from 'react';
+import Menu from 'react-feather/dist/icons/menu';
 
 import AppDrawer from './AppDrawer';
+import { AppBars } from './routes';
 
 
 type ProvidedProps = {
@@ -17,7 +18,6 @@ type ProvidedProps = {
 
 type Props = {
   children: React.Node;
-  title:    string;
 }
 
 type State = {
@@ -49,11 +49,10 @@ class AppFrame extends React.Component<ProvidedProps & Props, State> {
                           className={classes.navIconHide}
                           color="contrast"
                           onClick={this.onToggleDrawer}>
-                menu
+                <Menu />
               </IconButton>
-              <Typography type="title">
-                klubitus
-              </Typography>
+
+              <AppBars />
             </Toolbar>
           </AppBar>
 
