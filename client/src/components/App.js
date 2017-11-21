@@ -1,15 +1,17 @@
 // @flow
 import React from 'react';
+import Loadable from 'react-loadable';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import AppShell from './AppShell';
-import Welcome from '../pages/Welcome';
-import Events from '../pages/Events';
-import Event from '../pages/Event';
-import Forum from '../pages/Forum';
+import Loading from './Loading';
 import store from '../store';
 
+const Welcome = Loadable({ loader: () => import('../pages/Welcome'), loading: Loading });
+const Events = Loadable({ loader: () => import('../pages/Events'), loading: Loading });
+const Event = Loadable({ loader: () => import('../pages/Event'), loading: Loading });
+const Forum = Loadable({ loader: () => import('../pages/Forum'), loading: Loading });
 
 export default function App() {
   return (

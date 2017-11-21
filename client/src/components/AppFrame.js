@@ -1,7 +1,12 @@
 // @flow
+import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
+import withStyles from 'material-ui/styles/withStyles';
 import type { Theme } from 'material-ui/styles';
-import { AppBar, IconButton, Toolbar, Typography, withStyles } from 'material-ui';
 import * as React from 'react';
+
 import AppDrawer from './AppDrawer';
 
 

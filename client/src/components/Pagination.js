@@ -1,10 +1,12 @@
 // @flow
 
-import { Button, withStyles } from 'material-ui';
+import Button from 'material-ui/Button';
+import type { Theme } from 'material-ui/styles';
+import withStyles from 'material-ui/styles/withStyles';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight } from 'react-feather';
-import type { Theme } from 'material-ui/styles/index';
+import ChevronLeft from 'react-feather/dist/icons/chevron-left';
+import ChevronRight from 'react-feather/dist/icons/chevron-right';
 
 
 type ProvidedProps = {

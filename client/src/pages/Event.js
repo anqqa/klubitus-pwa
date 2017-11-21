@@ -1,10 +1,13 @@
 // @flow
 
 import { DateTime } from 'luxon';
-import { Button, Divider, Typography, withStyles } from 'material-ui';
-import type { Theme } from 'material-ui/styles/index';
+import Button from 'material-ui/Button';
+import Divider from 'material-ui/Divider';
+import Typography from 'material-ui/Typography';
+import withStyles from 'material-ui/styles/withStyles';
+import type { Theme } from 'material-ui/styles';
 import React from 'react';
-import { Facebook } from 'react-feather';
+import Facebook from 'react-feather/dist/icons/facebook';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 

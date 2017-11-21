@@ -1,7 +1,9 @@
 // @flow
 
 import { DateTime } from 'luxon';
-import { Card, CardContent, CardMedia, Typography, withStyles } from 'material-ui';
+import Card, { CardContent, CardMedia } from 'material-ui/Card';
+import Typography from 'material-ui/Typography';
+import { withStyles } from 'material-ui/styles';
 import type { Theme } from 'material-ui/styles';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -70,7 +72,7 @@ class Events extends React.PureComponent<ProvidedProps & ConnectedProps> {
   }
 
 
-  groupEvents(events: Object[]) {
+  groupEvents(events) {
     const grouped = [];
     let header    = null;
 

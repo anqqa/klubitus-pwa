@@ -1,11 +1,16 @@
 // @flow
+import Divider from 'material-ui/Divider';
+import Drawer from 'material-ui/Drawer';
+import Hidden from 'material-ui/Hidden';
+import { ListItemIcon, ListItemText } from 'material-ui/List';
+import { MenuItem } from 'material-ui/Menu';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
 import type { Theme } from 'material-ui/styles';
-import {
-  Divider, Drawer, Hidden, ListItemIcon, ListItemText, MenuItem, Toolbar, Typography,
-  withStyles
-} from 'material-ui';
+import withStyles from 'material-ui/styles/withStyles';
 import * as React from 'react';
-import { Calendar, MessageCircle } from 'react-feather';
+import Calendar from 'react-feather/dist/icons/calendar';
+import MessageCircle from 'react-feather/dist/icons/message-circle';
 import { Link } from 'react-router-dom';
 
 
