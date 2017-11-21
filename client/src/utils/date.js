@@ -30,7 +30,9 @@ export const dateFromISOWeek = (week: number, year: number) => {
  */
 export const monday = (date?: Date) => {
   const output = date ? new Date(date.valueOf()) : new Date();
-  const dow    = output.getDay();
+  output.setHours(0, 0, 0, 0);
+
+  const dow = output.getDay();
 
   if (dow < 1) {
     output.setDate(output.getDate() - 6);
