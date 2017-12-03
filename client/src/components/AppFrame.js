@@ -1,5 +1,6 @@
 // @flow
 import AppBar from 'material-ui/AppBar';
+import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
 import Toolbar from 'material-ui/Toolbar';
 import withStyles from 'material-ui/styles/withStyles';
@@ -9,6 +10,7 @@ import Menu from 'react-feather/dist/icons/menu';
 
 import AppDrawer from './AppDrawer';
 import { AppBars } from './routes';
+import { Link } from 'react-router-dom';
 
 
 type ProvidedProps = {
@@ -52,7 +54,13 @@ class AppFrame extends React.Component<ProvidedProps & Props, State> {
                 <Menu />
               </IconButton>
 
-              <AppBars />
+              <div className={classes.appBarFlex}>
+                <AppBars />
+              </div>
+
+              <Button color="contrast" component={Link} to="/login">Login</Button>
+              <Button color="contrast" component={Link} to="/register">Register</Button>
+
             </Toolbar>
           </AppBar>
 
@@ -91,15 +99,14 @@ const styles = (theme: Theme) => ({
   },
 
   root: {
-    overflow:  'hidden',
-    width:     '100%',
+    display:  'flex',
+    flexGrow: 1,
   },
 
   appFrame: {
     display:  'flex',
-    height:   '100%',
+    flexGrow: 1,
     position: 'relative',
-    width:    '100%',
   },
 
   appBar: {
@@ -111,6 +118,10 @@ const styles = (theme: Theme) => ({
     },
   },
 
+  appBarFlex: {
+    flex: 1,
+  },
+
   navIconHide: {
     [theme.breakpoints.up('md')]: {
       display: 'none',
@@ -118,18 +129,21 @@ const styles = (theme: Theme) => ({
   },
 
   drawer: {
+    display:  'flex',
+    flexGrow: 1,
   },
 
   content: theme.mixins.gutters({
     backgroundColor: theme.palette.background.default,
+    display:         'flex',
     flex:            '1 1 100%',
-    height:          'calc(100% - 56px)',
+    // height:          'calc(100% - 56px)',
     marginTop:       56,
     maxWidth:        '100%',
     padding:         theme.spacing.unit * 3,
 
     [theme.breakpoints.up('sm')]: {
-      height:    'calc(100% - 64px)',
+      // height:    'calc(100% - 64px)',
       marginTop: 64,
     }
   })

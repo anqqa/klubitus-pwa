@@ -27,7 +27,9 @@ export function Loading(props) {
 
 const styles = (theme: Theme) => ({
   paper: theme.mixins.gutters({
-    padding: theme.spacing.unit * 3
+    flex:     '1 0 auto',
+    height:   20,
+    padding:  theme.spacing.unit * 3
   }),
 });
 

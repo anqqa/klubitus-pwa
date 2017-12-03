@@ -102,11 +102,10 @@ const styles = (theme: Theme) => ({
   header: theme.mixins.toolbar,
 
   paper: {
-    height: '100%',
+    flexGrow: 1,
     width:  drawerWidth,
 
     [theme.breakpoints.up('md')]: {
-      height:   '100%',
       position: 'relative',
       width:    drawerWidth,
     }

@@ -11,9 +11,9 @@ import { Link } from 'react-router-dom';
 import { compose } from 'redux';
 import slug from 'slug';
 
+import Pagination from '../components/Pagination';
 import { services } from '../store';
 import { dateFromISOWeek, monday } from '../utils/date';
-import Pagination from '../components/Pagination';
 
 
 type ProvidedProps = {
@@ -174,16 +174,18 @@ class Events extends React.PureComponent<ProvidedProps & ConnectedProps> {
     const subtitle = dateParts.join(' - ');
 
 
-    return <div>
-      <Typography type="title">{title}</Typography>
-      <Typography type="subheading" color="secondary">{subtitle}</Typography>
+    return (
+      <section className={classes.container}>
+        <Typography type="title">{title}</Typography>
+        <Typography type="subheading" color="secondary">{subtitle}</Typography>
 
-      {pagination}
+        {pagination}
 
-      {this.renderEvents({ events: events.queryResult.data, classes })}
+        {this.renderEvents({ events: events.queryResult.data, classes })}
 
-      {pagination}
-    </div>;
+        {pagination}
+      </section>
+    );
   }
 }
 
@@ -201,13 +203,18 @@ const styles = (theme: Theme) => ({
     float: 'right',
   },
 
+  container: {
+    flex: '1 1 auto',
+  },
+
   content: {
-    flex: '1 0 auto',
+    flex: '1 1 auto',
   },
 
   flyer: {
     backgroundPosition: 'top center',
     backgroundSize:     'cover',
+    flex:               '0 0 auto',
     overflow:           'hidden',
     width:              120,
   },

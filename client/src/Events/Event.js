@@ -48,7 +48,7 @@ class Event extends React.PureComponent<ProvidedProps & ConnectedProps> {
     const endsAt   = DateTime.fromISO(event.ends_at);
 
     return (
-      <div>
+      <section className={classes.container}>
         <header className={classes.header}>
           <img alt="Flyer" src={event.flyer_front_url} />
 
@@ -81,7 +81,7 @@ class Event extends React.PureComponent<ProvidedProps & ConnectedProps> {
               {paragraph.split("\n").map(line => <span>{line}<br /></span>)}
             </p>)}
         </Typography>
-      </div>
+      </section>
     );
   }
 }
@@ -92,6 +92,10 @@ const styles = (theme: Theme) => ({
 
   buttonIcon: {
     marginRight: theme.spacing.unit,
+  },
+
+  container: {
+    flexGrow: 1,
   },
 
   divider: {
