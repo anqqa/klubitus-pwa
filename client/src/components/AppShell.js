@@ -19,7 +19,7 @@ const theme: Theme = createMuiTheme({
     type: 'dark'
   },
   typography: {
-    htmlFontSize: 12,  // The actual size is 10px, but it's too big for us
+    //htmlFontSize: 12,  // The actual size is 10px, but it's too big for us
   }
 });
 

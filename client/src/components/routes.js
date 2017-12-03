@@ -5,20 +5,26 @@ import { Route, Switch } from 'react-router-dom';
 import Loading from './Loading';
 
 
-const Welcome = Loadable({ loader: () => import('../pages/Welcome'), loading: Loading });
-const Events  = Loadable({ loader: () => import('../Events/Events'), loading: Loading });
-const Event   = Loadable({ loader: () => import('../Events/Event'), loading: Loading });
-const Forum   = Loadable({ loader: () => import('../pages/Forum'), loading: Loading });
+const Events   = Loadable({ loader: () => import('../Events/Events'), loading: Loading });
+const Event    = Loadable({ loader: () => import('../Events/Event'), loading: Loading });
+const Forum    = Loadable({ loader: () => import('../pages/Forum'), loading: Loading });
+const Login    = Loadable({ loader: () => import('../pages/Login'), loading: Loading });
+const Password = Loadable({ loader: () => import('../pages/Password'), loading: Loading });
+const Register = Loadable({ loader: () => import('../pages/Register'), loading: Loading });
+const Welcome  = Loadable({ loader: () => import('../pages/Welcome'), loading: Loading });
 
 export const Routes = () => (
   <Switch>
-    <Route exact path="/" component={Welcome}/>
+    <Route exact path="/" component={Welcome} />
+    <Route exact path="/login" component={Login} />
+    <Route exact path="/register" component={Register} />
+    <Route exact path="/password" component={Password} />
 
-    <Route exact path="/events" component={Events}/>
-    <Route path="/events/:year/week/:week" component={Events}/>
-    <Route path="/events/:id" component={Event}/>
+    <Route exact path="/events" component={Events} />
+    <Route path="/events/:year/week/:week" component={Events} />
+    <Route path="/events/:id" component={Event} />
 
-    <Route exact path="/forum" component={Forum}/>
+    <Route exact path="/forum" component={Forum} />
   </Switch>
 );
 

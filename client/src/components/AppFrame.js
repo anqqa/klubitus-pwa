@@ -86,7 +86,7 @@ const styles = (theme: Theme) => ({
   '@global': {
     html: {
       background: theme.palette.background.default,
-      fontSize:   '62.5%',  // 10px
+      //fontSize:   '62.5%',  // 10px
     },
 
     body: {
