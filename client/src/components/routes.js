@@ -8,9 +8,9 @@ import Loading from './Loading';
 const Events   = Loadable({ loader: () => import('../Events/Events'), loading: Loading });
 const Event    = Loadable({ loader: () => import('../Events/Event'), loading: Loading });
 const Forum    = Loadable({ loader: () => import('../pages/Forum'), loading: Loading });
-const Login    = Loadable({ loader: () => import('../pages/Login'), loading: Loading });
-const Password = Loadable({ loader: () => import('../pages/Password'), loading: Loading });
-const Register = Loadable({ loader: () => import('../pages/Register'), loading: Loading });
+const Login    = Loadable({ loader: () => import('../Auth/Login'), loading: Loading });
+const Password = Loadable({ loader: () => import('../Auth/Password'), loading: Loading });
+const Register = Loadable({ loader: () => import('../Auth/Register'), loading: Loading });
 const Welcome  = Loadable({ loader: () => import('../pages/Welcome'), loading: Loading });
 
 export const Routes = () => (

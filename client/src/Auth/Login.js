@@ -1,18 +1,18 @@
+import feathers from 'feathers-client';
 import Button from 'material-ui/Button';
 import Divider from 'material-ui/Divider';
-import { FormControl } from 'material-ui/Form';
 import Grid from 'material-ui/Grid';
-import IconButton from 'material-ui/IconButton';
-import Input, { InputAdornment, InputLabel } from 'material-ui/Input';
 import type { Theme } from 'material-ui/styles/index';
 import { withStyles } from 'material-ui/styles/index';
 import React from 'react';
-import Eye from 'react-feather/dist/icons/eye';
-import EyeOff from 'react-feather/dist/icons/eye-off';
 import Facebook from 'react-feather/dist/icons/facebook';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { compose } from 'redux';
+
+import LoginForm from './LoginForm';
+import { feathersAuthentication } from '../feathers';
+import { SubmissionError } from 'redux-form';
 
 
 type ProvidedProps = {
@@ -35,11 +35,20 @@ class Login extends React.PureComponent<ProvidedProps, State> {
   };
 
 
-  handleChange = prop => event => this.setState({ [prop]: event.target.value });
+  handleSubmit = (values, dispatch) => new Promise((resolve, reject) => {
+    const strategy = values.username.indexOf('@') > 0 ? 'email' : 'username';
 
-  handleMouseDownPassword = event => event.preventDefault();
-
-  handleTogglePassword = () => this.setState({ showPassword: !this.state.showPassword });
+    dispatch(feathersAuthentication.authenticate({
+      [strategy]: values.username,
+      password:   values.password,
+      strategy:   strategy,
+    }))
+      .then(resolve)
+      .catch(err => reject(err.type === 'FeathersError'
+        ? new SubmissionError({ ...err.errors, _error: err.message || '' })
+        : err
+      ));
+  });
 
 
   render() {
@@ -53,8 +62,7 @@ class Login extends React.PureComponent<ProvidedProps, State> {
             justify="center">
         <Grid className={classes.item} item>
           <Button className={classes.button}
-                  color="default"
-                  raised>
+                  color="contrast">
             <Facebook className={classes.buttonIcon} /> Login with Facebook
           </Button>
         </Grid>
@@ -64,33 +72,7 @@ class Login extends React.PureComponent<ProvidedProps, State> {
         </Grid>
 
         <Grid className={classes.item} item>
-          <FormControl className={classes.formControl} fullWidth>
-            <InputLabel htmlFor="input-username">Username</InputLabel>
-            <Input id="input-username" name="username" type="text" />
-          </FormControl>
-
-          <FormControl className={classes.formControl} fullWidth>
-            <InputLabel htmlFor="input-password">Password</InputLabel>
-            <Input id="input-password"
-                   name="password"
-                   onChange={this.handleChange('password')}
-                   type={this.state.showPassword ? 'text' : 'password'}
-                   value={this.state.password}
-                   endAdornment={
-                     <InputAdornment position="end">
-                       <IconButton onClick={this.handleTogglePassword}
-                                   onMouseDown={this.handleMouseDownPassword}
-                                   title="Show password">
-                         {this.state.showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                       </IconButton>
-                     </InputAdornment>
-                   } />
-          </FormControl>
-
-          <Button className={classes.button} color="primary" raised>
-            Login with username
-          </Button>
-
+          <LoginForm onSubmit={this.handleSubmit} />
         </Grid>
 
         <Grid className={classes.item} container justify="space-between">
@@ -120,10 +102,6 @@ const styles = (theme: Theme) => ({
 
   container: {
     flexGrow: 1,
-  },
-
-  formControl: {
-    marginBottom: theme.spacing.unit,
   },
 
   item: {

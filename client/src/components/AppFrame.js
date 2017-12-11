@@ -58,8 +58,8 @@ class AppFrame extends React.Component<ProvidedProps & Props, State> {
                 <AppBars />
               </div>
 
-              <Button color="contrast" component={Link} to="/login">Login</Button>
-              <Button color="contrast" component={Link} to="/register">Register</Button>
+              <Button component={Link} to="/login">Login</Button>
+              <Button component={Link} to="/register">Register</Button>
 
             </Toolbar>
           </AppBar>
@@ -86,11 +86,6 @@ const styles = (theme: Theme) => ({
   '@global': {
     html: {
       background: theme.palette.background.default,
-      //fontSize:   '62.5%',  // 10px
-    },
-
-    body: {
-
     },
 
     a: {
