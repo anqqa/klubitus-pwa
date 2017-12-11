@@ -1,25 +1,42 @@
 // @flow
-import { createMuiTheme, MuiThemeProvider } from 'material-ui/styles';
+import pink from 'material-ui/colors/pink';
 import type { Theme } from 'material-ui/styles';
+import createMuiTheme from 'material-ui/styles/createMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import transitions from 'material-ui/styles/transitions';
 import * as React from 'react';
 
 import AppFrame from './AppFrame';
 
 
 const theme: Theme = createMuiTheme({
+  overrides: {
+    MuiButton: {
+      flatContrast: {
+        border: '1px solid rgba(255, 255, 255, 0.25)',
+        transition: transitions.create(['border-color'], { duration: transitions.duration.short }),
+        '&:hover': {
+          borderColor: 'rgba(255, 255, 255, 1)',
+        }
+      },
+    },
+  },
+
   palette: {
     background: {
       appBar:  '#111111',
       default: '#000000',
       paper:   '#222222',
     },
+    primary: pink,
     text: {
       secondary: '#999999',
     },
     type: 'dark'
   },
+
   typography: {
-    //htmlFontSize: 12,  // The actual size is 10px, but it's too big for us
+    htmlFontSize: 10,
   }
 });
 

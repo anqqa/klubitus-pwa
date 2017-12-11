@@ -1,7 +1,6 @@
 // @flow
 
 import React from 'react';
-import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import type { Theme } from 'material-ui/styles';
 import withStyles from 'material-ui/styles/withStyles';
@@ -11,13 +10,13 @@ export function Loading(props) {
   const { classes, error, timedOut, pastDelay } = props;
 
   if (error) {
-    return <Paper className={classes.paper}><Typography color="error" type="body1">Error!</Typography></Paper>;
+    return <div className={classes.paper}><Typography color="error" type="body1">Error!</Typography></div>;
   }
   else if (timedOut) {
-    return <Paper className={classes.paper}><Typography type="body1">Still loading...</Typography></Paper>;
+    return <div className={classes.paper}><Typography type="body1">Still loading...</Typography></div>;
   }
   else if (pastDelay) {
-    return <Paper className={classes.paper}><Typography type="body1">Loading...</Typography></Paper>;
+    return <div className={classes.paper}><Typography type="body1">Loading...</Typography></div>;
   }
   else {
     return null;
