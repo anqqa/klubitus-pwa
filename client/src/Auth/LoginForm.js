@@ -1,5 +1,5 @@
 import Button from 'material-ui/Button';
-import { FormControl, FormHelperText } from 'material-ui/Form';
+import { FormControl } from 'material-ui/Form';
 import IconButton from 'material-ui/IconButton';
 import { InputAdornment } from 'material-ui/Input';
 import type { Theme } from 'material-ui/styles/index';
@@ -13,12 +13,9 @@ import { TextField } from 'redux-form-material-ui';
 
 
 type Props = {
-  classes:         Object;
-  handleRedirect:  Function;
-  handleSubmit:    Function;
-  invalid:         Boolean;
-  isAuthenticated: Boolean;
-  submitting:      Boolean;
+  classes:      Object;
+  handleSubmit: Function;
+  submitting:   Boolean;
 }
 
 type State = {

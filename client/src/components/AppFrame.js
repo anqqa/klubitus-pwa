@@ -7,39 +7,73 @@ import withStyles from 'material-ui/styles/withStyles';
 import type { Theme } from 'material-ui/styles';
 import * as React from 'react';
 import Menu from 'react-feather/dist/icons/menu';
+import { connect } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom';
+import type { RouterHistory } from 'react-router-dom';
+import { compose } from 'redux';
 
 import AppDrawer from './AppDrawer';
 import { AppBars } from './routes';
-import { Link } from 'react-router-dom';
+import { feathersAuthentication } from '../feathers';
 
 
 type ProvidedProps = {
   classes: Object;
+  history: RouterHistory;
   theme:   Theme;
+}
+
+type StateProps = {
+  isAuthenticated: boolean;
+}
+
+type DispatchProps = {
+  handleLogout: Function;
 }
 
 type Props = {
   children: React.Node;
 }
 
+
 type State = {
   drawerOpen: boolean;
 }
 
-class AppFrame extends React.Component<ProvidedProps & Props, State> {
 
-  state = {
-    drawerOpen: false,
-  };
+class AppFrame extends React.Component<ProvidedProps & StateProps & DispatchProps & Props, State> {
+  state = { drawerOpen: false };
 
 
-  onToggleDrawer = () => {
+  componentWillReceiveProps(nextProps: ProvidedProps & StateProps) {
+    if (!this.props.isAuthenticated && nextProps.isAuthenticated) {
+
+      // Logged in
+      this.props.history.goBack();
+
+    }
+    else if (this.props.isAuthenticated && !nextProps.isAuthenticated) {
+
+      // Logged out
+
+    }
+  }
+
+
+  handleDrawerToggle = () => {
     this.setState({ drawerOpen: !this.state.drawerOpen });
   };
 
 
+  handleLogout = event => {
+    event.preventDefault();
+
+    this.props.handleLogout();
+  };
+
+
   render() {
-    const { children, classes } = this.props;
+    const { children, classes, isAuthenticated } = this.props;
 
     return (
       <div className={classes.root}>
@@ -50,7 +84,7 @@ class AppFrame extends React.Component<ProvidedProps & Props, State> {
               <IconButton aria-label="open drawer"
                           className={classes.navIconHide}
                           color="contrast"
-                          onClick={this.onToggleDrawer}>
+                          onClick={this.handleDrawerToggle}>
                 <Menu />
               </IconButton>
 
@@ -58,15 +92,19 @@ class AppFrame extends React.Component<ProvidedProps & Props, State> {
                 <AppBars />
               </div>
 
-              <Button component={Link} to="/login">Login</Button>
-              <Button component={Link} to="/register">Register</Button>
+              {isAuthenticated
+                ? <Button onClick={this.handleLogout}>Logout</Button>
+                : <div>
+                  <Button component={Link} to="/login">Login</Button>
+                  <Button component={Link} to="/register">Register</Button>
+                </div>}
 
             </Toolbar>
           </AppBar>
 
           <AppDrawer className={classes.drawer}
                      isOpen={this.state.drawerOpen}
-                     onRequestClose={this.onToggleDrawer} />
+                     onRequestClose={this.handleDrawerToggle} />
 
           <main id="content" className={classes.content}>
             {children}
@@ -79,6 +117,17 @@ class AppFrame extends React.Component<ProvidedProps & Props, State> {
 }
 
 
+// Redux
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isSignedIn,
+});
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  handleLogout: () => { dispatch(feathersAuthentication.logout()); }
+});
+
+
+// Styles
 const drawerWidth = 200;
 
 const styles = (theme: Theme) => ({
@@ -146,4 +195,8 @@ const styles = (theme: Theme) => ({
 });
 
 
-export default withStyles(styles, { withTheme: true })(AppFrame);
+
+export default withRouter(compose(
+  withStyles(styles, { withTheme: true }),
+  connect(mapStateToProps, mapDispatchToProps),
+)(AppFrame));

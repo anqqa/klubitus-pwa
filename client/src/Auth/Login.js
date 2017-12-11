@@ -1,4 +1,3 @@
-import feathers from 'feathers-client';
 import Button from 'material-ui/Button';
 import Divider from 'material-ui/Divider';
 import Grid from 'material-ui/Grid';
@@ -6,9 +5,7 @@ import type { Theme } from 'material-ui/styles/index';
 import { withStyles } from 'material-ui/styles/index';
 import React from 'react';
 import Facebook from 'react-feather/dist/icons/facebook';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { compose } from 'redux';
+import { Link, withRouter } from 'react-router-dom';
 
 import LoginForm from './LoginForm';
 import { feathersAuthentication } from '../feathers';
@@ -21,19 +18,7 @@ type ProvidedProps = {
   theme:   Theme;
 }
 
-type State = {
-  password:     String;
-  showPassword: Boolean;
-  username:      String;
-}
-
 class Login extends React.PureComponent<ProvidedProps, State> {
-  state = {
-    password:     '',
-    showPassword: false,
-    username:     '',
-  };
-
 
   handleSubmit = (values, dispatch) => new Promise((resolve, reject) => {
     const strategy = values.username.indexOf('@') > 0 ? 'email' : 'username';
@@ -111,12 +96,4 @@ const styles = (theme: Theme) => ({
 });
 
 
-// Redux
-const mapStateToProps = state => ({
-});
-
-
-export default compose(
-  withStyles(styles, { withTheme: true}),
-  connect(mapStateToProps),
-)(Login);
+export default withRouter(withStyles(styles, { withTheme: true})(Login));
