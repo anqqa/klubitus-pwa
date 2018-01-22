@@ -25,29 +25,40 @@
   "scripts": {
     "test": "yarn eslint && yarn mocha",
     "eslint": "eslint src/. test/. --config .eslintrc",
-    "start": "node src/",
+    "start": "nodemon src/",
     "mocha": "mocha test/ --recursive --exit"
   },
   "dependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "babel-register": "^6.26.0",
     "body-parser": "^1.18.2",
     "compression": "^1.7.1",
     "cors": "^2.8.4",
     "feathers": "^2.2.3",
+    "feathers-authentication": "^1.3.0",
+    "feathers-authentication-hooks": "^0.1.5",
+    "feathers-authentication-jwt": "^0.3.2",
+    "feathers-authentication-local": "^0.4.4",
+    "feathers-authentication-oauth2": "^0.3.2",
     "feathers-configuration": "^0.4.2",
     "feathers-errors": "^2.9.2",
     "feathers-hooks": "^2.1.1",
     "feathers-hooks-common": "^3.10.0",
+    "feathers-knex": "^2.9.0",
     "feathers-rest": "^1.8.0",
     "feathers-socketio": "^2.0.0",
     "helmet": "^3.9.0",
     "knex": "^0.13.0",
-    "pg": "^7.3.0",
+    "lodash": "^4.17.4",
+    "passport-facebook": "^2.1.1",
+    "pg": "^7.4.0",
     "serve-favicon": "^2.4.5",
     "winston": "^2.4.0"
   },
   "devDependencies": {
     "eslint": "^4.10.0",
     "mocha": "^4.0.1",
+    "nodemon": "^1.12.1",
     "request": "^2.83.0",
     "request-promise": "^4.2.2"
   }

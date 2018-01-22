@@ -8,6 +8,71 @@
   },
   "postgres": {
     "client": "pg",
-    "connection": "postgres://klubitus:klubitus@localhost:5432/klubitus"
+    "connection": {
+      "host": "localhost",
+      "user": "klubitus",
+      "password": "klubitus",
+      "database": "klubitus",
+      "charset": "utf8"
+    }
+  },
+  "authentication": {
+    "secret": "01e5054398abcc8850035d5cb2c2004708d33fdf7c40f9ec631f11121614bb02be57f29274c9347309ca4537948d86614ff456af1a0527d690b5011ab9dcd15bcd1bf21a0745c6be9247eb78cab34940c94bab68397a06668e4f0bd242eed34d598375dff374aac4d63c9534c4a5d1e0da3468d4d16a594147bd2a5a34dea33d972b57a706b9e85754690b177ac4ba72db8efa303685383709b98f1d5ad606fa57179a483e92e7e8cec9616c0f08238e98a2b5e36ff64f17c639a0bab0385a7639fd072be8c2b06b1c6d06d4ec7fb233e57ace6ac36130f30eafa235e3b470282c74f177c75fa124e4adc07a01daf2c5b457cba43d342d28a8b5493eb9d333e7",
+    "strategies": [
+      "jwt",
+      "email",
+      "username"
+    ],
+    "path": "/authentication",
+    "service": "users",
+    "jwt": {
+      "header": {
+        "typ": "access"
+      },
+      "audience": "https://klubitus.org",
+      "subject": "anonymous",
+      "issuer": "feathers",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    },
+    "email": {
+      "name": "email",
+      "entity": "user",
+      "usernameField": "email",
+      "passwordField": "password"
+    },
+    "username": {
+      "name": "\\username",
+      "entity": "user",
+      "usernameField": "\\username",
+      "passwordField": "password"
+    },
+    "facebook": {
+      "clientID": "your facebook client id",
+      "clientSecret": "your facebook client secret",
+      "successRedirect": "/",
+      "scope": [
+        "public_profile",
+        "email"
+      ],
+      "profileFields": [
+        "id",
+        "displayName",
+        "first_name",
+        "last_name",
+        "email",
+        "gender",
+        "profileUrl",
+        "birthday",
+        "picture",
+        "permissions"
+      ]
+    },
+    "cookie": {
+      "enabled": true,
+      "name": "feathers-jwt",
+      "httpOnly": false,
+      "secure": false
+    }
   }
 }

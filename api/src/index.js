@@ -1,4 +1,8 @@
 /* eslint-disable no-console */
+require('babel-register')({
+  presets: ['es2015'],
+});
+
 const logger = require('winston');
 const app = require('./app');
 const port = app.get('port');
