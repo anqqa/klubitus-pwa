@@ -25,6 +25,7 @@ type ProvidedProps = {
 
 type StateProps = {
   isAuthenticated: boolean;
+  user?:           Object;
 }
 
 type DispatchProps = {
@@ -49,7 +50,11 @@ class AppFrame extends React.Component<ProvidedProps & StateProps & DispatchProp
     if (!this.props.isAuthenticated && nextProps.isAuthenticated) {
 
       // Logged in
-      this.props.history.goBack();
+      const { history, history: { location }} = this.props;
+
+      if (location.pathname === '/login') {
+        history.goBack();
+      }
 
     }
     else if (this.props.isAuthenticated && !nextProps.isAuthenticated) {
@@ -73,7 +78,7 @@ class AppFrame extends React.Component<ProvidedProps & StateProps & DispatchProp
 
 
   render() {
-    const { children, classes, isAuthenticated } = this.props;
+    const { children, classes, isAuthenticated, user } = this.props;
 
     return (
       <div className={classes.root}>
@@ -93,7 +98,10 @@ class AppFrame extends React.Component<ProvidedProps & StateProps & DispatchProp
               </div>
 
               {isAuthenticated
-                ? <Button onClick={this.handleLogout}>Logout</Button>
+                ? <div>
+                  <Button component={Link} to={`/user/${user.username}`}>Profile</Button>
+                  <Button onClick={this.handleLogout}>Logout</Button>
+                </div>
                 : <div>
                   <Button component={Link} to="/login">Login</Button>
                   <Button component={Link} to="/register">Register</Button>
@@ -120,6 +128,7 @@ class AppFrame extends React.Component<ProvidedProps & StateProps & DispatchProp
 // Redux
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.isSignedIn,
+  user:            state.auth.user,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

@@ -4,7 +4,7 @@ import { bindWithDispatch } from 'feathers-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-import { feathersServices } from '../feathers';
+import { feathersAuthentication, feathersServices } from '../feathers';
 import middleware from './middleware';
 import reducers from './reducers';
 
@@ -22,6 +22,16 @@ const store = createStore(
       applyMiddleware(...middleware)
     )
 );
+
+// Autologin
+if (localStorage['feathers-jwt']) {
+  store.dispatch(feathersAuthentication.authenticate())
+    .catch(err => {
+      console.log('Authentication error');
+
+      return err;
+    });
+}
 
 export default store;
 
