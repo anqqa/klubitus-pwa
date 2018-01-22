@@ -20,7 +20,7 @@ type ProvidedProps = {
 }
 
 type ConnectedProps = {
-  event: Object;
+  events: Object;
 }
 
 class Event extends React.PureComponent<ProvidedProps & ConnectedProps> {

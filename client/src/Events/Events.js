@@ -116,7 +116,7 @@ class Events extends React.PureComponent<ProvidedProps & ConnectedProps> {
               <CardContent className={classes.content}>
                 <Typography className={classes.city} type="body2">{event.city_name}</Typography>
 
-                <Link to={`/events/${event.id}-${slug(event.name, { lower: true })}`}>
+                <Link to={`/event/${event.id}-${slug(event.name, { lower: true })}`}>
                   <Typography type="title">{event.name}</Typography>
                 </Link>
 
