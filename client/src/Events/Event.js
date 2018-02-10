@@ -76,9 +76,9 @@ class Event extends React.PureComponent<ProvidedProps & ConnectedProps> {
 
         <Typography>
           {event.info.split("\n\n").map(paragraph =>
-            <p>
+            <div>
               {paragraph.split("\n").map(line => <span>{line}<br /></span>)}
-            </p>)}
+            </div>)}
         </Typography>
       </section>
     );

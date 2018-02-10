@@ -24,14 +24,14 @@ const store = createStore(
 );
 
 // Autologin
-if (localStorage['feathers-jwt']) {
-  store.dispatch(feathersAuthentication.authenticate())
-    .catch(err => {
-      console.log('Authentication error');
-
-      return err;
-    });
-}
+// if (localStorage['feathers-jwt']) {
+//   store.dispatch(feathersAuthentication.authenticate())
+//     .catch(err => {
+//       console.log('Authentication error');
+//
+//       return err;
+//     });
+// }
 
 export default store;
 

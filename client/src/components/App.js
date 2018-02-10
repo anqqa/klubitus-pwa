@@ -2,21 +2,22 @@
 
 import React from 'react';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { renderRoutes } from 'react-router-config';
+import BrowserRouter from 'react-router-dom/BrowserRouter';
 
 import AppShell from './AppShell';
-import { Routes } from './routes';
+import { routes } from './routes';
 import store from '../store';
 
 
 export default function App() {
   return (
     <Provider store={store}>
-      <Router>
+      <BrowserRouter>
         <AppShell>
-          <Routes />
+          {renderRoutes(routes)}
         </AppShell>
-      </Router>
+      </BrowserRouter>
     </Provider>
   );
 }

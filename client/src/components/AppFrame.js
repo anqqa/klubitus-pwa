@@ -13,8 +13,9 @@ import type { RouterHistory } from 'react-router-dom';
 import { compose } from 'redux';
 
 import AppDrawer from './AppDrawer';
-import { AppBars } from './routes';
+import { appBars } from './routes';
 import { feathersAuthentication } from '../feathers';
+import { renderRoutes } from 'react-router-config';
 
 
 type ProvidedProps = {
@@ -93,7 +94,7 @@ class AppFrame extends React.Component<ProvidedProps & StateProps & DispatchProp
               </IconButton>
 
               <div className={classes.appBarFlex}>
-                <AppBars />
+                {renderRoutes(appBars)}
               </div>
 
               {isAuthenticated

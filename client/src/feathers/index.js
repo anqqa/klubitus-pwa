@@ -1,6 +1,7 @@
 // @flow
 
 import feathers from 'feathers-client';
+import fetch from 'isomorphic-fetch';
 import reduxifyAuthentication from 'feathers-reduxify-authentication';
 import reduxifyServices from 'feathers-redux';
 
@@ -13,7 +14,7 @@ const client = feathers();
 
 client.configure(feathers.rest(API_BASE_URL).fetch(fetch));
 client.configure(feathers.hooks());
-client.configure(feathers.authentication({ storage: window.localStorage }));
+client.configure(feathers.authentication({ cookie: 'feathers-jwt' }));
 
 export default client;
 
