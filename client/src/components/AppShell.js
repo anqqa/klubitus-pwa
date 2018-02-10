@@ -12,13 +12,13 @@ import AppFrame from './AppFrame';
 const theme: Theme = createMuiTheme({
   overrides: {
     MuiButton: {
-      flatContrast: {
-        border: '1px solid rgba(255, 255, 255, 0.25)',
-        transition: transitions.create(['border-color'], { duration: transitions.duration.short }),
-        '&:hover': {
-          borderColor: 'rgba(255, 255, 255, 1)',
-        }
-      },
+      // raised: {
+        // border: '1px solid rgba(255, 255, 255, 0.25)',
+        // transition: transitions.create(['border-color'], { duration: transitions.duration.short }),
+        // '&:hover': {
+        //    borderColor: 'rgba(255, 255, 255, 1)',
+        //  },
+      // },
     },
   },
 
@@ -29,8 +29,8 @@ const theme: Theme = createMuiTheme({
       paper:   '#222222',
     },
     primary: pink,
-    text: {
-      secondary: '#999999',
+    secondary: {
+      main: '#999999',
     },
     type: 'dark'
   },

@@ -46,8 +46,7 @@ class Login extends React.PureComponent<ProvidedProps, State> {
             direction="column"
             justify="center">
         <Grid className={classes.item} item>
-          <Button className={classes.button}
-                  color="contrast">
+          <Button className={classes.button} variant="raised">
             <Facebook className={classes.buttonIcon} /> Login with Facebook
           </Button>
         </Grid>
@@ -62,10 +61,10 @@ class Login extends React.PureComponent<ProvidedProps, State> {
 
         <Grid className={classes.item} container justify="space-between">
           <Grid item>
-            <Button component={Link} dense to="/password">Forgot password</Button>
+            <Button component={Link} size="small" to="/password">Forgot password</Button>
           </Grid>
           <Grid item>
-            <Button component={Link} dense to="/register">Register</Button>
+            <Button component={Link} size="small" to="/register">Register</Button>
           </Grid>
         </Grid>
       </Grid>

@@ -53,12 +53,12 @@ class Event extends React.PureComponent<ProvidedProps & ConnectedProps> {
           <img alt="Flyer" src={event.flyer_front_url} />
 
           <Typography className={classes.date}
-                      type="subheading">{beginsAt.toLocaleString(DateTime.DATE_HUGE)}</Typography>
+                      variant="subheading">{beginsAt.toLocaleString(DateTime.DATE_HUGE)}</Typography>
 
           <Typography className={classes.title}
-                      type="headline">{event.name}</Typography>
+                      variant="headline">{event.name}</Typography>
 
-          <Typography type="body2">
+          <Typography variant="body2">
             {event.venue_name} {event.city_name}<br />
             {beginsAt.toLocaleString(DateTime.TIME_24_SIMPLE)} - {endsAt.toLocaleString(DateTime.TIME_24_SIMPLE)}
           </Typography>
@@ -67,8 +67,7 @@ class Event extends React.PureComponent<ProvidedProps & ConnectedProps> {
             <Button color="default"
                     component="a"
                     href={`https://facebook.com/events/${event.facebook_id}/`}
-                    raised
-            >
+                    variant="raised">
               <Facebook className={classes.buttonIcon} /> Facebook Event
             </Button>}
         </header>

@@ -15,10 +15,10 @@ import { Link } from 'react-router-dom';
 
 
 type Props = {
-  classes:        Object;
-  className:      string;
-  isOpen:         boolean;
-  onRequestClose: () => void;
+  classes:   Object;
+  className: string;
+  isOpen:    boolean;
+  onClose:   () => void;
 }
 
 const routes = [
@@ -36,13 +36,13 @@ const routes = [
 
 class AppDrawer extends React.Component<Props> {
   render() {
-    const { className, classes, isOpen, onRequestClose } = this.props;
+    const { className, classes, isOpen, onClose } = this.props;
 
     const drawer = (
       <div>
         <Toolbar>
           <Link to="/">
-            <Typography type="title">
+            <Typography variant="title">
               klubitus
             </Typography>
           </Link>
@@ -69,9 +69,9 @@ class AppDrawer extends React.Component<Props> {
         <Hidden mdUp>
           <Drawer classes={{ paper: classes.paper }}
                   ModalProps={{ keepMounted: true }}
-                  onRequestClose={onRequestClose}
+                  onClose={onClose}
                   open={isOpen}
-                  type="temporary">
+                  variant="temporary">
             {drawer}
           </Drawer>
         </Hidden>
@@ -79,7 +79,7 @@ class AppDrawer extends React.Component<Props> {
         <Hidden mdDown implementation="css">
           <Drawer classes={{ paper: classes.paper }}
                   open
-                  type="permanent">
+                  variant="permanent">
             {drawer}
           </Drawer>
         </Hidden>

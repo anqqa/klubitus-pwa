@@ -5,7 +5,7 @@ import React from 'react';
 
 
 export default function MenuBar() {
-  return <Typography type="title">
+  return <Typography variant="title">
     klubitus
   </Typography>;
 }

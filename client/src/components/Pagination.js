@@ -28,11 +28,11 @@ class Pagination extends React.PureComponent<ProvidedProps & Props> {
 
     return (
       <div className={classes.container}>
-        <Button component={Link} dense to={previous}>
+        <Button component={Link} size="small" to={previous}>
           <ChevronLeft className={classes.iconPrevious} /> {previousText}
         </Button>
         &nbsp; - &nbsp;
-        <Button component={Link} dense to={next}>
+        <Button component={Link} size="small" to={next}>
           {nextText} <ChevronRight className={classes.iconNext} />
         </Button>
       </div>

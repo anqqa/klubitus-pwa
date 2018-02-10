@@ -88,7 +88,6 @@ class AppFrame extends React.Component<ProvidedProps & StateProps & DispatchProp
             <Toolbar>
               <IconButton aria-label="open drawer"
                           className={classes.navIconHide}
-                          color="contrast"
                           onClick={this.handleDrawerToggle}>
                 <Menu />
               </IconButton>
@@ -112,7 +111,7 @@ class AppFrame extends React.Component<ProvidedProps & StateProps & DispatchProp
 
           <AppDrawer className={classes.drawer}
                      isOpen={this.state.drawerOpen}
-                     onRequestClose={this.handleDrawerToggle} />
+                     onClose={this.handleDrawerToggle} />
 
           <main id="content" className={classes.content}>
             {children}

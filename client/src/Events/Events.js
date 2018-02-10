@@ -114,13 +114,13 @@ class Events extends React.PureComponent<ProvidedProps & ConnectedProps> {
                          image={event.flyer_front_url} />
 
               <CardContent className={classes.content}>
-                <Typography className={classes.city} type="body2">{event.city_name}</Typography>
+                <Typography className={classes.city} variant="body2">{event.city_name}</Typography>
 
                 <Link to={`/event/${event.id}-${slug(event.name, { lower: true })}`}>
-                  <Typography type="title">{event.name}</Typography>
+                  <Typography variant="title">{event.name}</Typography>
                 </Link>
 
-                <Typography color="secondary" type="subheading">
+                <Typography color="secondary" variant="subheading">
                   {beginsAt.toLocaleString(DateTime.TIME_24_SIMPLE)} - {endsAt.toLocaleString(DateTime.TIME_24_SIMPLE)}
                   @ {event.venue_name}
                 </Typography>
@@ -176,8 +176,8 @@ class Events extends React.PureComponent<ProvidedProps & ConnectedProps> {
 
     return (
       <section className={classes.container}>
-        <Typography type="title">{title}</Typography>
-        <Typography type="subheading" color="secondary">{subtitle}</Typography>
+        <Typography variant="title">{title}</Typography>
+        <Typography variant="subheading" color="secondary">{subtitle}</Typography>
 
         {pagination}
 

@@ -80,7 +80,7 @@ class LoginForm extends React.PureComponent<Props, State> {
         <Button className={classes.button}
                 color="primary"
                 disabled={submitting}
-                raised
+                variant="raised"
                 type="submit">
           {submitting ? 'Logging in...' : 'Login'}
         </Button>

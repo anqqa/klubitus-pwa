@@ -52,9 +52,7 @@ class Login extends React.PureComponent<ProvidedProps, State> {
             direction="column"
             justify="center">
         <Grid className={classes.item} item>
-          <Button className={classes.button}
-                  color="default"
-                  raised>
+          <Button className={classes.button} variant="raised">
             <Facebook className={classes.buttonIcon} /> Login with Facebook
           </Button>
         </Grid>
@@ -92,7 +90,7 @@ class Login extends React.PureComponent<ProvidedProps, State> {
                    } />
           </FormControl>
 
-          <Button className={classes.button} color="primary" raised>
+          <Button className={classes.button} color="primary" variant="raised">
             Register
           </Button>
 
@@ -100,7 +98,7 @@ class Login extends React.PureComponent<ProvidedProps, State> {
 
         <Grid className={classes.item} container justify="space-between">
           <Grid item>
-            <Button component={Link} dense to="/login">Login</Button>
+            <Button component={Link} size="small" to="/login">Login</Button>
           </Grid>
         </Grid>
       </Grid>

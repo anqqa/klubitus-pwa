@@ -48,7 +48,7 @@ class Login extends React.PureComponent<ProvidedProps, State> {
             direction="column"
             justify="center">
         <Grid className={classes.item} item>
-          <Typography gutterBottom type="title">
+          <Typography gutterBottom variant="title">
             Forgot password
           </Typography>
 
@@ -58,17 +58,17 @@ class Login extends React.PureComponent<ProvidedProps, State> {
             <FormHelperText>Enter your email and we will send you a password reset mail.</FormHelperText>
           </FormControl>
 
-          <Button className={classes.button} color="primary" raised>
+          <Button className={classes.button} color="primary" variant="raised">
             Reset password
           </Button>
         </Grid>
 
         <Grid className={classes.item} container justify="space-between">
           <Grid item>
-            <Button component={Link} dense to="/login">Login</Button>
+            <Button component={Link} size="small" to="/login">Login</Button>
           </Grid>
           <Grid item>
-            <Button component={Link} dense to="/register">Register</Button>
+            <Button component={Link} size="small" to="/register">Register</Button>
           </Grid>
         </Grid>
       </Grid>
