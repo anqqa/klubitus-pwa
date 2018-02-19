@@ -1,0 +1,26 @@
+{
+  "name": "klubitus-api",
+  "version": "0.0.0",
+  "description": "REST API for Klubitus with Fastify",
+  "main": "server.js",
+  "author": "Antti Qvickström",
+  "license": "MIT",
+  "keywords": [
+    "fastify",
+    "klubitus",
+    "rest",
+    "api"
+  ],
+  "scripts": {
+    "start": "nodemon -f src/ --exec 'fastify src/server.js --port 3001 --pretty-logs --log-level trace'"
+  },
+  "dependencies": {
+    "fastify": "^1.0.0-rc.2",
+    "fastify-cli": "^0.12.0",
+    "fastify-postgres": "fastify/fastify-postgres#greenkeeper/fastify-1.0.0-rc.2",
+    "make-promises-safe": "^1.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.15.0"
+  }
+}
