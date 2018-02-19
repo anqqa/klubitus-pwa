@@ -18,6 +18,7 @@
     "fastify": "^1.0.0-rc.2",
     "fastify-cli": "^0.12.0",
     "fastify-postgres": "fastify/fastify-postgres#greenkeeper/fastify-1.0.0-rc.2",
+    "fastify-swagger": "^0.4.0",
     "make-promises-safe": "^1.1.0"
   },
   "devDependencies": {
