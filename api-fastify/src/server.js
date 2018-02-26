@@ -16,6 +16,11 @@ const swaggerOptions = {
 
 
 module.exports = async (fastify, options) => {
+  fastify.addHook('preHandler', (request, reply, next) => {
+    reply.header('Access-Control-Allow-Credentials', 'true');
+    reply.header('Access-Control-Allow-Origin', '*');
+    next();
+  });
 
   // Register database connection
   fastify.register(require('fastify-postgres'), {
