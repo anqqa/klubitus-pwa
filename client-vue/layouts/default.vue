@@ -15,7 +15,6 @@
           :key="index"
           :to="item.to"
           router
-          exact
         >
           <v-list-tile-action>
             <v-icon v-html="item.icon" />

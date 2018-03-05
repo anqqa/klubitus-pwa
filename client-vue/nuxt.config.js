@@ -1,10 +1,9 @@
 const nodeExternals = require('webpack-node-externals');
-const resolve = (dir) => require('path').join(__dirname, dir);
 
 module.exports = {
-  /*
-  ** Headers of the page
-  */
+  /**
+   * Headers of the page
+   */
   head: {
     title: 'Klubitus',
     meta: [
@@ -19,13 +18,42 @@ module.exports = {
   },
   plugins: ['~/plugins/vuetify.js'],
   css: ['~/assets/style/app.styl'],
-  /*
-  ** Customize the progress bar color
-  */
+  /**
+   * Customize the progress bar color
+    */
   loading: { color: '#3B8070' },
-  /*
-  ** Build configuration
-  */
+
+  /**
+   * Custom routes
+   */
+  router: {
+    extendRoutes (routes, resolve) {
+      routes.push({
+        name:      'events-year-week',
+        path:      '/events/:year/week/:week',
+        component: resolve(__dirname, 'pages/events/index.vue'),
+      });
+      routes.push({
+        name:      'events-year-month-day',
+        path:      '/events/:year/:month/:day?',
+        component: resolve(__dirname, 'pages/events/index.vue'),
+      })
+    },
+  },
+
+  /**
+   * Global modules
+   */
+  modules: ['@nuxtjs/axios'],
+  axios: {
+    debug: true,
+    host: 'localhost',
+    port: 3001,
+  },
+
+  /**
+   * Build configuration
+   */
   build: {
     babel: {
       plugins: [
@@ -39,9 +67,9 @@ module.exports = {
     },
     vendor: ['vuetify'],
     extractCSS: true,
-    /*
-    ** Run ESLint on save
-    */
+    /**
+     * Run ESLint on save
+     */
     extend (config, ctx) {
       // if (ctx.isDev && ctx.isClient) {
       //   config.module.rules.push({
@@ -61,10 +89,4 @@ module.exports = {
     }
   },
 
-  modules: ['@nuxtjs/axios'],
-  axios: {
-    debug: true,
-    host: 'localhost',
-    port: 3001,
-  }
 };
