@@ -16,15 +16,26 @@ const swaggerOptions = {
 
 
 module.exports = async (fastify, options) => {
-  fastify.addHook('preHandler', (request, reply, next) => {
-    reply.header('Access-Control-Allow-Credentials', 'true');
-    reply.header('Access-Control-Allow-Origin', '*');
+
+  // CORS
+  fastify.addHook('preHandler', (request, response, next) => {
+    response.header('Access-Control-Allow-Origin', '*');
+    response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
     next();
   });
 
   // Register database connection
-  fastify.register(require('fastify-postgres'), {
-    connectionString: 'postgres://klubitus:klubitus@localhost:5432/klubitus'
+  fastify.register(require('fastify-knexjs'), {
+    client:     'pg',
+    connection: 'postgres://klubitus:klubitus@localhost:5432/klubitus',
+    pool:       {
+      afterCreate: (connection, done) => {
+        connection.query('SET timezone = "Europe/Helsinki";');
+
+        done();
+      }
+    }
   });
 
   // Register Swagger

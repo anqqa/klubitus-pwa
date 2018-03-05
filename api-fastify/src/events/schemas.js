@@ -38,7 +38,13 @@ const getEvent = {
 
 const getEvents = {
   schema: {
-    response: {
+    querystring: {
+      from:   { type: 'string', description: 'Fetch events ending after this date' },
+      to:     { type: 'string', description: 'Fetch events starting before this date' },
+      limit:  { type: 'integer' },
+      offset: { type: 'integer' }
+    },
+    response:    {
       200: {
         type:       'object',
         properties: {

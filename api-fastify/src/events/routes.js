@@ -1,5 +1,7 @@
 'use strict';
 
+const { format, parse } = require('date-fns');
+
 const {
   getEvent:  getEventSchema,
   getEvents: getEventsSchema,
@@ -8,20 +10,54 @@ const {
 module.exports = async (fastify, options) => {
 
   fastify.get('/event/:eventId', getEventSchema, async (request, reply) => {
-    const { rows } = await fastify.pg.query(
-      'SELECT id, name, begins_at, ends_at, city_name, venue_name, flyer_front_url FROM events WHERE id = $1',
-      [parseInt(request.params.eventId)]
-    );
+    const events = await fastify.knex
+      .column('id', 'name', 'begins_at', 'ends_at', 'city_name', 'venue_name', 'flyer_front_url')
+      .from('events')
+      .where('id', parseInt(request.params.eventId))
+      .select();
 
-    return { data: rows[0] };
+    return { data: events[0] };
   });
 
-  fastify.get('/events', getEventsSchema, async (request, reply) => {
-    const { rows } = await fastify.pg.query(
-      'SELECT id, name, begins_at, ends_at, city_name, venue_name, flyer_front_url FROM events LIMIT 10'
-    );
 
-    return { data: rows };
+  fastify.get('/events', getEventsSchema, async (request, reply) => {
+    const { from, to, limit, offset } = request.query;
+
+    let order = 'asc';
+    let query = fastify.knex
+      .column('id', 'name', 'begins_at', 'ends_at', 'city_name', 'venue_name', 'flyer_front_url')
+      .from('events');
+
+    if (from && to) {
+      const from_date = parse(from);
+      const to_date   = parse(to);
+
+      query = query.where('begins_at', '<=', format(to_date, 'YYYY-MM-DD'))
+        .where('ends_at', '>=', format(from_date, 'YYYY-MM-DD'));
+
+      if (limit) {
+        query = query.limit(limit);
+      }
+    }
+    else if (to) {
+      const to_date = parse(to);
+
+      order = 'desc';
+      query = query.where('begins_at', '<=', format(to_date, 'YYYY-MM-DD')).limit(limit || 25);
+    }
+    else {
+      const from_date = from ? parse(from) : Date.now();
+
+      query = query.where('begins_at', '>=', format(from_date, 'YYYY-MM-DD')).limit(limit || 25);
+    }
+
+    if (offset) {
+      query = query.offset(offset);
+    }
+
+    const data = await query.select().orderBy('begins_at', order);
+
+    return { data };
   });
 
 };
