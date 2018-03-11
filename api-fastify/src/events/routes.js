@@ -32,8 +32,8 @@ module.exports = async (fastify, options) => {
       const from_date = parse(from);
       const to_date   = parse(to);
 
-      query = query.where('begins_at', '<=', format(to_date, 'YYYY-MM-DD'))
-        .where('ends_at', '>=', format(from_date, 'YYYY-MM-DD'));
+      query = query.whereRaw('begins_at::DATE <= ?', [format(to_date, 'YYYY-MM-DD')])
+        .whereRaw('ends_at >= ?', [format(from_date, 'YYYY-MM-DD [09:59]')]);
 
       if (limit) {
         query = query.limit(limit);
@@ -43,12 +43,14 @@ module.exports = async (fastify, options) => {
       const to_date = parse(to);
 
       order = 'desc';
-      query = query.where('begins_at', '<=', format(to_date, 'YYYY-MM-DD')).limit(limit || 25);
+      query = query.whereRaw('begins_at::DATE <= ?', [format(to_date, 'YYYY-MM-DD')])
+        .limit(limit || 25);
     }
     else {
       const from_date = from ? parse(from) : Date.now();
 
-      query = query.where('begins_at', '>=', format(from_date, 'YYYY-MM-DD')).limit(limit || 25);
+      query = query.whereRaw('begins_at::DATE >= ?', [format(from_date, 'YYYY-MM-DD')])
+        .limit(limit || 25);
     }
 
     if (offset) {
