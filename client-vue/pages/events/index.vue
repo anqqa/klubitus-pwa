@@ -2,6 +2,16 @@
   <v-layout row wrap>
     <v-flex tag="h1" class="headline">{{ title }}</v-flex>
 
+    <v-flex text-xs-center xs12>
+      <v-btn :to="pagination.previous.url" small nuxt>
+        &laquo; {{ pagination.previous.title }}
+      </v-btn>
+      -
+      <v-btn :to="pagination.next.url" small nuxt>
+        {{ pagination.next.title }} &raquo;
+      </v-btn>
+    </v-flex>
+
     <v-flex v-for="(day, dayIndex) in days" :key="dayIndex" xs12 tag="section">
       <h2 class="subheading mt-3">{{ day.header }}</h2>
 
@@ -28,12 +38,23 @@
       </v-card>
     </v-flex>
 
+    <v-flex text-xs-center xs12>
+      <v-btn :to="pagination.previous.url" small nuxt>
+        &laquo; {{ pagination.previous.title }}
+      </v-btn>
+      -
+      <v-btn :to="pagination.next.url" small nuxt>
+        {{ pagination.next.title }} &raquo;
+      </v-btn>
+    </v-flex>
+
   </v-layout>
 </template>
 
 
 <script>
   import addDays from 'date-fns/add_days';
+  import addMonths from 'date-fns/add_months';
   import endOfMonth from 'date-fns/end_of_month';
   import format from 'date-fns/format';
   import setISOWeek from 'date-fns/set_iso_week';
@@ -124,7 +145,48 @@
         dates = [format(from, 'D MMM YYYY'), format(to, 'D MMM YYYY')];  // Nothing same
       }
 
-      return { days, title: 'Events, ' + dates.join(' – ') };
+      // Build pagination
+      const pagination = {
+        previous: { title: undefined, url: undefined },
+        next:     { title: undefined, url: undefined },
+      };
+      let previousDate, nextDate;
+
+      switch (range) {
+
+        case 'day':
+          previousDate = addDays(from, -1);
+          nextDate     = addDays(from, 1);
+
+          pagination.previous.title = 'Previous day';
+          pagination.previous.url   = `/events/${format(previousDate, 'YYYY/MM/DD')}`;
+          pagination.next.title     = 'Next day';
+          pagination.next.url       = `/events/${format(nextDate, 'YYYY/MM/DD')}`;
+          break;
+
+        case 'week':
+          previousDate = addDays(from, -7);
+          nextDate     = addDays(from, 7);
+
+          pagination.previous.title = 'Previous week';
+          pagination.previous.url   = `/events/${format(previousDate, 'YYYY/[week]/WW')}`;
+          pagination.next.title     = 'Next week';
+          pagination.next.url       = `/events/${format(nextDate, 'YYYY/[week]/WW')}`;
+          break;
+
+        case 'month':
+          previousDate = addMonths(from, -1);
+          nextDate     = addMonths(from, 1);
+
+          pagination.previous.title = 'Previous month';
+          pagination.previous.url   = `/events/${format(previousDate, 'YYYY/MM')}`;
+          pagination.next.title     = 'Next month';
+          pagination.next.url       = `/events/${format(nextDate, 'YYYY/MM')}`;
+          break;
+
+      }
+
+      return { days, pagination, title: 'Events, ' + dates.join(' – ') };
     },
 
     components: { VDivider },
