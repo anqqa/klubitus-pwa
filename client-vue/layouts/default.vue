@@ -2,7 +2,7 @@
   <v-app dark>
 
     <v-navigation-drawer
-      v-model="drawer"
+      v-model="sidebar"
       app
       class="grey darken-4"
       clipped
@@ -27,7 +27,7 @@
     </v-navigation-drawer>
 
     <v-toolbar app clipped-left dense flat>
-      <v-toolbar-side-icon @click="drawer = !drawer" />
+      <v-toolbar-side-icon @click="toggleSidebar" />
       <img class="hidden-xs-only mx-3 logo" src="/logo.svg" />
       <v-toolbar-title class="hidden-xs-only" v-text="title" />
       <v-spacer />
@@ -40,14 +40,13 @@
         />
       </v-layout>
       <v-toolbar-items class="ml-3">
-        <v-btn flat router to="/signin">Sign In</v-btn>
+        <v-btn flat router to="/login">Login</v-btn>
+        <v-btn flat router to="/register">Register</v-btn>
       </v-toolbar-items>
     </v-toolbar>
 
     <v-content>
-      <v-container>
-        <nuxt />
-      </v-container>
+      <nuxt />
     </v-content>
 
     <v-footer app inset>
@@ -59,7 +58,10 @@
 
 
 <script>
+  import { mapMutations } from 'vuex';
+
   export default {
+
     data () {
       return {
         drawer: true,
@@ -71,7 +73,18 @@
         ],
         title: 'Klubitus'
       }
+    },
+
+    computed: {
+      sidebar () { return this.$store.state.ui.sidebar }
+    },
+
+    methods: {
+      ...mapMutations({
+        toggleSidebar: 'ui/toggleSidebar'
+      })
     }
+
   }
 </script>
 
