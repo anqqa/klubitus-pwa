@@ -44,12 +44,32 @@ module.exports = {
   /**
    * Global modules
    */
-  modules: ['@nuxtjs/axios'],
-  axios: {
-    debug: true,
-    host: 'localhost',
-    port: 3001,
-  },
+  modules: [
+    ['@nuxtjs/axios', {
+      debug: true,
+      host:  'localhost',
+      port:  3001,
+    }],
+    ['@nuxtjs/markdownit', {
+      breaks:      true,
+      injected:    true,
+      linkify:     true,
+      typographer: true,
+      use: [
+        ['markdown-it-link-attributes', [{
+          pattern: /^(https?:)?\/\/([\w.]*\.)?klubitus\.org/,
+          attrs:   {
+            class:  'internal-link',
+          }}, {
+          attrs: {
+            class:  'external-link',
+            rel:    'noopener',
+            target: '_blank',
+          },
+        }]],
+      ]
+    }],
+  ],
 
   /**
    * Build configuration
@@ -65,8 +85,6 @@ module.exports = {
         }]
       ]
     },
-    vendor: ['vuetify'],
-    extractCSS: true,
     /**
      * Run ESLint on save
      */
@@ -86,7 +104,9 @@ module.exports = {
           })
         ]
       }
-    }
+    },
+    extractCSS: true,
+    vendor: ['vuetify'],
   },
 
 };

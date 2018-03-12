@@ -25,7 +25,7 @@
             <v-flex sm10 xs12>
               <v-card-title>
                 <v-flex tag="h3" class="subheading" xs12>
-                  <nuxt-link :to="`/events/${event.id}`">{{ event.name }}</nuxt-link>
+                  <nuxt-link :to="event.url">{{ event.name }}</nuxt-link>
                 </v-flex>
                 <div>
                   {{ event.hours }}
@@ -60,6 +60,8 @@
   import setISOWeek from 'date-fns/set_iso_week';
   import startOfISOWeek from 'date-fns/start_of_iso_week';
   import VDivider from 'vuetify/es5/components/VDivider';
+
+  import { hours, slug } from '../../utils/text';
 
 
   const buildPagination = (from, to, range) => {
@@ -176,18 +178,11 @@
         }
       }
 
-      // Opening hours
-      const hours = [format(event.begins_at, 'HH:mm')];
-
-      if (event.ends_at) {
-        hours.push('–');
-        hours.push(format(event.ends_at, 'HH:mm'));
-      }
-      else {
-        hours.push('→');
-      }
-
-      events.push({ ...event, hours: hours.join('') });
+      events.push({
+        ...event,
+        hours: hours(event.begins_at, event.ends_at),
+        url:   `/events/${event.id}-${slug(event.name)}`,
+      });
     });
 
     return days;
@@ -233,5 +228,6 @@
 
       return year && month && week && day;
     }
+
   }
 </script>
