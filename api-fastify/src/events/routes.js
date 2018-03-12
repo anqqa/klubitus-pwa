@@ -11,7 +11,7 @@ module.exports = async (fastify, options) => {
 
   fastify.get('/event/:eventId', getEventSchema, async (request, reply) => {
     const events = await fastify.knex
-      .column('id', 'name', 'begins_at', 'ends_at', 'city_name', 'venue_name', 'flyer_front_url')
+      .column('id', 'name', 'begins_at', 'ends_at', 'city_name', 'venue_name', 'flyer_front_url', 'info', 'facebook_id')
       .from('events')
       .where('id', parseInt(request.params.eventId))
       .select();
