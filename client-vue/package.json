@@ -13,7 +13,9 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.0.1",
+    "@nuxtjs/markdownit": "^1.2.0",
     "date-fns": "^1.29.0",
+    "markdown-it-link-attributes": "^2.0.0",
     "nuxt": "^1.0.0",
     "vuetify": "^1.0.0"
   },
