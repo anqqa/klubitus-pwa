@@ -17,13 +17,9 @@ const swaggerOptions = {
 
 module.exports = async (fastify, options) => {
 
-  // CORS
-  fastify.addHook('preHandler', (request, response, next) => {
-    response.header('Access-Control-Allow-Origin', '*');
-    response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-
-    next();
-  });
+  // Security
+  fastify.register(require('fastify-helmet'));
+  fastify.use(require('cors')());
 
   // Register database connection
   fastify.register(require('fastify-knexjs'), {
@@ -41,8 +37,9 @@ module.exports = async (fastify, options) => {
   // Register Swagger
   fastify.register(require('fastify-swagger'), swaggerOptions);
 
-  // Register routes
+  // Register routes and custom plugins
+  fastify.options('/*', (request, reply) => {});
+  fastify.register(require('./auth/plugin'));
   fastify.register(require('./events/routes'));
-
 
 };

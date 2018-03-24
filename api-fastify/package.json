@@ -5,6 +5,7 @@
   "main": "server.js",
   "author": "Antti Qvickström",
   "license": "MIT",
+  "private": true,
   "keywords": [
     "fastify",
     "klubitus",
@@ -15,11 +16,18 @@
     "start": "nodemon -f src/ --exec \"fastify src/server.js --port 3001 --pretty-logs --log-level trace\""
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.4",
     "date-fns": "^1.29.0",
     "fastify": "^1.0.0-rc.2",
+    "fastify-auth": "^0.2.0",
     "fastify-cli": "^0.12.0",
+    "fastify-helmet": "^1.0.3",
+    "fastify-jwt": "^0.2.1",
     "fastify-knexjs": "^1.0.6",
+    "fastify-plugin": "^0.2.2",
     "fastify-swagger": "^0.4.0",
+    "http-errors": "^1.6.2",
     "make-promises-safe": "^1.1.0",
     "pg": "^7.4.1"
   },
