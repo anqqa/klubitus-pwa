@@ -1,12 +1,18 @@
 'use strict';
 
-const _user = {
-  type:       'object',
-  properties: {
-    id:       { type: 'integer' },
-    username: { type: 'string' },
+const getMe = {
+  schema: {
+    response: {
+      200: {
+        type:       'object',
+        properties: {
+          id:       { type: 'integer' },
+          username: { type: 'string' },
+        },
+        require: ['id', 'username']
+      },
+    },
   },
-  require: ['id', 'username']
 };
 
 
@@ -15,7 +21,7 @@ const postLogin = {
     body:   {
       type:       'object',
       properties: {
-        username: { type: 'string' },
+        username: { type: 'string', description: 'Username or email address' },
         password: { type: 'string' },
       },
       required:   ['username', 'password'],
@@ -27,11 +33,12 @@ const postLogin = {
           token: { type: 'string' },
         }
       },
-    }
-  }
+    },
+  },
 };
 
 
 module.exports = {
+  getMe,
   postLogin,
 };

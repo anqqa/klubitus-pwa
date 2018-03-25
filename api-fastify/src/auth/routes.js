@@ -6,28 +6,39 @@ const httpErrors = require('http-errors');
 
 const { deprecatedMatch, hash, match } = require('./password');
 const {
+  getMe:     getMeSchema,
   postLogin: postLoginSchema,
 } = require('./schemas');
 
 
 const routes = async (fastify, options) => {
 
-  fastify.post('/auth/login', postLoginSchema, async (request, reply) => {
+  /**
+   * Login with username or email and password.
+   *
+   * @param    request
+   * @param    reply
+   * @returns  {Promise<void>}
+   */
+  const authLogin = async (request, reply) => {
     const { username, password } = request.body;
 
-    const users = await fastify.knex
-      .select('id', 'username', 'password', 'password_kohana')
-      .from('users')
-      .where('username', username)
-      .orWhere('email', username);
-
-    if (!users.length) {
-      request.log.info('Auth: User not found');
+    if (!username || !password) {
+      request.log.info('Auth: Username or password not given');
 
       throw new httpErrors.Unauthorized('Bad credentials');
     }
 
-    const user = users[0];
+    const user = await fastify.knex('users')
+      .first('id', 'username', 'password', 'password_kohana')
+      .where('username', username)
+      .orWhere('email', username);
+
+    if (!user) {
+      request.log.info('Auth: User not found');
+
+      throw new httpErrors.Unauthorized('Bad credentials');
+    }
 
     // Migrate password if needed
     if (!user.password) {
@@ -86,8 +97,37 @@ const routes = async (fastify, options) => {
     };
 
     reply.jwtSign(payload, (error, token) => reply.send(error || { token }));
-  });
+  };
 
+
+  /**
+   * Get authenticated user.
+   *
+   * @param   request
+   * @param   reply
+   * @returns  {Promise<*>}
+   */
+  const authMe = async (request, reply) => {
+    if (!fastify.auth.isAuthenticated || !fastify.auth.userId) {
+      throw new httpErrors.Unauthorized();
+    }
+
+    const user = await fastify.knex('users')
+      .first('id', 'username')
+      .where('id', fastify.auth.userId);
+
+    if (!user) {
+      request.log.warn('Auth: Authenticated user not found');
+
+      throw new httpErrors.NotFound();
+    }
+
+    return user;
+  };
+
+
+  fastify.post('/auth/login', postLoginSchema, authLogin);
+  fastify.get('/auth/me', getMeSchema, authMe);
 };
 
 
