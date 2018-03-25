@@ -2,7 +2,7 @@
   <v-app dark>
 
     <v-navigation-drawer
-      v-model="sidebar"
+      :value="sidebar"
       app
       class="grey darken-4"
       clipped
@@ -28,7 +28,7 @@
 
     <v-toolbar app clipped-left dense flat>
       <v-toolbar-side-icon @click="toggleSidebar" />
-      <img class="hidden-xs-only mx-3 logo" src="/logo.svg" />
+      <img class="hidden-xs-only mx-3 logo" src="/logo.svg">
       <v-toolbar-title class="hidden-xs-only" v-text="title" />
       <v-spacer />
       <v-layout align-center row>
