@@ -9,12 +9,13 @@ module.exports = {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'PWA client for Klubitus with Nuxt.js and Vuetify.js' }
+      { hid: 'description', name: 'description', content: 'Clubbers guide to... Finland' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' },
-    ]
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700' },
+      // { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' },
+    ],
   },
   css: ['~/assets/style/app.styl'],
   /**
@@ -83,7 +84,7 @@ module.exports = {
     }],
   ],
 
-  plugins: ['~/plugins/axios', '~/plugins/vuetify.js'],
+  plugins: ['~/plugins/axios', '~/plugins/fontawesome.js', '~/plugins/vuetify.js'],
 
   /**
    * Build configuration
@@ -118,6 +119,15 @@ module.exports = {
           })
         ]
       }
+
+      // Font Awesome tree shaking (doesn't seem to be working atm)
+      // config.resolve.alias = {
+      //   ...config.resolve.alias,
+      //   '@fortawesome/fontawesome-free-brands$': '@fortawesome/fontawesome-free-brands/shakable.es.js',
+      //   '@fortawesome/fontawesome-free-regular$': '@fortawesome/fontawesome-free-regular/shakable.es.js',
+      //   '@fortawesome/fontawesome-free-solid$': '@fortawesome/fontawesome-free-solid/shakable.es.js',
+      // };
+
     },
     extractCSS: true,
     vendor: ['vuetify'],

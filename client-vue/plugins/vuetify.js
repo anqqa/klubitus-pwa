@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 import {
   Vuetify,
   VApp,
@@ -11,8 +11,8 @@ import {
   VNavigationDrawer,
   VTextField,
   VToolbar
-} from 'vuetify'
-import colors from 'vuetify/es5/util/colors'
+} from 'vuetify';
+import colors from 'vuetify/es5/util/colors';
 
 Vue.use(Vuetify, {
   components: {
@@ -29,5 +29,5 @@ Vue.use(Vuetify, {
   },
   theme: {
     primary: colors.pink.base,
-  }
+  },
 });

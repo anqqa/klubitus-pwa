@@ -13,7 +13,7 @@
               Enter your email and we will send you a password reset mail.
             </p>
             <v-form>
-              <v-text-field prepend-icon="email" name="email" label="Email" type="email" />
+              <v-text-field prepend-icon="fas fa-at" name="email" label="Email" type="email" />
             </v-form>
           </v-card-text>
 

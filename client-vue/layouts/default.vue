@@ -27,13 +27,15 @@
     </v-navigation-drawer>
 
     <v-toolbar app clipped-left dense flat>
-      <v-toolbar-side-icon @click="toggleSidebar" />
+      <v-toolbar-side-icon @click="toggleSidebar">
+        <v-icon>fas fa-bars</v-icon>
+      </v-toolbar-side-icon>
       <img class="hidden-xs-only mx-3 logo" src="/logo.svg">
       <v-toolbar-title class="hidden-xs-only" v-text="title" />
       <v-spacer />
       <v-layout align-center row>
         <v-text-field
-          append-icon="search"
+          append-icon="fas fa-search"
           hide-details
           placeholder="Search..."
           single-line
@@ -67,10 +69,10 @@
       return {
         drawer: true,
         items: [
-          { icon: 'home', title: 'Home', to: '/' },
-          { icon: 'date_range', title: 'Events', to: '/events' },
-          { icon: 'forum', title: 'Forum', to: '/forum' },
-          { icon: 'photo_camera', title: 'Galleries', to: '/galleries' }
+          { icon: 'fas fa-home fa-fw', title: 'Home', to: '/' },
+          { icon: 'far fa-calendar-alt fa-fw', title: 'Events', to: '/events' },
+          { icon: 'far fa-comments fa-fw', title: 'Forum', to: '/forum' },
+          { icon: 'far fa-images fa-fw', title: 'Galleries', to: '/galleries' }
         ],
         title: 'Klubitus'
       }

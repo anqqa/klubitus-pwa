@@ -16,7 +16,8 @@
                rel="noopener"
                tag="a"
                target="_blank">
-          Facebook event
+          <v-icon>fab fa-facebook-square</v-icon>
+          <span class="ml-2">Facebook event</span>
         </v-btn>
       </v-flex>
 

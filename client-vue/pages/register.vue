@@ -9,14 +9,17 @@
           </v-toolbar>
 
           <v-card-text>
-            <v-btn block outline>Login with Facebook</v-btn>
+            <v-btn block outline>
+              <v-icon>fab fa-facebook-square</v-icon>
+              <span class="ml-2">Login with Facebook</span>
+            </v-btn>
 
             <span class="separator mt-3">or</span>
 
             <v-form>
-              <v-text-field prepend-icon="email" name="email" label="Email" type="email" />
-              <v-text-field prepend-icon="person" name="username" label="Username" type="text" />
-              <v-text-field prepend-icon="lock" name="password" label="Password" type="password" />
+              <v-text-field prepend-icon="fas fa-at" name="email" label="Email" type="email" />
+              <v-text-field prepend-icon="far fa-user" name="username" label="Username" type="text" />
+              <v-text-field prepend-icon="fas fa-key" name="password" label="Password" type="password" />
             </v-form>
           </v-card-text>
 
