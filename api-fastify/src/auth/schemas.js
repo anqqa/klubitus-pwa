@@ -6,10 +6,15 @@ const getMe = {
       200: {
         type:       'object',
         properties: {
-          id:       { type: 'integer' },
-          username: { type: 'string' },
+          data: {
+            type:       'object',
+            properties: {
+              id:       { type: 'integer' },
+              username: { type: 'string' },
+            },
+            require:    ['id', 'username'],
+          },
         },
-        require: ['id', 'username']
       },
     },
   },
@@ -24,7 +29,7 @@ const postLogin = {
         username: { type: 'string', description: 'Username or email address' },
         password: { type: 'string' },
       },
-      required:   ['username', 'password'],
+      require:    ['username', 'password'],
     },
     response: {
       200: {

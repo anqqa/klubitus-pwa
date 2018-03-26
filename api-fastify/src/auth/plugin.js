@@ -23,7 +23,6 @@ module.exports = fp(function (fastify, options, next) {
     }
 
 
-
     // Validate token
     fastify.jwt.verify(token, (error, decoded) => {
       if (error || !decoded.id || !decoded.token) {
@@ -42,6 +41,7 @@ module.exports = fp(function (fastify, options, next) {
             return done(new httpErrors.Unauthorized('Token expired'));
           }
           fastify.auth.isAuthenticated = true;
+          fastify.auth.token           = decoded.token;
           fastify.auth.userId          = decoded.id;
 
           done();
@@ -56,7 +56,7 @@ module.exports = fp(function (fastify, options, next) {
 
 
   fastify.register(require('fastify-jwt'), { secret: 'dev' });
-  fastify.decorate('auth', { isAuthenticated: false, userId: undefined });
+  fastify.decorate('auth', { isAuthenticated: false, token: undefined, userId: undefined });
   fastify.decorate('verifyJWT', verifyJWT);
   fastify.addHook('preHandler', verifyJWT);
 

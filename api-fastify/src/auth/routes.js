@@ -96,7 +96,27 @@ const routes = async (fastify, options) => {
       username: user.username,
     };
 
-    reply.jwtSign(payload, (error, token) => reply.send(error || { token }));
+    reply.jwtSign(payload, { expiresIn: '30d', }, (error, token) => reply.send(error || { token }));
+  };
+
+
+  /**
+   * Remove token on logout.
+   *
+   * @param   request
+   * @param   reply
+   * @returns  {Promise<void>}
+   */
+  const authLogout = async (request, reply) => {
+    if (fastify.auth.userId && fastify.auth.token) {
+      fastify.knex('user_tokens')
+        .where({ token: fastify.auth.token, user_id: fastify.auth.userId })
+        .delete()
+        .then(() => request.log.info('Auth: Token removed'))
+        .catch(error => request.log.warn(`Auth: Could not delete token: ${error.message}`));
+    }
+
+    reply.send();
   };
 
 
@@ -122,11 +142,12 @@ const routes = async (fastify, options) => {
       throw new httpErrors.NotFound();
     }
 
-    return user;
+    return { data: user };
   };
 
 
   fastify.post('/auth/login', postLoginSchema, authLogin);
+  fastify.post('/auth/logout', authLogout);
   fastify.get('/auth/me', getMeSchema, authMe);
 };
 
