@@ -40,8 +40,9 @@
         />
       </v-layout>
       <v-toolbar-items class="ml-3">
-        <v-btn flat router to="/login">Login</v-btn>
-        <v-btn flat router to="/register">Register</v-btn>
+        <v-btn v-if="$auth.state.loggedIn" flat @click="logout">Logout</v-btn>
+        <v-btn v-if="!$auth.state.loggedIn" flat router to="/login">Login</v-btn>
+        <v-btn v-if="!$auth.state.loggedIn" flat router to="/register">Register</v-btn>
       </v-toolbar-items>
     </v-toolbar>
 
@@ -80,6 +81,15 @@
     },
 
     methods: {
+      async logout() {
+        try {
+          await this.$auth.logout();
+        }
+        catch (error) {}
+        finally {
+          this.$axios.setToken(false);
+        }
+      },
       ...mapMutations({
         toggleSidebar: 'ui/toggleSidebar'
       })

@@ -4,6 +4,7 @@
   "description": "PWA client for Klubitus with Nuxt.js and Vuetify.js",
   "author": "Antti Qvickström",
   "license": "MIT",
+  "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "dev": "nuxt",
@@ -12,6 +13,7 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "@nuxtjs/auth": "^4.0.0-rc.3",
     "@nuxtjs/axios": "^5.0.1",
     "@nuxtjs/markdownit": "^1.2.0",
     "date-fns": "^1.29.0",

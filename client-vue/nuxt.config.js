@@ -16,7 +16,6 @@ module.exports = {
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' },
     ]
   },
-  plugins: ['~/plugins/vuetify.js'],
   css: ['~/assets/style/app.styl'],
   /**
    * Customize the progress bar color
@@ -45,11 +44,21 @@ module.exports = {
    * Global modules
    */
   modules: [
+    ['@nuxtjs/auth', {
+      endpoints: {
+        login:  { url: '/auth/login', method: 'post', propertyName: 'token' },
+        logout: { url: '/auth/logout', method: 'post' },
+        user:   { url: '/auth/me', method: 'get', propertyName: 'data' }
+      },
+      resetOnError: true,
+    }],
+
     ['@nuxtjs/axios', {
       debug: true,
       host:  'localhost',
       port:  3001,
     }],
+
     ['@nuxtjs/markdownit', {
       breaks:      true,
       injected:    true,
@@ -71,16 +80,18 @@ module.exports = {
     }],
   ],
 
+  plugins: ['~/plugins/axios', '~/plugins/vuetify.js'],
+
   /**
    * Build configuration
    */
   build: {
     babel: {
       plugins: [
-        ["transform-imports", {
-          "vuetify": {
-            "transform": "vuetify/es5/components/${member}",
-            "preventFullImport": true
+        ['transform-imports', {
+          'vuetify': {
+            'transform':         'vuetify/es5/components/${member}',
+            'preventFullImport': true
           }
         }]
       ]
