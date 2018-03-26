@@ -45,6 +45,9 @@ module.exports = {
    */
   modules: [
     ['@nuxtjs/auth', {
+      cookie: {
+        options: { expires: 30 },
+      },
       endpoints: {
         login:  { url: '/auth/login', method: 'post', propertyName: 'token' },
         logout: { url: '/auth/logout', method: 'post' },
