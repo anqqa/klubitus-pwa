@@ -18,8 +18,8 @@
     "@nuxtjs/markdownit": "^1.2.0",
     "date-fns": "^1.29.0",
     "markdown-it-link-attributes": "^2.0.0",
-    "nuxt": "^1.0.0",
-    "vuetify": "^1.0.0"
+    "nuxt": "^1.4.0",
+    "vuetify": "^1.0.10"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
