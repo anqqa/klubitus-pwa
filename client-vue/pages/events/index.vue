@@ -1,52 +1,61 @@
 <template>
   <v-container>
     <v-layout row wrap>
-      <v-flex tag="h1" class="headline">{{ title }}</v-flex>
 
-      <v-flex text-xs-center xs12>
-        <v-btn :to="pagination.previous.url" small nuxt>
-          &laquo; {{ pagination.previous.title }}
-        </v-btn>
-        &sdot;
-        <v-btn :to="pagination.next.url" small nuxt>
-          {{ pagination.next.title }} &raquo;
-        </v-btn>
+      <v-flex tag="h1" class="headline" xs12>{{ title }}</v-flex>
+
+      <v-flex xs12 md9>
+        <v-flex text-xs-center xs12>
+          <v-btn :to="pagination.previous.url" small nuxt>
+            &laquo; {{ pagination.previous.title }}
+          </v-btn>
+          &sdot;
+          <v-btn :to="pagination.next.url" small nuxt>
+            {{ pagination.next.title }} &raquo;
+          </v-btn>
+        </v-flex>
+
+        <v-flex v-for="(day, dayIndex) in days" :key="dayIndex" xs12 tag="section">
+          <h2 class="subheading mt-3">{{ day.header }}</h2>
+
+          <v-card v-for="(event, eventIndex) in day.events" :key="eventIndex" flat tile class="transparent">
+            <v-container grid-list-xs>
+              <v-layout row wrap>
+                <v-flex sm2 xs12>
+                  <v-card-media :src="event.flyer_front_url" height="80px" />
+                </v-flex>
+
+                <v-flex sm10 xs12>
+                  <v-card-title>
+                    <v-flex tag="h3" class="subheading" xs12>
+                      <nuxt-link :to="event.url">{{ event.name }}</nuxt-link>
+                    </v-flex>
+                    <div>
+                      {{ event.hours }}
+                      &sdot; {{ event.venue_name }}, {{ event.city_name }}
+                    </div>
+                  </v-card-title>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-card>
+        </v-flex>
+
+        <v-flex text-xs-center xs12>
+          <v-btn :to="pagination.previous.url" small nuxt>
+            &laquo; {{ pagination.previous.title }}
+          </v-btn>
+          &sdot;
+          <v-btn :to="pagination.next.url" small nuxt>
+            {{ pagination.next.title }} &raquo;
+          </v-btn>
+        </v-flex>
       </v-flex>
 
-      <v-flex v-for="(day, dayIndex) in days" :key="dayIndex" xs12 tag="section">
-        <h2 class="subheading mt-3">{{ day.header }}</h2>
-
-        <v-card v-for="(event, eventIndex) in day.events" :key="eventIndex" flat tile class="transparent">
-          <v-container grid-list-xs>
-            <v-layout row wrap>
-              <v-flex sm2 xs12>
-                <v-card-media :src="event.flyer_front_url" height="80px" />
-              </v-flex>
-
-              <v-flex sm10 xs12>
-                <v-card-title>
-                  <v-flex tag="h3" class="subheading" xs12>
-                    <nuxt-link :to="event.url">{{ event.name }}</nuxt-link>
-                  </v-flex>
-                  <div>
-                    {{ event.hours }}
-                    &sdot; {{ event.venue_name }}, {{ event.city_name }}
-                  </div>
-                </v-card-title>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-card>
-      </v-flex>
-
-      <v-flex text-xs-center xs12>
-        <v-btn :to="pagination.previous.url" small nuxt>
-          &laquo; {{ pagination.previous.title }}
-        </v-btn>
-        &sdot;
-        <v-btn :to="pagination.next.url" small nuxt>
-          {{ pagination.next.title }} &raquo;
-        </v-btn>
+      <v-flex xs12 md3>
+        <keep-alive>
+          <EventList title="Latest events" type="latest" />
+        </keep-alive>
       </v-flex>
 
     </v-layout>
@@ -64,6 +73,7 @@
   import VDivider from 'vuetify/es5/components/VDivider';
 
   import { hours, slug } from '../../utils/text';
+  import EventList from '../../components/event-list';
 
 
   const buildPagination = (from, to, range) => {
@@ -210,11 +220,9 @@
       return { days, pagination, title };
     },
 
-    components: { VDivider },
+    components: { EventList, VDivider },
 
-    data() {
-      return {}
-    },
+    data() {},
 
     head: {
       title: 'Events'
