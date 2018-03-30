@@ -9,6 +9,9 @@ const {
 
 module.exports = async (fastify, options) => {
 
+  /**
+   * Get single event.
+   */
   fastify.get('/event/:eventId', getEventSchema, async (request, reply) => {
     const events = await fastify.knex
       .column('id', 'name', 'begins_at', 'ends_at', 'city_name', 'venue_name', 'flyer_front_url', 'info', 'facebook_id')
@@ -20,6 +23,9 @@ module.exports = async (fastify, options) => {
   });
 
 
+  /**
+   * Get events by date range.
+   */
   fastify.get('/events', getEventsSchema, async (request, reply) => {
     const { from, to, limit, offset } = request.query;
 
@@ -58,6 +64,27 @@ module.exports = async (fastify, options) => {
     }
 
     const data = await query.select().orderBy('begins_at', order);
+
+    return { data };
+  });
+
+
+  /**
+   * Get events by list type.
+   */
+  fastify.get('/events/:type', async (request, reply) => {
+    const { type }  = request.params;
+    const { limit } = request.query;
+
+    let query = fastify.knex('events')
+      .column('id', 'name', 'begins_at')
+      .limit(Math.max(1, Math.min(parseInt(limit), 100)));
+
+    switch (type) {
+      case 'latest': query = query.orderBy('created_at', 'desc'); break;
+    }
+
+    const data = await query.select();
 
     return { data };
   });
