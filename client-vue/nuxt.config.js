@@ -84,7 +84,7 @@ module.exports = {
     }],
   ],
 
-  plugins: ['~/plugins/axios', '~/plugins/fontawesome.js', '~/plugins/vuetify.js'],
+  plugins: ['~/plugins/axios', '~/plugins/fontawesome.js', '~/plugins/vuetify.js', '~/plugins/vue-plugins'],
 
   /**
    * Build configuration

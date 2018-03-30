@@ -23,6 +23,7 @@
     "date-fns": "^1.29.0",
     "markdown-it-link-attributes": "^2.0.0",
     "nuxt": "^1.4.0",
+    "vue-async-properties": "^0.4.2",
     "vuetify": "^1.0.10"
   },
   "devDependencies": {
