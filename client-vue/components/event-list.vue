@@ -1,18 +1,18 @@
 <template>
-  <v-card>
+  <v-card class="transparent">
     <v-list dense subheader>
       <v-subheader v-html="title" />
 
       <template v-for="event in events">
         <v-list-tile :key="event.id" :to="event.url">
 
-          <v-list-tile-action>
-            <v-list-tile-action-text v-html="event.stamp" />
-          </v-list-tile-action>
-
           <v-list-tile-content>
             <v-list-tile-title v-html="event.name" />
           </v-list-tile-content>
+
+          <v-list-tile-action>
+            <v-list-tile-action-text v-html="event.stamp" />
+          </v-list-tile-action>
 
         </v-list-tile>
       </template>
