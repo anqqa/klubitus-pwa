@@ -1,4 +1,4 @@
 import Vue from 'vue';
-import VueAsyncProperties from 'vue-async-properties';
+import VueAsyncComputed from 'vue-async-computed';
 
-Vue.use(VueAsyncProperties);
+Vue.use(VueAsyncComputed);

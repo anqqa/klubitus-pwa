@@ -43,10 +43,10 @@
       type:   { default: EventListType.LATEST, type: String },
     },
 
-    asyncData: {
+    asyncComputed: {
       async events() {
         if (cachedData) {
-          return { data: cachedData };
+          return cachedData;
         }
 
         const { data } = await this.$axios.$get(`events/${this.type}`, {
@@ -58,13 +58,9 @@
           event.url   = `/events/${event.id}-${slug(event.name)}`
         });
 
-        cachedData = data;
-
-        return { data };
+        return cachedData = data;
       }
     },
-
-    methods: { format }
 
   };
 </script>
