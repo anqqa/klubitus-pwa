@@ -29,15 +29,15 @@ module.exports = {
   router: {
     extendRoutes (routes, resolve) {
       routes.push({
-        name:      'events-year-week',
+        name:      'events-week',
         path:      '/events/:year/week/:week',
         component: resolve(__dirname, 'pages/events/index.vue'),
       });
       routes.push({
-        name:      'events-year-month-day',
+        name:      'events-date',
         path:      '/events/:year/:month/:day?',
         component: resolve(__dirname, 'pages/events/index.vue'),
-      })
+      });
     },
   },
 
@@ -81,6 +81,29 @@ module.exports = {
           },
         }]],
       ]
+    }],
+
+    ['nuxt-i18n', {
+      defaultLocale:         'en',
+      locales:               [
+        { code: 'en', iso: 'en-US', langFile: 'en-US.js', name: 'English' },
+        { code: 'fi', iso: 'fi-FI', langFile: 'fi-FI.js', name: 'suomi' },
+      ],
+      noPrefixDefaultLocale: false,
+      redirectRootToLocale:  'en',
+      routes:                {
+        'events/index': { fi: '/tapahtumat' },
+        'events/_id': { fi: '/tapahtumat/:id' },
+        'events-date': { fi: '/tapahtumat/:year/:month/:day?' },
+        'events-week': { fi: '/tapahtumat/:year/viikko/:week' },
+
+        'login': { fi: '/kirjaudu' },
+        'password': { fi: '/salasana' },
+        'register': { fi: '/liity' },
+      },
+      vueI18n:               {
+        fallbackLocale: 'en',
+      },
     }],
   ],
 

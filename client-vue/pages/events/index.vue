@@ -6,11 +6,11 @@
 
       <v-flex xs12 md9>
         <v-flex text-xs-center xs12>
-          <v-btn :to="pagination.previous.url" small nuxt>
+          <v-btn :to="localePath(pagination.previous.url)" small nuxt>
             &laquo; {{ pagination.previous.title }}
           </v-btn>
           &sdot;
-          <v-btn :to="pagination.next.url" small nuxt>
+          <v-btn :to="localePath(pagination.next.url)" small nuxt>
             {{ pagination.next.title }} &raquo;
           </v-btn>
         </v-flex>
@@ -27,22 +27,21 @@
 
             <v-flex sm10 xs12>
               <h3 class="subheading">
-                <nuxt-link :to="event.url">{{ event.name }}</nuxt-link>
+                <nuxt-link :to="localePath(event.url)">{{ event.name }}</nuxt-link>
               </h3>
-              <span>
-                {{ event.hours }}
-                &sdot; {{ event.venue_name }}, {{ event.city_name }}
-              </span>
+              <span>{{ event.venue_name }}, {{ event.city_name }}</span>
+              &sdot;
+              <span class="text--secondary">{{ event.hours }}</span>
             </v-flex>
           </v-layout>
         </v-flex>
 
         <v-flex text-xs-center xs12>
-          <v-btn :to="pagination.previous.url" small nuxt>
+          <v-btn :to="localePath(pagination.previous.url)" small nuxt>
             &laquo; {{ pagination.previous.title }}
           </v-btn>
           &sdot;
-          <v-btn :to="pagination.next.url" small nuxt>
+          <v-btn :to="localePath(pagination.next.url)" small nuxt>
             {{ pagination.next.title }} &raquo;
           </v-btn>
         </v-flex>
@@ -50,7 +49,7 @@
 
       <v-flex xs12 md3>
         <keep-alive>
-          <EventList title="Latest events" type="latest" />
+          <EventList title="New events" type="latest" />
         </keep-alive>
       </v-flex>
 
@@ -64,11 +63,11 @@
   import addMonths from 'date-fns/add_months';
   import endOfMonth from 'date-fns/end_of_month';
   import format from 'date-fns/format';
+  import getISOWeek from 'date-fns/get_iso_week';
   import setISOWeek from 'date-fns/set_iso_week';
   import startOfISOWeek from 'date-fns/start_of_iso_week';
-  import VDivider from 'vuetify/es5/components/VDivider';
 
-  import { hours, slug } from '../../utils/text';
+  import { hours, pad, slug } from '../../utils/text';
   import EventList from '../../components/event-list';
 
 
@@ -86,9 +85,23 @@
         nextDate     = addDays(from, 1);
 
         pagination.previous.title = 'Previous day';
-        pagination.previous.url   = `/events/${format(previousDate, 'YYYY/MM/DD')}`;
+        pagination.previous.url   = {
+          name:   'events-date',
+          params: {
+            year:  previousDate.getFullYear(),
+            month: pad(previousDate.getMonth() + 1, 2),
+            day:   pad(previousDate.getDate(), 2),
+          }
+        };
         pagination.next.title     = 'Next day';
-        pagination.next.url       = `/events/${format(nextDate, 'YYYY/MM/DD')}`;
+        pagination.next.url       = {
+          name:   'events-date',
+          params: {
+            year:  nextDate.getFullYear(),
+            month: pad(nextDate.getMonth() + 1, 2),
+            day:   pad(nextDate.getDate(), 2),
+          }
+        };
         break;
 
       case 'week':
@@ -96,9 +109,21 @@
         nextDate     = addDays(from, 7);
 
         pagination.previous.title = 'Previous week';
-        pagination.previous.url   = `/events/${format(previousDate, 'YYYY/[week]/WW')}`;
+        pagination.previous.url   = {
+          name:   'events-week',
+          params: {
+            year: previousDate.getFullYear(),
+            week: pad(getISOWeek(previousDate), 2),
+          }
+        };
         pagination.next.title     = 'Next week';
-        pagination.next.url       = `/events/${format(nextDate, 'YYYY/[week]/WW')}`;
+        pagination.next.url       = {
+          name:   'events-week',
+          params: {
+            year: nextDate.getFullYear(),
+            week: pad(getISOWeek(nextDate), 2),
+          }
+        };
         break;
 
       case 'month':
@@ -106,9 +131,21 @@
         nextDate     = addMonths(from, 1);
 
         pagination.previous.title = 'Previous month';
-        pagination.previous.url   = `/events/${format(previousDate, 'YYYY/MM')}`;
+        pagination.previous.url   = {
+          name:   'events-date',
+          params: {
+            year:  previousDate.getFullYear(),
+            month: pad(previousDate.getMonth() + 1, 2),
+          }
+        };
         pagination.next.title     = 'Next month';
-        pagination.next.url       = `/events/${format(nextDate, 'YYYY/MM')}`;
+        pagination.next.url       = {
+          name:   'events-date',
+          params: {
+            year:  nextDate.getFullYear(),
+            month: pad(nextDate.getMonth() + 1, 2),
+          }
+        };
         break;
 
     }
@@ -189,7 +226,7 @@
       events.push({
         ...event,
         hours: hours(event.begins_at, event.ends_at),
-        url:   `/events/${event.id}-${slug(event.name)}`,
+        url:   { name: 'events-id', params: { id: `${event.id}-${slug(event.name)}` }},
       });
     });
 
@@ -216,7 +253,7 @@
       return { days, pagination, title };
     },
 
-    components: { EventList, VDivider },
+    components: { EventList },
 
     data() {},
 

@@ -6,6 +6,17 @@ export const hours = (from, to) => {
 };
 
 
+export const pad = (number, size) => {
+  let padded = String(number);
+
+  while (padded.length < size) {
+    padded = '0' + padded;
+  }
+
+  return padded;
+};
+
+
 export const slug = text => {
   return text.toString().toLowerCase()
     .replace(/[àáäâã]/g, 'a')  // Transliterate

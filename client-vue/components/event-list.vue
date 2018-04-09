@@ -55,7 +55,7 @@
 
         data.forEach(event => {
           event.stamp = format(event.begins_at, 'DD MMM');
-          event.url   = `/events/${event.id}-${slug(event.name)}`
+          event.url   = this.localePath({ name: 'events-id', params: { id: `${event.id}-${slug(event.name)}` }});
         });
 
         return cachedData = data;

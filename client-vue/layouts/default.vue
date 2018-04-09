@@ -14,7 +14,8 @@
           v-for="(item, index) in items"
           :key="index"
           :to="item.to"
-          router
+          :exact="item.exact"
+          nuxt
         >
           <v-list-tile-action>
             <v-icon v-html="item.icon" />
@@ -24,6 +25,15 @@
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
+
+      <v-divider />
+
+      <v-btn v-for="locale in $i18n.locales"
+             :key="locale.code"
+             :to="switchLocalePath(locale.code)"
+             flat
+             nuxt
+             small>{{ locale.name }}</v-btn>
     </v-navigation-drawer>
 
     <v-toolbar app clipped-left dense flat>
@@ -69,10 +79,10 @@
       return {
         drawer: true,
         items: [
-          { icon: 'fas fa-home fa-fw', title: 'Home', to: '/' },
-          { icon: 'far fa-calendar-alt fa-fw', title: 'Events', to: '/events' },
-          { icon: 'far fa-comments fa-fw', title: 'Forum', to: '/forum' },
-          { icon: 'far fa-images fa-fw', title: 'Galleries', to: '/galleries' }
+          { icon: 'fas fa-home fa-fw', title: 'Home', to: this.localePath('index'), exact: true },
+          { icon: 'far fa-calendar-alt fa-fw', title: 'Events', to: this.localePath('events') },
+          { icon: 'far fa-comments fa-fw', title: 'Forum', to: this.localePath('forum') },
+          { icon: 'far fa-images fa-fw', title: 'Galleries', to: this.localePath('galleries') }
         ],
         title: 'Klubitus'
       }
