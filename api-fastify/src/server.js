@@ -27,12 +27,17 @@ module.exports = async (fastify, options) => {
     connection: 'postgres://klubitus:klubitus@localhost:5432/klubitus',
     pool:       {
       afterCreate: (connection, done) => {
+        const { Model } = require('objection');
+
+        Model.knex(fastify.knex);
+
         connection.query('SET timezone = "Europe/Helsinki";');
 
         done();
       }
     }
   });
+
 
   // Register Swagger
   fastify.register(require('fastify-swagger'), swaggerOptions);
@@ -41,5 +46,6 @@ module.exports = async (fastify, options) => {
   fastify.options('/*', (request, reply) => {});
   fastify.register(require('./auth/plugin'));
   fastify.register(require('./events/routes'));
+  fastify.register(require('./forum/routes'));
 
 };

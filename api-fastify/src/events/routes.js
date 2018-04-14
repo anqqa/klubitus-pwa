@@ -2,6 +2,7 @@
 
 const { format, parse } = require('date-fns');
 
+const { Event } = require('../models/event');
 const {
   getEvent:  getEventSchema,
   getEvents: getEventsSchema,
@@ -30,9 +31,8 @@ module.exports = async (fastify, options) => {
     const { from, to, limit, offset } = request.query;
 
     let order = 'asc';
-    let query = fastify.knex
-      .column('id', 'name', 'begins_at', 'ends_at', 'city_name', 'venue_name', 'flyer_front_url')
-      .from('events');
+    let query = Event.query()
+      .column('id', 'name', 'begins_at', 'ends_at', 'city_name', 'venue_name', 'flyer_front_url');
 
     if (from && to) {
       const from_date = parse(from);
@@ -42,7 +42,7 @@ module.exports = async (fastify, options) => {
         .whereRaw('ends_at >= ?', [format(from_date, 'YYYY-MM-DD [09:59]')]);
 
       if (limit) {
-        query = query.limit(limit);
+        query = query.limit(Math.max(1, Math.min(parseInt(limit), 500)));
       }
     }
     else if (to) {
@@ -50,13 +50,13 @@ module.exports = async (fastify, options) => {
 
       order = 'desc';
       query = query.whereRaw('begins_at::DATE <= ?', [format(to_date, 'YYYY-MM-DD')])
-        .limit(limit || 25);
+        .limit(Math.max(1, Math.min(parseInt(limit || 25), 500)));
     }
     else {
       const from_date = from ? parse(from) : Date.now();
 
       query = query.whereRaw('begins_at::DATE >= ?', [format(from_date, 'YYYY-MM-DD')])
-        .limit(limit || 25);
+        .limit(Math.max(1, Math.min(parseInt(limit || 25), 500)));
     }
 
     if (offset) {
@@ -76,7 +76,7 @@ module.exports = async (fastify, options) => {
     const { type }  = request.params;
     const { limit } = request.query;
 
-    let query = fastify.knex('events')
+    let query = Event.query()
       .column('id', 'name', 'begins_at')
       .limit(Math.max(1, Math.min(parseInt(limit), 100)));
 

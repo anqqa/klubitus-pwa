@@ -1,21 +1,4 @@
-'use strict';
-
-const _event = {
-  type: 'object',
-  properties: {
-    begins_at:       { type: 'string', description: 'DateTime string' },
-    city_name:       { type: 'string' },
-    ends_at:         { type: 'string', description: 'DateTime string' },
-    facebook_id:     { type: 'integer' },
-    flyer_front_url: { type: 'string' },
-    id:              { type: 'integer' },
-    info:            { type: 'string' },
-    name:            { type: 'string' },
-    venue_name:      { type: 'string' },
-  },
-  require: ['begins_at', 'ends_at', 'id', 'name']
-};
-
+const { Event } = require('../models/event');
 
 const getEvent = {
   schema: {
@@ -30,7 +13,7 @@ const getEvent = {
       200: {
         type:       'object',
         properties: {
-          data: _event
+          data: Event.getJsonSchema(),
         }
       }
     }
@@ -50,10 +33,7 @@ const getEvents = {
       200: {
         type:       'object',
         properties: {
-          data: {
-            type:  'array',
-            items: _event,
-          }
+          data: { type: 'array', items: Event.jsonSchema },
         }
       }
     }
