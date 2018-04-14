@@ -29,6 +29,7 @@
     "fastify-swagger": "^0.4.0",
     "http-errors": "^1.6.2",
     "make-promises-safe": "^1.1.0",
+    "objection": "^1.1.5",
     "pg": "^7.4.1"
   },
   "devDependencies": {
