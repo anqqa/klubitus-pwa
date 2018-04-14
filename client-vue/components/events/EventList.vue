@@ -25,7 +25,7 @@
   import format from 'date-fns/format';
   import VSubheader from 'vuetify/es5/components/VSubheader'
 
-  import { slug } from '../utils/text';
+  import { slug } from '../../utils/text';
 
 
   export const EventListType = {

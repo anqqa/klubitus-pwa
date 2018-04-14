@@ -25,10 +25,12 @@ module.exports = async (fastify, options) => {
   fastify.register(require('fastify-knexjs'), {
     client:     'pg',
     connection: 'postgres://klubitus:klubitus@localhost:5432/klubitus',
+    debug:      true,
     pool:       {
       afterCreate: (connection, done) => {
         const { Model } = require('objection');
 
+        // Hook Knex to Objection
         Model.knex(fastify.knex);
 
         connection.query('SET timezone = "Europe/Helsinki";');
