@@ -29,9 +29,9 @@
               <h3 class="subheading">
                 <nuxt-link :to="localePath(event.url)">{{ event.name }}</nuxt-link>
               </h3>
-              <span>{{ event.venue_name }}, {{ event.city_name }}</span>
-              &sdot;
               <span class="text--secondary">{{ event.hours }}</span>
+              &sdot;
+              <span>{{ event.venue_name }}, {{ event.city_name }}</span>
             </v-flex>
           </v-layout>
         </v-flex>
@@ -68,7 +68,7 @@
   import startOfISOWeek from 'date-fns/start_of_iso_week';
 
   import { hours, pad, slug } from '../../utils/text';
-  import EventList from '../../components/event-list';
+  import EventList from '../../components/events/EventList';
 
 
   const buildPagination = (from, to, range) => {
@@ -255,13 +255,9 @@
 
     components: { EventList },
 
-    data() {},
-
     head: {
       title: 'Events'
     },
-
-    methods: {},
 
     validate({ params }) {
       const year  = !params.year || /^\d{4}$/.test(params.year);
