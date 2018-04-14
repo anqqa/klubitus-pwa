@@ -1,27 +1,27 @@
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
+
   /**
    * Headers of the page
    */
   head: {
     title: 'Klubitus',
-    meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'Clubbers guide to... Finland' }
-    ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700' },
       // { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' },
     ],
   },
+  meta: {
+    description: 'Clubbers guide to... Finland',
+  },
   css: ['~/assets/style/app.styl'],
+
   /**
    * Customize the progress bar color
     */
-  loading: { color: '#3B8070' },
+  loading: { color: '#E91E63' },
 
   /**
    * Custom routes
@@ -83,6 +83,8 @@ module.exports = {
       ]
     }],
 
+    ['@nuxtjs/pwa'],
+
     ['nuxt-i18n', {
       defaultLocale:         'en',
       locales:               [
@@ -108,6 +110,15 @@ module.exports = {
   ],
 
   plugins: ['~/plugins/axios', '~/plugins/fontawesome.js', '~/plugins/vuetify.js', '~/plugins/vue-plugins'],
+
+  /**
+   * PWA
+   */
+  manifest: {
+    background_color: '#212121',
+    name:             'Klubitus',
+    short_name:       'Klubitus',
+  },
 
   /**
    * Build configuration
