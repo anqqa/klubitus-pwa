@@ -11,4 +11,5 @@ fontawesome.library.add(
   require('@fortawesome/fontawesome-free-solid/faKey'),
   require('@fortawesome/fontawesome-free-solid/faSearch'),
   require('@fortawesome/fontawesome-free-regular/faUser'),
+  require('@fortawesome/fontawesome-free-solid/faUserCircle'),
 );

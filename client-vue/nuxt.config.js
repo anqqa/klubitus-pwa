@@ -95,11 +95,13 @@ module.exports = {
       redirectRootToLocale:  'en',
       routes:                {
         'events/index': { fi: '/tapahtumat' },
-        'events/_id': { fi: '/tapahtumat/:id' },
-        'events-date': { fi: '/tapahtumat/:year/:month/:day?' },
-        'events-week': { fi: '/tapahtumat/:year/viikko/:week' },
+        'events/_id':   { fi: '/tapahtumat/:id' },
+        'events-date':  { fi: '/tapahtumat/:year/:month/:day?' },
+        'events-week':  { fi: '/tapahtumat/:year/viikko/:week' },
 
-        'login': { fi: '/kirjaudu' },
+        'forum/topic/_id': { fi: '/forum/aihe/:id' },
+
+        'login':    { fi: '/kirjaudu' },
         'password': { fi: '/salasana' },
         'register': { fi: '/liity' },
       },
