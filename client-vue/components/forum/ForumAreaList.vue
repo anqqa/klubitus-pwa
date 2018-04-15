@@ -3,14 +3,16 @@
   <v-list subheader class="transparent">
 
     <template v-for="area in areaList">
-      <v-subheader v-if="!area.nest_depth" :key="area.id" class="spread">
-        <span>{{ area.name }}</span> <v-icon small color="secondary">far fa-comments</v-icon>
+      <v-subheader v-if="!area.nest_depth" :key="area.id" class="secondary spread">
+        <span>{{ area.name }}</span> <v-icon class="subheader" small>far fa-comments</v-icon>
       </v-subheader>
 
       <v-list-tile v-else :key="area.id" :to="area.url">
         <v-list-tile-content>
           <v-list-tile-title v-html="area.name" />
-          <v-list-tile-sub-title v-html="area.description" />
+          <v-list-tile-sub-title>
+            <span class="text--tertiary" v-html="area.description" />
+          </v-list-tile-sub-title>
         </v-list-tile-content>
         <v-list-tile-action>
           <v-list-tile-action-text v-text="area.topicCount" />

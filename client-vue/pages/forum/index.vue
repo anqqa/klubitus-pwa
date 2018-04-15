@@ -1,15 +1,21 @@
 <template>
 
-  <v-container grid-list-md>
+  <v-container grid-list-lg>
     <v-layout row wrap>
 
       <v-flex tag="h1" class="headline" xs12>Forum</v-flex>
 
-      <v-flex xs6 order-lg2>
+      <v-flex xs12 md6 order-lg2>
+        <h2 class="subheading">Latest</h2>
+        <v-divider />
+
         <ForumTopicList :topics="topics" />
       </v-flex>
 
-      <v-flex xs6>
+      <v-flex xs12 md6>
+        <h2 class="subheading">Areas</h2>
+        <v-divider />
+
         <ForumAreaList :areas="areas" />
       </v-flex>
 
@@ -28,7 +34,7 @@
     async asyncData({ app }) {
       const [{ data: areas }, { data: topics }] = await Promise.all([
         app.$axios.$get('forum/areas'),
-        app.$axios.$get('forum/topics?limit=20'),
+        app.$axios.$get('forum/topics?limit=25'),
       ]);
 
       return { areas, topics }
