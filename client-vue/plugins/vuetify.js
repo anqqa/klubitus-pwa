@@ -3,6 +3,7 @@ import {
   Vuetify,
   VApp,
   VBtn,
+  VBtnToggle,
   VCard,
   VDivider,
   VFooter,
@@ -19,6 +20,7 @@ Vue.use(Vuetify, {
   components: {
     VApp,
     VBtn,
+    VBtnToggle,
     VCard,
     VDivider,
     VFooter,

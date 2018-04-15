@@ -1,15 +1,15 @@
 <template>
-  <v-app dark>
+  <v-app :dark="theme === 'dark'">
 
     <v-navigation-drawer
+      :class="theme === 'dark' ? 'grey darken-4' : ''"
       :value="sidebar"
       app
-      class="grey darken-4"
       clipped
       fixed
       width="220"
     >
-      <v-list class="grey darken-4" dense>
+      <v-list class="transparent" dense>
         <v-list-tile
           v-for="(item, index) in items"
           :key="index"
@@ -25,15 +25,6 @@
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
-
-      <v-divider />
-
-      <v-btn v-for="locale in $i18n.locales"
-             :key="locale.code"
-             :to="switchLocalePath(locale.code)"
-             flat
-             nuxt
-             small>{{ locale.name }}</v-btn>
     </v-navigation-drawer>
 
     <v-toolbar app clipped-left dense flat>
@@ -62,8 +53,27 @@
       <nuxt />
     </v-content>
 
-    <v-footer app inset>
-      <span class="pa-3"> &copy; 2000 &ndash; 2018 Klubitus</span>
+    <v-footer app inset class="pr-1">
+      <span class="ml-3 hidden-xs-only"> &copy; 2000 &ndash; 2018 Klubitus</span>
+
+      <v-spacer />
+
+      <v-icon small class="text--secondary mr-2">fas fa-language</v-icon>
+      <v-btn-toggle v-model="locale">
+        <v-btn v-for="locale in $i18n.locales"
+               :key="locale.code"
+               :to="switchLocalePath(locale.code)"
+               :value="locale.code"
+               flat
+               nuxt
+               small>{{ locale.name }}</v-btn>
+      </v-btn-toggle>
+
+      <v-icon small class="text--secondary ml-3 mr-2">fas fa-adjust</v-icon>
+      <v-btn-toggle v-model="theme">
+        <v-btn flat small value="dark">Dark</v-btn>
+        <v-btn flat small value="light">Light</v-btn>
+      </v-btn-toggle>
     </v-footer>
 
   </v-app>
@@ -75,7 +85,7 @@
 
   export default {
 
-    data () {
+    data() {
       return {
         drawer: true,
         items: [
@@ -89,7 +99,15 @@
     },
 
     computed: {
-      sidebar () { return this.$store.state.ui.sidebar }
+      locale: {
+        get() { return this.$i18n.locale; },
+        set() {},
+      },
+      sidebar() { return this.$store.state.ui.sidebar },
+      theme: {
+        get() { return this.$store.state.ui.theme; },
+        set(theme) { this.toggleTheme(theme); },
+      },
     },
 
     methods: {
@@ -103,7 +121,8 @@
         }
       },
       ...mapMutations({
-        toggleSidebar: 'ui/toggleSidebar'
+        toggleSidebar: 'ui/toggleSidebar',
+        toggleTheme:   'ui/toggleTheme',
       })
     }
 
