@@ -34,7 +34,7 @@
     async asyncData({ app }) {
       const [{ data: areas }, { data: topics }] = await Promise.all([
         app.$axios.$get('forum/areas'),
-        app.$axios.$get('forum/topics?limit=25'),
+        app.$axios.$get('forum/topics', { params: { limit: 20 } }),
       ]);
 
       return { areas, topics }

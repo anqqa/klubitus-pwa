@@ -41,8 +41,14 @@ a:hover
 .spread
   justify-content: space-between
 
-.text--tertiary
+.subheader--background
+  .theme--dark &
+    background-color: $colors.grey.darken-3
   .theme--light &
-    color: $colors.grey.lighten-1 !important
+    background-color: $colors.grey.lighten-3
+
+.text--tertiary
   .theme--dark &
     color: $colors.grey.darken-1 !important
+  .theme--light &
+    color: $colors.grey.lighten-1 !important
