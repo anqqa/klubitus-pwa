@@ -6,15 +6,17 @@
       <v-list-tile :key="topic.id" :to="topic.url" avatar>
 
         <v-list-tile-avatar class="hidden-xs-only">
-          <img v-if="topic.author.avatar_url" :src="topic.author.avatar_url" alt="Avatar">
+          <img v-if="topic.author && topic.author.avatar_url" :src="topic.author.avatar_url">
           <v-icon v-else color="grey">fas fa-user-circle</v-icon>
         </v-list-tile-avatar>
 
         <v-list-tile-content>
           <v-list-tile-title v-html="topic.name" />
           <v-list-tile-sub-title>
-            <nuxt-link to="/">{{ topic.author.username }}</nuxt-link>
-            &sdot; <span class="text--tertiary">{{ topic.forum_area.name }}</span>
+            <nuxt-link to="/">{{ topic.author ? topic.author.username : topic.author_name }}</nuxt-link>
+            <span v-if="topic.forum_area">
+              &sdot; <span class="text--tertiary">{{ topic.forum_area.name }}</span>
+            </span>
           </v-list-tile-sub-title>
         </v-list-tile-content>
 
@@ -44,6 +46,7 @@
   export default {
 
     props: {
+      area:   { default: false, type: Boolean },
       topics: { default: () => [], type: Array },
     },
 
