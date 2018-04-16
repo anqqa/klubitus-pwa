@@ -10,11 +10,11 @@ class User extends Model {
 
   static get jsonSchema() {
     return {
-      type:       'object',
-      require:    ['id', 'username'],
+      type:    'object',
+      require: ['id', 'username'],
 
       properties: {
-        avatar_url: { type: 'string' },
+        avatar_url: { type: ['string', 'null'] },
         id:         { type: 'integer' },
         username:   { type: 'string' },
       },

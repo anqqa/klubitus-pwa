@@ -2,7 +2,7 @@
 
 const { format, parse } = require('date-fns');
 
-const { Event } = require('../models/event');
+const { Event } = require('../models/Event');
 const {
   getEvent:  getEventSchema,
   getEvents: getEventsSchema,

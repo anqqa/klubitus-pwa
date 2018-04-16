@@ -1,7 +1,12 @@
-const { ForumArea } = require('../models/forumarea');
-const { ForumTopic } = require('../models/forumtopic');
-const { User } = require('../models/user');
+const { ForumArea } = require('../models/ForumArea');
+const { ForumTopic } = require('../models/ForumTopic');
+const { User } = require('../models/User');
 
+
+const areaNestedProperties = {
+  last_topic: { anyOf: [{ type: 'null' }, ForumTopic.jsonSchema]},
+  // last_topic: ForumTopic.jsonSchema,
+};
 
 const getAreas = {
   schema: {
@@ -11,7 +16,10 @@ const getAreas = {
         properties: {
           data: {
             type:  'array',
-            items: ForumArea.jsonSchema,
+            items: {
+              type:       'object',
+              properties: Object.assign({}, ForumArea.jsonSchema.properties, areaNestedProperties),
+            },
           },
         },
       },
@@ -21,13 +29,17 @@ const getAreas = {
 
 
 const topicNestedProperties = {
-  author:      User.jsonSchema,
+  author:      { anyOf: [{ type: 'null' }, User.jsonSchema]},
   forum_area:  ForumArea.jsonSchema,
-  last_poster: User.jsonSchema,
+  // last_poster: { anyOf: [User.jsonSchema, { type: 'null' }]},
 };
 
 const getTopics = {
   schema: {
+    querystring: {
+      area:  { type: 'integer' },
+      limit: { type: 'integer' },
+    },
     response: {
       200: {
         type:       'object',
@@ -49,5 +61,4 @@ const getTopics = {
 module.exports = {
   getAreas,
   getTopics,
-  topicNestedProperties,
 };

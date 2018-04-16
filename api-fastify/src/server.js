@@ -1,6 +1,6 @@
-'use strict';
-
 require('make-promises-safe');
+
+const { objectDateToStr } = require('./utils/types');
 
 
 const swaggerOptions = {
@@ -22,21 +22,23 @@ module.exports = async (fastify, options) => {
   fastify.use(require('cors')());
 
   // Register database connection
-  fastify.register(require('fastify-knexjs'), {
+  fastify.register(require('./db'), {
     client:     'pg',
     connection: 'postgres://klubitus:klubitus@localhost:5432/klubitus',
     debug:      true,
     pool:       {
       afterCreate: (connection, done) => {
-        const { Model } = require('objection');
-
-        // Hook Knex to Objection
-        Model.knex(fastify.knex);
-
         connection.query('SET timezone = "Europe/Helsinki";');
 
         done();
       }
+    },
+    postProcessResponse: (result, queryContext) => {
+
+      // Objection's relations containing Dates fail serializer
+      objectDateToStr(result);
+
+      return result;
     }
   });
 

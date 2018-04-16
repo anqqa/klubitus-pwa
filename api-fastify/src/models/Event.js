@@ -15,14 +15,14 @@ class Event extends Model {
 
       properties: {
         begins_at:       { type: 'string', description: 'DateTime string' },
-        city_name:       { type: 'string' },
+        city_name:       { type: ['string', 'null'] },
         ends_at:         { type: 'string', description: 'DateTime string' },
-        facebook_id:     { type: 'integer' },
-        flyer_front_url: { type: 'string' },
+        facebook_id:     { type: ['integer', 'null'] },
+        flyer_front_url: { type: ['string', 'null'] },
         id:              { type: 'integer' },
-        info:            { type: 'string' },
+        info:            { type: ['string', 'null'] },
         name:            { type: 'string', minLength: 1 },
-        venue_name:      { type: 'string' },
+        venue_name:      { type: ['string', 'null'] },
       },
     };
   }

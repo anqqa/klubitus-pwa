@@ -14,24 +14,26 @@ class ForumTopic extends Model {
       require: ['id', 'name'],
 
       properties: {
-        created_at:    { type: 'string', description: 'DateTime string' },
-        first_post_id: { type: 'number' },
+        author_name:   { type: 'string' },
+        // created_at:    { type: 'string', description: 'DateTime string' },
+        first_post_id: { type: 'integer' },
+        forum_area_id: { type: 'integer' },
         id:            { type: 'integer' },
-        is_locked:     { type: 'boolean' },
-        is_sinking:    { type: 'boolean' },
-        is_sticky:     { type: 'boolean' },
+        is_locked:     { type: ['boolean', 'null'] },
+        is_sinking:    { type: ['boolean', 'null'] },
+        is_sticky:     { type: ['boolean', 'null'] },
         last_post_at:  { type: 'string', description: 'DateTime string' },
-        last_post_id:  { type: 'number' },
+        last_post_id:  { type: 'integer' },
         name:          { type: 'string' },
-        post_count:    { type: 'number' },
+        post_count:    { type: 'integer' },
       },
     };
   }
 
 
   static get relationMappings() {
-    const { ForumArea } = require('./forumarea');
-    const { User } = require('./user');
+    const { ForumArea } = require('./ForumArea');
+    const { User } = require('./User');
 
     return {
       author: {

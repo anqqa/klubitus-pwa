@@ -1,4 +1,4 @@
-const { Event } = require('../models/event');
+const { Event } = require('../models/Event');
 
 const getEvent = {
   schema: {
