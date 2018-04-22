@@ -2,6 +2,8 @@ import fontawesome from '@fortawesome/fontawesome';
 
 fontawesome.library.add(
   require('@fortawesome/fontawesome-free-solid/faAdjust'),
+  require('@fortawesome/fontawesome-free-solid/faAngleLeft'),
+  require('@fortawesome/fontawesome-free-solid/faAngleRight'),
   require('@fortawesome/fontawesome-free-solid/faAt'),
   require('@fortawesome/fontawesome-free-solid/faBars'),
   require('@fortawesome/fontawesome-free-regular/faCalendarAlt'),

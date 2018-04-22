@@ -1,8 +1,33 @@
 // Import Vuetify styling
 @require '~vuetify/src/stylus/app.styl'
 
+// Transitions
 .page
   @extend .fade-transition
+
+//.transition-container
+//  position: relative
+//
+.transitioned
+  backface-visibility: hidden
+
+.slide-left-leave-active, .slide-right-leave-active
+  position: absolute
+
+  .list__tile__action
+    opacity: 0
+
+.slide-left-enter-active, .slide-left-leave-active,
+.slide-right-enter-active, .slide-right-leave-active
+  transition: all 0.25s cubic-bezier(0.55, 0, 0.1, 1) !important
+
+.slide-left-enter, .slide-right-leave-to
+  opacity: 0
+  transform: translateX(30px)
+
+.slide-left-leave-to, .slide-right-enter
+  opacity: 0
+  transform: translateX(-30px)
 
 
 // Custom
@@ -10,6 +35,9 @@ a, a.btn:hover, a.list__tile:hover
   text-decoration: none
 a:hover
   text-decoration: underline
+
+footer.footer
+  position: relative
 
 .list__tile--active
   border-right: 3px solid $material-theme.primary
