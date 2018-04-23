@@ -17,7 +17,7 @@
                         @input="onPageChange" />
         </div>
 
-        <ForumTopicList :topics="topics" area />
+        <nuxt-child :key="areaId" />
 
         <div class="text-xs-center">
           <v-pagination v-if="pages > 1"
@@ -42,31 +42,25 @@
 <script>
   import VPagination from 'vuetify/es5/components/VPagination';
 
-  import ForumAreaList from '../../components/forum/ForumAreaList';
-  import ForumTopicList from '../../components/forum/ForumTopicList';
-
-  const PAGE_SIZE = 20;
+  import ForumAreaList from '~/components/forum/ForumAreaList';
 
   export default {
     async asyncData({ app, params }) {
-      const areaId = parseInt(params.id);
+      const areaId = parseInt(params.area);
       const page   = parseInt(params.page) || 1;
 
-      const [{ data: areas }, { data: topics }] = await Promise.all([
-        app.$axios.$get('forum/areas'),
-        app.$axios.$get('forum/topics', { params: { area: areaId, limit: PAGE_SIZE, page } }),
-      ]);
+      const { data: areas } = await app.$axios.$get('forum/areas');
 
       let area;
 
       areas.forEach(_area => { if (_area.id === areaId) area = _area; });
 
-      const pages = Math.ceil(area.topic_count / PAGE_SIZE);
+      const pages = Math.ceil(area.topic_count / 20);
 
-      return { area, areaId, areas, page, pages, topics };
+      return { area, areaId, areas, page, pages };
     },
 
-    components: { ForumTopicList, ForumAreaList, VPagination },
+    components: { ForumAreaList, VPagination },
 
     head: {
       title: 'Forum'
@@ -85,7 +79,7 @@
 
         this.$router.push(this.localePath({ name: 'forum-area-page', params }));
 
-        // document.querySelector('#top-navigation').scrollIntoView({ behavior: 'smooth' });
+        document.querySelector('#top-navigation').scrollIntoView({ behavior: 'smooth' });
       }
     },
 

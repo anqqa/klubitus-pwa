@@ -56,7 +56,7 @@
             ...area,
             ago:        area.last_topic ? fuzzyTimeDistance(new Date(area.last_topic.last_post_at)) : null,
             topicCount: formatter.format(area.topic_count),
-            url:        this.localePath({ name: 'forum-id', params: { id: `${area.id}-${slug(area.name)}` }}),
+            url:        this.localePath({ name: 'forum-area', params: { area: `${area.id}-${slug(area.name)}` }}),
           })
         });
 
