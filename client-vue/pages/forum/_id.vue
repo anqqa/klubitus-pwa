@@ -48,9 +48,9 @@
   const PAGE_SIZE = 20;
 
   export default {
-    async asyncData({ app, params, query }) {
+    async asyncData({ app, params }) {
       const areaId = parseInt(params.id);
-      const page   = +query.page || 1;
+      const page   = parseInt(params.page) || 1;
 
       const [{ data: areas }, { data: topics }] = await Promise.all([
         app.$axios.$get('forum/areas'),
@@ -68,48 +68,29 @@
 
     components: { ForumTopicList, ForumAreaList, VPagination },
 
-    data() { return { transitionName: 'fade' }; },
-
     head: {
       title: 'Forum'
     },
 
-    watch: {
-      '$route.query.page': async function (page) {
-        this.$nuxt.$loading.start();
-
-        const { data } = await this.$axios.get('forum/topics', {
-          params: { area: this.areaId, limit: PAGE_SIZE, page }
-        });
-
-        this.topics = data.data;
-
-        this.$nuxt.$loading.finish();
-      }
-    },
-
     methods: {
       onPageChange(page) {
-        const { query } = this.$route;
+        const { params } = this.$route;
 
         if (page > 1) {
-          query.page = page;
+          params.page = page;
         }
-        else if (query.page) {
-          delete query.page;
+        else if (params.page) {
+          delete params.page;
         }
 
-        this.transitionName = page > this.prevPage ? 'slide-left' : 'slide-right';
-        this.prevPage       = page;
+        this.$router.push(this.localePath({ name: 'forum-area-page', params }));
 
-        this.$router.push({ query: { ...query }});
-
-        document.querySelector('#top-navigation').scrollIntoView({ behavior: 'smooth' });
+        // document.querySelector('#top-navigation').scrollIntoView({ behavior: 'smooth' });
       }
     },
 
-    validate({ query }) {
-      return !(query && query.page && +query.page < 1);
+    validate({ params }) {
+      return !(params && params.page && +params.page < 1);
     },
 
   };

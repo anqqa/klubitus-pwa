@@ -38,6 +38,12 @@ module.exports = {
         path:      '/events/:year/:month/:day?',
         component: resolve(__dirname, 'pages/events/index.vue'),
       });
+
+      routes.push({
+        name:      'forum-area-page',
+        path:      '/forum/:id/:page',
+        component: resolve(__dirname, 'pages/forum/_id.vue'),
+      });
     },
   },
 
