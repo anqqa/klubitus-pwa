@@ -6,9 +6,10 @@
       <v-flex tag="h1" class="headline" xs12 v-text="area.name" />
       <v-flex tag="h2" class="subheading" xs12 v-html="area.description" />
 
-      <v-flex xs12 md9 order-md2 class="transition-container">
+      <v-flex xs12 md9 order-md2>
         <div class="text-xs-center">
           <v-pagination v-if="pages > 1"
+                        id="top-navigation"
                         :length="pages"
                         v-model="page"
                         prev-icon="fas fa-angle-left"
@@ -16,9 +17,7 @@
                         @input="onPageChange" />
         </div>
 
-        <transition :name="transitionName">
-          <ForumTopicList :key="page" :topics="topics" area class="transitioned" />
-        </transition>
+        <ForumTopicList :topics="topics" area />
 
         <div class="text-xs-center">
           <v-pagination v-if="pages > 1"
@@ -104,6 +103,8 @@
         this.prevPage       = page;
 
         this.$router.push({ query: { ...query }});
+
+        document.querySelector('#top-navigation').scrollIntoView({ behavior: 'smooth' });
       }
     },
 
