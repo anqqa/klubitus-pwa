@@ -62,8 +62,36 @@
 
     components: { ForumAreaList, VPagination },
 
-    head: {
-      title: 'Forum'
+    head() {
+      const link  = [];
+      const page  = parseInt(this.page) || 1;
+      const pages = parseInt(this.pages);
+
+      if (pages > 1) {
+        const { params } = this.$route;
+
+        if (page > 1) {
+          if (page > 2) {
+            params.page = page - 1;
+          }
+          else {
+            delete params.page;
+          }
+
+          link.push({ rel: 'prev', href: this.localePath({ name: 'forum-area-page', params }) });
+        }
+
+        if (page < this.pages) {
+          params.page = page + 1;
+
+          link.push({ rel: 'next', href: this.localePath({ name: 'forum-area-page' , params }) });
+        }
+      }
+
+      return {
+        link,
+        title: this.area ? this.area.name : 'Forum',
+      };
     },
 
     methods: {
