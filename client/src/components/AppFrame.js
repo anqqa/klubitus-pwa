@@ -47,6 +47,20 @@ class AppFrame extends React.Component<ProvidedProps & StateProps & DispatchProp
   state = { drawerOpen: false };
 
 
+  componentDidMount() {
+
+    // Remove SSR CSS
+    const jssStyles = document.getElementById('jss-server-side');
+
+    console.log(jssStyles);
+
+    if (jssStyles && jssStyles.parentNode) {
+      jssStyles.parentNode.removeChild(jssStyles);
+    }
+
+  }
+
+
   componentWillReceiveProps(nextProps: ProvidedProps & StateProps) {
     if (!this.props.isAuthenticated && nextProps.isAuthenticated) {
 
