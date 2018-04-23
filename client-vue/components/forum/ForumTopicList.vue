@@ -6,7 +6,7 @@
       <v-list-tile :key="topic.id" :to="topic.url" avatar>
 
         <v-list-tile-avatar class="hidden-xs-only">
-          <img v-if="topic.author && topic.author.avatar_url" :src="topic.author.avatar_url">
+          <img v-if="topic.avatar" :src="topic.avatar">
           <v-icon v-else color="grey">fas fa-user-circle</v-icon>
         </v-list-tile-avatar>
 
@@ -39,6 +39,7 @@
 
 <script>
   import { fuzzyTimeDistance, slug } from '../../utils/text';
+  import { avatarUrl } from '../../utils/url';
 
 
   const formatter = new Intl.NumberFormat();
@@ -58,6 +59,7 @@
           topics.push({
             ...topic,
             ago:       fuzzyTimeDistance(new Date(topic.last_post_at)),
+            avatar:    topic.author && topic.author.avatar_url ? avatarUrl(topic.author.avatar_url) : null,
             postCount: formatter.format(topic.post_count),
             url:       this.localePath({ name: 'forum-topic-id', params: { id: `${topic.id}-${slug(topic.name)}` } }),
           })
