@@ -2,7 +2,6 @@
 
 const addDays    = require('date-fns/add_days');
 const crypto     = require('crypto');
-const httpErrors = require('http-errors');
 
 const { deprecatedMatch, hash, match } = require('./password');
 const {
@@ -26,7 +25,7 @@ const routes = async (fastify, options) => {
     if (!username || !password) {
       request.log.info('Auth: Username or password not given');
 
-      throw new httpErrors.Unauthorized('Bad credentials');
+      return reply.unauthorized('Bad credentials');
     }
 
     const user = await fastify.knex('users')
@@ -37,7 +36,7 @@ const routes = async (fastify, options) => {
     if (!user) {
       request.log.info('Auth: User not found');
 
-      throw new httpErrors.Unauthorized('Bad credentials');
+      return reply.unauthorized('Bad credentials');
     }
 
     // Migrate password if needed
@@ -45,13 +44,13 @@ const routes = async (fastify, options) => {
       if (!user.password_kohana) {
         request.log.warn('Auth: Password migration failed, old password not found');
 
-        throw new Error('Credentials error');
+        return reply.internalServerError('Credentials error');
       }
 
       if (!deprecatedMatch(password, user.password_kohana)) {
         request.log.info('Auth: Invalid password');
 
-        throw new httpErrors.Unauthorized('Bad credentials');
+        return reply.unauthorized('Bad credentials');
       }
 
 
@@ -63,7 +62,7 @@ const routes = async (fastify, options) => {
       if (!migrated) {
         request.log.warn('Auth: Password migration failed');
 
-        throw new Error('Credentials error');
+        return reply.internalServerError('Credentials error');
       }
 
       request.log.info('Auth: Password migrated');
@@ -71,7 +70,7 @@ const routes = async (fastify, options) => {
     else if (!match(password, user.password)) {
       request.log.info('Auth: Invalid password');
 
-      throw new httpErrors.Unauthorized('Bad credentials');
+      return reply.unauthorized('Bad credentials');
     }
 
     // Generate session token, valid for 30 days
@@ -86,7 +85,7 @@ const routes = async (fastify, options) => {
     if (!added) {
       request.log.warn('Auth: Creating a token failed');
 
-      throw new Error('Token error');
+      return reply.internalServerError('Token error');
     }
 
     // Sign a payload and return JWT
@@ -129,7 +128,7 @@ const routes = async (fastify, options) => {
    */
   const authMe = async (request, reply) => {
     if (!fastify.auth.isAuthenticated || !fastify.auth.userId) {
-      throw new httpErrors.Unauthorized();
+      return reply.unauthorized();
     }
 
     const user = await fastify.knex('users')
@@ -139,7 +138,7 @@ const routes = async (fastify, options) => {
     if (!user) {
       request.log.warn('Auth: Authenticated user not found');
 
-      throw new httpErrors.NotFound();
+      return reply.notFound();
     }
 
     return { data: user };

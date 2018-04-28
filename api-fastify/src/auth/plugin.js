@@ -1,7 +1,6 @@
 'use strict';
 
 const fp = require('fastify-plugin');
-const httpErrors = require('http-errors');
 
 
 module.exports = fp(function (fastify, options, next) {
@@ -28,7 +27,7 @@ module.exports = fp(function (fastify, options, next) {
       if (error || !decoded.id || !decoded.token) {
         request.log.warn('JWT: Invalid token');
 
-        return done(new httpErrors.Unauthorized('Invalid token'));
+        return done(new fastify.httpErrors.Unauthorized('Invalid token'));
       }
 
       fastify.knex('user_tokens')
@@ -38,7 +37,7 @@ module.exports = fp(function (fastify, options, next) {
           if (!token.expires_at || token.expires_at < new Date()) {
             request.log.info('JWT: Expired token');
 
-            return done(new httpErrors.Unauthorized('Token expired'));
+            return done(new fastify.httpErrors.unauthorized('Token expired'));
           }
           fastify.auth.isAuthenticated = true;
           fastify.auth.token           = decoded.token;
@@ -49,7 +48,7 @@ module.exports = fp(function (fastify, options, next) {
         .catch(error => {
           request.log.warn('JWT: Missing token');
 
-          done(new httpErrors.Unauthorized('Token missing or expired'));
+          done(new fastify.httpErrors.unauthorized('Token missing or expired'));
         });
     });
   };
