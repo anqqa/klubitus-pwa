@@ -3,15 +3,17 @@
   <v-list subheader class="transparent">
 
     <template v-for="topic in topicList">
-      <v-list-tile :key="topic.id" :to="topic.url" avatar>
+      <v-list-tile :key="topic.id" avatar>
 
         <v-list-tile-avatar class="hidden-xs-only">
           <img v-if="topic.avatar" :src="topic.avatar">
-          <v-icon v-else color="grey">fas fa-user-circle</v-icon>
+          <v-icon v-else color="grey" size="40px">fas fa-user-circle</v-icon>
         </v-list-tile-avatar>
 
         <v-list-tile-content>
-          <v-list-tile-title v-html="topic.name" />
+          <v-list-tile-title>
+            <nuxt-link :to="topic.url" class="text--primary" v-html="topic.name"/>
+          </v-list-tile-title>
           <v-list-tile-sub-title>
             <nuxt-link to="/">{{ topic.author ? topic.author.username : topic.author_name }}</nuxt-link>
             <span v-if="topic.forum_area">
@@ -55,7 +57,7 @@
       topicList() {
         const topics = [];
 
-        this.topics.forEach(topic => {
+        this.topics.slice(0).forEach(topic => {
           topics.push({
             ...topic,
             ago:       fuzzyTimeDistance(new Date(topic.last_post_at)),

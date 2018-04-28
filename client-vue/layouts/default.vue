@@ -115,7 +115,7 @@
         try {
           await this.$auth.logout();
         }
-        catch (error) {}
+        // catch (error) {}
         finally {
           this.$axios.setToken(false);
         }
@@ -130,7 +130,7 @@
 </script>
 
 
-<style>
+<style scoped>
   .logo {
     height: 35px;
     width: 35px;

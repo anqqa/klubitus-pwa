@@ -1,6 +1,6 @@
 <template>
 
-  <v-list :dense="mini" subheader :class="!mini && 'transparent'">
+  <v-list :dense="mini" :class="!mini && 'transparent'" subheader>
 
     <template v-for="area in areaList">
       <v-subheader v-if="!area.nest_depth" :key="area.id" :class="!mini && 'subheader--background spread'">
@@ -51,7 +51,7 @@
       areaList() {
         const areas = [];
 
-        this.areas.forEach(area => {
+        this.areas.slice(0).forEach(area => {
           areas.push({
             ...area,
             ago:        area.last_topic ? fuzzyTimeDistance(new Date(area.last_topic.last_post_at)) : null,

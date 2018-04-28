@@ -10,13 +10,17 @@ module.exports = {
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700' },
-      // { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' },
+      { rel: 'stylesheet',
+        href: 'https://use.fontawesome.com/releases/v5.0.10/css/all.css',
+        integrity: 'sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg',
+        crossorigin: 'anonymous' },
     ],
   },
   meta: {
     description: 'Clubbers guide to... Finland',
   },
   css: ['~/assets/style/app.styl'],
+  plugins: ['~/plugins/axios', '~/plugins/vuetify.js', '~/plugins/vue-plugins'],
 
   /**
    * Customize the progress bar color
@@ -83,7 +87,7 @@ module.exports = {
       ]
     }],
 
-    ['@nuxtjs/pwa'],
+    ['@nuxtjs/pwa', { icon: false }],
 
     ['nuxt-i18n', {
       defaultLocale:         'en',
@@ -111,8 +115,6 @@ module.exports = {
     }],
   ],
 
-  plugins: ['~/plugins/axios', '~/plugins/fontawesome.js', '~/plugins/vuetify.js', '~/plugins/vue-plugins'],
-
   /**
    * PWA
    */
@@ -136,37 +138,31 @@ module.exports = {
         }]
       ]
     },
+
     /**
      * Run ESLint on save
      */
     extend (config, ctx) {
-      // if (ctx.isDev && ctx.isClient) {
-      //   config.module.rules.push({
-      //     enforce: 'pre',
-      //     test:    /\.(js|vue)$/,
-      //     loader:  'eslint-loader',
-      //     exclude: /(node_modules)/
-      //   });
-      // }
+      if (ctx.isDev && ctx.isClient) {
+        config.module.rules.push({
+          enforce: 'pre',
+          test:    /\.(js|vue)$/,
+          loader:  'eslint-loader',
+          exclude: /(node_modules)/
+        });
+      }
+
       if (ctx.isServer) {
         config.externals = [
           nodeExternals({
-            whitelist: [/^vuetify/]
+            whitelist: [/\.css$/, /^vuetify/]
           })
         ]
       }
-
-      // Font Awesome tree shaking (doesn't seem to be working atm)
-      // config.resolve.alias = {
-      //   ...config.resolve.alias,
-      //   '@fortawesome/fontawesome-free-brands$': '@fortawesome/fontawesome-free-brands/shakable.es.js',
-      //   '@fortawesome/fontawesome-free-regular$': '@fortawesome/fontawesome-free-regular/shakable.es.js',
-      //   '@fortawesome/fontawesome-free-solid$': '@fortawesome/fontawesome-free-solid/shakable.es.js',
-      // };
-
     },
+
     extractCSS: true,
-    vendor: ['vuetify'],
+    vendor: ['~/plugins/vuetify'],
   },
 
 };

@@ -2,7 +2,7 @@
   <v-container>
     <v-layout column justify-center align-center>
       <v-flex>
-        Welcome
+        Galleries
       </v-flex>
     </v-layout>
   </v-container>
