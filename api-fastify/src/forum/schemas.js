@@ -39,6 +39,7 @@ const getTopics = {
     querystring: {
       area:  { type: 'integer' },
       limit: { type: 'integer' },
+      page:  { type: 'integer' },
     },
     response: {
       200: {
