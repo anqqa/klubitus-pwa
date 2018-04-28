@@ -19,6 +19,7 @@ module.exports = async (fastify, options) => {
 
   // Security
   fastify.register(require('fastify-helmet'));
+  fastify.register(require('fastify-sensible'));
   fastify.use(require('cors')());
 
   // Register database connection
@@ -41,7 +42,6 @@ module.exports = async (fastify, options) => {
       return result;
     }
   });
-
 
   // Register Swagger
   fastify.register(require('fastify-swagger'), swaggerOptions);
