@@ -7,7 +7,7 @@
         <span>{{ area.name }}</span> <v-icon v-if="!mini" small class="text--tertiary">far fa-comments</v-icon>
       </v-subheader>
 
-      <v-list-tile v-else :key="area.id" :to="area.url">
+      <v-list-tile v-else-if="area.url" :key="area.id" :to="area.url">
         <v-list-tile-content>
           <v-list-tile-title v-html="area.name" />
           <v-list-tile-sub-title v-if="!mini">
@@ -19,6 +19,18 @@
             {{ area.topicCount }}<br>
             <span class="text--tertiary">{{ area.ago }}</span>
           </v-list-tile-action-text>
+        </v-list-tile-action>
+      </v-list-tile>
+
+      <v-list-tile v-else :key="area.id">
+        <v-list-tile-content>
+          <v-list-tile-title class="text--secondary" v-html="area.name" />
+          <v-list-tile-sub-title v-if="!mini">
+            <span class="text--tertiary" v-html="area.description" />
+          </v-list-tile-sub-title>
+        </v-list-tile-content>
+        <v-list-tile-action v-if="!mini">
+          <v-icon class="text--tertiary">fas fa-lock</v-icon>
         </v-list-tile-action>
       </v-list-tile>
 
@@ -56,7 +68,9 @@
             ...area,
             ago:        area.last_topic ? fuzzyTimeDistance(new Date(area.last_topic.last_post_at)) : null,
             topicCount: formatter.format(area.topic_count),
-            url:        this.localePath({ name: 'forum-area', params: { area: `${area.id}-${slug(area.name)}` }}),
+            url:        this.$auth.state.loggedIn || !area.is_private
+                          ? this.localePath({ name: 'forum-area', params: { area: `${area.id}-${slug(area.name)}` }})
+                          : null,
           })
         });
 
