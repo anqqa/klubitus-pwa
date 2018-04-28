@@ -33,22 +33,28 @@ module.exports = async (fastify, options) => {
     const { area, limit, page } = request.query;
     const pageSize = Math.max(1, Math.min(limit || 20, 100));
 
+    // Accessible areas
+    const areas = await ForumArea.query()
+      .where({
+        is_hidden: false,
+        is_private: fastify.auth.isAuthenticated ? ref('is_private') : false,
+      })
+      .pluck('id');
+
+    if (!areas.length || (area && !areas.includes(area))) {
+      return reply.notFound();
+    }
+
     let query = ForumTopic.query()
       .eager('author')
-      .whereExists(
-        ForumArea.query()
-          .select(1)
-          .where({
-            id: ref('forum_area_id'),
-            is_hidden: false,
-            is_private: fastify.auth.isAuthenticated ? ref('is_private') : false
-          })
-      )
       .orderBy('last_post_at', 'desc')
       .limit(pageSize);
 
     if (area) {
       query = query.where('forum_area_id', area);
+    }
+    else {
+      query = query.whereIn('forum_area_id', areas);
     }
 
     if (page) {
