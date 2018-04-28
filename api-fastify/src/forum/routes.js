@@ -54,7 +54,9 @@ module.exports = async (fastify, options) => {
       query = query.where('forum_area_id', area);
     }
     else {
-      query = query.whereIn('forum_area_id', areas);
+      query = query
+        .whereIn('forum_area_id', areas)
+        .mergeEager('forum_area');
     }
 
     if (page) {
