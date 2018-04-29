@@ -7,7 +7,6 @@ class User extends Model {
     return 'users';
   }
 
-
   static get jsonSchema() {
     return {
       type:    'object',

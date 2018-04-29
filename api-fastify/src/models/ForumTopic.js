@@ -15,7 +15,7 @@ class ForumTopic extends Model {
 
       properties: {
         author_name:   { type: 'string' },
-        // created_at:    { type: 'string', description: 'DateTime string' },
+        created_at:    { type: 'string', description: 'DateTime string' },
         first_post_id: { type: 'integer' },
         forum_area_id: { type: 'integer' },
         id:            { type: 'integer' },
@@ -33,13 +33,13 @@ class ForumTopic extends Model {
 
   static get relationMappings() {
     const { ForumArea } = require('./ForumArea');
-    const { User } = require('./User');
+    const { ForumUser } = require('./ForumUser');
 
     return {
       author: {
         relation:   Model.BelongsToOneRelation,
-        modelClass: User,
-        join:       { from: `${ForumTopic.tableName}.author_id`, to: `${User.tableName}.id` },
+        modelClass: ForumUser,
+        join:       { from: `${ForumTopic.tableName}.author_id`, to: `${ForumUser.tableName}.id` },
       },
 
       forum_area: {

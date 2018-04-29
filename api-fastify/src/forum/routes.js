@@ -1,10 +1,13 @@
 const { ref } = require('objection');
 
 const { ForumArea }  = require('../models/ForumArea');
+const { ForumPost }  = require('../models/ForumPost');
 const { ForumTopic } = require('../models/ForumTopic');
 
 const {
   getAreas:  getAreasSchema,
+  getPosts:  getPostsSchema,
+  getTopic:  getTopicSchema,
   getTopics: getTopicsSchema,
 } = require('./schemas');
 
@@ -27,6 +30,62 @@ module.exports = async (fastify, options) => {
 
 
   /**
+   * Get forum posts.
+   */
+  fastify.get('/forum/posts/:topicId', getPostsSchema, async (request, reply) => {
+    const topicId         = parseInt(request.params.topicId);
+    const { limit, page } = request.query;
+    const pageSize        = Math.max(1, Math.min(limit || 20, 100));
+
+    let query = ForumPost.query()
+      .eager('author')
+      .where('forum_topic_id', topicId)
+      .whereExists(ForumArea.query()
+        .where({
+          id:         ref('forum_area_id'),
+          is_hidden:  false,
+          is_private: fastify.auth.isAuthenticated ? ref('is_private') : false
+        })
+        .select(1)
+      )
+      .limit(pageSize)
+      .orderBy('id', 'asc');
+
+    if (page) {
+      query = query.offset(pageSize * (page - 1));
+    }
+
+    const data = await query.select();
+
+    return { data };
+  });
+
+
+  /**
+   * Get forum topic.
+   */
+  fastify.get('/forum/topic/:topicId', getTopicSchema, async (request, reply) => {
+    const topicId = parseInt(request.params.topicId);
+
+    const topic = await ForumTopic.query()
+      .eager('[author, forum_area]')
+      .modifyEager('forum_area', builder => {
+        builder.where({
+          is_hidden: false,
+          is_private: fastify.auth.isAuthenticated ? ref('is_private') : false,
+        });
+      })
+      .findOne('id', topicId);
+
+    if (!topic || !topic.forum_area) {
+      return reply.notFound();
+    }
+
+    return { data: topic };
+  });
+
+
+  /**
    * Get forum topics.
    */
   fastify.get('/forum/topics', getTopicsSchema, async (request, reply) => {
@@ -36,7 +95,7 @@ module.exports = async (fastify, options) => {
     // Accessible areas
     const areas = await ForumArea.query()
       .where({
-        is_hidden: false,
+        is_hidden:  false,
         is_private: fastify.auth.isAuthenticated ? ref('is_private') : false,
       })
       .pluck('id');

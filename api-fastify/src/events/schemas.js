@@ -5,15 +5,13 @@ const getEvent = {
     params:   {
       type:       'object',
       required:   ['eventId'],
-      properties: {
-        eventId: { type: 'string', description: 'Event ID or slug, e.g. 123-event-name' },
-      },
+      properties: { eventId: { type: 'integer' } },
     },
     response: {
       200: {
         type:       'object',
         properties: {
-          data: Event.getJsonSchema(),
+          data: Event.jsonSchema,
         }
       }
     }
