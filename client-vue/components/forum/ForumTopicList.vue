@@ -63,7 +63,7 @@
             ago:       fuzzyTimeDistance(new Date(topic.last_post_at)),
             avatar:    topic.author && topic.author.avatar_url ? avatarUrl(topic.author.avatar_url) : null,
             postCount: formatter.format(topic.post_count),
-            url:       this.localePath({ name: 'forum-topic-id', params: { id: `${topic.id}-${slug(topic.name)}` } }),
+            url:       this.localePath({ name: 'forum-topic-id-page', params: { id: `${topic.id}-${slug(topic.name)}` } }),
           })
         });
 
@@ -73,7 +73,3 @@
 
   };
 </script>
-
-
-<style scoped>
-</style>
