@@ -18,6 +18,7 @@
     "@nuxtjs/markdownit": "^1.2.0",
     "@nuxtjs/pwa": "^2.0.8",
     "date-fns": "^1.29.0",
+    "lodash": "^4.17.10",
     "markdown-it-link-attributes": "^2.0.0",
     "nuxt": "^1.4.0",
     "nuxt-i18n": "^2.9.2",

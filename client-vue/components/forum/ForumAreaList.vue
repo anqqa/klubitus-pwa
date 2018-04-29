@@ -68,7 +68,7 @@
             ...area,
             ago:        area.last_topic ? fuzzyTimeDistance(new Date(area.last_topic.last_post_at)) : null,
             topicCount: formatter.format(area.topic_count),
-            url:        this.$auth.state.loggedIn || !area.is_private
+            url:        this.$auth.loggedIn || !area.is_private
                           ? this.localePath({ name: 'forum-area', params: { area: `${area.id}-${slug(area.name)}` }})
                           : null,
           })
