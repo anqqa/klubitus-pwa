@@ -28,6 +28,7 @@
     "fastify-plugin": "^0.2.2",
     "fastify-sensible": "^0.2.0",
     "fastify-swagger": "^0.4.0",
+    "lodash": "^4.17.10",
     "make-promises-safe": "^1.1.0",
     "objection": "^1.1.5",
     "pg": "^7.4.1"
