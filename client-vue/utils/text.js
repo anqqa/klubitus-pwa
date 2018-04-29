@@ -1,12 +1,45 @@
 import format from 'date-fns/format';
 
 
+const colors = [
+  'amber',
+  'blue',
+  'blue-grey',
+  'brown',
+  'cyan',
+  'deep-orange',
+  'deep-purple',
+  'green',
+  'grey',
+  'indigo',
+  'light-blue',
+  'light-green',
+  'lime',
+  'orange',
+  'pink',
+  'purple',
+  'red',
+  'teal',
+  'yellow',
+];
+
+export const colorFromText = text => {
+  let number = 0;
+
+  for (let c = 0; c < text.length; c++) {
+    number += text.charCodeAt(c);
+  }
+
+  return colors[number % colors.length];
+};
+
+
 const MINUTE = 60;
 const HOUR   = 60 * MINUTE;
 const DAY    = 24 * HOUR;
 const MONTH  = 30 * DAY;
 
-export const fuzzyTimeDistance = (since) => {
+export const fuzzyTimeDistance = since => {
   const now      = new Date();
   const distance = now - since;
 
