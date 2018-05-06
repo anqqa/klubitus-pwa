@@ -34,7 +34,7 @@ module.exports = {
     extendRoutes (routes, resolve) {
       routes.push({
         name:      'events-week',
-        path:      '/events/:year/week/:week',
+        path:      '/events/:year/wk:week',
         component: resolve(__dirname, 'pages/events/index.vue'),
       });
       routes.push({
@@ -42,6 +42,12 @@ module.exports = {
         path:      '/events/:year/:month/:day?',
         component: resolve(__dirname, 'pages/events/index.vue'),
       });
+
+      routes.push({
+        name:      'galleries-date',
+        path:      '/galleries/events/:year/:month?/:day?',
+        component: resolve(__dirname, 'pages/galleries/index.vue'),
+      })
     },
   },
 
@@ -107,9 +113,13 @@ module.exports = {
         'events/index': { fi: '/tapahtumat' },
         'events/_id':   { fi: '/tapahtumat/:id' },
         'events-date':  { fi: '/tapahtumat/:year/:month/:day?' },
-        'events-week':  { fi: '/tapahtumat/:year/viikko/:week' },
+        'events-week':  { fi: '/tapahtumat/:year/vk:week' },
 
         'forum/topic/_id': { fi: '/forum/aihe/:id' },
+
+        'galleries/index':  { fi: '/kuvastot' },
+        'galleries-date':   { fi: '/kuvastot/tapahtumat/:year/:month?/:day?' },
+        'galleries/flyers': { fi: '/kuvastot/flyerit' },
 
         'login':    { fi: '/kirjaudu' },
         'password': { fi: '/salasana' },
@@ -149,14 +159,14 @@ module.exports = {
      * Run ESLint on save
      */
     extend (config, ctx) {
-      if (ctx.isDev && ctx.isClient) {
-        config.module.rules.push({
-          enforce: 'pre',
-          test:    /\.(js|vue)$/,
-          loader:  'eslint-loader',
-          exclude: /(node_modules)/
-        });
-      }
+      // if (ctx.isDev && ctx.isClient) {
+      //   config.module.rules.push({
+      //     enforce: 'pre',
+      //     test:    /\.(js|vue)$/,
+      //     loader:  'eslint-loader',
+      //     exclude: /(node_modules)/
+      //   });
+      // }
 
       if (ctx.isServer) {
         config.externals = [

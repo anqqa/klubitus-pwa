@@ -17,7 +17,7 @@
                         @input="onPageChange" />
         </div>
 
-        <nuxt-child :key="areaId" />
+        <nuxt-child />
 
         <div class="text-xs-center">
           <v-pagination v-if="pages > 1"

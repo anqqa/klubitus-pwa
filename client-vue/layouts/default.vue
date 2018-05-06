@@ -10,20 +10,29 @@
       width="220"
     >
       <v-list class="transparent" dense>
-        <v-list-tile
-          v-for="(item, index) in items"
-          :key="index"
-          :to="item.to"
-          :exact="item.exact"
-          nuxt
-        >
-          <v-list-tile-action>
-            <v-icon v-html="item.icon" />
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title v-text="item.title" />
-          </v-list-tile-content>
-        </v-list-tile>
+        <v-list-group v-for="(item, index) in items"
+                      :key="index"
+                      :prepend-icon="item.icon"
+                      append-icon=""
+                      no-action>
+
+          <v-list-tile slot="activator" :exact="item.exact" :to="item.url" nuxt>
+            <v-list-tile-content>
+              <v-list-tile-title v-text="item.title" />
+            </v-list-tile-content>
+          </v-list-tile>
+
+          <v-list-tile v-for="(subItem, subIndex) in item.items"
+                       :exact="subItem.exact"
+                       :key="subIndex"
+                       :to="subItem.url"
+                       nuxt>
+            <v-list-tile-content>
+              <v-list-tile-title v-text="subItem.title" />
+            </v-list-tile-content>
+          </v-list-tile>
+
+        </v-list-group>
       </v-list>
     </v-navigation-drawer>
 
@@ -89,10 +98,13 @@
       return {
         drawer: true,
         items: [
-          { icon: 'fas fa-home fa-fw', title: 'Home', to: this.localePath('index'), exact: true },
-          { icon: 'far fa-calendar-alt fa-fw', title: 'Events', to: this.localePath('events') },
-          { icon: 'far fa-comments fa-fw', title: 'Forum', to: this.localePath('forum') },
-          { icon: 'far fa-images fa-fw', title: 'Galleries', to: this.localePath('galleries') }
+          { icon: 'fas fa-home fa-fw',         title: 'Home',      url: this.localePath('index'), exact: true },
+          { icon: 'far fa-calendar-alt fa-fw', title: 'Events',    url: this.localePath('events') },
+          { icon: 'far fa-comments fa-fw',     title: 'Forum',     url: this.localePath('forum') },
+          { icon: 'far fa-images fa-fw',       title: 'Galleries', url: this.localePath('galleries'), items: [
+              { title: 'Events', url: this.localePath('galleries-events') },
+              { title: 'Flyers', url: this.localePath('galleries-flyers') },
+            ]}
         ],
         title: 'Klubitus'
       }
