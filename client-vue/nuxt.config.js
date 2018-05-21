@@ -19,7 +19,7 @@ module.exports = {
   meta: {
     description: 'Clubbers guide to... Finland',
   },
-  css: ['~/assets/style/app.styl'],
+  css: ['~/assets/style/app.styl', '~/assets/style/dark.scss'],
   plugins: ['~/plugins/axios', '~/plugins/vuetify.js', '~/plugins/vue-plugins'],
 
   /**
@@ -101,6 +101,8 @@ module.exports = {
 
     ['@nuxtjs/pwa', { icon: false }],
 
+    ['nuxt-buefy',  { css: false, materialDesignIcons: false }],
+
     ['nuxt-i18n', {
       defaultLocale:         'en',
       locales:               [
@@ -147,10 +149,10 @@ module.exports = {
     babel: {
       plugins: [
         ['transform-imports', {
-          'vuetify': {
-            'transform':         'vuetify/es5/components/${member}',
-            'preventFullImport': true
-          }
+          vuetify: {
+            transform:         'vuetify/es5/components/${member}',
+            preventFullImport: true
+          },
         }]
       ]
     },
