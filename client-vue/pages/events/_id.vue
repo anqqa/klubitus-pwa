@@ -1,38 +1,38 @@
 <template>
-  <v-container>
-    <v-layout tag="article" row wrap>
-      <v-flex v-if="event.flyer_front_url" text-xs-center xs12>
-        <img :src="event.flyer_front_url" alt="Flyer">
-      </v-flex>
+  <main class="column">
 
-      <v-flex tag="header" text-xs-center xs12>
-        <h2 class="subheader">{{ event.date }}</h2>
-        <h1 class="headline">{{ event.name }}</h1>
+    <article class="container">
+      <figure v-if="event.flyer_front_url" class="image">
+        <img :src="event.flyer_front_url" alt="Flyer">
+      </figure>
+
+      <header class="has-text-centered is-uppercase">
+        <h2 class="subtitle">{{ event.date }}</h2>
+        <h1 class="title">{{ event.name }}</h1>
         {{ event.venue_name }}, {{ event.city_name }}<br>
         {{ event.hours }}<br>
-        <v-btn v-if="event.facebook_id"
-               :href="`https://facebook.com/events/${event.facebook_id}/`"
-               outline
-               rel="noopener"
-               tag="a"
-               target="_blank">
-          <v-icon>fab fa-facebook-square</v-icon>
-          <span class="ml-2">Facebook event</span>
-        </v-btn>
-      </v-flex>
+        <a v-if="event.facebook_id"
+           :href="`https://facebook.com/events/${event.facebook_id}/`"
+           class="button is-outlined"
+           rel="noopener"
+           target="_blank">
+          <span class="icon">
+            <i class="fab fa-facebook-square" />
+          </span>
+          <span>Facebook event</span>
+        </a>
+      </header>
 
-      <v-flex xs12>
-        <v-divider class="my-3" />
-      </v-flex>
+      <hr>
 
-      <v-flex class="markdown" xs12 v-html="event.info" />
-    </v-layout>
-  </v-container>
+      <div class="markdown" v-html="event.info" />
+    </article>
+
+  </main>
 </template>
 
 <script>
   import format from 'date-fns/format';
-  import VDivider from 'vuetify/es5/components/VDivider';
 
   import { hours } from '../../utils/text';
 
@@ -41,6 +41,7 @@
 
     async asyncData({ app, params }) {
       const { data } = await app.$axios.$get(`event/${parseInt(params.id)}`);
+      console.log(data);
       const { begins_at, ends_at, info } = data;
 
       return {
@@ -53,8 +54,6 @@
       };
     },
 
-    components: { VDivider },
-
     validate({ params }) {
       return /^\d+/.test(params.id);
     }
@@ -66,10 +65,5 @@
 <style scoped>
   article {
     max-width: 720px;
-    margin: 0 auto;
-  }
-
-  header {
-    text-transform: uppercase;
   }
 </style>

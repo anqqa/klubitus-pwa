@@ -1,29 +1,22 @@
 <template>
-  <v-card class="transparent">
-    <v-list dense subheader>
-      <v-subheader v-html="title" />
+  <section class="card">
 
-      <template v-for="event in events">
-        <v-list-tile :key="event.id" :to="event.url">
+    <header class="card-header">
+      <span class="card-header-title" v-html="title" />
+    </header>
 
-          <v-list-tile-content>
-            <v-list-tile-title v-html="event.name" />
-          </v-list-tile-content>
+    <ul class="card-content">
+      <li v-for="event in events" :key="event.id">
+        <time class="is-pulled-right">{{ event.stamp }}</time>
+        <nuxt-link :to="event.url">{{ event.name }}</nuxt-link>
+      </li>
+    </ul>
 
-          <v-list-tile-action>
-            <v-list-tile-action-text v-html="event.stamp" />
-          </v-list-tile-action>
-
-        </v-list-tile>
-      </template>
-
-    </v-list>
-  </v-card>
+  </section>
 </template>
 
 <script>
   import format from 'date-fns/format';
-  import VSubheader from 'vuetify/es5/components/VSubheader'
 
   import { slug } from '../../utils/text';
 
@@ -35,8 +28,6 @@
   let cachedData = null;
 
   export default {
-    components: { VSubheader },
-
     props: {
       limit:  { default: 10, type: Number },
       title:  { default: 'Events', type: String },

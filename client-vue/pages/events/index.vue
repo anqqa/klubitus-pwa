@@ -1,60 +1,58 @@
 <template>
-  <v-container grid-list-lg>
-    <v-layout row wrap>
+  <main class="column section">
+    <h1 class="title">{{ title }}</h1>
 
-      <v-flex tag="h1" class="headline" xs12>{{ title }}</v-flex>
+    <div class="columns">
 
-      <v-flex xs12 md9>
-        <v-flex text-xs-center xs12>
-          <v-btn :to="localePath(pagination.previous.url)" small nuxt>
+      <div class="column">
+        <nav class="pagination" role="navigation" aria-label="pagination">
+          <nuxt-link :to="localePath(pagination.previous.url)" class="pagination-previous">
             &laquo; {{ pagination.previous.title }}
-          </v-btn>
-          &sdot;
-          <v-btn :to="localePath(pagination.next.url)" small nuxt>
+          </nuxt-link>
+          <nuxt-link :to="localePath(pagination.next.url)" class="pagination-next">
             {{ pagination.next.title }} &raquo;
-          </v-btn>
-        </v-flex>
+          </nuxt-link>
+        </nav>
 
-        <v-flex v-for="(day, dayIndex) in days" :key="dayIndex" xs12 tag="section">
-          <h2 class="subheading mt-3">{{ day.header }}</h2>
+        <section v-for="(day, dayIndex) in days" :key="dayIndex">
+          <h2 class="subtitle">{{ day.header }}</h2>
 
-          <v-divider />
+          <hr>
 
-          <v-layout v-for="(event, eventIndex) in day.events" :key="eventIndex" row wrap>
-            <v-flex sm2 xs12>
-              <v-card-media :src="event.flyer_front_url" height="80px" />
-            </v-flex>
+          <div v-for="(event, eventIndex) in day.events" :key="eventIndex" class="columns">
+            <div class="column is-narrow flyer">
+              <figure class="image is-16by9">
+                <img :src="event.flyer_front_url">
+              </figure>
+            </div>
 
-            <v-flex sm10 xs12>
-              <h3 class="subheading">
-                <nuxt-link :to="localePath(event.url)">{{ event.name }}</nuxt-link>
-              </h3>
+            <div class="column">
+              <nuxt-link :to="localePath(event.url)">{{ event.name }}</nuxt-link><br>
               <span class="text--secondary">{{ event.hours }}</span>
               &sdot;
               <span>{{ event.venue_name }}, {{ event.city_name }}</span>
-            </v-flex>
-          </v-layout>
-        </v-flex>
+            </div>
+          </div>
+        </section>
 
-        <v-flex text-xs-center xs12>
-          <v-btn :to="localePath(pagination.previous.url)" small nuxt>
+        <nav class="pagination" role="navigation" aria-label="pagination">
+          <nuxt-link :to="localePath(pagination.previous.url)" class="pagination-previous">
             &laquo; {{ pagination.previous.title }}
-          </v-btn>
-          &sdot;
-          <v-btn :to="localePath(pagination.next.url)" small nuxt>
+          </nuxt-link>
+          <nuxt-link :to="localePath(pagination.next.url)" class="pagination-next">
             {{ pagination.next.title }} &raquo;
-          </v-btn>
-        </v-flex>
-      </v-flex>
+          </nuxt-link>
+        </nav>
+      </div>
 
-      <v-flex xs12 md3>
+      <div class="column is-one-quarter">
         <keep-alive>
           <EventList title="New events" type="latest" />
         </keep-alive>
-      </v-flex>
+      </div>
 
-    </v-layout>
-  </v-container>
+    </div>
+  </main>
 </template>
 
 
@@ -270,3 +268,8 @@
 
   }
 </script>
+
+
+<style scoped>
+  .flyer .image { width: 120px }
+</style>
