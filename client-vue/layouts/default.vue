@@ -1,91 +1,96 @@
 <template>
-  <v-app :dark="theme === 'dark'">
+  <div>
 
-    <v-navigation-drawer
-      :class="theme === 'dark' ? 'grey darken-4' : ''"
-      :value="sidebar"
-      app
-      clipped
-      fixed
-      width="220"
-    >
-      <v-list class="transparent" dense>
-        <v-list-group v-for="(item, index) in items"
-                      :key="index"
-                      :prepend-icon="item.icon"
-                      append-icon=""
-                      no-action>
+    <nav class="navbar" role="navigation">
+      <div class="navbar-brand">
+        <a role="button" class="navbar-item" data-target="mainMenu" @click="toggleSidebar">
+          <span class="icon"><i class="fas fa-bars" /></span>
+        </a>
 
-          <v-list-tile slot="activator" :exact="item.exact" :to="item.url" nuxt>
-            <v-list-tile-content>
-              <v-list-tile-title v-text="item.title" />
-            </v-list-tile-content>
-          </v-list-tile>
+        <nuxt-link to="/" class="navbar-item">
+          <img class="navbar-item" height="35" src="/logo.svg" width="35">
+          {{ title }}
+        </nuxt-link>
+      </div>
 
-          <v-list-tile v-for="(subItem, subIndex) in item.items"
-                       :exact="subItem.exact"
-                       :key="subIndex"
-                       :to="subItem.url"
-                       nuxt>
-            <v-list-tile-content>
-              <v-list-tile-title v-text="subItem.title" />
-            </v-list-tile-content>
-          </v-list-tile>
+      <div class="navbar-menu is-active">
+        <div class="navbar-start">
+          <div class="navbar-item is-expanded">
+            <div class="field">
+              <b-autocomplete icon="search" placeholder="Search..." />
+            </div>
+          </div>
+        </div>
 
-        </v-list-group>
-      </v-list>
-    </v-navigation-drawer>
+        <div class="navbar-end">
+          <div v-if="$auth.loggedIn" class="navbar-item">
+            <button class="button" @click="logout">Logout</button>
+          </div>
+          <div v-if="!$auth.loggedIn" class="navbar-item">
+            <nuxt-link :to="localePath('login')" class="button">Login</nuxt-link>
+          </div>
+          <div v-if="!$auth.loggedIn" class="navbar-item">
+            <nuxt-link :to="localePath('register')" class="button">Register</nuxt-link>
+          </div>
+        </div>
+      </div>
+    </nav>
 
-    <v-toolbar app clipped-left dense flat>
-      <v-toolbar-side-icon @click="toggleSidebar">
-        <v-icon>fas fa-bars</v-icon>
-      </v-toolbar-side-icon>
-      <img class="hidden-xs-only mx-3 logo" src="/logo.svg">
-      <v-toolbar-title class="hidden-xs-only" v-text="title" />
-      <v-spacer />
-      <v-layout align-center row>
-        <v-text-field
-          append-icon="fas fa-search"
-          hide-details
-          placeholder="Search..."
-          single-line
-        />
-      </v-layout>
-      <v-toolbar-items class="ml-3">
-        <v-btn v-if="$auth.loggedIn" flat @click="logout">Logout</v-btn>
-        <v-btn v-if="!$auth.loggedIn" :to="localePath('login')" flat nuxt>Login</v-btn>
-        <v-btn v-if="!$auth.loggedIn" :to="localePath('register')" flat nuxt>Register</v-btn>
-      </v-toolbar-items>
-    </v-toolbar>
+    <div class="columns">
 
-    <v-content>
+      <div class="column is-narrow">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+          <ul class="menu-list">
+            <li v-for="(item, index) in items" :key="index">
+              <nuxt-link :exact="item.exact" :to="item.url" active-class="is-active">
+                <span class="icon is-small"><i :class="item.icon" /></span>
+                {{ item.title }}
+              </nuxt-link>
+
+              <ul v-if="item.items" class="menu-list">
+                <li v-for="(subItem, subIndex) in item.items" :key="subIndex">
+                  <nuxt-link :exact="subItem.exact"
+                             :to="subItem.url"
+                             active-class="is-active"
+                             v-text="subItem.title" />
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
       <nuxt />
-    </v-content>
 
-    <v-footer app inset class="pr-1">
-      <span class="ml-3 hidden-xs-only"> &copy; 2000 &ndash; 2018 Klubitus</span>
+    </div>
 
-      <v-spacer />
+    <footer class="columns">
+      <div class="level container is-fluid">
 
-      <v-icon small class="text--secondary mr-2">fas fa-language</v-icon>
-      <v-btn-toggle v-model="locale">
-        <v-btn v-for="locale in $i18n.locales"
-               :key="locale.code"
-               :to="switchLocalePath(locale.code)"
-               :value="locale.code"
-               flat
-               nuxt
-               small>{{ locale.name }}</v-btn>
-      </v-btn-toggle>
+        <div class="level-left is-hidden-mobile">
+          <span class="level-item">&copy; 2000 &ndash; 2018 Klubitus</span>
+        </div>
 
-      <v-icon small class="text--secondary ml-3 mr-2">fas fa-adjust</v-icon>
-      <v-btn-toggle v-model="theme">
-        <v-btn flat small value="dark">Dark</v-btn>
-        <v-btn flat small value="light">Light</v-btn>
-      </v-btn-toggle>
-    </v-footer>
+        <div class="level-right">
+          <div class="level-item">
+            <span class="icon"><i class="fas fa-language" /></span>
+          </div>
+          <div class="level-item">
+            <div class="buttons has-addons">
+              <nuxt-link v-for="locale in $i18n.locales"
+                         :key="locale.code"
+                         :to="switchLocalePath(locale.code)"
+                         :value="locale.code"
+                         active-class="is-selected is-primary"
+                         class="button is-small">{{ locale.name }}</nuxt-link>
+            </div>
+          </div>
+        </div>
 
-  </v-app>
+      </div>
+    </footer>
+
+  </div>
 </template>
 
 
@@ -98,10 +103,10 @@
       return {
         drawer: true,
         items: [
-          { icon: 'fas fa-home fa-fw',         title: 'Home',      url: this.localePath('index'), exact: true },
-          { icon: 'far fa-calendar-alt fa-fw', title: 'Events',    url: this.localePath('events') },
-          { icon: 'far fa-comments fa-fw',     title: 'Forum',     url: this.localePath('forum') },
-          { icon: 'far fa-images fa-fw',       title: 'Galleries', url: this.localePath('galleries'), items: [
+          { icon: 'fas fa-home',         title: 'Home',      url: this.localePath('index'), exact: true },
+          { icon: 'far fa-calendar-alt', title: 'Events',    url: this.localePath('events') },
+          { icon: 'far fa-comments',     title: 'Forum',     url: this.localePath('forum') },
+          { icon: 'far fa-images',       title: 'Galleries', url: this.localePath('galleries'), items: [
               { title: 'Events', url: this.localePath('galleries-events') },
               { title: 'Flyers', url: this.localePath('galleries-flyers') },
             ]}
@@ -143,8 +148,11 @@
 
 
 <style scoped>
-  .logo {
-    height: 35px;
-    width: 35px;
+  nav.navbar img {
+    padding: 0;
+  }
+
+  nav.menu {
+    width: 220px;
   }
 </style>

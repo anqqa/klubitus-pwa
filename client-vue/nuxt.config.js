@@ -101,7 +101,11 @@ module.exports = {
 
     ['@nuxtjs/pwa', { icon: false }],
 
-    ['nuxt-buefy',  { css: false, materialDesignIcons: false }],
+    ['nuxt-buefy', {
+      css:                 false,
+      defaultIconPack:     'fas',
+      materialDesignIcons: false,
+    }],
 
     ['nuxt-i18n', {
       defaultLocale:         'en',
