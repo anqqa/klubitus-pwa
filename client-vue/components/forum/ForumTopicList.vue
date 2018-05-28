@@ -1,40 +1,28 @@
 <template>
 
-  <v-list subheader class="transparent">
-
-    <template v-for="topic in topicList">
-      <v-list-tile :key="topic.id" avatar>
-
-        <v-list-tile-avatar class="hidden-xs-only">
+  <ol>
+    <li v-for="topic in topicList" :key="topic.id" class="media">
+      <div class="media-left">
+        <figure class="image is-48x48">
           <img v-if="topic.avatar" :src="topic.avatar">
-          <v-icon v-else color="grey" size="40px">fas fa-user-circle</v-icon>
-        </v-list-tile-avatar>
+          <span v-else class="icon is-large"><i class="fas fa-user-circle fa-2x" /></span>
+        </figure>
+      </div>
 
-        <v-list-tile-content>
-          <v-list-tile-title>
-            <nuxt-link :to="topic.url" class="text--primary" v-html="topic.name"/>
-          </v-list-tile-title>
-          <v-list-tile-sub-title>
-            <nuxt-link to="/">{{ topic.author ? topic.author.username : topic.author_name }}</nuxt-link>
-            <span v-if="topic.forum_area">
-              &sdot; <span class="text--tertiary">{{ topic.forum_area.name }}</span>
-            </span>
-          </v-list-tile-sub-title>
-        </v-list-tile-content>
+      <div class="media-content">
+        <nuxt-link :to="topic.url" class="text--primary" v-html="topic.name" /><br>
+        <nuxt-link to="/">{{ topic.author ? topic.author.username : topic.author_name }}</nuxt-link>
+        <span v-if="topic.forum_area">
+          &sdot; <span>{{ topic.forum_area.name }}</span>
+        </span>
+      </div>
 
-        <v-list-tile-action>
-          <v-list-tile-action-text class="text-xs-right">
-            {{ topic.postCount }}<br>
-            <span class="text--tertiary">{{ topic.ago }}</span>
-          </v-list-tile-action-text>
-        </v-list-tile-action>
-
-      </v-list-tile>
-
-      <v-divider :key="`${topic.id}.divider`" inset />
-    </template>
-
-  </v-list>
+      <div class="media-right has-text-right">
+        {{ topic.postCount }}<br>
+        <span class="text--tertiary">{{ topic.ago }}</span>
+      </div>
+    </li>
+  </ol>
 
 </template>
 

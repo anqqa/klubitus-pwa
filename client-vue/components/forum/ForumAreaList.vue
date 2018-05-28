@@ -1,50 +1,51 @@
 <template>
 
-  <v-list :dense="mini" :class="!mini && 'transparent'" subheader>
+  <section>
+    <table class="table is-hoverable if-fullwidth is-transparent">
+      <template v-for="group in groupList">
 
-    <template v-for="area in areaList">
-      <v-subheader v-if="!area.nest_depth" :key="area.id" :class="!mini && 'subheader--background spread'">
-        <span>{{ area.name }}</span> <v-icon v-if="!mini" small class="text--tertiary">far fa-comments</v-icon>
-      </v-subheader>
+        <thead :key="`${group.id}_head`">
+          <tr>
+            <th><h3>{{ group.name }}</h3></th>
+            <th v-if="!mini" class="has-text-right">
+              <span class="icon is-small"><i class="far fa-comments" /></span>
+            </th>
+          </tr>
+        </thead>
 
-      <v-list-tile v-else-if="area.url" :key="area.id" :to="area.url">
-        <v-list-tile-content>
-          <v-list-tile-title v-html="area.name" />
-          <v-list-tile-sub-title v-if="!mini">
-            <span class="text--tertiary" v-html="area.description" />
-          </v-list-tile-sub-title>
-        </v-list-tile-content>
-        <v-list-tile-action v-if="!mini">
-          <v-list-tile-action-text class="text-xs-right">
-            {{ area.topicCount }}<br>
-            <span class="text--tertiary">{{ area.ago }}</span>
-          </v-list-tile-action-text>
-        </v-list-tile-action>
-      </v-list-tile>
+        <tbody :key="group.id">
+          <template v-for="area in group.areas">
+            <tr v-if="area.url" :key="area.id">
+              <td>
+                <nuxt-link :to="area.url">{{ area.name }}</nuxt-link>
+                <p v-if="!mini" v-html="area.description" />
+              </td>
+              <td v-if="!mini" class="has-text-right">
+                {{ area.topicCount }}<br>
+                {{ area.ago }}
+              </td>
+            </tr>
 
-      <v-list-tile v-else :key="area.id">
-        <v-list-tile-content>
-          <v-list-tile-title class="text--secondary" v-html="area.name" />
-          <v-list-tile-sub-title v-if="!mini">
-            <span class="text--tertiary" v-html="area.description" />
-          </v-list-tile-sub-title>
-        </v-list-tile-content>
-        <v-list-tile-action v-if="!mini">
-          <v-icon class="text--tertiary">fas fa-lock</v-icon>
-        </v-list-tile-action>
-      </v-list-tile>
+            <tr v-else :key="area.id">
+              <td>
+                {{ area.name }}
+                <p v-if="!mini" v-html="area.description" />
+              </td>
+              <td v-if="!mini" class="has-text-right">
+                <span class="icon"><i class="fas fa-lock" /></span>
+              </td>
+            </tr>
+          </template>
+        </tbody>
 
-      <v-divider v-if="!!area.nest_depth === !mini" :key="`${area.id}.divider`" />
-    </template>
-
-  </v-list>
+      </template>
+    </table>
+  </section>
 
 </template>
 
 
 <script>
-  import VSubheader from 'vuetify/es5/components/VSubheader';
-
   import { fuzzyTimeDistance, slug } from '../../utils/text';
 
 
@@ -52,29 +53,40 @@
 
   export default {
 
-    components: { VSubheader },
-
     props: {
       areas: { default: () => [], type: Array },
       mini:  { default: false, type: Boolean },
     },
 
     computed: {
-      areaList() {
-        const areas = [];
+      groupList() {
+        const groups = [];
+        let   areas  = [];
 
         this.areas.slice(0).forEach(area => {
-          areas.push({
-            ...area,
-            ago:        area.last_topic ? fuzzyTimeDistance(new Date(area.last_topic.last_post_at)) : null,
-            topicCount: formatter.format(area.topic_count),
-            url:        this.$auth.loggedIn || !area.is_private
-                          ? this.localePath({ name: 'forum-area', params: { area: `${area.id}-${slug(area.name)}` }})
-                          : null,
-          })
+          if (!area.nest_depth) {
+
+            // Group
+            areas = [];
+            groups.push({ id: area.id, name: area.name, areas })
+
+          }
+          else {
+
+            // Area
+            areas.push({
+              ...area,
+              ago:        area.last_topic ? fuzzyTimeDistance(new Date(area.last_topic.last_post_at)) : null,
+              topicCount: formatter.format(area.topic_count),
+              url:        this.$auth.loggedIn || !area.is_private
+                            ? this.localePath({ name: 'forum-area', params: { area: `${area.id}-${slug(area.name)}` }})
+                            : null,
+            });
+
+          }
         });
 
-        return areas;
+        return groups;
       }
     }
 
@@ -83,7 +95,7 @@
 
 
 <style scoped>
-  .subheader span {
+  h3 {
     text-transform: uppercase;
   }
 </style>

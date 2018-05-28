@@ -1,44 +1,39 @@
 <template>
 
-  <v-container grid-list-lg>
-    <v-layout v-for="post in postList" :key="post.id" row wrap tag="section">
-
-      <v-flex md1>
-        <v-avatar :class="post.avatarColor" class="darken-3">
+  <div>
+    <article v-for="post in postList" :key="post.id" class="media">
+      <div class="media-left">
+        <figure class="image is-48x48">
           <img v-if="post.avatar" :src="post.avatar" alt="Avatar">
           <span v-else class="white--text headline">{{ post.username.substr(0, 2) }}</span>
-        </v-avatar>
-      </v-flex>
+        </figure>
+      </div>
 
-      <v-flex md11>
-        <nuxt-link to="/">{{ post.username }}</nuxt-link>
-        <span v-if="post.author && post.author.title" class="text--tertiary"> &sdot; {{ post.author.title }}</span>
-        <span :title="post.created_at" class="text--tertiary right">{{ post.ago }}</span>
+      <div class="media-content">
+        <header class="level">
+          <span class="level-left">
+            <nuxt-link to="/">{{ post.username }}</nuxt-link>
+            <span v-if="post.author && post.author.title" class="text--tertiary"> &sdot; {{ post.author.title }}</span>
+          </span>
+          <span :title="post.created_at" class="level-right">{{ post.ago }}</span>
+        </header>
 
-        <v-flex class="markdown pa-0 mt-1" xs12 v-html="post.post" />
-        <v-flex class="text--secondary caption markdown signature pb-0" xs12 v-html="post.signature" />
-      </v-flex>
+        <div class="content markdown" v-html="post.post" />
 
-      <v-flex xs12>
-        <v-divider />
-      </v-flex>
-
-    </v-layout>
-  </v-container>
+        <footer class="content markdown signature" v-html="post.signature" />
+      </div>
+    </article>
+  </div>
 
 </template>
 
 
 <script>
-  import VAvatar from 'vuetify/es5/components/VAvatar';
-
   import { colorFromText, fuzzyTimeDistance } from '../../utils/text';
   import { avatarUrl } from '../../utils/url';
 
 
   export default {
-
-    components: { VAvatar },
 
     props: {
       posts: { default: () => [], type: Array },

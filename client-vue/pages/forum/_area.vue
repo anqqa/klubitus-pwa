@@ -1,47 +1,41 @@
 <template>
 
-  <v-container grid-list-lg>
-    <v-layout row wrap>
+  <main class="column section">
+    <h1 class="title" v-text="area.name" />
+    <h2 class="subtitle" v-html="area.description" />
 
-      <v-flex tag="h1" class="headline" xs12 v-text="area.name" />
-      <v-flex tag="h2" class="subheading" xs12 v-html="area.description" />
+    <div class="columns is-reverse-order">
+      <div class="column">
 
-      <v-flex xs12 md9 order-md2>
-        <div class="text-xs-center">
-          <v-pagination v-if="pages > 1"
-                        id="top-navigation"
-                        :length="pages"
-                        v-model="page"
-                        prev-icon="fas fa-angle-left"
-                        next-icon="fas fa-angle-right"
-                        @input="onPageChange" />
-        </div>
+        <b-pagination v-if="pages > 1"
+                      id="top-navigation"
+                      :current.sync="page"
+                      :total="area.topic_count"
+                      order="is-centered"
+                      per-page="20"
+                      @change="onPageChange" />
 
         <nuxt-child />
 
-        <div class="text-xs-center">
-          <v-pagination v-if="pages > 1"
-                        :length="pages"
-                        v-model="page"
-                        prev-icon="fas fa-angle-left"
-                        next-icon="fas fa-angle-right"
-                        @input="onPageChange" />
-        </div>
-      </v-flex>
+        <b-pagination v-if="pages > 1"
+                      :current.sync="page"
+                      :total="area.topic_count"
+                      order="is-centered"
+                      per-page="20"
+                      @change="onPageChange" />
+      </div>
 
-      <v-flex xs12 md3>
+      <div class="column is-one-third">
         <ForumAreaList :areas="areas" mini />
-      </v-flex>
+      </div>
+    </div>
 
-    </v-layout>
-  </v-container>
+  </main>
 
 </template>
 
 
 <script>
-  import VPagination from 'vuetify/es5/components/VPagination';
-
   import ForumAreaList from '~/components/forum/ForumAreaList';
 
   export default {
@@ -60,7 +54,7 @@
       return { area, areaId, areas, page, pages };
     },
 
-    components: { ForumAreaList, VPagination },
+    components: { ForumAreaList },
 
     head() {
       const link  = [];

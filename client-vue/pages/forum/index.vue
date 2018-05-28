@@ -1,26 +1,22 @@
 <template>
 
-  <v-container grid-list-lg>
-    <v-layout row wrap>
+  <main class="column section">
+    <h1 class="title">Forum</h1>
 
-      <v-flex tag="h1" class="headline" xs12>Forum</v-flex>
-
-      <v-flex xs12 md6 order-lg2>
-        <h2 class="subheading">Latest</h2>
-        <v-divider />
+    <div class="columns is-reverse-order">
+      <div class="column is-half">
+        <h2 class="subtitle">Latest</h2>
 
         <ForumTopicList :topics="topics" />
-      </v-flex>
+      </div>
 
-      <v-flex xs12 md6>
-        <h2 class="subheading">Areas</h2>
-        <v-divider />
+      <div class="column is-half">
+        <h2 class="subtitle">Areas</h2>
 
         <ForumAreaList :areas="areas" />
-      </v-flex>
-
-    </v-layout>
-  </v-container>
+      </div>
+    </div>
+  </main>
 
 </template>
 

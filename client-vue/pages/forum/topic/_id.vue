@@ -1,42 +1,28 @@
 <template>
 
-  <v-container grid-list-lg>
-    <v-layout row wrap>
+  <main class="column section">
+    <h1 class="title">{{ topic.name }}</h1>
 
-      <v-flex tag="h1" class="headline" xs12 v-text="topic.name" />
+    <b-pagination v-if="pages > 1"
+                  id="top-navigation"
+                  :current.sync="page"
+                  :total="topic.post_count"
+                  per-page="20"
+                  @change="onPageChange" />
 
-      <v-flex xs12 md9 order-md2>
-        <div class="text-xs-center">
-          <v-pagination v-if="pages > 1"
-                        id="top-navigation"
-                        :length="pages"
-                        v-model="page"
-                        prev-icon="fas fa-angle-left"
-                        next-icon="fas fa-angle-right"
-                        @input="onPageChange" />
-        </div>
+    <nuxt-child :key="topicId" />
 
-        <nuxt-child :key="topicId" />
-
-        <div class="text-xs-center">
-          <v-pagination v-if="pages > 1"
-                        :length="pages"
-                        v-model="page"
-                        prev-icon="fas fa-angle-left"
-                        next-icon="fas fa-angle-right"
-                        @input="onPageChange" />
-        </div>
-      </v-flex>
-
-    </v-layout>
-  </v-container>
+    <b-pagination v-if="pages > 1"
+                  :current.sync="page"
+                  :total="topic.post_count"
+                  per-page="20"
+                  @change="onPageChange" />
+  </main>
 
 </template>
 
 
 <script>
-  import VPagination from 'vuetify/es5/components/VPagination';
-
   export default {
     async asyncData({ app, params }) {
       const topicId = parseInt(params.id);
@@ -48,8 +34,6 @@
 
       return { page, pages, topic, topicId };
     },
-
-    components: { VPagination },
 
     head() {
       const link  = [];
