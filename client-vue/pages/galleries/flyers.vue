@@ -1,12 +1,8 @@
 <template>
 
-  <v-container grid-list-lg>
-    <v-layout row wrap>
-
-      <v-flex tag="h1" class="headline" xs12>Flyers</v-flex>
-
-    </v-layout>
-  </v-container>
+  <main class="column section">
+    <h1 class="title">Flyers</h1>
+  </main>
 
 </template>
 

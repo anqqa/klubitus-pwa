@@ -1,73 +1,58 @@
 <template>
 
-  <v-container grid-list-lg>
-    <v-layout row wrap>
+  <main class="column section">
 
-      <v-flex xs12>
+    <nav class="tabs is-small is-mobile">
+      <ul>
+        <li v-for="browseYear in Object.keys(stats).sort().reverse()"
+            :key="browseYear"
+            :class="year == browseYear && 'is-active'">
+          <nuxt-link :to="localePath({ name: 'galleries-date', params: { year: browseYear } })">
+            {{ browseYear }}
+          </nuxt-link>
+        </li>
+      </ul>
+    </nav>
 
-        <v-tabs :slider-color="year ? 'primary' : 'transparent'"
-                color="transparent"
-                next-icon="fas fa-angle-right"
-                prev-icon="fas fa-angle-left"
-                show-arrows>
-          <v-tab v-for="browseYear in Object.keys(stats).sort().reverse()"
-                 :key="browseYear"
-                 :to="localePath({ name: 'galleries-date', params: { year: browseYear } })"
-                 nuxt>{{ browseYear }}</v-tab>
-        </v-tabs>
+    <nav v-if="year" class="tabs is-small is-mobile">
+      <ul>
+        <li v-for="browseMonth in stats[year]"
+            :key="browseMonth.month"
+            :class="browseMonth.month == month && 'is-active'">
+          <nuxt-link :to="localePath({ name: 'galleries-date', params: { year, month: browseMonth.month } })">
+            {{ browseMonth.nameShort }}
+          </nuxt-link>
+        </li>
+      </ul>
+    </nav>
 
-        <v-tabs v-if="year"
-                :slider-color="month ? 'primary' : 'transparent'"
-                color="transparent"
-                next-icon="fas fa-angle-right"
-                prev-icon="fas fa-angle-left"
-                show-arrows>
-          <v-tab v-for="browseMonth in stats[year]"
-                 :key="browseMonth.month"
-                 :to="localePath({ name: 'galleries-date', params: { year, month: browseMonth.month } })"
-                 nuxt>{{ browseMonth.nameShort }}</v-tab>
-        </v-tabs>
+    <h1 class="title">
+      {{ title }}
+      <span v-if="galleries" class="subtitle">
+        - {{ format(galleries) }} galleries with {{ format(images) }} images
+      </span>
+    </h1>
 
-      </v-flex>
+    <b-pagination v-if="pages > 1"
+                  id="top-navigation"
+                  :current.sync="page"
+                  :total="galleries"
+                  per-page="20"
+                  @change="onPageChange" />
 
-      <v-flex tag="h1" class="headline" xs12>
-        {{ title }}
-        <span v-if="galleries" class="subheading text--tertiary">
-          - {{ format(galleries) }} galleries with {{ format(images) }} images
-        </span>
-      </v-flex>
+    <nuxt-child />
 
-      <v-flex xs12 class="text-xs-center">
-        <v-pagination v-if="pages > 1"
-                      id="top-navigation"
-                      :length="pages"
-                      v-model="page"
-                      prev-icon="fas fa-angle-left"
-                      next-icon="fas fa-angle-right"
-                      @input="onPageChange"/>
-      </v-flex>
-
-      <nuxt-child />
-
-      <v-flex xs12 class="text-xs-center">
-        <v-pagination v-if="pages > 1"
-                      :length="pages"
-                      v-model="page"
-                      prev-icon="fas fa-angle-left"
-                      next-icon="fas fa-angle-right"
-                      @input="onPageChange" />
-      </v-flex>
-
-    </v-layout>
-  </v-container>
+    <b-pagination v-if="pages > 1"
+                  :current.sync="page"
+                  :total="galleries"
+                  per-page="20"
+                  @change="onPageChange" />
+  </main>
 
 </template>
 
 
 <script>
-  import VPagination from 'vuetify/es5/components/VPagination';
-  import { VTab, VTabs } from 'vuetify/es5/components/VTabs';
-
   import format from 'date-fns/format';
 
 
@@ -119,8 +104,6 @@
 
       return { day, galleries, images, month, page, pages, stats, title, year };
     },
-
-    components: { VPagination, VTab, VTabs },
 
     head: {
       title: 'Galleries'
