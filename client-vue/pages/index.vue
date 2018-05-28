@@ -1,9 +1,5 @@
 <template>
-  <v-container>
-    <v-layout column justify-center align-center>
-      <v-flex>
-        Welcome
-      </v-flex>
-    </v-layout>
-  </v-container>
+  <main class="column section">
+    Welcome
+  </main>
 </template>

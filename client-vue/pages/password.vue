@@ -1,44 +1,45 @@
 <template>
-  <v-container fluid fill-height>
-    <v-layout align-center justify-center>
-      <v-flex sx12 sm8 md4>
-        <v-card>
+  <main class="column">
 
-          <v-toolbar flat>
-            <v-toolbar-title>Forgot password</v-toolbar-title>
-          </v-toolbar>
+    <section class="card">
+      <div class="card-header">
+        <span class="card-header-title">Forgot password</span>
+      </div>
 
-          <v-card-text>
-            <p>
-              Enter your email and we will send you a password reset mail.
-            </p>
-            <v-form>
-              <v-text-field prepend-icon="fas fa-at" name="email" label="Email" type="email" />
-            </v-form>
-          </v-card-text>
+      <form class="card-content">
+        <p>
+          Enter your email and we will send you a password reset mail.
+        </p>
 
-          <v-card-actions>
-            <v-spacer />
-            <v-btn color="primary">Reset password</v-btn>
-          </v-card-actions>
+        <b-field label="Email">
+          <b-input icon-pack="fas"
+                   icon="fa-at"
+                   name="email"
+                   required
+                   type="email" />
+        </b-field>
 
-          <v-card-actions class="mt-3">
-            <nuxt-link to="/login">Login</nuxt-link>
-            <v-spacer />
-            <nuxt-link to="/register">Register</nuxt-link>
-          </v-card-actions>
+        <button class="button is-primary" type="submit">Reset password</button>
+      </form>
 
-        </v-card>
-      </v-flex>
-    </v-layout>
-  </v-container>
+      <div class="card-footer">
+        <nuxt-link :to="localePath('login')">Login</nuxt-link>
+        <nuxt-link :to="localePath('register')">Register</nuxt-link>
+      </div>
+    </section>
+
+  </main>
 </template>
+
 
 <script>
   export default {
   };
 </script>
 
-<style scoped>
 
+<style scoped>
+  section.card {
+    max-width: 300px;
+  }
 </style>

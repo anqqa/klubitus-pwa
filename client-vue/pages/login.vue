@@ -1,68 +1,52 @@
 <template>
-  <v-container fluid fill-height>
-    <v-layout align-center justify-center>
-      <v-flex sx12 sm8 md4>
-        <v-card>
+  <main class="column">
 
-          <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="login">
+    <section class="card">
+      <div class="card-header">
+        <span class="card-header-title">Login</span>
+      </div>
 
-            <v-toolbar flat>
-              <v-toolbar-title>Login</v-toolbar-title>
-            </v-toolbar>
+      <form class="card-content">
+        <button class="button is-outlined">
+          <span class="icon"><i class="fab fa-facebook-square" /></span>
+          Login with Facebook
+        </button>
 
-            <v-card-text>
-              <v-btn block outline>
-                <v-icon>fab fa-facebook-square</v-icon>
-                <span class="ml-2">Login with Facebook</span>
-              </v-btn>
+        <span class="separator">or</span>
 
-              <span class="separator mt-3">or</span>
+        <b-field :type="!!formError && 'is-danger'" label="Email or username">
+          <b-input :value="username"
+                   icon-pack="far"
+                   icon="fa-user"
+                   name="username"
+                   required
+                   type="text" />
+        </b-field>
 
-              <v-alert :value="!!formError" color="warning" icon="far fa-frown" transition="scale-transition">
-                {{ formError }}
-              </v-alert>
+        <b-field :type="!!formError && 'is-danger'" label="Password">
+          <b-input icon-pack="fas"
+                   icon="fa-key"
+                   name="password"
+                   required
+                   type="password" />
+        </b-field>
 
-              <v-text-field v-model="username"
-                            :error="!!formError"
-                            :rules="usernameRules"
-                            prepend-icon="far fa-user"
-                            name="username"
-                            label="Email or username"
-                            required
-                            type="email" />
-              <v-text-field v-model="password"
-                            :error="!!formError"
-                            :rules="passwordRules"
-                            prepend-icon="fas fa-key"
-                            required
-                            name="password"
-                            label="Password"
-                            type="password" />
+        <button class="button is-primary" type="submit">Login</button>
+      </form>
 
-              <nuxt-link to="/password">Forgot password?</nuxt-link>
-            </v-card-text>
+      <div class="card-footer">
+        <nuxt-link :to="localePath('password')">Forgot password?</nuxt-link>
+        <nuxt-link :to="localePath('register')">Register</nuxt-link>
+      </div>
+    </section>
 
-            <v-card-actions>
-              <nuxt-link to="/register">Register</nuxt-link>
-              <v-spacer />
-              <v-btn :disabled="!valid" color="primary" type="submit">Login</v-btn>
-            </v-card-actions>
-
-          </v-form>
-
-        </v-card>
-      </v-flex>
-    </v-layout>
-  </v-container>
+  </main>
 </template>
 
 <script>
   import get from 'lodash/get';
-  import VAlert from 'vuetify/es5/components/VAlert';
-  import VForm from 'vuetify/es5/components/VForm';
 
   export default {
-    components: { VAlert, VForm },
 
     data: () => ({
       formError: null,
@@ -106,5 +90,7 @@
 </script>
 
 <style scoped>
-
+  section.card {
+    max-width: 300px;
+  }
 </style>

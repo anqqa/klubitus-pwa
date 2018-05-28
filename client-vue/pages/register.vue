@@ -1,45 +1,65 @@
 <template>
-  <v-container fluid fill-height>
-    <v-layout align-center justify-center>
-      <v-flex sx12 sm8 md4>
-        <v-card>
+  <main class="column">
 
-          <v-toolbar flat>
-            <v-toolbar-title>Register</v-toolbar-title>
-          </v-toolbar>
+    <section class="card">
+      <div class="card-header">
+        <span class="card-header-title">Register</span>
+      </div>
 
-          <v-card-text>
-            <v-btn block outline>
-              <v-icon>fab fa-facebook-square</v-icon>
-              <span class="ml-2">Login with Facebook</span>
-            </v-btn>
+      <form class="card-content">
+        <button class="button is-outlined">
+          <span class="icon"><i class="fab fa-facebook-square" /></span>
+          Login with Facebook
+        </button>
 
-            <span class="separator mt-3">or</span>
+        <span class="separator">or</span>
 
-            <v-form>
-              <v-text-field prepend-icon="fas fa-at" name="email" label="Email" type="email" />
-              <v-text-field prepend-icon="far fa-user" name="username" label="Username" type="text" />
-              <v-text-field prepend-icon="fas fa-key" name="password" label="Password" type="password" />
-            </v-form>
-          </v-card-text>
+        <b-field label="Email">
+          <b-input :value="email"
+                   icon-pack="far"
+                   icon="fa-at"
+                   name="email"
+                   required
+                   type="email" />
+        </b-field>
 
-          <v-card-actions>
-            <nuxt-link to="/login">Login</nuxt-link>
-            <v-spacer />
-            <v-btn color="primary">Register</v-btn>
-          </v-card-actions>
+        <b-field label="Username">
+          <b-input :value="username"
+                   icon-pack="far"
+                   icon="fa-user"
+                   name="username"
+                   required
+                   type="text" />
+        </b-field>
 
-        </v-card>
-      </v-flex>
-    </v-layout>
-  </v-container>
+        <b-field label="Password">
+          <b-input icon-pack="fas"
+                   icon="fa-key"
+                   name="password"
+                   required
+                   type="password" />
+        </b-field>
+
+        <button class="button is-primary" type="submit">Register</button>
+      </form>
+
+      <div class="card-footer">
+        <nuxt-link :to="localePath('login')">Login</nuxt-link>
+      </div>
+    </section>
+
+  </main>
 </template>
+
 
 <script>
   export default {
   };
 </script>
 
-<style scoped>
 
+<style scoped>
+  section.card {
+    max-width: 300px;
+  }
 </style>
