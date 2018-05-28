@@ -174,3 +174,52 @@ $navbar-dropdown-arrow: $white;
     }
   }
 }
+
+
+// Custom
+
+.is-reverse-order {
+  flex-direction: row-reverse;
+}
+
+.is-transparent {
+  background-color: transparent;
+}
+
+.markdown {
+  a {
+    text-decoration: underline;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.separator {
+  display: block;
+  font-variant: small-caps;
+  overflow: hidden;
+  text-align: center;
+
+  &:after,
+  &:before {
+    background-color: grey;
+    content: '';
+    display: inline-block;
+    height: 1px;
+    position: relative;
+    vertical-align: middle;
+    width: 50%;
+  }
+
+  &:after {
+    margin-right: -50%;
+    left: 0.5em;
+  }
+
+  &:before {
+    margin-left: -50%;
+    right: 0.5em;
+  }
+}
