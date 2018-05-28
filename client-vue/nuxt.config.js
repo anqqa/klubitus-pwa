@@ -19,8 +19,8 @@ module.exports = {
   meta: {
     description: 'Clubbers guide to... Finland',
   },
-  css: ['~/assets/style/app.styl', '~/assets/style/dark.scss'],
-  plugins: ['~/plugins/axios', '~/plugins/vuetify.js', '~/plugins/vue-plugins'],
+  css: ['~/assets/style/dark.scss'],
+  plugins: ['~/plugins/axios', '~/plugins/vue-plugins'],
 
   /**
    * Customize the progress bar color
@@ -150,17 +150,6 @@ module.exports = {
    * Build configuration
    */
   build: {
-    babel: {
-      plugins: [
-        ['transform-imports', {
-          vuetify: {
-            transform:         'vuetify/es5/components/${member}',
-            preventFullImport: true
-          },
-        }]
-      ]
-    },
-
     /**
      * Run ESLint on save
      */
@@ -177,14 +166,13 @@ module.exports = {
       if (ctx.isServer) {
         config.externals = [
           nodeExternals({
-            whitelist: [/\.css$/, /^vuetify/]
+            whitelist: [/\.css$/]
           })
         ]
       }
     },
 
     extractCSS: true,
-    vendor: ['~/plugins/vuetify'],
   },
 
 };

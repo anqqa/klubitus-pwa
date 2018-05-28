@@ -1,7 +1,7 @@
 {
   "name": "klubitus-client",
   "version": "0.0.0",
-  "description": "PWA client for Klubitus with Nuxt.js and Vuetify.js",
+  "description": "PWA client for Klubitus with Vue and Nuxt.js",
   "author": "Antti Qvickström",
   "license": "MIT",
   "private": true,
@@ -27,8 +27,7 @@
     "vue-async-computed": "^3.3.1",
     "vue-router": "^3.0.1",
     "vue-server-renderer": "^2.5.16",
-    "vue-template-compiler": "^2.5.16",
-    "vuetify": "^1.0.10"
+    "vue-template-compiler": "^2.5.16"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
@@ -36,8 +35,6 @@
     "eslint": "^4.3.0",
     "eslint-loader": "^1.9.0",
     "node-sass": "^4.9.0",
-    "sass-loader": "^7.0.1",
-    "stylus": "^0.54.5",
-    "stylus-loader": "^3.0.1"
+    "sass-loader": "^7.0.1"
   }
 }
