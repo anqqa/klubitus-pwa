@@ -1,0 +1,55 @@
+version: '2'
+
+services:
+
+  logentries:
+    image: logentries/docker-logentries:0.2.1
+    container_name: logentries
+    command: -t ${LOGENTRIES_TOKEN} --no-stats
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy:alpine
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - /volumes/proxy/certs:/etc/nginx/certs:ro
+      - /volumes/proxy/vhost.d:/etc/nginx/vhost.d
+      - /volumes/proxy/html:/usr/share/nginx/html
+    labels:
+      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
+
+  nginx-proxy-letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion:stable
+    container_name: nginx-proxy-letsencrypt
+    restart: always
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /volumes/proxy/certs:/etc/nginx/certs:rw
+
+
+  portainer:
+    image: portainer/portainer
+    container_name: portainer
+    command: -H unix:///var/run/docker.sock
+    expose:
+      - "9000"
+    environment:
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      LETSENCRYPT_HOST: swarm.klubitus.org
+      VIRTUAL_HOST: swarm.klubitus.org
+      VIRTUAL_PORT: 9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /volumes/portainer/data:/data
+    depends_on:
+      - nginx-proxy
