@@ -1,0 +1,38 @@
+
+:root {
+  --color-background: #000;
+  --color-primary: #e91e63;
+  --color-secondary: #aaa;
+  --color-text: #fff;
+
+  --font-family: -apple-system, BlinkMacSystemFont, Avenir, "Avenir Next", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+
+  --form-border-radius: 4px;
+
+  --grid-gutter: 2rem;
+  --grid-max-width: 120rem;
+
+  --media-phone: 480px;
+  --media-tablet: 768px;
+  --media-computer: 1024px;
+
+  --transition-time: 0.2s;
+}
+
+
+.theme-in-transition,
+.theme-in-transition * {
+  transition: all 250ms;
+}
+
+
+/* Theme: Dark */
+[data-theme="dark"] {
+}
+
+
+/* Theme: Light */
+[data-theme="light"] {
+  --color-background: #fff;
+  --color-text: #000;
+}

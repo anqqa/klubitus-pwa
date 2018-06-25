@@ -1,0 +1,55 @@
+/* Primary navigation bar */
+.navbar {
+  align-items: stretch;
+  display: flex;
+  min-height: 5rem;
+  margin: auto 0.5rem;
+}
+
+.navbar a {
+  align-items: center;
+  color: var(--color-text);
+  display: flex;
+  margin: auto 0.5rem;
+}
+
+.navbar img {
+  max-height: 3rem;
+}
+
+.navbar .is-center,
+.navbar .is-left,
+.navbar .is-right {
+  flex: 1;
+}
+
+
+/* Secondary navigation */
+nav:not(.navbar) ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav:not(.navbar) ul ul {
+  font-size: 80%;
+  margin-left: 1rem;
+}
+
+nav:not(.navbar) li {
+}
+
+nav:not(.navbar) a {
+  color: var(--color-text);
+  display: block;
+  padding: 0.5rem 1rem;
+}
+
+nav:not(.navbar) a.is-active {
+  border-right: 2px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+.nav-inline li {
+  display: inline-block;
+}

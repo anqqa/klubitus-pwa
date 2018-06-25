@@ -1,0 +1,72 @@
+/* Button */
+.button,
+[type="button"],
+button {
+  background: transparent;
+  border: 1px solid var(--color-text);
+  border-radius: var(--form-border-radius);
+  color: var(--color-text);
+  display: inline-block;
+  line-height: 1;
+  padding: 1rem 2rem;
+  text-align: center;
+  transform: scale(1);
+  transition: opacity var(--transition-time) ease;
+}
+
+.button:hover,
+[type="button"]:hover,
+button:hover {
+  opacity: 0.8;
+}
+
+.button:active,
+[type="button"]:active,
+button:active {
+  transform: scale(0.98);
+}
+
+.button.is-primary {
+  background: var(--color-primary);
+  border-color: transparent;
+  color: var(--color-text);
+}
+
+.button.is-clear {
+  background: transparent;
+  border-color: transparent;
+  color: var(--color-primary);
+}
+
+
+.button.is-small {
+  padding: 0.5rem 1rem;
+}
+
+
+/* Button group */
+.button-group {
+  display: flex;
+  margin: auto 0.5rem;
+}
+
+.button-group .button,
+.button-group [type="button"],
+.button-group button {
+  margin: 0;
+}
+
+.button-group :not(:first-child) {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  margin-left: -1px;
+}
+
+.button-group :not(:last-child) {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.button-group .is-active {
+  z-index: 1;
+}
