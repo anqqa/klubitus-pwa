@@ -16,7 +16,7 @@
         <div class="is-center">
           <div class="navbar-item is-expanded">
             <div class="field">
-              <b-autocomplete icon="search" placeholder="Search..." />
+              <input type="text" placeholder="Search...">
             </div>
           </div>
         </div>
@@ -67,6 +67,15 @@
                        :value="locale.code"
                        active-class="is-active is-primary"
                        class="button is-small">{{ locale.name }}</nuxt-link>
+          </div>
+
+          <span class="icon"><i class="fas fa-adjust" /></span>
+          <div class="button-group">
+            <button v-for="availableTheme in ['light', 'dark']"
+                    :key="availableTheme"
+                    :class="theme === availableTheme ? 'is-active is-primary' : ''"
+                    class="button is-small"
+                    @click="toggleTheme(availableTheme)">{{ availableTheme }}</button>
           </div>
         </div>
 
