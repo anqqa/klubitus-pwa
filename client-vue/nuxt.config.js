@@ -9,17 +9,17 @@ module.exports = {
     title: 'Klubitus',
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700' },
       { rel: 'stylesheet',
         href: 'https://use.fontawesome.com/releases/v5.0.10/css/all.css',
         integrity: 'sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg',
         crossorigin: 'anonymous' },
+      { rel: 'stylesheet', href: 'https://unpkg.com/normalize.css' },
     ],
   },
   meta: {
     description: 'Clubbers guide to... Finland',
   },
-  css: ['~/assets/style/dark.scss'],
+  css: ['~/assets/style/klubitus.css'],
   plugins: ['~/plugins/axios', '~/plugins/vue-plugins'],
 
   /**
@@ -100,12 +100,6 @@ module.exports = {
     }],
 
     ['@nuxtjs/pwa', { icon: false }],
-
-    ['nuxt-buefy', {
-      css:                 false,
-      defaultIconPack:     'fas',
-      materialDesignIcons: false,
-    }],
 
     ['nuxt-i18n', {
       defaultLocale:         'en',
