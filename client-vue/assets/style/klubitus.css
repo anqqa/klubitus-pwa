@@ -1,5 +1,3 @@
-@import './_themes.css';
-
 @import './_base.css';
 @import './_layout.css';
 @import './_grid.css';
@@ -11,3 +9,5 @@
 @import './_tag.css';
 
 @import './_util.css';
+
+@import './_themes.css';

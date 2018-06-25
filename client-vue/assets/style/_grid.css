@@ -1,0 +1,95 @@
+.container {
+  margin: 0 auto;
+  max-width: var(--grid-max-width);
+  padding: 0 calc(var(--grid-gutter) / 2);
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  margin-left: calc(var(--grid-gutter) / -2);
+  margin-right: calc(var(--grid-gutter) / -2);
+}
+
+.col,
+[class*=" col-"],
+[class^="col-"] {
+  flex: 0 1 100%;
+  margin: 0 calc(var(--grid-gutter) / 2) calc(var(--grid-gutter) / 2);
+  max-width: 100%;
+}
+
+.is-narrow { flex: 0 1; }
+.is-reverse-order { flex-direction: row-reverse; }
+
+@media screen and (min-width: 768px) {
+  .container {
+    width: 96%;
+  }
+
+  .col {
+    flex: 1;
+  }
+
+  .col-1 {
+    flex: 0 0 calc((100% / (12 / 1)) - var(--grid-gutter));
+    max-width: calc((100% / (12 / 1)) - var(--grid-gutter));
+  }
+
+  .col-2 {
+    flex: 0 0 calc((100% / (12 / 2)) - var(--grid-gutter));
+    max-width: calc((100% / (12 / 2)) - var(--grid-gutter));
+  }
+
+  .col-3 {
+    flex: 0 0 calc((100% / (12 / 3)) - var(--grid-gutter));
+    max-width: calc((100% / (12 / 3)) - var(--grid-gutter));
+  }
+
+  .col-4 {
+    flex: 0 0 calc((100% / (12 / 4)) - var(--grid-gutter));
+    max-width: calc((100% / (12 / 4)) - var(--grid-gutter));
+  }
+
+  .col-5 {
+    flex: 0 0 calc((100% / (12 / 5)) - var(--grid-gutter));
+    max-width: calc((100% / (12 / 5)) - var(--grid-gutter));
+  }
+
+  .col-6 {
+    flex: 0 0 calc((100% / (12 / 6)) - var(--grid-gutter));
+    max-width: calc((100% / (12 / 6)) - var(--grid-gutter));
+  }
+
+  .col-7 {
+    flex: 0 0 calc((100% / (12 / 7)) - var(--grid-gutter));
+    max-width: calc((100% / (12 / 7)) - var(--grid-gutter));
+  }
+
+  .col-8 {
+    flex: 0 0 calc((100% / (12 / 8)) - var(--grid-gutter));
+    max-width: calc((100% / (12 / 8)) - var(--grid-gutter));
+  }
+
+  .col-9 {
+    flex: 0 0 calc((100% / (12 / 9)) - var(--grid-gutter));
+    max-width: calc((100% / (12 / 9)) - var(--grid-gutter));
+  }
+
+  .col-10 {
+    flex: 0 0 calc((100% / (12 / 10)) - var(--grid-gutter));
+    max-width: calc((100% / (12 / 10)) - var(--grid-gutter));
+  }
+
+  .col-11 {
+    flex: 0 0 calc((100% / (12 / 11)) - var(--grid-gutter));
+    max-width: calc((100% / (12 / 11)) - var(--grid-gutter));
+  }
+
+  .col-12 {
+    flex: 0 0 calc((100% / (12 / 12)) - var(--grid-gutter));
+    max-width: calc((100% / (12 / 12)) - var(--grid-gutter));
+  }
+}

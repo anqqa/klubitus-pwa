@@ -1,17 +1,17 @@
 <template>
 
-  <main class="column section">
-    <h1 class="title">Forum</h1>
+  <main>
+    <h1>Forum</h1>
 
-    <div class="columns is-reverse-order">
-      <div class="column is-half">
-        <h2 class="subtitle">Latest</h2>
+    <div class="row is-reverse-order">
+      <div class="col">
+        <h2 class="h3">Latest</h2>
 
         <ForumTopicList :topics="topics" />
       </div>
 
-      <div class="column is-half">
-        <h2 class="subtitle">Areas</h2>
+      <div class="col">
+        <h2 class="h3">Areas</h2>
 
         <ForumAreaList :areas="areas" />
       </div>

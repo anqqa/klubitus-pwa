@@ -1,19 +1,19 @@
 <template>
-  <main class="column">
+  <main>
 
     <article class="container">
       <figure v-if="event.flyer_front_url" class="image">
         <img :src="event.flyer_front_url" alt="Flyer">
       </figure>
 
-      <header class="has-text-centered is-uppercase">
+      <header class="is-text-center is-uppercase">
         <h2 class="subtitle">{{ event.date }}</h2>
         <h1 class="title">{{ event.name }}</h1>
         {{ event.venue_name }}, {{ event.city_name }}<br>
         {{ event.hours }}<br>
         <a v-if="event.facebook_id"
            :href="`https://facebook.com/events/${event.facebook_id}/`"
-           class="button is-outlined"
+           class="button"
            rel="noopener"
            target="_blank">
           <span class="icon">

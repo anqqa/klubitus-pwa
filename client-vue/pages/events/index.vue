@@ -1,32 +1,38 @@
 <template>
-  <main class="column section">
-    <h1 class="title">{{ title }}</h1>
+  <main>
+    <h1>{{ title }}</h1>
 
-    <div class="columns">
+    <div class="row">
 
-      <div class="column">
-        <nav class="pagination" role="navigation" aria-label="pagination">
-          <nuxt-link :to="localePath(pagination.previous.url)" class="pagination-previous">
-            &laquo; {{ pagination.previous.title }}
-          </nuxt-link>
-          <nuxt-link :to="localePath(pagination.next.url)" class="pagination-next">
-            {{ pagination.next.title }} &raquo;
-          </nuxt-link>
+      <div class="col">
+        <nav class="nav-inline" role="navigation" aria-label="pagination">
+          <ul class="is-horizontal-center">
+            <li>
+              <nuxt-link :to="localePath(pagination.previous.url)">
+                &laquo; {{ pagination.previous.title }}
+              </nuxt-link>
+            </li>
+            <li>
+              <nuxt-link :to="localePath(pagination.next.url)">
+                {{ pagination.next.title }} &raquo;
+              </nuxt-link>
+            </li>
+          </ul>
         </nav>
 
         <section v-for="(day, dayIndex) in days" :key="dayIndex">
-          <h2 class="subtitle">{{ day.header }}</h2>
+          <h2 class="h6">{{ day.header }}</h2>
 
           <hr>
 
-          <div v-for="(event, eventIndex) in day.events" :key="eventIndex" class="columns">
-            <div class="column is-narrow flyer">
+          <div v-for="(event, eventIndex) in day.events" :key="eventIndex" class="row">
+            <div class="col is-narrow flyer">
               <figure class="image is-16by9">
                 <img :src="event.flyer_front_url">
               </figure>
             </div>
 
-            <div class="column">
+            <div class="col">
               <nuxt-link :to="localePath(event.url)">{{ event.name }}</nuxt-link><br>
               <span class="text--secondary">{{ event.hours }}</span>
               &sdot;
@@ -35,17 +41,23 @@
           </div>
         </section>
 
-        <nav class="pagination" role="navigation" aria-label="pagination">
-          <nuxt-link :to="localePath(pagination.previous.url)" class="pagination-previous">
-            &laquo; {{ pagination.previous.title }}
-          </nuxt-link>
-          <nuxt-link :to="localePath(pagination.next.url)" class="pagination-next">
-            {{ pagination.next.title }} &raquo;
-          </nuxt-link>
+        <nav class="nav-inline" role="navigation" aria-label="pagination">
+          <ul class="is-horizontal-center">
+            <li>
+              <nuxt-link :to="localePath(pagination.previous.url)">
+                &laquo; {{ pagination.previous.title }}
+              </nuxt-link>
+            </li>
+            <li>
+              <nuxt-link :to="localePath(pagination.next.url)">
+                {{ pagination.next.title }} &raquo;
+              </nuxt-link>
+            </li>
+          </ul>
         </nav>
       </div>
 
-      <div class="column is-one-quarter">
+      <div class="col-3">
         <keep-alive>
           <EventList title="New events" type="latest" />
         </keep-alive>

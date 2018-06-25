@@ -1,6 +1,8 @@
-.is-text-left { text-align: left; }
-.is-text-center { text-align: center; }
-.is-text-right { text-align: right; }
+.has-text-left { text-align: left; }
+.has-text-center { text-align: center; }
+.has-text-right { text-align: right; }
+.is-lowercase { text-transform: lowercase; }
+.is-uppercase { text-transform: uppercase; }
 
 .is-left {
   align-items: center;
@@ -34,7 +36,7 @@
 .pull-right { float: right; }
 
 
-.truncate {
+.is-truncated {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -3,7 +3,8 @@
   --color-background: #000;
   --color-primary: #e91e63;
   --color-secondary: #aaa;
-  --color-text: #fff;
+  --color-separator: rgba(128, 128, 128, 0.5);
+  --color-text: rgba(255, 255, 255, 0.9);
 
   --font-family: -apple-system, BlinkMacSystemFont, Avenir, "Avenir Next", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 
@@ -27,12 +28,12 @@
 
 
 /* Theme: Dark */
-[data-theme="dark"] {
+.layout[data-theme="dark"] {
 }
 
 
 /* Theme: Light */
-[data-theme="light"] {
+.layout[data-theme="light"] {
   --color-background: #fff;
   --color-text: #000;
 }

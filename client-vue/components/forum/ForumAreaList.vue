@@ -1,12 +1,12 @@
 <template>
 
   <section>
-    <table class="table is-hoverable if-fullwidth is-transparent">
+    <table class="table is-hoverable">
       <template v-for="group in groupList">
 
         <thead :key="`${group.id}_head`">
           <tr>
-            <th><h3>{{ group.name }}</h3></th>
+            <th><h3 class="h6">{{ group.name }}</h3></th>
             <th v-if="!mini" class="has-text-right">
               <span class="icon is-small"><i class="far fa-comments" /></span>
             </th>
@@ -92,10 +92,3 @@
 
   };
 </script>
-
-
-<style scoped>
-  h3 {
-    text-transform: uppercase;
-  }
-</style>

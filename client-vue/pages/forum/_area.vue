@@ -1,11 +1,11 @@
 <template>
 
-  <main class="column section">
+  <main>
     <h1 class="title" v-text="area.name" />
     <h2 class="subtitle" v-html="area.description" />
 
-    <div class="columns is-reverse-order">
-      <div class="column">
+    <div class="row is-reverse-order">
+      <div class="col">
 
         <b-pagination v-if="pages > 1"
                       id="top-navigation"
@@ -25,7 +25,7 @@
                       @change="onPageChange" />
       </div>
 
-      <div class="column is-one-third">
+      <div class="col-3">
         <ForumAreaList :areas="areas" mini />
       </div>
     </div>

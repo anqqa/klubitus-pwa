@@ -1,5 +1,5 @@
 <template>
-  <main class="column section">
+  <main>
     Welcome
   </main>
 </template>
