@@ -55,7 +55,7 @@
 .icon.is-small { height: 1rem; width: 1rem; }
 .icon.is-medium { height: 2rem; width: 2rem; }
 .icon.is-large { height: 3rem; width: 3rem; }
-.icon.is-max { height: 100%; width: 100%; }
+.icon.is-full { height: 100%; width: 100%; }
 
 
 /* Avatar */

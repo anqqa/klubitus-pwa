@@ -7,7 +7,7 @@
           <img v-if="post.avatar" :src="post.avatar" alt="Avatar">
           <span v-else
                 :class="`theme-${post.avatarColor}`"
-                class="icon is-max">{{ post.username.substr(0, 2) }}</span>
+                class="icon is-full">{{ post.username.substr(0, 2) }}</span>
         </figure>
       </div>
 
@@ -53,7 +53,7 @@
             ...post,
             ago:         fuzzyTimeDistance(new Date(post.created_at)),
             avatar,
-            avatarColor: avatar ? 'transparent' : colorFromText(username),
+            avatarColor: colorFromText(username),
             post:        this.$md.render(post.post),
             signature:   post.author && post.author.signature ? this.$md.render("--\n" + post.author.signature) : null,
             username,
