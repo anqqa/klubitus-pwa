@@ -14,12 +14,13 @@ module.exports = {
         integrity: 'sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg',
         crossorigin: 'anonymous' },
       { rel: 'stylesheet', href: 'https://unpkg.com/normalize.css' },
+      { rel: 'stylesheet', href: '/style/klubitus.css' },
     ],
   },
   meta: {
     description: 'Clubbers guide to... Finland',
   },
-  css: ['~/assets/style/klubitus.css'],
+  // css: ['~/assets/style/klubitus.css'],
   plugins: ['~/plugins/axios', '~/plugins/vue-plugins'],
 
   /**
