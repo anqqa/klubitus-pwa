@@ -1,21 +1,23 @@
 <template>
 
-  <div>
+  <section>
     <article v-for="post in postList" :key="post.id" class="media">
       <div class="media-left">
-        <figure class="image is-48x48">
+        <figure class="image avatar is-48x48">
           <img v-if="post.avatar" :src="post.avatar" alt="Avatar">
-          <span v-else class="white--text headline">{{ post.username.substr(0, 2) }}</span>
+          <span v-else
+                :class="`theme-${post.avatarColor}`"
+                class="icon is-max">{{ post.username.substr(0, 2) }}</span>
         </figure>
       </div>
 
       <div class="media-content">
-        <header class="level">
-          <span class="level-left">
+        <header>
+          <span>
             <nuxt-link to="/">{{ post.username }}</nuxt-link>
-            <span v-if="post.author && post.author.title" class="text--tertiary"> &sdot; {{ post.author.title }}</span>
+            <span v-if="post.author && post.author.title" class="has-text-tertiary"> &sdot; {{ post.author.title }}</span>
           </span>
-          <span :title="post.created_at" class="level-right">{{ post.ago }}</span>
+          <span :title="post.created_at" class="pull-right">{{ post.ago }}</span>
         </header>
 
         <div class="content markdown" v-html="post.post" />
@@ -23,7 +25,7 @@
         <footer class="content markdown signature" v-html="post.signature" />
       </div>
     </article>
-  </div>
+  </section>
 
 </template>
 

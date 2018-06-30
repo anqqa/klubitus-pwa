@@ -3,23 +3,23 @@
   <ol>
     <li v-for="topic in topicList" :key="topic.id" class="media">
       <div class="media-left">
-        <figure class="image is-48x48">
+        <figure class="image avatar is-48x48">
           <img v-if="topic.avatar" :src="topic.avatar">
-          <span v-else class="icon is-large"><i class="fas fa-user-circle fa-2x" /></span>
+          <span v-else class="icon is-max"><i class="fas fa-user-circle fa-3x" /></span>
         </figure>
       </div>
 
       <div class="media-content">
-        <nuxt-link :to="topic.url" class="text--primary" v-html="topic.name" /><br>
+        <nuxt-link :to="topic.url" class="has-text-default" v-html="topic.name" /><br>
         <nuxt-link to="/">{{ topic.author ? topic.author.username : topic.author_name }}</nuxt-link>
-        <span v-if="topic.forum_area">
-          &sdot; <span>{{ topic.forum_area.name }}</span>
-        </span>
+        <small v-if="topic.forum_area" class="has-text-tertiary">
+          &sdot; {{ topic.forum_area.name }}
+        </small>
       </div>
 
       <div class="media-right has-text-right">
         {{ topic.postCount }}<br>
-        <span class="text--tertiary">{{ topic.ago }}</span>
+        <span class="has-text-tertiary">{{ topic.ago }}</span>
       </div>
     </li>
   </ol>
