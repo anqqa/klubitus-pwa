@@ -1,10 +1,12 @@
 @import './_base.css';
 @import './_layout.css';
 @import './_grid.css';
-@import './_form.css';
 
-@import './_nav.css';
 @import './_card.css';
+@import './_form.css';
+@import './_image.css';
+@import './_media.css';
+@import './_nav.css';
 @import './_tab.css';
 @import './_tag.css';
 

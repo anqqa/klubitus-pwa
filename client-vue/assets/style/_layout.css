@@ -16,8 +16,6 @@
 }
 
 .layout {
-  background-color: var(--color-background);
-  color: var(--color-text);
   display: grid;
   grid-template-areas:
     "header"

@@ -1,0 +1,87 @@
+.has-text-left { text-align: left; }
+.has-text-center { text-align: center; }
+.has-text-right { text-align: right; }
+.is-lowercase { text-transform: lowercase; }
+.is-uppercase { text-transform: uppercase; }
+
+.is-left {
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.is-center {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.is-right {
+  align-items: center;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.is-horizontal-center {
+  display: flex;
+  justify-content: center;
+}
+
+.is-vertical-center {
+  align-items: center;
+  display: flex;
+}
+
+.pull-left { float: left; }
+.pull-right { float: right; }
+
+
+.is-truncated {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+.has-bg-aqua    { background-color: var(--color-aqua); }
+.has-bg-black   { background-color: var(--color-black); }
+.has-bg-blue    { background-color: var(--color-blue); }
+.has-bg-fuchsia { background-color: var(--color-fuchsia); }
+.has-bg-gray    { background-color: var(--color-gray); }
+.has-bg-green   { background-color: var(--color-green); }
+.has-bg-lime    { background-color: var(--color-lime); }
+.has-bg-maroon  { background-color: var(--color-maroon); }
+.has-bg-navy    { background-color: var(--color-navy); }
+.has-bg-olive   { background-color: var(--color-olive); }
+.has-bg-orange  { background-color: var(--color-orange); }
+.has-bg-purple  { background-color: var(--color-purple); }
+.has-bg-red     { background-color: var(--color-red); }
+.has-bg-silver  { background-color: var(--color-silver); }
+.has-bg-teal    { background-color: var(--color-teal); }
+.has-bg-white   { background-color: var(--color-white); }
+.has-bg-yellow  { background-color: var(--color-yellow); }
+
+.has-text-default { color: var(--color-text); }
+.has-text-primary { color: var(--color-primary); }
+.has-text-secondary { color: var(--color-secondary); }
+.has-text-tertiary { color: color(var(--color-text) alpha(0.5)); }
+.has-text-white { color: white; }
+
+@media screen and (max-width: 479px) {
+  .hide-phone,
+  .show-tablet,
+  .show-computer { display: none !important; }
+}
+
+@media screen and (min-width: 480px) and (max-width: 767px) {
+  .hide-tablet,
+  .show-computer,
+  .show-phone { display: none !important; }
+}
+
+@media screen and (min-width: 768px) {
+  .hide-computer,
+  .show-phone,
+  .show-tablet{ display: none !important; }
+}

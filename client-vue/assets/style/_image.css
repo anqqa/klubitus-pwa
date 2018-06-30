@@ -1,0 +1,67 @@
+.image {
+  display: block;
+  overflow: hidden;
+  position: relative;
+}
+
+.image img {
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+
+/* Ratios */
+.image.is-square img,
+.image.is-1by1 img,
+.image.is-16by9 img,
+.image.is-4by3 img {
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+}
+
+.image.is-square,
+.image.is-1by1 {
+  padding-top: 100%;
+}
+
+.image.is-16by9 {
+  padding-top: 56.25%;
+}
+
+.image.is-4by3 {
+  padding-top: 75%;
+}
+
+
+/* Sizes */
+.is-48x48 { height: 48px; width: 48px; }
+
+
+/* Icon */
+.icon {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.icon.is-small { height: 1rem; width: 1rem; }
+.icon.is-medium { height: 2rem; width: 2rem; }
+.icon.is-large { height: 3rem; width: 3rem; }
+.icon.is-max { height: 100%; width: 100%; }
+
+
+/* Avatar */
+.avatar {
+  border-radius: 50%;
+}
+
+.avatar img {
+}

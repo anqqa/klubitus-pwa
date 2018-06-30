@@ -1,5 +1,5 @@
 <template>
-  <div :data-theme="theme" class="layout">
+  <div :class="`theme-${theme}`" class="layout">
 
     <header>
       <nav class="navbar" role="navigation">
