@@ -6,7 +6,7 @@
         <h1 class="h3">Login</h1>
       </header>
 
-      <form class="card-content">
+      <form class="card-content" @submit.prevent="login">
         <button class="button is-full is-outlined">
           <span class="icon"><i class="bx bx-facebook" /></span>
           Login with Facebook
@@ -14,30 +14,33 @@
 
         <span class="separator">or</span>
 
-        <div :class="!!formError && 'has-error'" class="field">
-          <label for="input-username">Email or username</label>
+        <div :class="{ 'has-error': $v.username.$error }" class="field">
+          <label for="input-username">Email or username *</label>
           <div class="control has-icon-left">
             <input id="input-username"
-                   :value="username"
+                   v-model.trim="$v.username.$model"
                    name="username"
                    required
                    type="text">
             <span class="icon"><i class="bx bx-user" /></span>
           </div>
-          <p v-if="!!formError" class="help" v-html="formError" />
+          <p v-if="$v.username.$error && !$v.username.required" class="help">Please fill in</p>
         </div>
 
-        <div :class="!!formError && 'has-error'" class="field">
-          <label for="input-password">Password</label>
+        <div :class="{ 'has-error': $v.password.$error }" class="field">
+          <label for="input-password">Password *</label>
           <div class="control has-icon-left">
             <input id="input-password"
+                   v-model.trim="$v.password.$model"
                    name="password"
                    required
                    type="password">
             <span class="icon"><i class="bx bx-lock" /></span>
           </div>
-          <p v-if="!!formError" class="help" v-html="formError" />
+          <p v-if="$v.password.$error && !$v.password.required" class="help">Please fill in</p>
         </div>
+
+        <div v-if="!!error" class="field has-error" v-html="error" />
 
         <button class="button is-primary is-full" type="submit">Login</button>
       </form>
@@ -53,29 +56,23 @@
 
 <script>
   import get from 'lodash/get';
+  import { required } from 'vuelidate/lib/validators';
 
   export default {
 
     data: () => ({
-      formError: null,
-      valid:     true,
-
+      error:    null,
       username: '',
-      usernameRules: [
-        v => !!v || 'Please fill in',
-      ],
       password: '',
-      passwordRules: [
-        v => !!v || 'Please fill in',
-      ]
     }),
 
     methods: {
       async login() {
-        if (!this.$refs.form.validate()) {
+        this.$v.$touch();
+
+        if (this.$v.$invalid) {
           return;
         }
-
         try {
           await this.$auth.login({
             data: {
@@ -84,15 +81,20 @@
             }
           });
 
-          this.formError = null;
-          this.username  = '';
-          this.password  = '';
+          this.error    = null;
+          this.username = '';
+          this.password = '';
         }
         catch (error) {
-          this.formError = get(error, 'response.data.message', 'Nope');
+          this.error = get(error, 'response.data.message', 'Nope');
         }
       },
     },
+
+    validations: {
+      username: { required },
+      password: { required },
+    }
 
   };
 </script>

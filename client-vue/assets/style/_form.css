@@ -32,6 +32,9 @@ input::placeholder {
   margin-bottom: 0.75rem;
 }
 
+.field.has-error {
+  color: var(--color-deep-orange);
+}
 
 .control {
   clear: both;
@@ -51,6 +54,12 @@ input::placeholder {
   padding-left: 3.5rem;
 }
 .has-icon-left input:focus + .icon { color: var(--color-text); }
+
+
+.help {
+  font-size: 0.85em;
+  margin-top: 0.25rem;
+}
 
 
 /* Button */
