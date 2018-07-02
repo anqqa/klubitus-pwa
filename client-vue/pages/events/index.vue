@@ -96,7 +96,7 @@
 
         pagination.previous.title = 'Previous day';
         pagination.previous.url   = {
-          name:   'events-date',
+          name:   'events-year-month-day',
           params: {
             year:  previousDate.getFullYear(),
             month: pad(previousDate.getMonth() + 1, 2),
@@ -105,7 +105,7 @@
         };
         pagination.next.title     = 'Next day';
         pagination.next.url       = {
-          name:   'events-date',
+          name:   'events-year-month-day',
           params: {
             year:  nextDate.getFullYear(),
             month: pad(nextDate.getMonth() + 1, 2),
@@ -120,7 +120,7 @@
 
         pagination.previous.title = 'Previous week';
         pagination.previous.url   = {
-          name:   'events-week',
+          name:   'events-year-wk-week',
           params: {
             year: previousDate.getFullYear(),
             week: pad(getISOWeek(previousDate), 2),
@@ -128,7 +128,7 @@
         };
         pagination.next.title     = 'Next week';
         pagination.next.url       = {
-          name:   'events-week',
+          name:   'events-year-wk-week',
           params: {
             year: nextDate.getFullYear(),
             week: pad(getISOWeek(nextDate), 2),
@@ -142,7 +142,7 @@
 
         pagination.previous.title = 'Previous month';
         pagination.previous.url   = {
-          name:   'events-date',
+          name:   'events-year-month-day',
           params: {
             year:  previousDate.getFullYear(),
             month: pad(previousDate.getMonth() + 1, 2),
@@ -150,7 +150,7 @@
         };
         pagination.next.title     = 'Next month';
         pagination.next.url       = {
-          name:   'events-date',
+          name:   'events-year-month-day',
           params: {
             year:  nextDate.getFullYear(),
             month: pad(nextDate.getMonth() + 1, 2),

@@ -25,30 +25,6 @@ module.exports = {
   loading: { color: '#E91E63' },
 
   /**
-   * Custom routes
-   */
-  router: {
-    extendRoutes (routes, resolve) {
-      routes.push({
-        name:      'events-week',
-        path:      '/events/:year/wk:week',
-        component: resolve(__dirname, 'pages/events/index.vue'),
-      });
-      routes.push({
-        name:      'events-date',
-        path:      '/events/:year/:month/:day?',
-        component: resolve(__dirname, 'pages/events/index.vue'),
-      });
-
-      routes.push({
-        name:      'galleries-date',
-        path:      '/galleries/events/:year/:month?/:day?',
-        component: resolve(__dirname, 'pages/galleries/index.vue'),
-      })
-    },
-  },
-
-  /**
    * Global modules
    */
   modules: [
@@ -107,16 +83,17 @@ module.exports = {
       noPrefixDefaultLocale: false,
       redirectRootToLocale:  'en',
       routes:                {
-        'events/index': { fi: '/tapahtumat' },
-        'events/_id':   { fi: '/tapahtumat/:id' },
-        'events-date':  { fi: '/tapahtumat/:year/:month/:day?' },
-        'events-week':  { fi: '/tapahtumat/:year/vk:week' },
+        'events/index':                { fi: '/tapahtumat' },
+        'events/_id':                  { fi: '/tapahtumat/:id' },
+        'events/_year/wk/_week/index': { fi: '/tapahtumat/:year/vk/:week' },
+        'events/_year/_month/_day':    { fi: '/tapahtumat/:year/:month/:day?' },
 
         'forum/topic/_id': { fi: '/forum/aihe/:id' },
 
-        'galleries/index':  { fi: '/kuvastot' },
-        'galleries-date':   { fi: '/kuvastot/tapahtumat/:year/:month?/:day?' },
-        'galleries/flyers': { fi: '/kuvastot/flyerit' },
+        'galleries/index':                     { fi: '/kuvastot' },
+        'galleries/events/_year/_month/index': { fi: '/kuvastot/tapahtumat/:year/:month?' },
+        'galleries/events/_year/_month/_day':  { fi: '/kuvastot/tapahtumat/:year/:month?/:day?' },
+        'galleries/flyers':                    { fi: '/kuvastot/flyerit' },
 
         'login':    { fi: '/kirjaudu' },
         'password': { fi: '/salasana' },
