@@ -12,14 +12,14 @@
       </div>
 
       <div class="media-content">
-        <nuxt-link :to="topic.url" class="has-text-default" v-html="topic.name" /><br>
+        <nuxt-link :to="topic.url" class="has-text-default" v-text="topic.name" /><br>
         <nuxt-link to="/">{{ topic.username }}</nuxt-link>
         <small v-if="topic.forum_area" class="has-text-tertiary">
           &sdot; {{ topic.forum_area.name }}
         </small>
       </div>
 
-      <div class="media-right has-text-right">
+      <div class="media-right has-no-breaks has-text-right">
         {{ topic.postCount }}<br>
         <span class="has-text-tertiary">{{ topic.ago }}</span>
       </div>

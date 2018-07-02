@@ -25,13 +25,10 @@
 .is-reverse-order { flex-direction: row-reverse; }
 
 @media screen and (min-width: 768px) {
-  .container {
-    width: 96%;
-  }
+  .container { width: 96%; }
 
-  .col {
-    flex: 1;
-  }
+  .col { flex: 1; }
+  .is-narrow { flex: 0 1; }
 
   .col-1 {
     flex: 0 0 calc((100% / (12 / 1)) - var(--grid-gutter));

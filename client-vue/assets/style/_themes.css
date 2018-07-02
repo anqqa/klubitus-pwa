@@ -33,12 +33,14 @@
   --color-light-divider:   rgba(255, 255, 255, 0.12);
 
 
-  --color-background: var(--color-black);
-  --color-primary:    var(--color-pink);
-  --color-secondary:  var(--color-light-secondary);
-  --color-separator:  var(--color-light-divider);
-  --color-tertiary:   var(--color-light-tertiary);
-  --color-text:       var(--color-light-primary);
+  --color-background:       var(--color-black);
+  --color-primary:          var(--color-pink);
+  --color-secondary:        var(--color-light-secondary);
+  --color-tertiary:         var(--color-light-tertiary);
+  --color-separator:        var(--color-light-divider);
+  --color-text:             var(--color-light-primary);
+  --color-input-background: var(--color-separator);
+  --color-input-text:       var(--color-secondary);
 
   --font-family: -apple-system, BlinkMacSystemFont, Avenir, "Avenir Next", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 
@@ -51,7 +53,7 @@
   --media-tablet: 768px;
   --media-computer: 1024px;
 
-  --transition-time: 0.2s;
+  --transition-time: 0.15s;
 }
 
 
@@ -68,10 +70,10 @@
 .theme-purple,
 .theme-red,
 .theme-teal {
-  --color-secondary:  var(--color-light-secondary);
-  --color-separator:  var(--color-light-divider);
-  --color-tertiary:   var(--color-light-tertiary);
-  --color-text:       var(--color-light-primary);
+  --color-secondary: var(--color-light-secondary);
+  --color-separator: var(--color-light-divider);
+  --color-tertiary:  var(--color-light-tertiary);
+  --color-text:      var(--color-light-primary);
 }
 
 .theme-amber,
@@ -85,10 +87,10 @@
 .theme-orange,
 .theme-white,
 .theme-yellow {
-  --color-secondary:  var(--color-dark-secondary);
-  --color-separator:  var(--color-dark-divider);
-  --color-tertiary:   var(--color-dark-tertiary);
-  --color-text:       var(--color-dark-primary);
+  --color-secondary: var(--color-dark-secondary);
+  --color-separator: var(--color-dark-divider);
+  --color-tertiary:  var(--color-dark-tertiary);
+  --color-text:      var(--color-dark-primary);
 }
 
 .theme-amber       { --color-background: var(--color-amber); }

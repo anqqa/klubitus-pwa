@@ -8,7 +8,7 @@
           <tr>
             <th><h3 class="h6">{{ group.name }}</h3></th>
             <th v-if="!mini" class="has-text-right">
-              <span class="icon is-small"><i class="far fa-comments" /></span>
+              <span class="icon is-small"><i class="bx bx-conversation" /></span>
             </th>
           </tr>
         </thead>
@@ -20,7 +20,7 @@
                 <nuxt-link :to="area.url">{{ area.name }}</nuxt-link>
                 <p v-if="!mini" v-html="area.description" />
               </td>
-              <td v-if="!mini" class="has-text-right">
+              <td v-if="!mini" class="has-no-breaks has-text-right">
                 {{ area.topicCount }}<br>
                 {{ area.ago }}
               </td>
@@ -32,7 +32,7 @@
                 <p v-if="!mini" v-html="area.description" />
               </td>
               <td v-if="!mini" class="has-text-right">
-                <span class="icon"><i class="fas fa-lock" /></span>
+                <span class="icon"><i class="bx bx-lock" /></span>
               </td>
             </tr>
           </template>

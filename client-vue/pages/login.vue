@@ -1,43 +1,51 @@
 <template>
-  <main class="column">
+  <main class="is-center">
 
     <section class="card">
-      <div class="card-header">
-        <span class="card-header-title">Login</span>
-      </div>
+      <header>
+        <h1 class="h3">Login</h1>
+      </header>
 
       <form class="card-content">
-        <button class="button is-outlined">
-          <span class="icon"><i class="fab fa-facebook-square" /></span>
+        <button class="button is-full is-outlined">
+          <span class="icon"><i class="bx bx-facebook" /></span>
           Login with Facebook
         </button>
 
         <span class="separator">or</span>
 
-        <b-field :type="!!formError && 'is-danger'" label="Email or username">
-          <b-input :value="username"
-                   icon-pack="far"
-                   icon="fa-user"
+        <div :class="!!formError && 'has-error'" class="field">
+          <label for="input-username">Email or username</label>
+          <div class="control has-icon-left">
+            <input id="input-username"
+                   :value="username"
                    name="username"
                    required
-                   type="text" />
-        </b-field>
+                   type="text">
+            <span class="icon"><i class="bx bx-user" /></span>
+          </div>
+          <p v-if="!!formError" class="help" v-html="formError" />
+        </div>
 
-        <b-field :type="!!formError && 'is-danger'" label="Password">
-          <b-input icon-pack="fas"
-                   icon="fa-key"
+        <div :class="!!formError && 'has-error'" class="field">
+          <label for="input-password">Password</label>
+          <div class="control has-icon-left">
+            <input id="input-password"
                    name="password"
                    required
-                   type="password" />
-        </b-field>
+                   type="password">
+            <span class="icon"><i class="bx bx-lock" /></span>
+          </div>
+          <p v-if="!!formError" class="help" v-html="formError" />
+        </div>
 
-        <button class="button is-primary" type="submit">Login</button>
+        <button class="button is-primary is-full" type="submit">Login</button>
       </form>
 
-      <div class="card-footer">
-        <nuxt-link :to="localePath('password')">Forgot password?</nuxt-link>
+      <footer>
+        <nuxt-link :to="localePath('password')">Forgot password</nuxt-link>
         <nuxt-link :to="localePath('register')">Register</nuxt-link>
-      </div>
+      </footer>
     </section>
 
   </main>
@@ -90,7 +98,8 @@
 </script>
 
 <style scoped>
-  section.card {
+  .card {
     max-width: 300px;
+    width: 100%;
   }
 </style>

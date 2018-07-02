@@ -6,7 +6,7 @@
         <img :src="event.flyer_front_url" alt="Flyer">
       </figure>
 
-      <header class="is-text-center is-uppercase">
+      <header class="has-text-center is-uppercase">
         <h2 class="subtitle">{{ event.date }}</h2>
         <h1 class="title">{{ event.name }}</h1>
         {{ event.venue_name }}, {{ event.city_name }}<br>
@@ -16,9 +16,7 @@
            class="button"
            rel="noopener"
            target="_blank">
-          <span class="icon">
-            <i class="fab fa-facebook-square" />
-          </span>
+          <span class="icon"><i class="bx bx-facebook" /></span>
           <span>Facebook event</span>
         </a>
       </header>
@@ -41,7 +39,6 @@
 
     async asyncData({ app, params }) {
       const { data } = await app.$axios.$get(`event/${parseInt(params.id)}`);
-      console.log(data);
       const { begins_at, ends_at, info } = data;
 
       return {

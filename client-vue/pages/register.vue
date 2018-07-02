@@ -1,51 +1,60 @@
 <template>
-  <main class="column">
+  <main class="is-center">
 
     <section class="card">
-      <div class="card-header">
-        <span class="card-header-title">Register</span>
-      </div>
+      <header>
+        <h1 class="h3">Register</h1>
+      </header>
 
       <form class="card-content">
-        <button class="button is-outlined">
-          <span class="icon"><i class="fab fa-facebook-square" /></span>
+        <button class="button is-full is-outlined">
+          <span class="icon"><i class="bx bx-facebook" /></span>
           Login with Facebook
         </button>
 
         <span class="separator">or</span>
 
-        <b-field label="Email">
-          <b-input :value="email"
-                   icon-pack="far"
-                   icon="fa-at"
+        <div class="field">
+          <label for="input-email">Email</label>
+          <div class="control has-icon-left">
+            <input id="input-email"
+                   :value="email"
                    name="email"
                    required
-                   type="email" />
-        </b-field>
+                   type="email">
+            <span class="icon"><i class="bx bx-at" /></span>
+          </div>
+        </div>
 
-        <b-field label="Username">
-          <b-input :value="username"
-                   icon-pack="far"
-                   icon="fa-user"
+        <div class="field">
+          <label for="input-username">Username</label>
+          <div class="control has-icon-left">
+            <input id="input-username"
+                   :value="username"
                    name="username"
                    required
-                   type="text" />
-        </b-field>
+                   type="text">
+            <span class="icon"><i class="bx bx-user" /></span>
+          </div>
+        </div>
 
-        <b-field label="Password">
-          <b-input icon-pack="fas"
-                   icon="fa-key"
+        <div class="field">
+          <label for="input-password">Passphrase</label>
+          <div class="control has-icon-left">
+            <input id="input-password"
                    name="password"
                    required
-                   type="password" />
-        </b-field>
+                   type="password">
+            <span class="icon"><i class="bx bx-lock-open" /></span>
+          </div>
+        </div>
 
-        <button class="button is-primary" type="submit">Register</button>
+        <button class="button is-primary is-full" type="submit">Register</button>
       </form>
 
-      <div class="card-footer">
+      <footer>
         <nuxt-link :to="localePath('login')">Login</nuxt-link>
-      </div>
+      </footer>
     </section>
 
   </main>
@@ -59,7 +68,8 @@
 
 
 <style scoped>
-  section.card {
+  .card {
     max-width: 300px;
+    width: 100%;
   }
 </style>

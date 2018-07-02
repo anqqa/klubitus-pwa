@@ -5,7 +5,7 @@
       <nav class="navbar" role="navigation">
         <div class="is-left">
           <a class="show-phone" role="button" data-target="mainMenu" @click="toggleSidebar">
-            <span class="icon"><i class="fas fa-bars" /></span>
+            <span class="icon"><i class="bx bx-bars" /></span>
           </a>
 
           <nuxt-link to="/" class="hide-phone">
@@ -59,7 +59,7 @@
         </div>
 
         <div class="is-right">
-          <span class="icon"><i class="fas fa-language" /></span>
+          <span class="icon"><i class="bx bx-world" /></span>
           <div class="button-group">
             <nuxt-link v-for="locale in $i18n.locales"
                        :key="locale.code"
@@ -69,7 +69,7 @@
                        class="button is-small">{{ locale.name }}</nuxt-link>
           </div>
 
-          <span class="icon"><i class="fas fa-adjust" /></span>
+          <span class="icon"><i class="bx bx-adjust" /></span>
           <div class="button-group">
             <button v-for="availableTheme in ['light', 'dark']"
                     :key="availableTheme"
@@ -95,10 +95,10 @@
       return {
         drawer: true,
         items: [
-          { icon: 'fas fa-home',         title: 'Home',      url: this.localePath('index'), exact: true },
-          { icon: 'far fa-calendar-alt', title: 'Events',    url: this.localePath('events') },
-          { icon: 'far fa-comments',     title: 'Forum',     url: this.localePath('forum') },
-          { icon: 'far fa-images',       title: 'Galleries', url: this.localePath('galleries'), items: [
+          { icon: 'bx bx-home',         title: 'Home',      url: this.localePath('index'), exact: true },
+          { icon: 'bx bx-calendar-alt', title: 'Events',    url: this.localePath('events') },
+          { icon: 'bx bx-conversation', title: 'Forum',     url: this.localePath('forum') },
+          { icon: 'bx bx-images',       title: 'Galleries', url: this.localePath('galleries'), items: [
               { title: 'Events', url: this.localePath('galleries-events') },
               { title: 'Flyers', url: this.localePath('galleries-flyers') },
             ]}

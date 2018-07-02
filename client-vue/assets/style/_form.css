@@ -1,3 +1,58 @@
+label {
+
+}
+
+input,
+select,
+textarea {
+  background: var(--color-input-background);
+  border: 1px solid var(--color-separator);
+  border-radius: var(--form-border-radius);
+  color: var(--color-input-text);
+  padding: 1rem;
+  transition: border var(--transition-time) ease;
+  width: 100%;
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: var(--color-tertiary);
+}
+
+input::placeholder {
+  color: var(--color-tertiary);
+}
+
+
+.field {
+}
+
+.field:not(:last-child) {
+  margin-bottom: 0.75rem;
+}
+
+
+.control {
+  clear: both;
+  position: relative;
+}
+
+.has-icon-left .icon {
+  color: var(--color-input-text);
+  left: 1rem;
+  margin: 1px;
+  pointer-events: none;
+  position: absolute;
+  top: 1rem;
+}
+.has-icon-left input,
+.has-icon-left select {
+  padding-left: 3.5rem;
+}
+.has-icon-left input:focus + .icon { color: var(--color-text); }
+
+
 /* Button */
 .button,
 [type="button"],
@@ -17,6 +72,7 @@ button {
 .button:hover,
 [type="button"]:hover,
 button:hover {
+  cursor: pointer;
   opacity: 0.8;
 }
 
@@ -38,6 +94,9 @@ button:active {
   color: var(--color-primary);
 }
 
+.button.is-full {
+  width: 100%;
+}
 
 .button.is-small {
   padding: 0.5rem 1rem;

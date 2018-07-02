@@ -1,3 +1,4 @@
+.has-no-breaks { white-space: nowrap; }
 .has-text-left { text-align: left; }
 .has-text-center { text-align: center; }
 .has-text-right { text-align: right; }
@@ -44,23 +45,34 @@
 }
 
 
-.has-bg-aqua    { background-color: var(--color-aqua); }
-.has-bg-black   { background-color: var(--color-black); }
-.has-bg-blue    { background-color: var(--color-blue); }
-.has-bg-fuchsia { background-color: var(--color-fuchsia); }
-.has-bg-gray    { background-color: var(--color-gray); }
-.has-bg-green   { background-color: var(--color-green); }
-.has-bg-lime    { background-color: var(--color-lime); }
-.has-bg-maroon  { background-color: var(--color-maroon); }
-.has-bg-navy    { background-color: var(--color-navy); }
-.has-bg-olive   { background-color: var(--color-olive); }
-.has-bg-orange  { background-color: var(--color-orange); }
-.has-bg-purple  { background-color: var(--color-purple); }
-.has-bg-red     { background-color: var(--color-red); }
-.has-bg-silver  { background-color: var(--color-silver); }
-.has-bg-teal    { background-color: var(--color-teal); }
-.has-bg-white   { background-color: var(--color-white); }
-.has-bg-yellow  { background-color: var(--color-yellow); }
+.separator {
+  color: var(--color-tertiary);
+  display: block;
+  font-variant: small-caps;
+  overflow: hidden;
+  text-align: center;
+}
+.separator:after,
+.separator:before {
+  background-color: var(--color-tertiary);
+  content: '';
+  display: inline-block;
+  height: 1px;
+  position: relative;
+  vertical-align: middle;
+  width: 50%;
+}
+
+.separator:after {
+  margin-right: -50%;
+  left: 0.5em;
+}
+
+.separator:before {
+  margin-left: -50%;
+  right: 0.5em;
+}
+
 
 .has-text-default { color: var(--color-text); }
 .has-text-primary { color: var(--color-primary); }

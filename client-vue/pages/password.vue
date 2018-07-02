@@ -1,31 +1,35 @@
 <template>
-  <main class="column">
+  <main class="is-center">
 
     <section class="card">
-      <div class="card-header">
-        <span class="card-header-title">Forgot password</span>
-      </div>
+      <header>
+        <h1 class="h3">Forgot password</h1>
+      </header>
 
       <form class="card-content">
         <p>
           Enter your email and we will send you a password reset mail.
         </p>
 
-        <b-field label="Email">
-          <b-input icon-pack="fas"
-                   icon="fa-at"
+        <div class="field">
+          <label for="input-email">Email</label>
+          <div class="control has-icon-left">
+            <input id="input-email"
+                   :value="email"
                    name="email"
                    required
-                   type="email" />
-        </b-field>
+                   type="email">
+            <span class="icon"><i class="bx bx-at" /></span>
+          </div>
+        </div>
 
-        <button class="button is-primary" type="submit">Reset password</button>
+        <button class="button is-primary is-full" type="submit">Reset password</button>
       </form>
 
-      <div class="card-footer">
+      <footer>
         <nuxt-link :to="localePath('login')">Login</nuxt-link>
         <nuxt-link :to="localePath('register')">Register</nuxt-link>
-      </div>
+      </footer>
     </section>
 
   </main>
@@ -39,7 +43,8 @@
 
 
 <style scoped>
-  section.card {
+  .card {
     max-width: 300px;
+    width: 100%;
   }
 </style>

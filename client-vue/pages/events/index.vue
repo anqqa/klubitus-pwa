@@ -283,5 +283,5 @@
 
 
 <style scoped>
-  .flyer .image { width: 120px }
+  .flyer { flex-basis: 120px }
 </style>
