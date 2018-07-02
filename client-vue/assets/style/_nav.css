@@ -33,13 +33,16 @@
 
 .menu ul ul {
   font-size: 80%;
-  margin-left: 1rem;
+  margin-left: 2rem;
 }
 
 .menu a {
   color: var(--color-text);
   display: block;
   padding: 0.5rem 1rem;
+}
+.menu a:hover {
+  text-decoration: none;
 }
 
 .menu a.is-active {

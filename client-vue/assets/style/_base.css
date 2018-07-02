@@ -34,6 +34,7 @@ a {
 
 a:hover:not(.button) {
   opacity: 0.6;
+  text-decoration: underline;
 }
 
 
