@@ -75,14 +75,13 @@ module.exports = {
     ['@nuxtjs/pwa', { icon: false }],
 
     ['nuxt-i18n', {
-      defaultLocale:         'en',
-      locales:               [
+      defaultLocale: 'en',
+      locales: [
         { code: 'en', iso: 'en-US', langFile: 'en.js', name: 'English' },
         { code: 'fi', iso: 'fi-FI', langFile: 'fi.js', name: 'suomi' },
       ],
-      noPrefixDefaultLocale: false,
-      redirectRootToLocale:  'en',
-      routes:                {
+
+      pages: {
         'events/index':                { fi: '/tapahtumat' },
         'events/_id':                  { fi: '/tapahtumat/:id' },
         'events/_year/wk/_week/index': { fi: '/tapahtumat/:year/vk/:week' },
@@ -99,7 +98,11 @@ module.exports = {
         'password': { fi: '/salasana' },
         'register': { fi: '/liity' },
       },
-      vueI18n:               {
+      parsePages: false,
+      rootRedirect: 'en',
+      strategy: 'prefix',
+
+      vueI18n: {
         fallbackLocale: 'en',
       },
     }],
