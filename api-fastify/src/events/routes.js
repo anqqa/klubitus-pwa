@@ -14,9 +14,8 @@ module.exports = async (fastify, options) => {
    * Get single event.
    */
   fastify.get('/event/:eventId', getEventSchema, async (request, reply) => {
-    const event = await fastify.knex
+    const event = await Event.query()
       .column('id', 'name', 'begins_at', 'ends_at', 'city_name', 'venue_name', 'flyer_front_url', 'info', 'facebook_id')
-      .from('events')
       .findOne('id', parseInt(request.params.eventId));
 
     return { data: event };

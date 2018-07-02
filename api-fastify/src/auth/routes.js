@@ -3,6 +3,7 @@
 const addDays    = require('date-fns/add_days');
 const crypto     = require('crypto');
 
+const { User } = require('../models/User');
 const { deprecatedMatch, hash, match } = require('./password');
 const {
   getMe:     getMeSchema,
@@ -28,10 +29,11 @@ const routes = async (fastify, options) => {
       return reply.unauthorized('Bad credentials');
     }
 
-    const user = await fastify.knex('users')
-      .first('id', 'username', 'password', 'password_kohana')
+    const user = await User.query()
+      .column('id', 'username', 'password', 'password_kohana')
       .where('username', username)
-      .orWhere('email', username);
+      .orWhere('email', username)
+      .first();
 
     if (!user) {
       request.log.info('Auth: User not found');
