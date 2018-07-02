@@ -101,8 +101,8 @@ module.exports = {
     ['nuxt-i18n', {
       defaultLocale:         'en',
       locales:               [
-        { code: 'en', iso: 'en-US', langFile: 'en-US.js', name: 'English' },
-        { code: 'fi', iso: 'fi-FI', langFile: 'fi-FI.js', name: 'suomi' },
+        { code: 'en', iso: 'en-US', langFile: 'en.js', name: 'English' },
+        { code: 'fi', iso: 'fi-FI', langFile: 'fi.js', name: 'suomi' },
       ],
       noPrefixDefaultLocale: false,
       redirectRootToLocale:  'en',
