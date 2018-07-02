@@ -2,6 +2,7 @@
  * Recursively convert object's Date values to string.
  *
  * @param  {Object}  obj
+ * @return  {Object}
  */
 const objectDateToStr = obj => {
   Object.keys(obj).forEach(key => {
@@ -19,6 +20,29 @@ const objectDateToStr = obj => {
 };
 
 
+/**
+ * Converts string date presentation without timezone to Date in UTC.
+ *
+ * @param  {string}  str
+ * @return  {Date}
+ */
+const stringToDateUTC = str => {
+  if (!str) {
+    return;
+  }
+
+  const ts = new Date(str);
+
+  return new Date(Date.UTC(
+    ts.getFullYear(), ts.getMonth(), ts.getDate(),
+    ts.getHours(), ts.getMinutes(), ts.getSeconds(),
+  ));
+};
+
+
+
+
 module.exports = {
-  objectDateToStr
+  objectDateToStr,
+  stringToDateUTC,
 };
