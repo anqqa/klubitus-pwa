@@ -12,22 +12,7 @@
                     :url="paginationUrl"
         />
 
-        <b-pagination v-if="pages > 1"
-                      id="top-navigation"
-                      :current.sync="page"
-                      :total="area.topic_count"
-                      order="is-centered"
-                      per-page="20"
-                      @change="onPageChange" />
-
         <nuxt-child />
-
-        <b-pagination v-if="pages > 1"
-                      :current.sync="page"
-                      :total="area.topic_count"
-                      order="is-centered"
-                      per-page="20"
-                      @change="onPageChange" />
       </div>
 
       <div class="col-3">
@@ -49,6 +34,8 @@
       const areaId = parseInt(params.area);
       const page   = parseInt(params.page) || 1;
 
+      console.log('asyncData', page);
+
       const { data: areas } = await app.$axios.$get('forum/areas');
 
       let area;
@@ -64,6 +51,8 @@
 
     data() {
       const { params } = this.$route;
+
+      console.log('data');
 
       params.page = '_page';
 
@@ -102,23 +91,6 @@
         link,
         title: this.area ? this.area.name : 'Forum',
       };
-    },
-
-    methods: {
-      onPageChange(page) {
-        const { params } = this.$route;
-
-        if (page > 1) {
-          params.page = page;
-        }
-        else if (params.page) {
-          delete params.page;
-        }
-
-        this.$router.push(this.localePath({ name: 'forum-area-page', params }));
-
-        document.querySelector('#top-navigation').scrollIntoView({ behavior: 'smooth' });
-      }
     },
 
     validate({ params }) {
