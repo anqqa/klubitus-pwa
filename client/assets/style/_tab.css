@@ -17,6 +17,7 @@
   border-bottom-color: var(--color-primary);
   color: var(--color-primary);
   opacity: 1;
+  text-decoration: none;
 }
 
 .tabs.is-small a { padding: 0.5rem 1rem; }
