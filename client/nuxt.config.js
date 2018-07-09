@@ -144,6 +144,14 @@ module.exports = {
     },
 
     extractCSS: true,
+
+    postcss: {
+      plugins: {
+        'postcss-cssnext': {
+          features: { customProperties: false },
+        },
+      },
+    },
   },
 
 };
