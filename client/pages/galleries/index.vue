@@ -5,7 +5,6 @@
     <nav class="tabs is-small is-mobile">
       <nuxt-link v-for="browseYear in Object.keys(stats).sort().reverse()"
                  :key="browseYear"
-                 :class="year == browseYear && 'is-active'"
                  :to="localePath({ name: 'galleries-events-year-month', params: { year: browseYear } })">
         {{ browseYear }}
       </nuxt-link>
@@ -14,7 +13,6 @@
     <nav v-if="year" class="tabs is-small is-mobile">
       <nuxt-link v-for="browseMonth in stats[year]"
                  :key="browseMonth.month"
-                 :class="browseMonth.month == month && 'is-active'"
                  :to="localePath({ name: 'galleries-events-year-month', params: { year, month: browseMonth.month } })">
         {{ browseMonth.nameShort }}
       </nuxt-link>

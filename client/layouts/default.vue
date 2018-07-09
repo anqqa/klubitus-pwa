@@ -32,7 +32,7 @@
     <nav class="menu" role="navigation" aria-label="main navigation">
       <ul>
         <li v-for="(item, index) in items" :key="index">
-          <nuxt-link :exact="item.exact" :to="item.url" active-class="is-active">
+          <nuxt-link :exact="item.exact" :to="item.url">
             <span class="icon is-small"><i :class="item.icon" /></span>
             {{ item.title }}
           </nuxt-link>
@@ -41,7 +41,6 @@
             <li v-for="(subItem, subIndex) in item.items" :key="subIndex">
               <nuxt-link :exact="subItem.exact"
                          :to="subItem.url"
-                         active-class="is-active"
                          v-text="subItem.title" />
             </li>
           </ul>
@@ -65,7 +64,7 @@
                        :key="locale.code"
                        :to="switchLocalePath(locale.code)"
                        :value="locale.code"
-                       active-class="is-active is-primary"
+                       active-class="is-primary"
                        class="button is-small">{{ locale.name }}</nuxt-link>
           </div>
 

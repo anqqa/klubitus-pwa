@@ -108,6 +108,11 @@ module.exports = {
     }],
   ],
 
+  router: {
+    linkActiveClass:      'is-active',
+    linkExactActiveClass: 'is-active-exact',
+  },
+
   /**
    * PWA
    */
