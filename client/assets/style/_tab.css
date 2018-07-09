@@ -1,4 +1,7 @@
-.tabs { display: flex; }
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+}
 
 .tabs a {
   border-bottom: 2px solid var(--color-separator);

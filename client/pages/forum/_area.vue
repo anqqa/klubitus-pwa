@@ -7,6 +7,11 @@
     <div class="row is-reverse-order">
       <div class="col">
 
+        <Pagination :page="page"
+                    :pages="pages"
+                    :url="paginationUrl"
+        />
+
         <b-pagination v-if="pages > 1"
                       id="top-navigation"
                       :current.sync="page"
@@ -37,6 +42,7 @@
 
 <script>
   import ForumAreaList from '~/components/forum/ForumAreaList';
+  import Pagination from '~/components/Pagination';
 
   export default {
     async asyncData({ app, params }) {
@@ -54,7 +60,17 @@
       return { area, areaId, areas, page, pages };
     },
 
-    components: { ForumAreaList },
+    components: { ForumAreaList, Pagination },
+
+    data() {
+      const { params } = this.$route;
+
+      params.page = '_page';
+
+      return {
+        paginationUrl: this.localePath({ name: 'forum-area-page', params }),
+      };
+    },
 
     head() {
       const link  = [];

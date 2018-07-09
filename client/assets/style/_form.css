@@ -70,6 +70,7 @@ button {
   border: 1px solid var(--color-text);
   border-radius: var(--form-border-radius);
   color: var(--color-text);
+  cursor: pointer;
   display: inline-block;
   line-height: 1;
   padding: 1rem 2rem;
@@ -78,11 +79,15 @@ button {
   transition: opacity var(--transition-time) ease;
 }
 
-.button:hover,
+.button:not(span):hover,
 [type="button"]:hover,
 button:hover {
-  cursor: pointer;
   opacity: 0.8;
+}
+
+span.button {
+  cursor: default;
+  opacity: 0.5;
 }
 
 .button:active,
