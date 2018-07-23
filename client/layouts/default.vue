@@ -98,7 +98,7 @@
           { icon: 'bx bx-calendar-alt', title: 'Events',    url: this.localePath('events') },
           { icon: 'bx bx-conversation', title: 'Forum',     url: this.localePath('forum') },
           { icon: 'bx bx-images',       title: 'Galleries', url: this.localePath('galleries'), items: [
-              { title: 'Events', url: this.localePath('galleries') },
+              { title: 'Events', url: this.localePath('galleries-events-year-month-day') },
               { title: 'Flyers', url: this.localePath('galleries-flyers') },
             ]}
         ],

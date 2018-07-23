@@ -11,7 +11,7 @@
   export default {
 
     head: {
-      title: 'Galleries'
+      title: 'Flyers'
     },
 
   }
