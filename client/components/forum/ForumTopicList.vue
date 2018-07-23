@@ -57,7 +57,7 @@
             avatar,
             avatarColor: colorFromText(username),
             postCount:   formatter.format(topic.post_count),
-            url:         this.localePath({ name: 'forum-topic-id-page', params: { id: `${topic.id}-${slug(topic.name)}` } }),
+            url:         this.localePath({ name: 'forum-topic-id', params: { id: `${topic.id}-${slug(topic.name)}` } }),
             username,
           })
         });

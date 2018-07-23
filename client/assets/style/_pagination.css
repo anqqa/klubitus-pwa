@@ -6,7 +6,7 @@
 }
 
 .pagination ul {
-  justify-self: flex-start;
+  justify-self: center;
   flex-wrap: wrap;
   list-style: none;
 }
@@ -53,6 +53,6 @@
 
   .pagination-previous,
   .pagination-next {
-    justify-self: flex-end;
+    justify-self: flex-start;
   }
 }

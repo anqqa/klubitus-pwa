@@ -3,61 +3,69 @@
   <main class="column section">
     <h1 class="title">{{ topic.name }}</h1>
 
-    <b-pagination v-if="pages > 1"
-                  id="top-navigation"
-                  :current.sync="page"
-                  :total="topic.post_count"
-                  per-page="20"
-                  @change="onPageChange" />
+    <Pagination :pages="pages" :route="route" />
 
     <nuxt-child :key="topicId" />
 
-    <b-pagination v-if="pages > 1"
-                  :current.sync="page"
-                  :total="topic.post_count"
-                  per-page="20"
-                  @change="onPageChange" />
+    <Pagination :pages="pages" :route="route" />
   </main>
 
 </template>
 
 
 <script>
+  import Pagination from '~/components/Pagination';
+
+
   export default {
+
     async asyncData({ app, params }) {
       const topicId = parseInt(params.id);
-      const page    = parseInt(params.page) || 1;
 
       const { data: topic } = await app.$axios.$get(`forum/topic/${topicId}`);
 
       const pages = Math.ceil(topic.post_count / 20);
 
-      return { page, pages, topic, topicId };
+      return { pages, topic, topicId };
+    },
+
+    components: { Pagination },
+
+    data() {
+      return {
+        route: { name: 'forum-topic-id', params: this.$route.params },
+      };
+    },
+
+    computed: {
+      page() { return parseInt(this.$route.query.page) || 1; },
     },
 
     head() {
       const link  = [];
-      const page  = parseInt(this.page) || 1;
-      const pages = parseInt(this.pages);
 
-      if (pages > 1) {
+      if (this.pages > 1) {
         const { params } = this.$route;
 
-        if (page > 1) {
-          if (page > 2) {
-            params.page = page - 1;
+        if (this.page > 1) {
+          const prevQuery = { ...this.$route.query };
+
+          if (this.page > 2) {
+            prevQuery.page = this.page - 1;
           }
           else {
-            delete params.page;
+            delete prevQuery.page;
           }
 
-          link.push({ rel: 'prev', href: this.localePath({ name: 'forum-topic-id-page', params }) });
+          link.push({ rel: 'prev', href: this.localePath({ name: this.route.name, params, query: prevQuery }) });
         }
 
-        if (page < this.pages) {
-          params.page = page + 1;
+        if (this.page < this.pages) {
+          const nextQuery = { ...this.$route.query };
 
-          link.push({ rel: 'next', href: this.localePath({ name: 'forum-topic-id-page' , params }) });
+          nextQuery.page = this.page + 1;
+
+          link.push({ rel: 'next', href: this.localePath({ name: this.route.name, params, query: nextQuery }) });
         }
       }
 
@@ -67,31 +75,5 @@
       };
     },
 
-    methods: {
-      onPageChange(page) {
-        const { params } = this.$route;
-
-        if (page > 1) {
-          params.page = page;
-        }
-        else if (params.page) {
-          delete params.page;
-        }
-
-        this.$router.push(this.localePath({ name: 'forum-topic-id-page', params }));
-
-        document.querySelector('#top-navigation').scrollIntoView({ behavior: 'smooth' });
-      }
-    },
-
-    validate({ params }) {
-      return !(params && params.page && +params.page < 1);
-    },
-
   };
 </script>
-
-
-<style scoped>
-
-</style>

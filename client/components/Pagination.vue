@@ -1,10 +1,23 @@
 <template>
   <nav class="pagination" role="navigation" aria-label="pagination">
 
+    <nuxt-link v-if="page > 1"
+               :to="prevUrl"
+               class="button pagination-previous"
+               exact>&laquo; {{ prev }}</nuxt-link>
+    <span v-else class="button pagination-previous">&laquo; {{ prev }}</span>
+
+    <nuxt-link v-if="page < pages"
+               :to="nextUrl"
+               class="button pagination-next"
+               exact>{{ next }} &raquo;</nuxt-link>
+    <span v-else class="button pagination-next">{{ next }} &raquo;</span>
+
     <ul class="pagination-list">
       <li v-for="paginate in paginated" :key="paginate.page">
         <nuxt-link v-if="typeof paginate.page === 'number'"
                    :to="paginate.url"
+                   active-class="is-primary"
                    class="button"
                    exact>
           {{ paginate.page }}
@@ -12,16 +25,6 @@
         <span v-else class="pagination-separator">&hellip;</span>
       </li>
     </ul>
-
-    <nuxt-link v-if="current > 1"
-               :to="prevUrl"
-               class="button pagination-previous">&laquo; {{ prev }}</nuxt-link>
-    <span v-else class="button pagination-previous">&laquo; {{ prev }}</span>
-
-    <nuxt-link v-if="current < pages"
-               :to="nextUrl"
-               class="button pagination-next">{{ next }} &raquo;</nuxt-link>
-    <span v-else class="button pagination-next">{{ next }} &raquo;</span>
 
   </nav>
 </template>
@@ -32,35 +35,33 @@
 
     props: {
       next:  { default: null, type: String },
-      page:  { default: 0, type: Number },
       pages: { default: 0, type: Number },
       prev:  { default: null, type: String },
-      url:   { default: null, type: String },
+      route: { default: null, type: Object },
     },
 
     data() {
-      return { current: this.page };
+      return { page: this.getPageFromQuery(this.$route.query) };
     },
 
     computed: {
       paginated() {
-        console.log('paginated', this.current, this.pages);
-        const pages = [];
+        const pages    = [];
         const paginate = [1];
 
         if (this.pages < 6) {
           for (let page = 2; page < this.pages; page++) paginate.push(page);
         }
         else {
-          if (this.current > 4) {
+          if (this.page > 4) {
             paginate.push('ellipsis-1');
           }
 
-          for (let page = Math.max(2, this.current - 2); page <= Math.min(this.pages - 1, this.current + 2); page++) {
+          for (let page = Math.max(2, this.page - 2); page <= Math.min(this.pages - 1, this.page + 2); page++) {
             paginate.push(page);
           }
 
-          if (this.current < this.pages - 3) {
+          if (this.page < this.pages - 3) {
             paginate.push('ellipsis-2');
           }
         }
@@ -68,27 +69,42 @@
         paginate.push(this.pages);
 
         paginate.forEach(page => {
-          pages.push({ page, url: typeof page === 'string' ? false : this.url.replace('_page', page) });
+          const url = typeof page === 'number' ? this.getUrlForPage(page) : false;
+
+          pages.push({ page, url });
         });
 
         return pages;
       },
 
-      prevUrl() { return this.url.replace('_page', this.current - 1); },
-      nextUrl() { return this.url.replace('_page', this.current + 1); },
+      prevUrl() { return this.getUrlForPage(this.page - 1); },
+      nextUrl() { return this.getUrlForPage(this.page + 1); },
     },
 
     watch: {
-      '$route.path': function() {
-        console.log('watch', this.$route.path, this.$route.params.page);
-
-        if ('page' in this.$route.params) {
-          this.current = parseInt(this.$route.params.page) || 1;
-        }
+      $route({ query }) {
+        this.page = this.getPageFromQuery(query);
       }
     },
 
-    watchQuery: ['page'],
+    methods: {
+      getPageFromQuery(query) {
+        return 'page' in query ? parseInt(query.page) || 1 : 1;
+      },
+
+      getUrlForPage(page) {
+        const route = { ...this.route, query: { ...(this.route.query || {}) } };
+
+        if (page > 1) {
+          route.query.page = page;
+        }
+        else if ('page' in route.query) {
+          delete route.query.page;
+        }
+
+        return this.localePath(route);
+      },
+    },
 
   };
 </script>

@@ -6,13 +6,9 @@
 
     <div class="row is-reverse-order">
       <div class="col">
+        <Pagination :pages="pages" :route="route" />
 
-        <Pagination :page="page"
-                    :pages="pages"
-                    :url="paginationUrl"
-        />
-
-        <nuxt-child />
+        <nuxt-child :key="$route.fullPath" />
       </div>
 
       <div class="col-3">
@@ -29,13 +25,11 @@
   import ForumAreaList from '~/components/forum/ForumAreaList';
   import Pagination from '~/components/Pagination';
 
+
   export default {
+
     async asyncData({ app, params }) {
-      const areaId = parseInt(params.area);
-      const page   = parseInt(params.page) || 1;
-
-      console.log('asyncData', page);
-
+      const areaId          = parseInt(params.area);
       const { data: areas } = await app.$axios.$get('forum/areas');
 
       let area;
@@ -44,46 +38,46 @@
 
       const pages = Math.ceil(area.topic_count / 20);
 
-      return { area, areaId, areas, page, pages };
+      return { area, areaId, areas, pages };
     },
 
     components: { ForumAreaList, Pagination },
 
     data() {
-      const { params } = this.$route;
-
-      console.log('data');
-
-      params.page = '_page';
-
       return {
-        paginationUrl: this.localePath({ name: 'forum-area-page', params }),
+        route:  { name: 'forum-area', params: this.$route.params },
       };
+    },
+
+    computed: {
+      page() { return parseInt(this.$route.query.page) || 1; },
     },
 
     head() {
       const link  = [];
-      const page  = parseInt(this.page) || 1;
-      const pages = parseInt(this.pages);
 
-      if (pages > 1) {
+      if (this.pages > 1) {
         const { params } = this.$route;
 
-        if (page > 1) {
-          if (page > 2) {
-            params.page = page - 1;
+        if (this.page > 1) {
+          const prevQuery = { ...this.$route.query };
+
+          if (this.page > 2) {
+            prevQuery.page = this.page - 1;
           }
-          else {
-            delete params.page;
+          else if ('page' in prevQuery) {
+            delete prevQuery.page;
           }
 
-          link.push({ rel: 'prev', href: this.localePath({ name: 'forum-area-page', params }) });
+          link.push({ rel: 'prev', href: this.localePath({ name: this.route.name, params, query: prevQuery }) });
         }
 
-        if (page < this.pages) {
-          params.page = page + 1;
+        if (this.page < this.pages) {
+          const nextQuery = { ...this.$route.query };
 
-          link.push({ rel: 'next', href: this.localePath({ name: 'forum-area-page' , params }) });
+          nextQuery.page = this.page + 1;
+
+          link.push({ rel: 'next', href: this.localePath({ name: this.route.name, params, query: nextQuery }) });
         }
       }
 
@@ -93,14 +87,5 @@
       };
     },
 
-    validate({ params }) {
-      return !(params && params.page && +params.page < 1);
-    },
-
   };
 </script>
-
-
-<style scoped>
-
-</style>
