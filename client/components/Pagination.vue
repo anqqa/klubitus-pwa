@@ -87,6 +87,22 @@
       }
     },
 
+    head() {
+      if (this.pages && this.route) {
+        const link = [];
+
+        if (this.page > 1) {
+          link.push({ hid: 'prev', rel: 'prev', href: this.getUrlForPage(this.page - 1) });
+        }
+
+        if (this.page < this.pages) {
+          link.push({ hid: 'next', rel: 'next', href: this.getUrlForPage(this.page + 1) });
+        }
+
+        return { link };
+      }
+    },
+
     methods: {
       getPageFromQuery(query) {
         return 'page' in query ? parseInt(query.page) || 1 : 1;

@@ -1,5 +1,5 @@
 <script>
-  import Index from '~/pages/events/index';
+  import Index from '../../../index';
 
   export default Index;
 </script>

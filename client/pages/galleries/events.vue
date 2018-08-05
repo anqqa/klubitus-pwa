@@ -28,7 +28,7 @@ import format from "date-fns/format";
 
     <Pagination v-if="pages > 1" :pages="pages" :route="route" />
 
-    <nuxt-child />
+    <nuxt-child :key="$route.fullPath" />
 
     <Pagination v-if="pages > 1" :pages="pages" :route="route" />
   </main>
@@ -42,7 +42,7 @@ import format from "date-fns/format";
   import sumBy from 'lodash/sumBy';
   import transform from 'lodash/transform';
 
-  import Pagination from '~/components/Pagination';
+  import Pagination from '../../components/Pagination';
 
 
   const formatter = new Intl.NumberFormat();

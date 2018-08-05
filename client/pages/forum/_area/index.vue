@@ -4,7 +4,7 @@
 
 
 <script>
-  import ForumTopicList from '~/components/forum/ForumTopicList';
+  import ForumTopicList from '../../../components/forum/ForumTopicList';
 
 
   export default {

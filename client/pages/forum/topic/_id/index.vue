@@ -4,7 +4,7 @@
 
 
 <script>
-  import ForumPostList from '~/components/forum/ForumPostList';
+  import ForumPostList from '../../../../components/forum/ForumPostList';
 
 
   export default {

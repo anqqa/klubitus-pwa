@@ -22,8 +22,8 @@
 
 
 <script>
-  import ForumAreaList from '~/components/forum/ForumAreaList';
-  import Pagination from '~/components/Pagination';
+  import ForumAreaList from '../../components/forum/ForumAreaList';
+  import Pagination from '../../components/Pagination';
 
 
   export default {
@@ -54,35 +54,7 @@
     },
 
     head() {
-      const link  = [];
-
-      if (this.pages > 1) {
-        const { params } = this.$route;
-
-        if (this.page > 1) {
-          const prevQuery = { ...this.$route.query };
-
-          if (this.page > 2) {
-            prevQuery.page = this.page - 1;
-          }
-          else if ('page' in prevQuery) {
-            delete prevQuery.page;
-          }
-
-          link.push({ rel: 'prev', href: this.localePath({ name: this.route.name, params, query: prevQuery }) });
-        }
-
-        if (this.page < this.pages) {
-          const nextQuery = { ...this.$route.query };
-
-          nextQuery.page = this.page + 1;
-
-          link.push({ rel: 'next', href: this.localePath({ name: this.route.name, params, query: nextQuery }) });
-        }
-      }
-
       return {
-        link,
         title: this.area ? this.area.name : 'Forum',
       };
     },
