@@ -93,6 +93,7 @@ module.exports = {
         'galleries/events/_year/_month/index': { fi: '/kuvastot/tapahtumat/:year/:month?' },
         'galleries/events/_year/_month/_day':  { fi: '/kuvastot/tapahtumat/:year/:month?/:day?' },
         'galleries/flyers':                    { fi: '/kuvastot/flyerit' },
+        'galleries/_id':                       { fi: '/kuvastot/:id' },
 
         'login':    { fi: '/kirjaudu' },
         'password': { fi: '/salasana' },

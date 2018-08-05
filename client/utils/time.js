@@ -39,8 +39,19 @@ export const dateRange = (year, month, week, day) => {
     }
     else {
       from  = new Date(year, month ? month - 1 : 0, day ? day : 1);
-      to    = day ? from : endOfMonth(from);
-      range = day ? 'day' : 'month';
+
+      if (!month) {
+        to    = new Date(year, 11, 31);
+        range = 'year';
+      }
+      else if (!day) {
+        to    = endOfMonth(from);
+        range = 'month';
+      }
+      else {
+        to    = from;
+        range = 'day';
+      }
     }
   }
 
