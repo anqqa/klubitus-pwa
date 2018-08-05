@@ -46,7 +46,8 @@
 
 
 <script>
-  import { fuzzyTimeDistance, slug } from '../../utils/text';
+  import { slug } from '../../utils/text';
+  import { fuzzyTimeDistance } from '../../utils/time';
 
 
   const formatter = new Intl.NumberFormat();

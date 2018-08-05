@@ -71,14 +71,12 @@
 <script>
   import addDays from 'date-fns/add_days';
   import addMonths from 'date-fns/add_months';
-  import endOfMonth from 'date-fns/end_of_month';
   import format from 'date-fns/format';
   import getISOWeek from 'date-fns/get_iso_week';
-  import setISOWeek from 'date-fns/set_iso_week';
-  import startOfISOWeek from 'date-fns/start_of_iso_week';
 
-  import { hours, pad, slug } from '../../utils/text';
   import EventList from '../../components/events/EventList';
+  import { pad, slug } from '../../utils/text';
+  import { dateRange, hours } from '../../utils/time';
 
 
   const buildPagination = (from, to, range) => {
@@ -164,34 +162,6 @@
   };
 
 
-  const buildRange = (year, month, week, day) => {
-    let from, to, range;
-
-    if (!year) {
-
-      // Default to this week if no date given
-      from  = startOfISOWeek(new Date());
-      to    = addDays(from, 7);
-      range = 'week';
-
-    }
-    else {
-      if (week) {
-        from  = startOfISOWeek(setISOWeek(new Date(parseInt(year), 1, 10), parseInt(week)));
-        to    = addDays(from, 7);
-        range = 'week';
-      }
-      else {
-        from  = new Date(parseInt(year), parseInt(month) - 1, day ? parseInt(day) : 1);
-        to    = day ? from : endOfMonth(from);
-        range = day ? 'day' : 'month';
-      }
-    }
-
-    return { from, to, range };
-  };
-
-
   const buildTitle = (from, to) => {
     let dates = [];
 
@@ -248,8 +218,10 @@
     async asyncData({ app, params }) {
       let { year, month, week, day } = params;
 
+      [year, month, week, day].map(parseInt);
+
       // Get date range
-      const { from, to, range } = buildRange(year, month, week, day);
+      const { from, to, range } = dateRange(year, month, week, day);
 
       // Fetch events
       const { data } = await app.$axios.$get('events', {

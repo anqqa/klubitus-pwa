@@ -30,8 +30,9 @@
 
 
 <script>
-  import { colorFromText, fuzzyTimeDistance, slug } from '../../utils/text';
+  import { colorFromText, slug } from '../../utils/text';
   import { avatarUrl } from '../../utils/url';
+  import { fuzzyTimeDistance } from '../../utils/time';
 
 
   const formatter = new Intl.NumberFormat();

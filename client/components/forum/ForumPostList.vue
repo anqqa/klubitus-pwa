@@ -31,8 +31,9 @@
 
 
 <script>
-  import { colorFromText, fuzzyTimeDistance } from '../../utils/text';
+  import { colorFromText} from '../../utils/text';
   import { avatarUrl } from '../../utils/url';
+  import { fuzzyTimeDistance } from '../../utils/time';
 
 
   export default {

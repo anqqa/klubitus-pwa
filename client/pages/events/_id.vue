@@ -32,7 +32,7 @@
 <script>
   import format from 'date-fns/format';
 
-  import { hours } from '../../utils/text';
+  import { hours } from '../../utils/time';
 
 
   export default {
