@@ -73,6 +73,7 @@
         if (this.$v.$invalid) {
           return;
         }
+
         try {
           await this.$auth.login({
             data: {
@@ -82,8 +83,8 @@
           });
 
           this.error    = null;
-          this.username = '';
-          this.password = '';
+          // this.username = '';
+          // this.password = '';
         }
         catch (error) {
           this.error = get(error, 'response.data.message', 'Nope');
