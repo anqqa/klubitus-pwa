@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@nuxtjs/auth@^4.0.0-rc.3":
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/@nuxtjs/auth/-/auth-4.3.0.tgz#1306c0538885c51ebb9b03a3f06a8fd40d5fc05c"
+"@nuxtjs/auth@^4.5.1":
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/@nuxtjs/auth/-/auth-4.5.1.tgz#e827d85769543a38f0094df7db18cd66400e4e8f"
   dependencies:
     "@nuxtjs/axios" "^5.3.1"
     boom "^7.2.0"
