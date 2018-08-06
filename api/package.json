@@ -19,7 +19,7 @@
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.4",
     "date-fns": "^1.29.0",
-    "fastify": "^1.2.1",
+    "fastify": "^1.9.0",
     "fastify-auth": "^0.2.0",
     "fastify-cli": "^0.16.0",
     "fastify-helmet": "^1.0.3",
@@ -30,7 +30,7 @@
     "fastify-swagger": "^0.4.0",
     "lodash": "^4.17.10",
     "make-promises-safe": "^1.1.0",
-    "objection": "^1.1.5",
+    "objection": "^1.2.2",
     "pg": "^7.4.1"
   },
   "devDependencies": {
