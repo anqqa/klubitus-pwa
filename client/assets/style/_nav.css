@@ -2,8 +2,8 @@
 .navbar {
   align-items: stretch;
   display: flex;
-  min-height: 5rem;
-  margin: auto 0.5rem;
+  min-height: 6rem;
+  margin: auto 1rem;
 }
 
 .navbar a {
@@ -11,6 +11,9 @@
   color: var(--color-text);
   display: flex;
   margin: auto 0.5rem;
+}
+.navbar a:hover {
+  text-decoration: none;
 }
 
 .navbar img {
@@ -37,17 +40,20 @@
 }
 
 .menu a {
-  color: var(--color-text);
+  border-left: 4px solid transparent;
+  color: var(--color-tertiary);
   display: block;
   padding: 0.5rem 1rem;
 }
 .menu a:hover {
+  color: var(--color-text);
+  opacity: 1;
   text-decoration: none;
 }
 
 .menu a.is-active {
-  border-right: 2px solid var(--color-primary);
-  color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-text);
 }
 
 .nav-inline li {

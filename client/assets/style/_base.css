@@ -70,3 +70,8 @@ tr:not(:last-child) {
 td, th {
   vertical-align: middle;
 }
+
+
+ol, ul {
+  padding-left: 0;
+}
