@@ -1,4 +1,4 @@
-const { Model } = require('objection');
+const { Model } = require('./Model');
 
 
 class ForumArea extends Model {
