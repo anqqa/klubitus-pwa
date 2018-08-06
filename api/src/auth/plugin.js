@@ -25,9 +25,15 @@ module.exports = fp(function (fastify, options, next) {
     // Validate token
     fastify.jwt.verify(token, (error, decoded) => {
       if (error || !decoded.id || !decoded.token) {
-        request.log.warn('JWT: Invalid token');
+        if (error && error.name === 'TokenExpiredError') {
+          request.log.info('JWT: Expired token');
 
-        return done(new fastify.httpErrors.Unauthorized('Invalid token'));
+          return done(fastify.httpErrors.unauthorized('Token expired'));
+        }
+
+        request.log.warn('JWT: Invalid token', error);
+
+        return done(fastify.httpErrors.unauthorized('Invalid token'));
       }
 
       fastify.knex('user_tokens')
@@ -37,7 +43,7 @@ module.exports = fp(function (fastify, options, next) {
           if (!token.expires_at || token.expires_at < new Date()) {
             request.log.info('JWT: Expired token');
 
-            return done(new fastify.httpErrors.unauthorized('Token expired'));
+            return done(fastify.httpErrors.unauthorized('Token expired'));
           }
           fastify.auth.isAuthenticated = true;
           fastify.auth.token           = decoded.token;
@@ -48,7 +54,7 @@ module.exports = fp(function (fastify, options, next) {
         .catch(error => {
           request.log.warn('JWT: Missing token');
 
-          done(new fastify.httpErrors.unauthorized('Token missing or expired'));
+          done(fastify.httpErrors.unauthorized('Token missing or expired'));
         });
     });
   };
