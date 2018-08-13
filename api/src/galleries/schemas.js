@@ -1,3 +1,39 @@
+const { Gallery } = require('../models/Gallery');
+
+
+const getGalleries = {
+  schema: {
+    querystring: {
+      from:   { type: 'string', description: 'Fetch galleries ending after this date' },
+      to:     { type: 'string', description: 'Fetch galleries starting before this date' },
+      limit:  { type: 'integer' },
+      offset: { type: 'integer' }
+    },
+    response:    {
+      200: { type: 'object', properties: {
+        data: { type: 'array', items: Gallery.combinedJsonSchema }
+      } },
+    },
+  }
+};
+
+
+const getGallery = {
+  schema: {
+    params:   {
+      type:       'object',
+      required:   ['galleryId'],
+      properties: { galleryId: { type: 'integer' } },
+    },
+    response: {
+      200: { type: 'object', properties: {
+        data: Gallery.combinedJsonSchema
+      } },
+    },
+  }
+};
+
+
 const getStats = {
   schema: {
     response: {
@@ -15,5 +51,7 @@ const getStats = {
 
 
 module.exports = {
+  getGalleries,
+  getGallery,
   getStats,
 };

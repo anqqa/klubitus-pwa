@@ -1,16 +1,48 @@
+const { format, parse } = require('date-fns');
 const { raw } = require('objection');
 
 const { Gallery } = require('../models/Gallery');
 
 const {
-  getStats: getStatsSchema,
+  getGalleries: getGalleriesSchema,
+  getGallery:   getGallerySchema,
+  getStats:     getStatsSchema,
 } = require('./schemas');
 
 
 module.exports = async (fastify, options) => {
 
-  fastify.get('/galleries/stats', getStatsSchema, async (request, reply) => {
+  fastify.get('/galleries', getGalleriesSchema, async (request, reply) => {
+    const { from, to, limit, offset } = request.query;
 
+    let query = Gallery.query()
+      .eager('[default_image, event]');
+
+    // If date range is given then order by event date, otherwise updated date
+    if (from && to) {
+      const from_date = parse(from);
+      const to_date   = parse(to);
+
+      query = query.orderBy('event_date', 'DESC')
+        .whereBetween('event_date', [format(from_date, 'YYYY-MM-DD'), format(to_date, 'YYYY-MM-DD')]);
+    }
+
+    if (limit) {
+      query = query.limit(Math.max(1, Math.min(limit, 100)));
+    }
+
+    if (offset) {
+      query = query.offset(offset);
+    }
+
+    const data = await query.select().orderBy('updated_at', 'DESC');
+
+    // Call toJSON to get virtual attrs
+    return { data: data.map(o => o.toJSON()) };
+  });
+
+
+  fastify.get('/galleries/stats', getStatsSchema, async (request, reply) => {
     const data = await Gallery.query()
       .select(
         raw('EXTRACT (YEAR FROM event_date) AS year'),
@@ -23,6 +55,15 @@ module.exports = async (fastify, options) => {
       .orderBy('month', 'DESC');
 
     return { data };
+  });
+
+
+  fastify.get('/gallery/:galleryId', getGallerySchema, async (request, reply) => {
+    const gallery = await Gallery.query()
+      .eager('event')
+      .findOne('id', request.params.galleryId);
+
+    return { data: gallery };
   });
 
 };

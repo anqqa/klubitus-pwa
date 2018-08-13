@@ -11,7 +11,6 @@ class Image extends Model {
   static get jsonSchema() {
     return {
       type:    'object',
-      require: ['id'],
 
       properties: {
         author_id:   { type: ['integer', 'null'] },
@@ -29,7 +28,13 @@ class Image extends Model {
 
 
   url() {
-    return `https://images.klubitus.org/${this.id}`;
+
+    // Convert numeric id to path, e.g. 1234567 -> 01/23/45
+    const hex    = this.id.toString(16).padStart(8, '0');
+    const chunks = hex.match(/.{1,2}/g);
+    chunks.pop();
+
+    return `https://images.klubitus.org/${chunks.join('/')}/${this.id}_${this.postfix}.jpg`;
   }
 
 }
