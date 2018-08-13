@@ -37,6 +37,10 @@
 .pull-right { float: right; }
 
 
+.is-hidden {
+  display: none;
+}
+
 .is-truncated {
   display: block;
   overflow: hidden;

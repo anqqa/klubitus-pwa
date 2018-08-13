@@ -101,20 +101,21 @@ button:active {
   border-color: transparent;
   color: var(--color-text);
 }
-
 button.is-clear,
 .button.is-clear {
   background: transparent;
   border-color: transparent;
   color: var(--color-primary);
 }
-
 .button.is-full {
   width: 100%;
 }
-
 .button.is-small {
   padding: 0.5rem 1rem;
+}
+.button.is-tiny {
+  font-size: 75%;
+  padding: 0.25rem 0.5rem;
 }
 
 

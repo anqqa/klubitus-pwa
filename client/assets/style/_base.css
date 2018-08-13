@@ -18,12 +18,18 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 500;
   margin: 0.35em 0 0.7em 0;
 }
+h1:last-child,
+h2:last-child,
+h3:last-child,
+h4:last-child,
+h5:last-child,
+h6:last-child { margin-bottom: 0; }
 
 h1, .h1 { font-size: 2em; }
 h2, .h2 { font-size: 1.75em; }
 h3, .h3 { font-size: 1.5em; }
 h4, .h4 { font-size: 1.25em; }
-h5, .h5 { font-size: 2em; }
+h5, .h5 { font-size: 1em; }
 h6, .h6 { font-size: 0.85em; text-transform: uppercase; }
 
 

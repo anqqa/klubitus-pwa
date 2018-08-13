@@ -13,6 +13,7 @@
   z-index: 10;
 }
 .sidebar section {
+  display: flex;
   padding: 1rem;
 }
 .sidebar .menu {
@@ -21,7 +22,9 @@
   flex: 1;
   padding: 1rem 0;
 }
-
+.sidebar .ui .language {
+  flex: 1;
+}
 
 .layout {
   min-height: 100vh;

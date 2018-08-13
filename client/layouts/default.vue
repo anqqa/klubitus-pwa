@@ -51,23 +51,27 @@
       </nav>
 
       <section class="ui">
-        <span class="icon"><i class="bx bx-world" /></span>
-        <div class="button-group">
+        <div class="button-group language">
           <nuxt-link v-for="locale in $i18n.locales"
                      :key="locale.code"
                      :to="switchLocalePath(locale.code)"
                      :value="locale.code"
                      active-class="is-primary"
-                     class="button is-small">{{ locale.name }}</nuxt-link>
+                     class="button is-tiny">{{ locale.name }}</nuxt-link>
         </div>
 
-        <span class="icon"><i class="bx bx-adjust" /></span>
-        <div class="button-group">
-          <button v-for="availableTheme in ['light', 'dark']"
-                  :key="availableTheme"
-                  :class="theme === availableTheme ? 'is-active is-primary' : ''"
-                  class="button is-small"
-                  @click="toggleTheme(availableTheme)">{{ availableTheme }}</button>
+        <div class="theme">
+          <button :class="{'is-hidden': theme === 'light'}"
+                  class="button is-tiny"
+                  @click="toggleTheme('light')">
+            <span class="icon"><i class="bx bx-moon" /></span>
+          </button>
+
+          <button :class="{'is-hidden': theme === 'dark'}"
+                  class="button is-tiny"
+                  @click="toggleTheme('dark')">
+            <span class="icon"><i class="bx bx-sun" /></span>
+          </button>
         </div>
       </section>
 
