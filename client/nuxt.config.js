@@ -90,6 +90,7 @@ module.exports = {
         'forum/topic/_id': { fi: '/forum/aihe/:id' },
 
         'galleries/index':                     { fi: '/kuvastot' },
+        'galleries/events':                    { fi: '/kuvastot/tapahtumat' },
         'galleries/events/_year/_month/index': { fi: '/kuvastot/tapahtumat/:year/:month?' },
         'galleries/events/_year/_month/_day':  { fi: '/kuvastot/tapahtumat/:year/:month?/:day?' },
         'galleries/flyers':                    { fi: '/kuvastot/flyerit' },

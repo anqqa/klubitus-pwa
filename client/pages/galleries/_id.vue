@@ -8,6 +8,8 @@
 
     <Pagination v-if="pages > 1" :pages="pages" :route="route" />
 
+    <nuxt-child />
+
   </main>
 
 </template>
@@ -30,7 +32,7 @@
     components: { Pagination },
 
     data() {
-      return { route: { name: 'gallery', params: this.$route.params } };
+      return { route: { name: 'galleries-id', params: this.$route.params } };
     },
 
     methods: {
@@ -45,7 +47,7 @@
 
     validate({ params }) {
       return /^\d+/.test(params.id);
-    }
+    },
 
   };
 </script>
