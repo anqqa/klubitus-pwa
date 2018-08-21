@@ -31,6 +31,13 @@ export const colorFromText = text => {
 };
 
 
+const formatter = new Intl.NumberFormat();
+
+export const count = (number, singular, plural) => {
+  return `${formatter.format(number)} ${number === 1 ? singular : plural }`;
+};
+
+
 export const pad = (number, size) => {
   let padded = String(number);
 
