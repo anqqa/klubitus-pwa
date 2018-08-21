@@ -35,6 +35,22 @@ const getGallery = {
 };
 
 
+const getImage = {
+  schema: {
+    params:   {
+      type:       'object',
+      required:   ['galleryId', 'imageId'],
+      properties: { galleryId: { type: 'integer' }, imageId: { type: 'integer' } },
+    },
+    response: {
+      200: { type: 'object', properties: {
+        data: Image.combinedJsonSchema,
+      } },
+    },
+  },
+};
+
+
 const getImages = {
   schema: {
     params:   {
@@ -74,6 +90,7 @@ const getStats = {
 module.exports = {
   getGalleries,
   getGallery,
+  getImage,
   getImages,
   getStats,
 };

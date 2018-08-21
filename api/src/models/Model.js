@@ -22,10 +22,31 @@ class Model extends ObjectionModel {
 
       Object.keys(relationships).forEach(attribute => {
         const relationship = relationships[attribute];
+        const modelClass   = typeof relationship.modelClass === 'string'
+          ? require(`./${relationship.modelClass}`)[relationship.modelClass]
+          : relationship.modelClass;
 
-        relationshipProperties[attribute] = {
-          anyOf: [{ type: 'null' }, relationship.modelClass.combinedJsonSchema],
-        };
+        // Try to avoid loops, don't include "parent" models in childs, i.e. skip Image in ImageComment
+        if (this.name.startsWith(modelClass.name)) {
+          return;
+        }
+
+        if (attribute.endsWith('s')) {
+
+          // HasMany or ManyToMany
+          relationshipProperties[attribute] = {
+            anyOf: [{ type: 'null' }, { type: 'array', items: modelClass.combinedJsonSchema }],
+          };
+
+        }
+        else {
+
+          // BelongsToOne
+          relationshipProperties[attribute] = {
+            anyOf: [{ type: 'null' }, modelClass.combinedJsonSchema],
+          };
+
+        }
       });
     }
 
@@ -34,6 +55,11 @@ class Model extends ObjectionModel {
       { properties: virtualProperties }, { properties: relationshipProperties },
     );
   }
+
+  static get modelPaths() {
+    return [__dirname];
+  }
+
 }
 
 

@@ -7,6 +7,7 @@ const { Image } = require('../models/Image');
 const {
   getGalleries: getGalleriesSchema,
   getGallery:   getGallerySchema,
+  getImage:     getImageSchema,
   getImages:    getImagesSchema,
   getStats:     getStatsSchema,
 } = require('./schemas');
@@ -93,7 +94,15 @@ module.exports = async (fastify, options) => {
     const data = await query.select();
 
     return { data: data.images.map(o => o.toJSON()) };
+  });
 
+
+  fastify.get('/gallery/:galleryId/:imageId', getImageSchema, async (request, reply) => {
+    const data = await Image.query()
+      .eager('[author, comments.[author], notes]')
+      .findOne('id', request.params.imageId);
+
+    return { data: data.toJSON() };
   });
 
 };

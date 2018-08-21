@@ -1,31 +1,53 @@
 <template>
-  <ImageList :images="images" :url="url" />
+
+  <main>
+    <h1>
+      {{ gallery.name }}
+      <small> - {{ format(gallery.image_count) }} images</small>
+    </h1>
+
+    <ImageList :images="images" :url="url" />
+  </main>
+
 </template>
 
 
 <script>
-  import ImageList from '../../../components/galleries/ImageList';
+  import ImageList from '../../components/galleries/ImageList';
+
+
+  const formatter = new Intl.NumberFormat();
 
   export default {
 
-    async asyncData({ app, params, query }) {
+    async asyncData({ app, params }) {
       const galleryId = parseInt(params.id);
-      const page      = parseInt(query.page) || 1;
-      const limit     = 20;
-      const offset    = (page - 1) * limit;
 
-      const { data: images } = await app.$axios.$get(`gallery/${galleryId}/images`, { params: { limit, offset } });
+      const { data: gallery } = await app.$axios.$get(`gallery/${galleryId}`);
+      const { data: images }  = await app.$axios.$get(`gallery/${galleryId}/images`);
 
-      return { images };
+      return { gallery, images };
     },
 
     components: { ImageList },
 
     data() {
-      return { url: `${this.$route.path}:imageId` };
+      return { url: `${this.$route.path}/:imageId` };
     },
 
-    watchQuery: ['page'],
+    methods: {
+      format: formatter.format,
+    },
+
+    head() {
+      return {
+        title: this.gallery ? this.gallery.name : 'Gallery',
+      };
+    },
+
+    validate({ params }) {
+      return /^\d+/.test(params.id);
+    },
 
   };
 </script>

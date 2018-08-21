@@ -13,10 +13,13 @@ class Image extends Model {
       type:    'object',
 
       properties: {
-        author_id:   { anyOf: [{ type: 'integer' }, { type: 'null' }] },
-        description: { anyOf: [{ type: 'string' }, { type: 'null' }] },
-        id:          { type: 'integer' },
-        postfix:     { anyOf: [{ type: 'string' }, { type: 'null' }] },
+        author_id:     { anyOf: [{ type: 'integer' }, { type: 'null' }] },
+        comment_count: { type: 'integer' },
+        created_at:    { type: 'string', description: 'DateTime string' },
+        description:   { anyOf: [{ type: 'string' }, { type: 'null' }] },
+        id:            { type: 'integer' },
+        postfix:       { anyOf: [{ type: 'string' }, { type: 'null' }] },
+        view_count:    { type: 'integer' },
       },
     };
   }
@@ -28,14 +31,25 @@ class Image extends Model {
 
 
   static get relationMappings() {
-    const { User }  = require('./User');
-
     return {
       author: {
         relation:   Model.BelongsToOneRelation,
-        modelClass: User,
-        join:       { from: `${this.tableName}.author_id`, to: `${User.tableName}.id` },
+        modelClass: 'User',
+        join:       { from: 'images.author_id', to: 'users.id' },
       },
+
+      comments: {
+        relation:   Model.HasManyRelation,
+        modelClass: 'ImageComment',
+        join:       { from: 'images.id', to: 'image_comments.image_id' },
+      },
+
+      notes: {
+        relation:   Model.HasManyRelation,
+        modelClass: 'ImageNote',
+        join:       { from: 'images.id', to: 'image_notes.image_id' },
+      },
+
     };
   }
 
