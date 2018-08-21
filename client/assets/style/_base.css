@@ -53,6 +53,11 @@ img {
 }
 
 
+hr {
+  border-color: var(--color-separator);
+}
+
+
 table {
   border: none;
   border-collapse: collapse;

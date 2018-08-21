@@ -13,7 +13,7 @@
 
 
 <script>
-  import ImageList from '../../components/galleries/ImageList';
+  import ImageList from '../../../components/galleries/ImageList';
 
 
   const formatter = new Intl.NumberFormat();
