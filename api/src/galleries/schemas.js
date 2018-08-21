@@ -1,4 +1,5 @@
 const { Gallery } = require('../models/Gallery');
+const { Image } = require('../models/Image');
 
 
 const getGalleries = {
@@ -34,6 +35,26 @@ const getGallery = {
 };
 
 
+const getImages = {
+  schema: {
+    params:   {
+      type:       'object',
+      required:   ['galleryId'],
+      properties: { galleryId: { type: 'integer' } },
+    },
+    querystring: {
+      limit:  { type: 'integer' },
+      offset: { type: 'integer' }
+    },
+    response: {
+      200: { type: 'object', properties: {
+        data: { type: 'array', items: Image.combinedJsonSchema }
+      } },
+    },
+  },
+};
+
+
 const getStats = {
   schema: {
     response: {
@@ -53,5 +74,6 @@ const getStats = {
 module.exports = {
   getGalleries,
   getGallery,
+  getImages,
   getStats,
 };

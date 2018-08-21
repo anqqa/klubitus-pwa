@@ -13,10 +13,10 @@ class Image extends Model {
       type:    'object',
 
       properties: {
-        author_id:   { type: ['integer', 'null'] },
-        description: { type: ['string', 'null'] },
+        author_id:   { anyOf: [{ type: 'integer' }, { type: 'null' }] },
+        description: { anyOf: [{ type: 'string' }, { type: 'null' }] },
         id:          { type: 'integer' },
-        postfix:     { type: ['string', 'null'] },
+        postfix:     { anyOf: [{ type: 'string' }, { type: 'null' }] },
       },
     };
   }
@@ -24,6 +24,19 @@ class Image extends Model {
 
   static get virtualAttributes() {
     return ['url'];
+  }
+
+
+  static get relationMappings() {
+    const { User }  = require('./User');
+
+    return {
+      author: {
+        relation:   Model.BelongsToOneRelation,
+        modelClass: User,
+        join:       { from: `${this.tableName}.author_id`, to: `${User.tableName}.id` },
+      },
+    };
   }
 
 

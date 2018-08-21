@@ -36,13 +36,23 @@ class Gallery extends Model {
       default_image: {
         relation:   Model.BelongsToOneRelation,
         modelClass: Image,
-        join:       { from: `${Gallery.tableName}.default_image_id`, to: `${Image.tableName}.id` },
+        join:       { from: `${this.tableName}.default_image_id`, to: `${Image.tableName}.id` },
       },
 
       event: {
         relation:   Model.BelongsToOneRelation,
         modelClass: Event,
-        join:       { from: `${Gallery.tableName}.event_id`, to: `${Event.tableName}.id` },
+        join:       { from: `${this.tableName}.event_id`, to: `${Event.tableName}.id` },
+      },
+
+      images: {
+        relation:   Model.ManyToManyRelation,
+        modelClass: Image,
+        join:       {
+          from:    `${this.tableName}.id`,
+          through: { from: 'galleries_images.gallery_id', to: 'galleries_images.image_id' },
+          to:      `${Image.tableName}.id`
+        }
       },
     };
   }

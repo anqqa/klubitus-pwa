@@ -2,10 +2,12 @@ const { format, parse } = require('date-fns');
 const { raw } = require('objection');
 
 const { Gallery } = require('../models/Gallery');
+const { Image } = require('../models/Image');
 
 const {
   getGalleries: getGalleriesSchema,
   getGallery:   getGallerySchema,
+  getImages:    getImagesSchema,
   getStats:     getStatsSchema,
 } = require('./schemas');
 
@@ -59,11 +61,39 @@ module.exports = async (fastify, options) => {
 
 
   fastify.get('/gallery/:galleryId', getGallerySchema, async (request, reply) => {
-    const gallery = await Gallery.query()
+    const data = await Gallery.query()
       .eager('event')
       .findOne('id', request.params.galleryId);
 
-    return { data: gallery };
+    return { data };
+  });
+
+
+  fastify.get('/gallery/:galleryId/images', getImagesSchema, async (request, reply) => {
+    const { limit, offset } = request.query;
+
+    let query = Gallery.query()
+      .eager('[images(orderById).[author]]', {
+        orderById: builder => {
+          builder = builder.orderBy('id');
+
+          if (limit) {
+            builder = builder.limit(Math.max(1, Math.min(limit, 100)));
+          }
+
+          if (offset) {
+            builder = builder.offset(offset);
+          }
+
+          return builder;
+        }
+      })
+      .findOne('id', request.params.galleryId);
+
+    const data = await query.select();
+
+    return { data: data.images.map(o => o.toJSON()) };
+
   });
 
 };
