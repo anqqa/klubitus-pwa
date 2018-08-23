@@ -4,18 +4,29 @@
     <div class="row">
 
       <figure class="col-8 has-text-center">
-        <img :src="image.url">
+        <Tags :editable="isEditing" :tags="image.notes" :orig-size="origSize">
+          <img :src="image.url">
+        </Tags>
         <figcaption>{{ image.description }}</figcaption>
       </figure>
 
       <div class="col-4">
-        <h4>{{ event }}</h4>
-        <small>{{ eventInfo }}</small>
-        <hr>
-
         &copy; <span v-html="copyright" />,
         <nuxt-link to="/">{{ image.author.username }}</nuxt-link><br>
         <small>{{ comments }}, {{ views }}</small>
+        <br>
+        <button class="button is-tiny" @click="isEditing = !isEditing">
+          <span class="icon"><i class="bx bx-purchase-tag" /></span>
+          <span v-if="isEditing">Stop tagging</span>
+          <span v-else>Tag people</span>
+        </button>
+
+        <hr>
+
+        <h4>{{ event }}</h4>
+        <small>{{ eventInfo }}</small>
+
+        <hr>
 
         <CommentList :comments="image.comments" />
       </div>
@@ -30,6 +41,7 @@
   import format from 'date-fns/format';
 
   import CommentList from '../../../components/CommentList';
+  import Tags from '../../../components/image/Tags';
   import { count } from '../../../utils/text';
 
 
@@ -45,7 +57,9 @@
       return { gallery, image };
     },
 
-    components: { CommentList },
+    components: { CommentList, Tags },
+
+    data: () => ({ isEditing: false }),
 
     computed: {
       comments() { return count(this.image.comment_count, 'comment', 'comments'); },
@@ -73,8 +87,10 @@
         }
       },
 
+      origSize() { return { width: this.image.width, height: this.image.height }; },
+
       views() { return count(this.image.view_count, 'view', 'views'); },
-    }
+    },
 
   };
 </script>
