@@ -20,6 +20,13 @@
           <span v-if="isEditing">Stop tagging</span>
           <span v-else>Tag people</span>
         </button>
+        &nbsp;
+        <button v-if="image.exif" class="button is-tiny" @click="showExif = !showExif">
+          <span class="icon"><i class="bx bx-info-circle" /></span>
+          <span v-if="showExif">Hide image details</span>
+          <span v-else>Show image details</span>
+        </button>
+        <Exif v-if="showExif" :exif="image.exif" />
 
         <hr>
 
@@ -42,6 +49,7 @@
   import sortBy from 'lodash/sortBy';
 
   import CommentList from '../../../components/CommentList';
+  import Exif from '../../../components/image/Exif';
   import Tags from '../../../components/image/Tags';
   import { count } from '../../../utils/text';
 
@@ -58,9 +66,12 @@
       return { gallery, image };
     },
 
-    components: { CommentList, Tags },
+    components: { CommentList, Exif, Tags },
 
-    data: () => ({ isEditing: false }),
+    data: () => ({
+      isEditing: false,
+      showExif:  false,
+    }),
 
     computed: {
       comments() { return count(this.image.comment_count, 'comment', 'comments'); },
