@@ -1,13 +1,22 @@
 export const sizeToStyle = (size, origSize) => {
+
+  // Support negative sizes
+  const correctedSize = {
+    x:      size.width < 0 ? size.x + size.width : (size.x || 0),
+    y:      size.height < 0 ? size.y + size.height : (size.y || 0),
+    width:  Math.abs(size.width || 0),
+    height: Math.abs(size.height || 0),
+  };
+
   if (origSize) {
-    const relative = (child, parent) => Math.floor(100 * (child || 0) / parent);
+    const relative = (child, parent) => Math.floor(100 * child / parent);
 
     // Relative size
     return {
-      left:   relative(size.x, origSize.width) + '%',
-      top:    relative(size.y, origSize.height) + '%',
-      width:  relative(size.width, origSize.width) + '%',
-      height: relative(size.height, origSize.height) + '%',
+      left:   relative(correctedSize.x, origSize.width) + '%',
+      top:    relative(correctedSize.y, origSize.height) + '%',
+      width:  relative(correctedSize.width, origSize.width) + '%',
+      height: relative(correctedSize.height, origSize.height) + '%',
     };
 
   }
@@ -15,10 +24,10 @@ export const sizeToStyle = (size, origSize) => {
 
     // Absolute size
     return {
-      left:   (size.x || 0) + 'px',
-      top:    (size.y || 0) + 'px',
-      width:  (size.width || 0) + 'px',
-      height: (size.height || 0) + 'px',
+      left:   correctedSize.x + 'px',
+      top:    correctedSize.y + 'px',
+      width:  correctedSize.width + 'px',
+      height: correctedSize.height + 'px',
     };
 
   }

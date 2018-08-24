@@ -34,7 +34,7 @@
 
     props: {
       editable: { default: false, type: Boolean },
-      minSize:  { default: 20, type: Number },
+      minSize:  { default: 50, type: Number },
       tags:     { default: () => [], type: Array },
       origSize: { default: () => {}, type: Object },
     },
@@ -120,8 +120,8 @@
         this.newTag   = {
           x:      e.clientX - this.position.left,
           y:      e.clientY - this.position.top,
-          width:  1,
-          height: 1,
+          width:  this.minSize,
+          height: this.minSize,
           status: 'new',
           label:  '',
           id:     randomId(),
@@ -131,6 +131,18 @@
       onStopDrawing() {
         if (!this.editable || this.isLocked) {
           return;
+        }
+
+        // Did we left from starting point?
+        if (this.newTag.width < 0) {
+          this.newTag.x     += this.newTag.width;
+          this.newTag.width  = Math.abs(this.newTag.width);
+        }
+
+        // Did we move upwards from starting point?
+        if (this.newTag.height < 0) {
+          this.newTag.y     += this.newTag.height;
+          this.newTag.height = Math.abs(this.newTag.height);
         }
 
         // Match new tag size to the original image size instead of displayed size
