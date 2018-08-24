@@ -5,7 +5,7 @@
        @mousedown="onStartDrawing"
        @mousemove="onDraw"
        @mouseup="onStopDrawing">
-    <slot>Image</slot>
+    <slot />
     <Tag v-for="tag in tagList"
          :editable="editable"
          :key="tag.id"
@@ -34,6 +34,7 @@
 
     props: {
       editable: { default: false, type: Boolean },
+      minSize:  { default: 20, type: Number },
       tags:     { default: () => [], type: Array },
       origSize: { default: () => {}, type: Object },
     },
@@ -132,14 +133,23 @@
           return;
         }
 
-        // Minimum size
-        if (this.newTag.width < 20 || this.newTag.height < 20) {
-          this.newTag = null;
+        // Match new tag size to the original image size instead of displayed size
+        const { clientWidth, clientHeight } = this.$slots.default[0].elm;
 
-          return;
-        }
+        const correctionX  = this.origSize.width / clientWidth;
+        const correctionY  = this.origSize.height / clientHeight;
+        const correctedTag = Object.assign({}, this.newTag, {
+          x:      Math.max(0, Math.round(this.newTag.x * correctionX)),
+          y:      Math.max(0, Math.round(this.newTag.y * correctionY)),
+          width:  Math.max(this.minSize, Math.round(this.newTag.width * correctionX)),
+          height: Math.max(this.minSize, Math.round(this.newTag.height * correctionY)),
+        });
 
-        this.tagList.push(this.newTag);
+        // Make sure the region fits the image
+        correctedTag.x = Math.min(correctedTag.x, this.origSize.width - correctedTag.width);
+        correctedTag.y = Math.min(correctedTag.y, this.origSize.height - correctedTag.height);
+
+        this.tagList.push(correctedTag);
 
         this.newTag   = null;
         this.isLocked = true;
