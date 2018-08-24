@@ -99,7 +99,7 @@ module.exports = async (fastify, options) => {
 
   fastify.get('/gallery/:galleryId/:imageId', getImageSchema, async (request, reply) => {
     const data = await Image.query()
-      .eager('[author, comments.[author], notes]')
+      .eager('[author, comments.[author], exif, notes]')
       .findOne('id', request.params.imageId);
 
     return { data: data.toJSON() };

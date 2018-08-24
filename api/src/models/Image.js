@@ -46,6 +46,12 @@ class Image extends Model {
         join:       { from: 'images.id', to: 'image_comments.image_id' },
       },
 
+      exif: {
+        relation:   Model.BelongsToOneRelation,
+        modelClass: 'ImageExif',
+        join:       { from: 'images.id', to: 'exifs.image_id' },
+      },
+
       notes: {
         relation:   Model.HasManyRelation,
         modelClass: 'ImageNote',
