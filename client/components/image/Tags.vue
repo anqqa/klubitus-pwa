@@ -26,7 +26,7 @@
   import TagOutline from './TagOutline';
 
 
-  const randomId = () => Math.random().toString(36).substr(2, 9);
+  const randomId = () => 'new-' + Math.random().toString(36).substr(2, 9);
 
 
   export default {
@@ -50,8 +50,6 @@
 
     methods: {
       onCancel(msg) {
-        console.log('Tags.cancel', { msg });
-
         this.isLocked = false;
 
         this.tagList.forEach(tag => {
@@ -70,11 +68,16 @@
 
         this.newTag.width  = e.clientX - this.newTag.x - this.position.left;
         this.newTag.height = e.clientY - this.newTag.y - this.position.top;
+
+        this.newTag.width = this.newTag.width > 0
+          ? Math.max(this.minSize, this.newTag.width)
+          : Math.min(-this.minSize, this.newTag.width);
+        this.newTag.height = this.newTag.height > 0
+          ? Math.max(this.minSize, this.newTag.height)
+          : Math.min(-this.minSize, this.newTag.height);
       },
 
       onEdit(msg) {
-        console.log('Tags.onEdit', { msg });
-
         if (!this.editable) {
           return;
         }
@@ -87,20 +90,21 @@
       },
 
       onRemove(msg) {
-        console.log('Tags.delete', { msg });
-
         this.isLocked = false;
 
         this.tagList = this.tagList.filter(tag => tag.id !== msg.id);
       },
 
       onSave(msg) {
-        console.log('Tags.save', { msg });
-
         this.isLocked = false;
 
         if (!this.editable || !msg) {
           return;
+        }
+
+        // Saving empty text = remove
+        if (msg.name === '') {
+          return this.onRemove(msg);
         }
 
         this.tagList.forEach(tag => {

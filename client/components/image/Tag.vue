@@ -44,10 +44,10 @@
     },
 
     methods: {
-      cancelTag() { console.log('Tag.cancel'); this.$emit('cancelTag', { id: this.tag.id }); },
-      editTag()    { console.log('Tag.onEdit'); this.editable && this.$emit('editTag', { id: this.tag.id }); },
-      removeTag()  { console.log('Tag.remove'); this.$emit('removeTag', { id: this.tag.id }); },
-      saveTag(e)   { console.log('Tage.save'); this.$emit('saveTag', { id: this.tag.id, name: e.target.value }); },
+      cancelTag() { this.$emit('cancelTag', { id: this.tag.id }); },
+      editTag()   { this.editable && this.$emit('editTag', { id: this.tag.id }); },
+      removeTag() { this.$emit('removeTag', { id: this.tag.id }); },
+      saveTag(e)  { this.$emit('saveTag', { id: this.tag.id, name: e.target.value }); },
     }
   };
 </script>
@@ -76,6 +76,10 @@
   }
   .tag:not(.is-editable) button {
     display: none;
+  }
+
+  .tag input {
+    min-width: 100px;
   }
 
   .tag-remove {
