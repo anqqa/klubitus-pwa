@@ -17,9 +17,11 @@ class Image extends Model {
         comment_count: { type: 'integer' },
         created_at:    { type: 'string', description: 'DateTime string' },
         description:   { anyOf: [{ type: 'string' }, { type: 'null' }] },
+        height:        { anyOf: [{ type: 'integer' }, { type: 'null' }] },
         id:            { type: 'integer' },
         postfix:       { anyOf: [{ type: 'string' }, { type: 'null' }] },
         view_count:    { type: 'integer' },
+        width:         { anyOf: [{ type: 'integer' }, { type: 'null' }] },
       },
     };
   }
