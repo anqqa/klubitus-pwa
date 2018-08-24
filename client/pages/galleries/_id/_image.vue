@@ -7,7 +7,7 @@
         <Tags :editable="isEditing" :tags="image.notes" :orig-size="origSize">
           <img :src="image.url">
         </Tags>
-        <figcaption>{{ image.description }}</figcaption>
+        <figcaption>{{ description }}</figcaption>
       </figure>
 
       <div class="col-4">
@@ -39,6 +39,7 @@
 
 <script>
   import format from 'date-fns/format';
+  import sortBy from 'lodash/sortBy';
 
   import CommentList from '../../../components/CommentList';
   import Tags from '../../../components/image/Tags';
@@ -73,6 +74,18 @@
         }
 
         return copyright.join(' &ndash; ');
+      },
+
+      description() {
+        if (!this.image.notes) {
+          return this.image.description;
+        }
+
+        const description = [];
+
+        sortBy(this.image.notes, ['x', 'width']).forEach(note => description.push(note.name));
+
+        return description.join(', ');
       },
 
       event() { return this.gallery.event ? this.gallery.event.name : this.gallery.name; },
