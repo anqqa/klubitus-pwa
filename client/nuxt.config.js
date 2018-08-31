@@ -16,7 +16,7 @@ module.exports = {
   meta: {
     description: 'Clubbers guide to... Finland',
   },
-  css: ['~/assets/style/klubitus.css'],
+  css: ['@/assets/style/klubitus.scss'],
   plugins: ['~/plugins/axios', '~/plugins/vue-plugins'],
 
   /**

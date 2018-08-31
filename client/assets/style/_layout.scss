@@ -1,0 +1,148 @@
+.layout {
+  min-height: 100vh;
+
+
+  & > header {
+    border-bottom: 1px solid var(--color-separator);
+    display: flex;
+    min-height: 6rem;
+
+    .back {
+      flex: 1;
+    }
+
+    .brand {
+      align-items: center;
+      display: flex;
+      flex: 1;
+      flex-direction: row;
+    }
+    .brand img {
+      margin-right: 0.5rem;
+    }
+
+    .search {
+      flex: 1;
+      justify-content: flex-end;
+    }
+
+    nav {
+      display: flex;
+    }
+  }
+
+
+  & > main {
+    margin: 0 auto;
+    max-width: 980px;
+    padding: 1rem;
+  }
+
+
+  & > footer {
+    margin-bottom: 60px;
+  }
+}
+
+
+/* Main navigation */
+nav[aria-label="main navigation"] {
+  align-items: stretch;
+  align-self: stretch;
+  background: var(--color-background);
+  border-top: 1px solid var(--color-separator);
+  bottom: 0;
+  height: 60px;
+  justify-content: space-evenly;
+  left: 0;
+  position: fixed;
+  right: 0;
+  z-index: 10;
+
+  a {
+    align-items: center;
+    border-top: 2px solid transparent;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    margin: -1px 0 0;
+    position: relative;
+  }
+  a.is-active {
+    border-color: var(--color-primary);
+  }
+  a.is-active::after {
+    background: var(--color-primary);
+    bottom: 0;
+    content: '';
+    left: 0;
+    opacity: 0.25;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+  }
+
+  .icon {
+    font-size: 3rem;
+    height: 3rem;
+    width: 3rem;
+  }
+
+  .label {
+    font-size: 10px;
+    margin-top: 2px;
+  }
+}
+
+
+@media screen and (min-width: 768px) {
+  .layout {
+    & > header {
+      .back {
+        display: none;
+      }
+
+      .brand {
+        flex: 100px 0 1;
+      }
+      .search {
+      }
+
+    }
+
+    & > footer {
+      margin-bottom: 0;
+    }
+  }
+
+
+  nav[aria-label="main navigation"] {
+    border: 0 transparent;
+    flex: 0 1;
+    height: auto;
+    position: relative;
+
+    a {
+      align-items: center;
+      border-width: 0;
+      border-bottom: 2px solid transparent;
+      display: flex;
+      padding: 0 1rem 1px 1rem;
+      margin: 0 0 -1px;
+    }
+    a:hover {
+      text-decoration: none;
+    }
+
+    .icon {
+      display: none;
+    }
+
+    .label {
+      font-size: inherit;
+    }
+
+  }
+}
