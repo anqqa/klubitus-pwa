@@ -9,10 +9,6 @@
     display: flex;
     min-height: 6rem;
 
-    .back {
-      flex: 1;
-    }
-
     .brand {
       align-items: center;
       display: flex;
@@ -104,10 +100,6 @@ nav[aria-label="main navigation"] {
 @media screen and (min-width: 768px) {
   .layout {
     & > header {
-      .back {
-        display: none;
-      }
-
       .brand {
         flex: 100px 0 1;
       }

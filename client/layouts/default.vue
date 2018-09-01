@@ -2,8 +2,6 @@
   <div :class="`theme-${theme} ${sidebar}`" class="layout">
 
     <header class="navbar">
-      <div class="back" />
-
       <nuxt-link class="brand" to="/">
         <img src="/logo.svg" align="center"> {{ title }}
       </nuxt-link>
