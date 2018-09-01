@@ -1,38 +1,40 @@
 <template>
-  <GalleryList :galleries="galleries" />
+  <div>
+    <GalleryList :galleries="galleries" />
+  </div>
 </template>
 
 
 <script>
-  import format from 'date-fns/format';
-
   import GalleryList from '../../../../../components/galleries/GalleryList';
-  import { dateRange } from '../../../../../utils/time';
+  import { Actions } from '../../../../../store/galleries';
+
+
+  const dateFromParams = params => ({
+    day:   parseInt(params.day),
+    month: parseInt(params.month),
+    year:  parseInt(params.year),
+  });
 
 
   export default {
-    async asyncData({ app, params, query }) {
-      const year  = parseInt(params.year);
-      const month = parseInt(params.month);
-      const day   = parseInt(params.day);
+    async fetch({ params, query, store }) {
       const page  = parseInt(query.page) || 1;
 
-      const reqParams = { limit: 20 };
-
-      if (year) {
-        const { from, to } = dateRange(year, month, undefined, day);
-
-        reqParams.from   = format(from, 'YYYY-MM-DD');
-        reqParams.to     = format(to, 'YYYY-MM-DD');
-        reqParams.offset = (page - 1) * reqParams.limit;
-      }
-
-      const { data } = await app.$axios.get('galleries', { params: reqParams });
-
-      return { galleries: data.data };
+      await store.dispatch(Actions.GET_GALLERIES_BY_DATE, { ...dateFromParams(params), page });
     },
 
     components: { GalleryList },
+
+    computed: {
+      galleries() {
+        const getter = this.$store.getters['galleries/galleriesByDate'];
+
+        return getter(dateFromParams(this.$route.params), this.page);
+      },
+
+      page() { return parseInt(this.$route.query.page) || 1; },
+    },
 
     validate({ params }) {
       const year  = !params.year || /^\d{4}$/.test(params.year);
