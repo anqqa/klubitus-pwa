@@ -11,6 +11,13 @@
       </figure>
 
       <div class="col-4">
+        &laquo; <nuxt-link :to="back">Back to gallery</nuxt-link>
+
+        <h4>{{ eventName }}</h4>
+        <small>{{ eventInfo }}</small>
+
+        <hr>
+
         &copy; <span v-html="copyright" />,
         <nuxt-link to="/">{{ image.author.username }}</nuxt-link><br>
         <small>{{ comments }}, {{ views }}</small>
@@ -30,11 +37,6 @@
 
         <hr>
 
-        <h4>{{ event }}</h4>
-        <small>{{ eventInfo }}</small>
-
-        <hr>
-
         <CommentList :comments="image.comments" />
       </div>
 
@@ -51,7 +53,7 @@
   import CommentList from '../../../components/CommentList';
   import Exif from '../../../components/image/Exif';
   import Tags from '../../../components/image/Tags';
-  import { count } from '../../../utils/text';
+  import { count, slug } from '../../../utils/text';
 
 
   export default {
@@ -74,6 +76,14 @@
     }),
 
     computed: {
+      back() {
+        return this.localePath({
+          name: 'galleries-id',
+          params: { id: `${this.gallery.id}-${slug(this.gallery.name)}`
+          }
+        });
+      },
+
       comments() { return count(this.image.comment_count, 'comment', 'comments'); },
 
       copyright() {
@@ -99,8 +109,6 @@
         return description.join(', ');
       },
 
-      event() { return this.gallery.event ? this.gallery.event.name : this.gallery.name; },
-
       eventInfo() {
         if (this.gallery.event) {
           return format(this.gallery.event.begins_at, 'MMMM D, YYYY')
@@ -110,6 +118,8 @@
           return format(this.gallery.event_date, 'MMMM D, YYYY');
         }
       },
+
+      eventName() { return this.gallery.event ? this.gallery.event.name : this.gallery.name; },
 
       origSize() { return { width: this.image.width, height: this.image.height }; },
 

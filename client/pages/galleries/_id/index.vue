@@ -40,8 +40,6 @@
     },
 
     computed: {
-      back() { return this.breadcrumbs[this.breadcrumbs.length - 2]; },
-
       breadcrumbs() {
         return [
           { url: this.localePath({ name: 'galleries' }), title: 'Galleries' },
