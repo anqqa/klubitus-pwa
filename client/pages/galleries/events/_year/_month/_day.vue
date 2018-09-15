@@ -7,7 +7,7 @@
 
 <script>
   import GalleryList from '../../../../../components/galleries/GalleryList';
-  import { Actions } from '../../../../../store/galleries';
+  import { Actions, Getters } from '../../../../../store/galleries';
 
 
   const dateFromParams = params => ({
@@ -19,18 +19,30 @@
 
   export default {
     async fetch({ params, query, store }) {
-      const page  = parseInt(query.page) || 1;
+      const page         = parseInt(query.page) || 1;
+      const dateParams   = dateFromParams(params);
+      const getGalleries = store.getters[`galleries/${Getters.GALLERIES_BY_DATE}`];
 
-      await store.dispatch(Actions.GET_GALLERIES_BY_DATE, { ...dateFromParams(params), page });
+      if (!getGalleries(dateParams, page).length) {
+        await store.dispatch(`galleries/${Actions.GET_GALLERIES_BY_DATE}`, { ...dateParams, page });
+      }
     },
 
     components: { GalleryList },
 
     computed: {
       galleries() {
-        const getter = this.$store.getters['galleries/galleriesByDate'];
+        const galleriesWithRelations = [];
 
-        return getter(dateFromParams(this.$route.params), this.page);
+        const getGalleries = this.$store.getters[`galleries/${Getters.GALLERIES_BY_DATE}`];
+        const galleries    = getGalleries(dateFromParams(this.$route.params), this.page);
+
+        galleries.forEach(gallery => galleriesWithRelations.push({
+          ...gallery,
+          default_image: gallery.default_image_id && this.$store.state.images.images[gallery.default_image_id],
+        }));
+
+        return galleriesWithRelations;
       },
 
       page() { return parseInt(this.$route.query.page) || 1; },

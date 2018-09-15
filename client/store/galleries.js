@@ -2,12 +2,25 @@ import format from 'date-fns/format';
 import filter from 'lodash/filter';
 import orderBy from 'lodash/orderBy';
 
+import { Mutations as ImageMutations } from './images';
 import { dateRange } from '../utils/time';
 
 
 export const Actions = {
-  GET_GALLERIES_BY_DATE: 'galleries/getGalleriesByDate',
+  GET_GALLERIES_BY_DATE: 'getGalleriesByDate',
 };
+
+
+export const Getters = {
+  GALLERIES_BY_DATE: 'galleriesByDate',
+};
+
+
+export const Mutations = {
+  SET_GALLERIES: 'setGalleries',
+  SET_GALLERY:   'setGallery',
+};
+
 
 const PAGE_SIZE = 20;
 
@@ -25,14 +38,13 @@ export const actions = {
    * Get galleries by date.
    *
    * @param  {Function}  commit
-   * @param  {Object}    getters
    * @param  {Number}    [year]
    * @param  {Number}    [month]
    * @param  {Number}    [day]
    * @param  {Number}    [page]
    * @returns  {Promise<void>}
    */
-  async getGalleriesByDate({ commit, getters }, { year, month, day, page }) {
+  async [Actions.GET_GALLERIES_BY_DATE]({ commit }, { year, month, day, page }) {
     const params = { limit: PAGE_SIZE };
 
     if (year) {
@@ -43,14 +55,20 @@ export const actions = {
       params.offset = (page - 1) * params.limit;
     }
 
-    // Already fetched?
-    if (getters['galleriesByDate']({ year, month, day }, page).length) {
-      return;
-    }
-
     const { data } = await this.$axios.get('galleries', { params });
 
-    commit('setGalleries', data.data);
+    // Set galleries
+    commit(Mutations.SET_GALLERIES, data.data);
+
+
+    // Set images
+    const images = [];
+
+    data.data.forEach(gallery => gallery.default_image && images.push(gallery.default_image));
+
+    if (images.length) {
+      commit(`images/${ImageMutations.SET_IMAGES}`, images, { root: true });
+    }
   },
 
 };
@@ -58,7 +76,7 @@ export const actions = {
 
 export const getters = {
 
-  galleriesByDate: state => (date, page) => {
+  [Getters.GALLERIES_BY_DATE]: state => (date, page) => {
     const galleriesByDate = filter(state.byId, gallery => {
       const galleryDate = new Date(gallery.date);
 
@@ -91,13 +109,13 @@ export const getters = {
 
 export const mutations = {
 
-  setGalleries(state, galleries) {
-    galleries.forEach(gallery => mutations.setGallery(state, gallery));
+  [Mutations.SET_GALLERIES](state, galleries) {
+    galleries.forEach(gallery => mutations[Mutations.SET_GALLERY](state, gallery));
   },
 
 
-  setGallery(state, gallery) {
-    const { event, default_image, ...flatGallery } = gallery;
+  [Mutations.SET_GALLERY](state, gallery) {
+    const { event, default_image, ...flatGallery } = gallery; // eslint-disable-line
 
     if (event) {
       flatGallery.date = event.begins_at;
@@ -111,17 +129,6 @@ export const mutations = {
     }
 
     state.byId[flatGallery.id] = flatGallery;
-
-    if (default_image) {
-      mutations.setImage(state, default_image);
-    }
   },
 
-
-  setImage(state, image) {
-    state.images[image.id] = {
-      ...image,
-      created_at: new Date(image.created_at),
-    };
-  }
 };
