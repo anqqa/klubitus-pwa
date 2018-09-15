@@ -1,6 +1,6 @@
 import format from 'date-fns/format';
-import filter from 'lodash/filter';
-import orderBy from 'lodash/orderBy';
+import get from 'lodash/get';
+import setWith from 'lodash/setWith';
 
 import { Mutations as ImageMutations } from './images';
 import { dateRange } from '../utils/time';
@@ -17,8 +17,9 @@ export const Getters = {
 
 
 export const Mutations = {
-  SET_GALLERIES: 'setGalleries',
-  SET_GALLERY:   'setGallery',
+  SET_GALLERIES:         'setGalleries',
+  SET_GALLERIES_BY_DATE: 'setGalleriesByDate',
+  SET_GALLERY:           'setGallery',
 };
 
 
@@ -26,9 +27,8 @@ const PAGE_SIZE = 20;
 
 
 export const state = () => ({
-  byId:    {},
-  fetched: {},
-  images:  {},
+  idsByDate: {},
+  byId:      {},
 });
 
 
@@ -52,14 +52,14 @@ export const actions = {
 
       params.from   = format(from, 'YYYY-MM-DD');
       params.to     = format(to, 'YYYY-MM-DD');
-      params.offset = (page - 1) * params.limit;
+      params.offset = (page - 1) * PAGE_SIZE;
     }
 
     const { data } = await this.$axios.get('galleries', { params });
 
     // Set galleries
     commit(Mutations.SET_GALLERIES, data.data);
-
+    commit(Mutations.SET_GALLERIES_BY_DATE, { galleries: data.data, date: { year, month, day }, page });
 
     // Set images
     const images = [];
@@ -77,31 +77,18 @@ export const actions = {
 export const getters = {
 
   [Getters.GALLERIES_BY_DATE]: state => (date, page) => {
-    const galleriesByDate = filter(state.byId, gallery => {
-      const galleryDate = new Date(gallery.date);
+    const path = [date.year || 'latest'];
 
-      if (date.year && galleryDate.getFullYear() !== date.year) {
-        return false;
-      }
+    date.month && path.push(date.month);
+    date.day && path.push(date.day);
+    path.push(`page:${page || 1}`);
 
-      if (date.month && (galleryDate.getMonth() + 1) !== date.month) {
-        return false;
-      }
+    const galleryIds = get(state.idsByDate, path, []);
+    const galleries  = [];
 
-      if (date.day && galleryDate.getDate() !== date.day) {
-        return false;
-      }
+    galleryIds.forEach(id => galleries.push(state.byId[id]));
 
-      return true;
-    });
-
-    const orderedByDate = orderBy(galleriesByDate, ['date', 'desc']);
-
-    if (page) {
-      return orderedByDate.slice((page - 1) * PAGE_SIZE, PAGE_SIZE);
-    }
-
-    return orderedByDate;
+    return galleries;
   },
 
 };
@@ -111,6 +98,21 @@ export const mutations = {
 
   [Mutations.SET_GALLERIES](state, galleries) {
     galleries.forEach(gallery => mutations[Mutations.SET_GALLERY](state, gallery));
+  },
+
+
+  [Mutations.SET_GALLERIES_BY_DATE](state, { galleries, date, page }) {
+    const path = [date.year || 'latest'];
+
+    date.month && path.push(date.month);
+    date.day && path.push(date.day);
+    path.push(`page:${page || 1}`);
+
+    const pageful = [];
+
+    galleries.forEach(gallery => pageful.push(gallery.id));
+
+    setWith(state.idsByDate, path, pageful, Object);
   },
 
 
