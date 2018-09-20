@@ -52,5 +52,6 @@ module.exports = async (fastify, options) => {
   fastify.register(require('./events/routes'));
   fastify.register(require('./forum/routes'));
   fastify.register(require('./galleries/routes'));
+  fastify.register(require('./shouts/routes'));
 
 };
