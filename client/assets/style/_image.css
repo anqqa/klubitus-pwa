@@ -41,6 +41,8 @@
 
 /* Sizes */
 .is-48x48 { height: 48px; width: 48px; }
+.is-36x36 { height: 36px; width: 36px; }
+.is-24x24 { height: 24px; width: 24px; }
 
 
 /* Icon */
@@ -59,9 +61,6 @@
 
 
 /* Avatar */
-.avatar {
-  border-radius: 50%;
-}
-
-.avatar img {
-}
+.avatar { border-radius: 50%; }
+.avatar.is-24x24 .icon,
+.avatar.is-36x36 .icon { font-size: 75%; }

@@ -44,18 +44,12 @@ a:hover:not(.button) {
 }
 
 
-figure {
-  margin: 0;
-}
+figure { margin: 0; }
 
-img {
-  max-width: 100%;
-}
+img { max-width: 100%; }
 
 
-hr {
-  border-color: var(--color-separator);
-}
+hr { border-color: var(--color-separator); }
 
 
 table {
@@ -66,23 +60,18 @@ table {
   width: 100%;
 }
 
-thead {
-  border-bottom: 2px solid var(--color-separator);
-}
+thead { border-bottom: 2px solid var(--color-separator); }
 
-tfoot {
-  border-top: 2px solid var(--color-separator);
-}
+tfoot { border-top: 2px solid var(--color-separator); }
 
-tr:not(:last-child) {
-  border-bottom: 1px solid var(--color-separator);
-}
+tr:not(:last-child) { border-bottom: 1px solid var(--color-separator); }
 
-td, th {
-  vertical-align: middle;
-}
+td, th { vertical-align: middle; }
 
 
-ol, ul {
-  padding-left: 0;
-}
+ol, ul { padding-left: 0; }
+
+
+.markdown p { margin: 0; }
+.markdown p + p { margin-top: 1rem; }
+.markdown a { color: var(--color-blue); }

@@ -1,6 +1,7 @@
 .media {
   align-items: flex-start;
   display: flex;
+  overflow: hidden;
 }
 
 .media + .media {
