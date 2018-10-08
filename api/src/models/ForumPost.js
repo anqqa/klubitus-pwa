@@ -28,27 +28,23 @@ class ForumPost extends Model {
 
 
   static get relationMappings() {
-    const { ForumArea }  = require('./ForumArea');
-    const { ForumTopic } = require('./ForumTopic');
-    const { ForumUser }  = require('./ForumUser');
-
     return {
       author: {
         relation:   Model.BelongsToOneRelation,
-        modelClass: ForumUser,
-        join:       { from: `${ForumPost.tableName}.author_id`, to: `${ForumUser.tableName}.id` },
+        modelClass: 'ForumUser',
+        join:       { from: 'forum_posts.author_id', to: 'users.id' },
       },
 
       forum_area: {
         relation:   Model.BelongsToOneRelation,
-        modelClass: ForumArea,
-        join:       { from: `${ForumPost.tableName}.forum_area_id`, to: `${ForumArea.tableName}.id` },
+        modelClass: 'ForumArea',
+        join:       { from: 'forum_posts.forum_area_id', to: 'forum_areas.id' },
       },
 
       forum_topic: {
         relation:   Model.BelongsToOneRelation,
-        modelClass: ForumTopic,
-        join:       { from: `${ForumPost.tableName}.forum_topic_id`, to: `${ForumTopic.tableName}.id` },
+        modelClass: 'ForumTopic',
+        join:       { from: 'forum_posts.forum_topic_id', to: 'forum_topics.id' },
       },
     };
   }

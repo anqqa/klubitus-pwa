@@ -3,7 +3,7 @@ const { Model: ObjectionModel } = require('objection');
 
 
 class Model extends ObjectionModel {
-  static get combinedJsonSchema() {
+  static getCombinedJsonSchema(filterClassName) {
     const virtualProperties      = {};
     const relationshipProperties = {};
 
@@ -27,7 +27,7 @@ class Model extends ObjectionModel {
           : relationship.modelClass;
 
         // Try to avoid loops, don't include "parent" models in childs, i.e. skip Image in ImageComment
-        if (this.name.startsWith(modelClass.name)) {
+        if (/*this.name.startsWith(modelClass.name) || */modelClass.name === filterClassName) {
           return;
         }
 
@@ -35,7 +35,7 @@ class Model extends ObjectionModel {
 
           // HasMany or ManyToMany
           relationshipProperties[attribute] = {
-            anyOf: [{ type: 'null' }, { type: 'array', items: modelClass.combinedJsonSchema }],
+            anyOf: [{ type: 'null' }, { type: 'array', items: modelClass.getCombinedJsonSchema(this.name) }],
           };
 
         }
@@ -43,7 +43,7 @@ class Model extends ObjectionModel {
 
           // BelongsToOne
           relationshipProperties[attribute] = {
-            anyOf: [{ type: 'null' }, modelClass.combinedJsonSchema],
+            anyOf: [{ type: 'null' }, modelClass.getCombinedJsonSchema(this.name)],
           };
 
         }

@@ -32,19 +32,17 @@ class ForumArea extends Model {
 
 
   static get relationMappings() {
-    const { ForumTopic } = require('./ForumTopic');
-
     return {
       forum_topics: {
         relation:   Model.HasManyRelation,
-        modelClass: ForumTopic,
-        join:       { from: `${ForumArea.tableName}.id`, to: `${ForumTopic.tableName}.forum_area_id` },
+        modelClass: 'ForumTopic',
+        join:       { from: 'forum_areas.id', to: 'forum_topics.forum_area_id' },
       },
 
       last_topic: {
         relation:   Model.BelongsToOneRelation,
-        modelClass: ForumTopic,
-        join:       { from: `${ForumArea.tableName}.last_topic_id`, to: `${ForumTopic.tableName}.id` },
+        modelClass: 'ForumTopic',
+        join:       { from: 'forum_area.last_topic_id', to: 'forum_topics.id' },
       },
     };
   }

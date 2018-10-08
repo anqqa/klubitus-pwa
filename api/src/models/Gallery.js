@@ -29,29 +29,26 @@ class Gallery extends Model {
 
 
   static get relationMappings() {
-    const { Event } = require('./Event');
-    const { Image } = require('./Image');
-
     return {
       default_image: {
         relation:   Model.BelongsToOneRelation,
-        modelClass: Image,
-        join:       { from: `${this.tableName}.default_image_id`, to: `${Image.tableName}.id` },
+        modelClass: 'Image',
+        join:       { from: 'galleries.default_image_id', to: 'images.id' },
       },
 
       event: {
         relation:   Model.BelongsToOneRelation,
-        modelClass: Event,
-        join:       { from: `${this.tableName}.event_id`, to: `${Event.tableName}.id` },
+        modelClass: 'Event',
+        join:       { from: 'galleries.event_id', to: 'events.id' },
       },
 
       images: {
         relation:   Model.ManyToManyRelation,
-        modelClass: Image,
+        modelClass: 'Image',
         join:       {
-          from:    `${this.tableName}.id`,
+          from:    'galleries.id',
           through: { from: 'galleries_images.gallery_id', to: 'galleries_images.image_id' },
-          to:      `${Image.tableName}.id`
+          to:      'images.id',
         }
       },
     };

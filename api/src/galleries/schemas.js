@@ -12,7 +12,7 @@ const getGalleries = {
     },
     response:    {
       200: { type: 'object', properties: {
-        data: { type: 'array', items: Gallery.combinedJsonSchema }
+        data: { type: 'array', items: Gallery.getCombinedJsonSchema() }
       } },
     },
   }
@@ -28,7 +28,7 @@ const getGallery = {
     },
     response: {
       200: { type: 'object', properties: {
-        data: Gallery.combinedJsonSchema
+        data: Gallery.getCombinedJsonSchema()
       } },
     },
   }
@@ -44,7 +44,7 @@ const getImage = {
     },
     response: {
       200: { type: 'object', properties: {
-        data: Image.combinedJsonSchema,
+        data: Image.getCombinedJsonSchema(),
       } },
     },
   },
@@ -64,7 +64,7 @@ const getImages = {
     },
     response: {
       200: { type: 'object', properties: {
-        data: { type: 'array', items: Image.combinedJsonSchema }
+        data: { type: 'array', items: Image.getCombinedJsonSchema() }
       } },
     },
   },

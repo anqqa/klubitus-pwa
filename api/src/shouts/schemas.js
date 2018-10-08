@@ -6,7 +6,7 @@ const getShouts = {
     querystring: { limit: { type: 'integer' }, offset: { type: 'integer' } },
     response:    {
       200: { type: 'object', properties: {
-        data: { type: 'array', items: Shout.combinedJsonSchema }
+        data: { type: 'array', items: Shout.getCombinedJsonSchema() }
       } },
     },
   }
