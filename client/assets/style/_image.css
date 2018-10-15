@@ -61,6 +61,9 @@
 
 
 /* Avatar */
-.avatar { border-radius: 50%; }
+.avatar {
+  border-radius: 50%;
+  line-height: 1;
+}
 .avatar.is-24x24 .icon,
 .avatar.is-36x36 .icon { font-size: 75%; }
