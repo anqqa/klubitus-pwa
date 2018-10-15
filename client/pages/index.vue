@@ -3,14 +3,14 @@
     <div class="row">
 
       <div class="col-4">
-        <Chat class="dense" limit="10" />
+        <Chat :limit="10" class="dense" />
       </div>
 
       <div class="col">
-
+        <Newsfeed :limit="20" />
       </div>
 
-      <div class="col-4">
+      <div class="col-3">
 
       </div>
 
@@ -21,10 +21,11 @@
 
 <script>
   import Chat from '../components/Chat';
+  import Newsfeed from '../components/Newsfeed';
 
 
   export default {
-    components: { Chat },
+    components: { Chat, Newsfeed },
   }
 
 
