@@ -23,17 +23,20 @@
   --color-white:       #ffffff;
   --color-yellow:      #ffeb3b;
 
-  --color-dark-primary:    rgba(0, 0, 0, 0.87);
-  --color-dark-secondary:  rgba(0, 0, 0, 0.54);
-  --color-dark-tertiary:   rgba(0, 0, 0, 0.38);
-  --color-dark-divider:    rgba(0, 0, 0, 0.12);
-  --color-light-primary:   #fff;
-  --color-light-secondary: rgba(255, 255, 255, 0.7);
-  --color-light-tertiary:  rgba(255, 255, 255, 0.5);
-  --color-light-divider:   rgba(255, 255, 255, 0.12);
+  --color-dark-background:  rgba(255, 255, 255, 0.1);
+  --color-dark-primary:     rgba(0, 0, 0, 0.87);
+  --color-dark-secondary:   rgba(0, 0, 0, 0.54);
+  --color-dark-tertiary:    rgba(0, 0, 0, 0.38);
+  --color-dark-divider:     rgba(0, 0, 0, 0.12);
+  --color-light-background: rgba(0, 0, 0, 0.025);
+  --color-light-primary:    rgba(255, 255, 255, 0.95);
+  --color-light-secondary:  rgba(255, 255, 255, 0.7);
+  --color-light-tertiary:   rgba(255, 255, 255, 0.5);
+  --color-light-divider:    rgba(255, 255, 255, 0.12);
 
 
   --color-background:       var(--color-black);
+  --color-background-alt:   var(--color-dark-background);
   --color-primary:          var(--color-pink);
   --color-secondary:        var(--color-light-secondary);
   --color-tertiary:         var(--color-light-tertiary);
@@ -43,6 +46,7 @@
   --color-input-text:       var(--color-secondary);
 
   --font-family: -apple-system, BlinkMacSystemFont, Avenir, "Avenir Next", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  --font-weight-bold: 600;
 
   --form-border-radius: 4px;
 
@@ -72,10 +76,12 @@
 .theme-purple,
 .theme-red,
 .theme-teal {
+  --color-link:      var(--color-light-primary);
   --color-secondary: var(--color-light-secondary);
   --color-separator: var(--color-light-divider);
   --color-tertiary:  var(--color-light-tertiary);
-  --color-text:      var(--color-light-primary);
+  --color-text:      var(--color-light-secondary);
+  --color-text-alt:  var(--color-light-primary);
 }
 
 .theme-amber,
@@ -89,10 +95,13 @@
 .theme-orange,
 .theme-white,
 .theme-yellow {
-  --color-secondary: var(--color-dark-secondary);
-  --color-separator: var(--color-dark-divider);
-  --color-tertiary:  var(--color-dark-tertiary);
-  --color-text:      var(--color-dark-primary);
+  --color-background-alt: var(--color-light-background);
+  --color-link:           var(--color-dark-secondary);
+  --color-secondary:      var(--color-dark-secondary);
+  --color-separator:      var(--color-dark-divider);
+  --color-tertiary:       var(--color-dark-tertiary);
+  --color-text:           var(--color-dark-primary);
+  --color-text-alt:       var(--color-dark-secondary);
 }
 
 .theme-amber       { --color-background: var(--color-amber); }

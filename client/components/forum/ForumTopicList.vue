@@ -12,16 +12,17 @@
       </div>
 
       <div class="media-content">
-        <nuxt-link :to="topic.url" class="has-text-default" v-text="topic.name" /><br>
-        <nuxt-link to="/">{{ topic.username }}</nuxt-link>
+        <h4><nuxt-link :to="topic.url" v-text="topic.name" /></h4>
+        <nuxt-link class="user" to="/">{{ topic.username }}</nuxt-link>
+        <span class="has-text-tertiary">
+          &nbsp; {{ topic.ago }}
+        </span>
+        <span v-if="topic.replies">
+          &nbsp; {{ topic.replies }}
+        </span>
         <small v-if="topic.forum_area" class="has-text-tertiary">
-          &sdot; {{ topic.forum_area.name }}
+          &nbsp; <nuxt-link :to="topic.areaUrl">{{ topic.forum_area.name }}</nuxt-link>
         </small>
-      </div>
-
-      <div class="media-right has-no-breaks has-text-right">
-        {{ topic.postCount }}<br>
-        <span class="has-text-tertiary">{{ topic.ago }}</span>
       </div>
     </li>
   </ol>
@@ -52,12 +53,13 @@
           const avatar   = topic.author && topic.author.avatar_url ? avatarUrl(topic.author.avatar_url) : null;
           const username = topic.author ? topic.author.username : topic.author_name;
 
-            topics.push({
+          topics.push({
             ...topic,
             ago:         fuzzyTimeDistance(new Date(topic.last_post_at)),
+            areaUrl:     topic.forum_area ? this.localePath({ name: 'forum-area', params: { area:`${topic.forum_area.id}-${slug(topic.forum_area.name)}` } }) : null,
             avatar,
             avatarColor: colorFromText(username),
-            postCount:   formatter.format(topic.post_count),
+            replies:     topic.post_count > 1 ? `${formatter.format(topic.post_count - 1)} ${topic.post_count === 2 ? 'reply' : 'replies'}` : null,
             url:         this.localePath({ name: 'forum-topic-id', params: { id: `${topic.id}-${slug(topic.name)}` } }),
             username,
           })
@@ -69,3 +71,8 @@
 
   };
 </script>
+
+
+<style scoped>
+  h4 { margin-top: 0; }
+</style>

@@ -1,19 +1,20 @@
 <template>
-  <section class="card">
+  <section class="card dense">
 
-    <header class="card-header">
-      <span class="card-header-title" v-html="title" />
+    <header>
+      <h2 v-html="title" />
     </header>
 
     <ul class="card-content">
       <li v-for="event in events" :key="event.id">
-        <time class="is-pulled-right">{{ event.stamp }}</time>
+        <time class="is-pulled-right">{{ event.stamp }}</time>&nbsp;
         <nuxt-link :to="event.url">{{ event.name }}</nuxt-link>
       </li>
     </ul>
 
   </section>
 </template>
+
 
 <script>
   import format from 'date-fns/format';
@@ -56,6 +57,7 @@
   };
 </script>
 
-<style scoped>
 
+<style scoped>
+  ul { list-style: none; }
 </style>

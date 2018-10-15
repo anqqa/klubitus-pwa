@@ -13,7 +13,7 @@
         </div>
 
         <div class="media-content">
-          <nuxt-link to="/">{{ shout.author.username }}</nuxt-link>
+          <nuxt-link class="user" to="/">{{ shout.author.username }}</nuxt-link>
           <time :datetime="shout.created_at" :title="shout.created_at">{{ shout.stamp }}</time>
           <br>
           <div class="markdown" v-html="shout.html" />

@@ -3,18 +3,14 @@
   <main>
     <h1>Forum</h1>
 
-    <div class="row is-reverse-order">
+    <div class="row">
       <div class="col">
         <h2 class="h3">Latest</h2>
 
         <ForumTopicList :topics="topics" />
       </div>
 
-      <div class="col">
-        <h2 class="h3">Areas</h2>
-
-        <ForumAreaList :areas="areas" />
-      </div>
+      <ForumAreaList :areas="areas" class="col-5"/>
     </div>
   </main>
 

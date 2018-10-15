@@ -1,5 +1,5 @@
 <template>
-  <section class="card">
+  <section class="card dense">
 
     <header>
       <h2>Newsfeed</h2>
@@ -13,7 +13,7 @@
         </div>
 
         <div class="media-content">
-          <nuxt-link to="/">{{ group.username }}</nuxt-link> {{ group.text }}
+          <nuxt-link class="user" to="/">{{ group.username }}</nuxt-link> {{ group.text }}
           <time :datetime="group.created_at" :title="group.created_at">{{ group.stamp }}</time>
           <ul>
             <li v-for="item in group.items" :key="item.id">
@@ -35,7 +35,6 @@
 
 <script>
   import format from 'date-fns/format';
-  import get from 'lodash/get';
 
   import Avatar from './Avatar';
   import { avatarUrl } from '../utils/url';
@@ -117,7 +116,7 @@
 
           case 'forum':
             model = item.target_forum_topic || {};
-            icon  = 'message';
+            icon  = item.type === 'reply' ? 'conversation' : 'message';
             text  = model.name || '(Untitled)';
             url   = this.localePath({ name: 'forum-topic-id', params: { id: `${model.id}-${slug(model.name)}` }});
             break;

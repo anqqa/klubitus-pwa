@@ -4,7 +4,7 @@
     <h1 class="title" v-text="area.name" />
     <h2 class="subtitle" v-html="area.description" />
 
-    <div class="row is-reverse-order">
+    <div class="row">
       <div class="col">
         <Pagination :pages="pages" :route="route" />
 
