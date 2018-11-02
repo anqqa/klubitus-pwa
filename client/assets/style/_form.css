@@ -96,6 +96,13 @@ button:active {
   transform: scale(0.98);
 }
 
+.button.is-icon {
+  border-radius: 50%;
+  height: 4rem;
+  padding: 0;
+  width: 4rem;
+}
+
 .button.is-primary {
   background: var(--color-primary);
   border-color: transparent;

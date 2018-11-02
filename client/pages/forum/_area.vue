@@ -3,7 +3,7 @@
   <main class="row">
 
     <nav class="sidebar col-2">
-      <ForumAreaList :areas="areas" mini />
+      <ForumAreaList :areas="areas" />
     </nav>
 
     <div class="col main-content">

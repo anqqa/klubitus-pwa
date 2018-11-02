@@ -1,9 +1,18 @@
 <template>
 
-  <section>
-    <div v-for="group in groupList" :key="group.id">
+  <section :class="collapse">
+    <header class="show-phone" @click="toggleList">
+      <h2>
+        <span>Areas</span>
+        <span class="icon has-text-secondary">
+          <i :class="`${collapse ? 'bx-chevrons-down' : 'bx-chevrons-up'}`" class="bx" />
+        </span>
+      </h2>
+    </header>
+
+    <div v-for="group in groupList" :key="group.id" class="collapsible">
       <h3 class="h6 has-text-tertiary">{{ group.name }}</h3>
-      <ul :class="{'mini': mini}">
+      <ul>
         <template v-for="area in group.areas">
           <li v-if="area.url" :key="area.id">
             <nuxt-link :to="area.url">
@@ -30,6 +39,10 @@
 
     props: {
       areas: { default: () => [], type: Array },
+    },
+
+    data() {
+      return { collapse: 'collapsed' };
     },
 
     computed: {
@@ -60,6 +73,12 @@
 
         return groups;
       }
+    },
+
+    methods: {
+      toggleList() {
+        this.collapse = this.collapse ? null : 'collapsed';
+      }
     }
 
   };
@@ -67,6 +86,13 @@
 
 
 <style scoped>
+  h2 {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 2rem;
+    margin: 0;
+  }
   h3 {
     border-bottom: 1px solid var(--color-separator);
     margin: 0 0 0 1rem;
@@ -92,5 +118,17 @@
   }
   h4 {
     margin: 0;
+  }
+
+  .collapsible {
+    max-height: 500px;
+    opacity: 1;
+    overflow: hidden;
+    transition: max-height 0.2s ease-in-out;
+  }
+  @media screen and (max-width: 479px) {
+    .collapsed .collapsible {
+      max-height: 0;
+    }
   }
 </style>
