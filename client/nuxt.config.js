@@ -10,7 +10,7 @@ module.exports = {
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       { rel: 'stylesheet', href: 'https://unpkg.com/normalize.css@8.0.0/normalize.css' },
-      { rel: 'stylesheet', href: 'https://unpkg.com/boxicons@1.1.0/css/boxicons.min.css' },
+      { rel: 'stylesheet', href: 'https://unpkg.com/boxicons@1.7.1/css/boxicons.min.css' },
     ],
   },
   meta: {
@@ -30,11 +30,13 @@ module.exports = {
   modules: [
     ['@nuxtjs/auth', {
       cookie:       { options: { expires: 30 } },
+      localStorage: false,
       redirect:     {
-        callback: '/en/login',
+        callback: '/',
         login:    '/en/login',
+        logout:   false,
       },
-      resetOnError: true,
+      // resetOnError: true,
       strategies:   {
         local: {
           endpoints: {
