@@ -5,9 +5,17 @@
 
 
   & > header {
+    background: var(--color-background);
     border-bottom: 1px solid var(--color-separator);
     display: flex;
-    min-height: 6rem;
+    left: 0;
+    margin: 0;
+    height: 6rem;
+    padding: 0 1rem;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 3;
 
     .brand {
       align-items: center;
@@ -33,13 +41,25 @@
   & > main {
     flex: 1;
     margin: 0 auto;
-    max-width: 980px;
-    padding: 1rem;
+    padding: 6rem 0 0;
     width: 100%;
+    z-index: 1;
   }
 
+  .sidebar {
+    background: var(--color-separator);
+    margin: 0;
+    padding: 1rem 0;
+  }
+
+  .main-content {
+    //box-shadow: -2px 0 5px rgba(0, 0, 0, 0.25);
+    padding: 1rem;
+    z-index: 2;
+  }
 
   & > footer {
+    border-top: 1px solid var(--color-separator);
     margin-bottom: 60px;
   }
 }
@@ -106,6 +126,9 @@ nav[aria-label="main navigation"] {
       .search {
       }
 
+    }
+
+    & > main {
     }
 
     & > footer {

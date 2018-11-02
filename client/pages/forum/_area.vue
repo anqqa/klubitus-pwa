@@ -1,19 +1,18 @@
 <template>
 
-  <main>
-    <h1 class="title" v-text="area.name" />
-    <h2 class="subtitle" v-html="area.description" />
+  <main class="row">
 
-    <div class="row">
-      <div class="col">
-        <Pagination :pages="pages" :route="route" />
+    <nav class="sidebar col-3">
+      <ForumAreaList :areas="areas" mini />
+    </nav>
 
-        <nuxt-child :key="$route.fullPath" />
-      </div>
+    <div class="col main-content">
+      <h1 class="title" v-text="area.name" />
+      <h2 class="subtitle" v-html="area.description" />
 
-      <div class="col-3">
-        <ForumAreaList :areas="areas" mini />
-      </div>
+      <Pagination :pages="pages" :route="route" />
+
+      <nuxt-child :key="$route.fullPath" />
     </div>
 
   </main>

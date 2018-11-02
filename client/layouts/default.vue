@@ -2,30 +2,34 @@
   <div :class="`theme-${theme} ${sidebar}`" class="layout">
 
     <header class="navbar">
-      <nuxt-link class="brand" to="/">
-        <img src="/logo.svg" align="center"> {{ title }}
-      </nuxt-link>
-
-      <nav role="navigation" aria-label="main navigation">
-        <nuxt-link v-for="(item, index) in items" :key="index" :exact="item.exact" :to="item.url">
-          <span class="icon"><i :class="item.icon" /></span>
-          <span class="label">{{ item.title }}</span>
+      <section class="navbar-section">
+        <nuxt-link class="brand" to="/">
+          <img src="/logo.svg" align="center"> {{ title }}
         </nuxt-link>
-      </nav>
 
-      <nav class="search">
-        <div class="navbar-item is-expanded">
-          <div class="field">
-            <input type="text" placeholder="Search...">
+        <nav role="navigation" aria-label="main navigation">
+          <nuxt-link v-for="(item, index) in items" :key="index" :exact="item.exact" :to="item.url">
+            <span class="icon"><i :class="item.icon" /></span>
+            <span class="label">{{ item.title }}</span>
+          </nuxt-link>
+        </nav>
+      </section>
+
+      <section class="navbar-section">
+        <nav class="search">
+          <div class="navbar-item is-expanded">
+            <div class="field">
+              <input type="text" placeholder="Search...">
+            </div>
           </div>
-        </div>
 
-        <section class="user">
-          <button v-if="$auth.loggedIn" @click="logout">Logout</button>
-          <nuxt-link v-if="!$auth.loggedIn" :to="localePath('login')" class="button">Login</nuxt-link>
-          <nuxt-link v-if="!$auth.loggedIn" :to="localePath('register')" class="button">Register</nuxt-link>
-        </section>
-      </nav>
+          <section class="user">
+            <button v-if="$auth.loggedIn" @click="logout">Logout</button>
+            <nuxt-link v-if="!$auth.loggedIn" :to="localePath('login')" class="button">Login</nuxt-link>
+            <nuxt-link v-if="!$auth.loggedIn" :to="localePath('register')" class="button">Register</nuxt-link>
+          </section>
+        </nav>
+      </section>
     </header>
 
     <nuxt />
@@ -33,11 +37,11 @@
     <footer>
       <nav class="navbar">
 
-        <div class="is-left hide-phone">
+        <div class="navbar-section hide-phone">
           &copy; 2000 &ndash; 2018 Klubitus
         </div>
 
-        <div class="is-right">
+        <div class="navbar-section is-right">
           <div class="button-group language">
             <nuxt-link v-for="locale in $i18n.locales"
                        :key="locale.code"
@@ -63,7 +67,6 @@
         </div>
 
       </nav>
-
     </footer>
 
   </div>

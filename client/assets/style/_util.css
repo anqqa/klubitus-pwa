@@ -81,7 +81,7 @@
 .has-text-default { color: var(--color-text); }
 .has-text-primary { color: var(--color-primary); }
 .has-text-secondary { color: var(--color-secondary); }
-.has-text-tertiary { color: color(var(--color-text) alpha(0.5)); }
+.has-text-tertiary { color: var(--color-tertiary); }
 .has-text-white { color: white; }
 
 @media screen and (max-width: 479px) {

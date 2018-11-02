@@ -10,7 +10,7 @@ body {
   line-height: 1.4;
   margin: 0;
   font-family: var(--font-family);
-  font-size: 1.4rem;
+  font-size: var(--font-size);
 }
 
 
@@ -26,12 +26,12 @@ h4:last-child,
 h5:last-child,
 h6:last-child { margin-bottom: 0; }
 
-h1, .h1 { font-size: 1.75em; }
-h2, .h2 { font-size: 1.5em; }
-h3, .h3 { font-size: 1.25em; }
-h4, .h4 { font-size: 1.15em; }
-h5, .h5 { font-size: 1em; }
-h6, .h6 { font-size: 0.85em; text-transform: uppercase; }
+h1, .h1 { font-size: calc(var(--font-size) * 2); }
+h2, .h2 { font-size: calc(var(--font-size) * 1.5); }
+h3, .h3 { font-size: calc(var(--font-size) * 1.25); }
+h4, .h4 { font-size: calc(var(--font-size) * 1.1); }
+h5, .h5 { font-size: var(--font-size); }
+h6, .h6 { font-size: calc(var(--font-size) * 0.8); text-transform: uppercase; }
 
 
 a {

@@ -1,16 +1,17 @@
 <template>
 
-  <main>
-    <h1>Forum</h1>
+  <main class="row">
 
-    <div class="row">
-      <div class="col">
-        <h2 class="h3">Latest</h2>
+    <nav class="sidebar col-3">
+      <ForumAreaList :areas="areas" />
+    </nav>
 
-        <ForumTopicList :topics="topics" />
-      </div>
+    <div class="col main-content">
+      <h1>Forum</h1>
 
-      <ForumAreaList :areas="areas" class="col-5"/>
+      <h2 class="h3">Latest</h2>
+
+      <ForumTopicList :topics="topics" />
     </div>
   </main>
 

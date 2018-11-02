@@ -1,8 +1,14 @@
 .navbar {
-  align-items: center;
+  align-items: stretch;
   display: flex;
+  justify-content: space-between;
   min-height: 6rem;
   margin: auto 1rem;
+}
+
+.navbar-section {
+  align-items: center;
+  display: flex;
 }
 
 .navbar a {
