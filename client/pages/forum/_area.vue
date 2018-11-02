@@ -2,7 +2,7 @@
 
   <main class="row">
 
-    <nav class="sidebar col-3">
+    <nav class="sidebar col-2">
       <ForumAreaList :areas="areas" mini />
     </nav>
 
