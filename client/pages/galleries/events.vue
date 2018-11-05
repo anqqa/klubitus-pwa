@@ -1,36 +1,69 @@
-import format from "date-fns/format";
 <template>
 
-  <main>
+  <main class="row">
 
-    <nav class="tabs is-small is-mobile">
-      <nuxt-link v-for="browseYear in Object.keys(stats).sort().reverse()"
-                 :key="browseYear"
-                 :to="localePath({ name: 'galleries-events-year-month-day', params: { year: browseYear } })">
-        {{ browseYear }}
-      </nuxt-link>
+    <nav class="sidebar col-2">
+      <section :class="{ collapsed }">
+        <header class="show-phone" @click="toggleList">
+          <h2>
+            <span>Select date</span>
+            <span class="icon has-text-secondary">
+              <i :class="`${collapsed ? 'bx-chevrons-down' : 'bx-chevrons-up'}`" class="bx" />
+            </span>
+          </h2>
+        </header>
+
+        <div v-for="browseYear in Object.keys(stats).sort().reverse()"
+             :key="browseYear"
+             class="collapsible">
+
+          <nuxt-link :to="localePath({
+            name: 'galleries-events-year-month-day',
+            params: { year: browseYear },
+          })">
+            <h4>
+              {{ browseYear }}
+              <small class="has-text-tertiary">
+                ({{ getStat('galleries', browseYear) }})
+              </small>
+            </h4>
+          </nuxt-link>
+
+          <ul v-if="~~year === ~~browseYear">
+            <li v-for="browseMonth in Object.keys(stats[year]).sort().reverse()"
+                :key="browseMonth">
+              <nuxt-link :to="localePath({
+                name: 'galleries-events-year-month-day',
+                params: { year, month: browseMonth },
+              })">
+                <h4>
+                  {{ stats[year][browseMonth].name }}
+                  <small class="has-text-tertiary">
+                    ({{ stats[year][browseMonth].galleries }})
+                  </small>
+                </h4>
+              </nuxt-link>
+            </li>
+          </ul>
+
+        </div>
+      </section>
     </nav>
 
-    <nav v-if="year" class="tabs is-small is-mobile">
-      <nuxt-link v-for="browseMonth in Object.keys(stats[year]).sort().reverse()"
-                 :key="browseMonth"
-                 :to="localePath({ name: 'galleries-events-year-month-day', params: { year, month: browseMonth } })">
-        {{ stats[year][browseMonth].name }}
-      </nuxt-link>
-    </nav>
+    <div class="col main-content">
+      <h1>
+        {{ title }}
+        <small v-if="galleries">
+          - {{ format(galleries) }} galleries with {{ format(images) }} images
+        </small>
+      </h1>
 
-    <h1>
-      {{ title }}
-      <small v-if="galleries">
-        - {{ format(galleries) }} galleries with {{ format(images) }} images
-      </small>
-    </h1>
+      <Pagination v-if="pages > 1" :pages="pages" :route="route" />
 
-    <Pagination v-if="pages > 1" :pages="pages" :route="route" />
+      <nuxt-child :key="$route.fullPath" />
 
-    <nuxt-child :key="$route.fullPath" />
-
-    <Pagination v-if="pages > 1" :pages="pages" :route="route" />
+      <Pagination v-if="pages > 1" :pages="pages" :route="route" />
+    </div>
   </main>
 
 </template>
@@ -65,6 +98,10 @@ import format from "date-fns/format";
 
     components: { Pagination },
 
+    data() {
+      return { collapsed: true };
+    },
+
     computed: {
       day() { return parseInt(this.$route.params.day); },
       month() { return parseInt(this.$route.params.month); },
@@ -72,8 +109,8 @@ import format from "date-fns/format";
       route() { return { name: 'galleries-events-year-month-day', params: this.$route.params }; },
       year() { return parseInt(this.$route.params.year); },
 
-      galleries() { return this.getStat('galleries'); },
-      images() { return this.getStat('images'); },
+      galleries() { return this.getStat('galleries', this.year, this.month); },
+      images() { return this.getStat('images', this.year, this.month); },
       pages() { return Math.ceil(this.galleries / 20); },
       title() { return this.month ? format(new Date(this.year, this.month - 1), 'MMMM YYYY') : this.year || 'Event Galleries'; },
     },
@@ -85,18 +122,35 @@ import format from "date-fns/format";
     methods: {
       format: formatter.format,
 
-      getStat(stat) {
-        if (this.month) {
-          return get(this.stats, [this.year, this.month, stat].join('.'), 0);
+      getStat(stat, year, month) {
+        if (month) {
+          return get(this.stats, [year, month, stat].join('.'), 0);
         }
 
-        if (this.year) {
-          return sumBy(Object.values(get(this.stats, this.year)), stat);
+        if (year) {
+          return sumBy(Object.values(get(this.stats, year)), stat);
         }
 
         return 0;
+      },
+
+      toggleList() {
+        this.collapsed = !this.collapsed;
       }
     },
 
   }
 </script>
+
+
+<style scoped>
+  ul {
+    border-bottom: 1px solid var(--color-separator);
+  }
+
+  @media screen and (min-width: 480px) {
+    .collapsible {
+      text-align: right;
+    }
+  }
+</style>

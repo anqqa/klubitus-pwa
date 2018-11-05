@@ -1,11 +1,11 @@
 <template>
 
-  <section :class="collapse">
+  <section :class="{ collapsed }">
     <header class="show-phone" @click="toggleList">
       <h2>
         <span>Areas</span>
         <span class="icon has-text-secondary">
-          <i :class="`${collapse ? 'bx-chevrons-down' : 'bx-chevrons-up'}`" class="bx" />
+          <i :class="`${collapsed ? 'bx-chevrons-down' : 'bx-chevrons-up'}`" class="bx" />
         </span>
       </h2>
     </header>
@@ -45,7 +45,7 @@
     },
 
     data() {
-      return { collapse: 'collapsed' };
+      return { collapsed: true };
     },
 
     computed: {
@@ -80,7 +80,7 @@
 
     methods: {
       toggleList() {
-        this.collapse = this.collapse ? null : 'collapsed';
+        this.collapsed = !this.collapsed;
       }
     }
 

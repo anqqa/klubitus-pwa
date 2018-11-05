@@ -49,10 +49,11 @@
     overflow: hidden;
     transition: max-height 0.2s ease-in-out;
   }
-  @media screen and (max-width: 479px) {
-    .collapsed .collapsible {
-      max-height: 0;
-    }
-  }
 
+}
+
+@media screen and (max-width: 479px) {
+  .sidebar .collapsed .collapsible {
+    max-height: 0;
+  }
 }
