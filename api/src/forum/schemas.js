@@ -73,7 +73,7 @@ const getTopic = {
     response: {
       200: {
         type:       'object',
-        properties: { data: topic },
+        properties: { data: ForumTopic.getCombinedJsonSchema() },
       },
     },
   },
@@ -90,7 +90,7 @@ const getTopics = {
     response: {
       200: {
         type:       'object',
-        properties: { data: { type: 'array', items: topic } },
+        properties: { data: { type: 'array', items: ForumTopic.getCombinedJsonSchema() } },
       },
     },
   },

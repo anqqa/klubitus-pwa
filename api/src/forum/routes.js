@@ -105,7 +105,7 @@ module.exports = async (fastify, options) => {
     }
 
     let query = ForumTopic.query()
-      .eager('author')
+      .eager('[author, last_post.author]')
       .orderBy('last_post_at', 'desc')
       .limit(pageSize);
 

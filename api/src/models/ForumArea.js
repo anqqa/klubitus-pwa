@@ -42,7 +42,7 @@ class ForumArea extends Model {
       last_topic: {
         relation:   Model.BelongsToOneRelation,
         modelClass: 'ForumTopic',
-        join:       { from: 'forum_area.last_topic_id', to: 'forum_topics.id' },
+        join:       { from: 'forum_areas.last_topic_id', to: 'forum_topics.id' },
       },
     };
   }

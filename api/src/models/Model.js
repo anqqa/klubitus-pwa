@@ -3,9 +3,10 @@ const { Model: ObjectionModel } = require('objection');
 
 
 class Model extends ObjectionModel {
-  static getCombinedJsonSchema(filterClassName) {
+  static getCombinedJsonSchema(filterRelations) {
     const virtualProperties      = {};
     const relationshipProperties = {};
+
 
     // Virtual Attributes
     if (this.virtualAttributes) {
@@ -19,6 +20,14 @@ class Model extends ObjectionModel {
     // Relationships
     if (this.relationMappings) {
       const relationships = this.relationMappings;
+      const filterClasses = [this.name];
+
+      if (typeof filterRelations === 'string') {
+        filterClasses.push(filterRelations);
+      }
+      else if (filterRelations) {
+        filterClasses.push(...filterRelations);
+      }
 
       Object.keys(relationships).forEach(attribute => {
         const relationship = relationships[attribute];
@@ -26,8 +35,7 @@ class Model extends ObjectionModel {
           ? require(`./${relationship.modelClass}`)[relationship.modelClass]
           : relationship.modelClass;
 
-        // Try to avoid loops, don't include "parent" models in childs, i.e. skip Image in ImageComment
-        if (/*this.name.startsWith(modelClass.name) || */modelClass.name === filterClassName) {
+        if (filterClasses.includes(modelClass.name)) {
           return;
         }
 
@@ -35,7 +43,7 @@ class Model extends ObjectionModel {
 
           // HasMany or ManyToMany
           relationshipProperties[attribute] = {
-            anyOf: [{ type: 'null' }, { type: 'array', items: modelClass.getCombinedJsonSchema(this.name) }],
+            anyOf: [{ type: 'null' }, { type: 'array', items: modelClass.getCombinedJsonSchema(filterClasses) }],
           };
 
         }
@@ -43,7 +51,7 @@ class Model extends ObjectionModel {
 
           // BelongsToOne
           relationshipProperties[attribute] = {
-            anyOf: [{ type: 'null' }, modelClass.getCombinedJsonSchema(this.name)],
+            anyOf: [{ type: 'null' }, modelClass.getCombinedJsonSchema(filterClasses)],
           };
 
         }

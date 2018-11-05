@@ -44,6 +44,12 @@ class ForumTopic extends Model {
         modelClass: 'ForumArea',
         join:       { from: 'forum_topics.forum_area_id', to: 'forum_areas.id' },
       },
+
+      last_post: {
+        relation:   Model.BelongsToOneRelation,
+        modelClass: 'ForumPost',
+        join:       { from: 'forum_topics.last_post_id', to: 'forum_posts.id' },
+      },
     };
   }
 

@@ -19,9 +19,9 @@ class ForumPost extends Model {
         forum_area_id:  { type: 'integer' },
         forum_topic_id: { type: 'integer' },
         id:             { type: 'integer' },
-        parent_id:      { type: 'integer' },
+        parent_id:      { anyOf: [{ type: 'integer' }, { type: 'null' }] },
         post:           { type: 'string' },
-        updated_at:     { type: 'string', description: 'DateTime string' },
+        updated_at:     { anyOf: [{ type: 'string' }, { type: 'null' }], description: 'DateTime string' },
       },
     };
   }
