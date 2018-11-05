@@ -47,9 +47,6 @@
   }
 
   .sidebar {
-    background: var(--color-separator);
-    margin: 0;
-    padding: 1rem 0;
   }
 
   .main-content {
@@ -88,20 +85,26 @@ nav[aria-label="main navigation"] {
     justify-content: center;
     margin: -1px 0 0;
     position: relative;
-  }
-  a.is-active {
-    border-color: var(--color-primary);
-  }
-  a.is-active::after {
-    background: var(--color-primary);
-    bottom: 0;
-    content: '';
-    left: 0;
-    opacity: 0.25;
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: -1;
+
+    &:hover {
+      text-decoration: none;
+    }
+
+    &.is-active {
+      border-color: var(--color-primary);
+    }
+
+    &.is-active::after {
+      background: var(--color-primary);
+      bottom: 0;
+      content: '';
+      left: 0;
+      opacity: 0.25;
+      position: absolute;
+      right: 0;
+      top: 0;
+      z-index: -1;
+    }
   }
 
   .icon {

@@ -40,7 +40,7 @@ a {
 }
 a.user { font-weight: var(--font-weight-bold); }
 
-a[href]:hover:not(.button) {
+a:hover:not(.button) {
   opacity: 0.6;
   text-decoration: underline;
 }
