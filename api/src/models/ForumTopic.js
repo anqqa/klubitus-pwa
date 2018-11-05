@@ -26,6 +26,7 @@ class ForumTopic extends Model {
         last_post_id:  { type: 'integer' },
         name:          { type: 'string' },
         post_count:    { type: 'integer' },
+        read_count:    { type: 'integer' },
       },
     };
   }

@@ -8,17 +8,13 @@ const { ForumUser }  = require('../models/ForumUser');
 
 const getAreas = {
   schema: {
+    querystring: {
+      details: { type: 'boolean' }
+    },
     response: {
       200: {
         type:       'object',
-        properties: {
-          data: {
-            type:  'array',
-            items: merge({}, ForumArea.jsonSchema, { properties: {
-              last_topic: { anyOf: [{ type: 'null' }, ForumTopic.jsonSchema] }
-            } }),
-          },
-        },
+        properties: { data: { type: 'array', items: ForumArea.getCombinedJsonSchema() } },
       },
     },
   },
@@ -52,12 +48,6 @@ const getPosts = {
   },
 };
 
-
-const topic = merge({}, ForumTopic.jsonSchema, { properties: {
-  author,
-  forum_area:  ForumArea.jsonSchema,
-  // last_poster: { anyOf: [User.jsonSchema, { type: 'null' }]},
-} });
 
 const getTopic = {
   schema: {

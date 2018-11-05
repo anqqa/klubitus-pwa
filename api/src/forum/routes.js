@@ -18,10 +18,15 @@ module.exports = async (fastify, options) => {
    * Get forum areas.
    */
   fastify.get('/forum/areas', getAreasSchema, async (request, reply) => {
+    const { details } = request.query;
+
     let query = ForumArea.query()
-      .eager('last_topic')
       .where('is_hidden', false)
       .orderBy('nest_left', 'asc');
+
+    if (details) {
+      query = query.eager('last_topic.[author, last_post.author]');
+    }
 
     const data = await query.select();
 
