@@ -1,10 +1,12 @@
 <template>
-  <figure class="image avatar is-48x48">
+
+  <figure :title="name" class="image avatar is-48x48">
     <img v-if="imageUrl" :src="imageUrl" alt="Avatar">
     <span v-else
           :class="theme"
           class="icon is-full">{{ initials }}</span>
   </figure>
+
 </template>
 
 
