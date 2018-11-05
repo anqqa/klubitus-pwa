@@ -38,6 +38,29 @@ export const count = (number, singular, plural) => {
 };
 
 
+export const nFormatter = (number, digits) => {
+  const regex   = /\.0+|(\.[0-9]*[1-9])0+$/;
+  const symbols = [
+    { value: 1, symbol: '' },
+    { value: 1e3, symbol: 'k' },
+    { value: 1e6, symbol: 'M' },
+    { value: 1e9, symbol: 'G' },
+    { value: 1e12, symbol: 'T' },
+    { value: 1e15, symbol: 'P' },
+    { value: 1e18, symbol: 'E' },
+  ];
+
+  let i;
+  for (i = symbols.length - 1; i > 0; i--) {
+    if (number > symbols[i].value) {
+      break;
+    }
+  }
+
+  return (number / symbols[i].value).toFixed(digits).replace(regex, '$1') + symbols[i].symbol;
+};
+
+
 export const pad = (number, size) => {
   let padded = String(number);
 

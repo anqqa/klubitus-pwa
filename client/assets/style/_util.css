@@ -84,6 +84,10 @@
 .has-text-tertiary { color: var(--color-tertiary); }
 .has-text-white { color: white; }
 
+.hotness-1 { color: var(--color-amber); }
+.hotness-2 { color: var(--color-orange); text-shadow: 0 0 5px var(--color-orange); }
+.hotness-3 { color: var(--color-red); text-shadow: 0 0 5px var(--color-red); }
+
 @media screen and (max-width: 479px) {
   .hide-phone,
   .show-tablet,
