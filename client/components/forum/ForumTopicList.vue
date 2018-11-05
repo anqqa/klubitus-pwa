@@ -3,12 +3,7 @@
   <ol>
     <li v-for="topic in topicList" :key="topic.id" class="media">
       <div class="media-left">
-        <figure class="image avatar is-48x48">
-          <img v-if="topic.avatar" :src="topic.avatar">
-          <span v-else
-                :class="`theme-${topic.avatarColor}`"
-                class="icon is-full">{{ topic.username.substr(0, 2) }}</span>
-        </figure>
+        <Avatar :image-url="topic.avatar" :name="topic.username" />
       </div>
 
       <div class="media-content">
@@ -37,12 +32,15 @@
 
 
 <script>
+  import Avatar from '../Avatar';
   import { colorFromText, nFormatter, slug } from '../../utils/text';
   import { avatarUrl } from '../../utils/url';
   import { fuzzyTimeDistance } from '../../utils/time';
 
 
   export default {
+
+    components: { Avatar },
 
     props: {
       area:   { default: false, type: Boolean },
