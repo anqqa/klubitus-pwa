@@ -6,9 +6,9 @@
       <ForumAreaList :areas="areas" />
     </nav>
 
-    <div class="col main-content">
-      <h1 class="title" v-text="area.name" />
-      <h2 class="subtitle" v-html="area.description" />
+    <div class="col-7 main-content">
+      <h1 v-text="area.name" />
+      <h2 v-html="area.description" />
 
       <Pagination :pages="pages" :route="route" />
 
@@ -60,3 +60,7 @@
 
   };
 </script>
+
+
+<style scoped>
+</style>

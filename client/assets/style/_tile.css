@@ -1,0 +1,45 @@
+.tile {
+  align-items: stretch;
+  display: block;
+  flex: 1 1 0;
+  min-height: min-content;
+}
+
+.tile.is-ancestor {
+  margin: -0.75rem -0.75rem -0.75rem 0.75rem;
+}
+.tile.is-ancestor:last-child {
+  margin-bottom: -0.75rem;
+}
+
+.tile.is-parent {
+  padding: 0.75rem;
+}
+
+.tile.is-child {
+  margin: 0 !important;
+}
+
+.tile.is-vertical {
+  flex-direction: column;
+}
+.tile.is-vertical > .tile.is-child:not(:last-child) {
+  margin-bottom: 1.5rem !important;
+}
+
+
+.tile:not(.is-child) {
+  display: flex;
+}
+.tile.is-1 { flex: none; width: calc((1 / 12) * 100%); }
+.tile.is-2 { flex: none; width: calc((2 / 12) * 100%); }
+.tile.is-3 { flex: none; width: calc((3 / 12) * 100%); }
+.tile.is-4 { flex: none; width: calc((4 / 12) * 100%); }
+.tile.is-5 { flex: none; width: calc((5 / 12) * 100%); }
+.tile.is-6 { flex: none; width: calc((6 / 12) * 100%); }
+.tile.is-7 { flex: none; width: calc((7 / 12) * 100%); }
+.tile.is-8 { flex: none; width: calc((8 / 12) * 100%); }
+.tile.is-9 { flex: none; width: calc((9 / 12) * 100%); }
+.tile.is-10 { flex: none; width: calc((10 / 12) * 100%); }
+.tile.is-11 { flex: none; width: calc((11 / 12) * 100%); }
+.tile.is-12 { flex: none; width: calc((12 / 12) * 100%); }

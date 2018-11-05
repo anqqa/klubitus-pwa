@@ -53,6 +53,16 @@
     //box-shadow: -2px 0 5px rgba(0, 0, 0, 0.25);
     padding: 1rem;
     z-index: 2;
+
+    & > header {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+
+      nav a + a {
+        margin-left: 10px;
+      }
+    }
   }
 
   & > footer {

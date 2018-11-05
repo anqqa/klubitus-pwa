@@ -33,7 +33,7 @@
 
 <script>
   import Avatar from '../Avatar';
-  import { colorFromText, nFormatter, slug } from '../../utils/text';
+  import { nFormatter, slug } from '../../utils/text';
   import { avatarUrl } from '../../utils/url';
   import { fuzzyTimeDistance } from '../../utils/time';
 
@@ -65,7 +65,6 @@
             ago:         fuzzyTimeDistance(new Date(topic.last_post_at)),
             areaUrl:     topic.forum_area ? this.localePath({ name: 'forum-area', params: { area:`${topic.forum_area.id}-${slug(topic.forum_area.name)}` } }) : null,
             avatar,
-            avatarColor: colorFromText(username),
             hotness:     this.hotness(topic.post_count - 1),
             poster,
             replies:     topic.post_count > 1 ? nFormatter(topic.post_count - 1, 1) : null,

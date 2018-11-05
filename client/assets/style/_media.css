@@ -5,7 +5,7 @@
 }
 
 .media + .media {
-  border-top: 1px solid var(--color-separator);
+  /*border-top: 1px solid var(--color-separator);*/
   margin-top: 1.5rem;
   padding-top: 1.5rem;
 }
