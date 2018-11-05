@@ -13,14 +13,13 @@
 
       <div class="media-content">
         <h4><nuxt-link :to="topic.url" v-text="topic.name" /></h4>
-        <nuxt-link class="user" to="/">{{ topic.username }}</nuxt-link>
-        <span class="has-text-tertiary">
-          &nbsp; {{ topic.ago }}
+        <span v-if="topic.first_post_id !== topic.last_post_id" class="icon"><i class="bx bx-reply" /></span>
+        <nuxt-link class="user" to="/">{{ topic.poster }}</nuxt-link>
+        {{ topic.verb }} {{ topic.ago }}
+        <span v-if="topic.replies" class="has-text-tertiary" title="Replies">
+          &nbsp; <span class="icon"><i class="bx bx-conversation" /></span> {{ topic.replies }}
         </span>
-        <span v-if="topic.replies">
-          &nbsp; {{ topic.replies }}
-        </span>
-        <small v-if="topic.forum_area" class="has-text-tertiary">
+        <small v-if="topic.forum_area" class="has-no-breaks">
           &nbsp; <nuxt-link :to="topic.areaUrl">{{ topic.forum_area.name }}</nuxt-link>
         </small>
       </div>
@@ -52,6 +51,11 @@
         this.topics.slice(0).forEach(topic => {
           const avatar   = topic.author && topic.author.avatar_url ? avatarUrl(topic.author.avatar_url) : null;
           const username = topic.author ? topic.author.username : topic.author_name;
+          let poster     = username;
+
+          if (topic.last_post) {
+            poster = topic.last_post.author ? topic.last_post.author.username : topic.last_post.author_name;
+          }
 
           topics.push({
             ...topic,
@@ -59,9 +63,11 @@
             areaUrl:     topic.forum_area ? this.localePath({ name: 'forum-area', params: { area:`${topic.forum_area.id}-${slug(topic.forum_area.name)}` } }) : null,
             avatar,
             avatarColor: colorFromText(username),
-            replies:     topic.post_count > 1 ? `${formatter.format(topic.post_count - 1)} ${topic.post_count === 2 ? 'reply' : 'replies'}` : null,
+            poster,
+            replies:     topic.post_count > 1 ? `${formatter.format(topic.post_count - 1)}` : null,
             url:         this.localePath({ name: 'forum-topic-id', params: { id: `${topic.id}-${slug(topic.name)}` } }),
             username,
+            verb:        topic.first_post_id === topic.last_post_id ? 'started' : 'replied',
           })
         });
 
@@ -74,5 +80,13 @@
 
 
 <style scoped>
-  h4 { margin-top: 0; }
+  h4 {
+    margin: 0;
+  }
+
+  small a {
+    border: 1px solid var(--color-tertiary);
+    border-radius: 10px;
+    padding: 0 1rem;
+  }
 </style>
