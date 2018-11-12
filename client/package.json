@@ -13,11 +13,12 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "@nuxtjs/auth": "^4.5.1",
     "@nuxtjs/axios": "^5.0.1",
     "@nuxtjs/markdownit": "^1.2.0",
     "@nuxtjs/pwa": "^2.0.8",
+    "cookie": "^0.3.1",
     "date-fns": "^1.29.0",
+    "js-cookie": "^2.2.0",
     "lodash": "^4.17.10",
     "markdown-it-link-attributes": "^2.0.0",
     "nuxt": "^1.4.1",

@@ -28,26 +28,6 @@ module.exports = {
    * Global modules
    */
   modules: [
-    ['@nuxtjs/auth', {
-      cookie:       { options: { expires: 30 } },
-      localStorage: false,
-      redirect:     {
-        callback: '/',
-        login:    '/en/login',
-        logout:   false,
-      },
-      // resetOnError: true,
-      strategies:   {
-        local: {
-          endpoints: {
-            login:  { url: '/auth/login', method: 'post', propertyName: 'token' },
-            logout: { url: '/auth/logout', method: 'post' },
-            user:   { url: '/auth/me', method: 'get', propertyName: 'data' }
-          },
-        },
-      },
-    }],
-
     ['@nuxtjs/axios', {
       debug: true,
       host:  'localhost',
