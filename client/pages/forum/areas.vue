@@ -73,6 +73,8 @@
 
 
 <script>
+  import { mapGetters } from 'vuex';
+
   import Avatar from '../../components/Avatar';
   import { nFormatter, slug } from '../../utils/text';
   import { fuzzyTimeDistance } from '../../utils/time';
@@ -104,7 +106,7 @@
           else {
 
             // Area
-            const hasAccess = this.$auth.loggedIn || !area.is_private;
+            const hasAccess = this.isAuthenticated || !area.is_private;
             let lastTopic   = null;
 
             if (hasAccess && area.last_topic) {
@@ -138,7 +140,11 @@
         });
 
         return groups;
-      }
+      },
+
+      ...mapGetters({
+        isAuthenticated: 'auth/isAuthenticated',
+      })
     },
 
     head: {

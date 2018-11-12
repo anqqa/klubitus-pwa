@@ -14,7 +14,7 @@
 
         <span class="separator">or</span>
 
-        <div :class="{ 'has-error': $v.username.$error }" class="field">
+        <div :class="{ 'has-error': error || $v.username.$error }" class="field">
           <label for="input-username">Email or username *</label>
           <div class="control has-icon-left">
             <input id="input-username"
@@ -27,7 +27,7 @@
           <p v-if="$v.username.$error && !$v.username.required" class="help">Please fill in</p>
         </div>
 
-        <div :class="{ 'has-error': $v.password.$error }" class="field">
+        <div :class="{ 'has-error': error || $v.password.$error }" class="field">
           <label for="input-password">Password *</label>
           <div class="control has-icon-left">
             <input id="input-password"
@@ -40,7 +40,7 @@
           <p v-if="$v.password.$error && !$v.password.required" class="help">Please fill in</p>
         </div>
 
-        <div v-if="!!error" class="field has-error" v-html="error" />
+        <div v-if="error" class="field has-error" v-html="error" />
 
         <button class="button is-primary is-full" type="submit">Login</button>
       </form>
@@ -57,6 +57,9 @@
 <script>
   import get from 'lodash/get';
   import { required } from 'vuelidate/lib/validators';
+
+  import { Actions } from '../store/auth';
+
 
   export default {
 
@@ -75,19 +78,18 @@
         }
 
         try {
-          await this.$auth.login({
-            data: {
-              username: this.username,
-              password: this.password,
-            }
+          await this.$store.dispatch(`auth/${Actions.LOGIN}`, {
+            username: this.username,
+            password: this.password,
           });
 
-          this.error    = null;
-          // this.username = '';
-          // this.password = '';
+          this.error = null;
+
+          this.$router.push('/');
         }
         catch (error) {
-          this.error = get(error, 'response.data.message', 'Nope');
+          console.log('error', { error });
+          this.error = get(error, 'response.data.message', 'Fail');
         }
       },
     },

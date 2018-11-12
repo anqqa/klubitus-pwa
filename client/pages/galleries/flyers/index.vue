@@ -1,5 +1,5 @@
 <template>
-  <div>flyers/index</div>
+  <main>flyers/index</main>
 </template>
 
 <script>

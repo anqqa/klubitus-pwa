@@ -35,6 +35,8 @@
 
 
 <script>
+  import { mapGetters } from 'vuex';
+
   import { slug } from '../../utils/text';
 
 
@@ -66,7 +68,7 @@
             // Area
             areas.push({
               ...area,
-              url: this.$auth.loggedIn || !area.is_private
+              url: this.isAuthenticated || !area.is_private
                      ? this.localePath({ name: 'forum-area', params: { area: `${area.id}-${slug(area.name)}` }})
                      : null,
             });
@@ -75,7 +77,11 @@
         });
 
         return groups;
-      }
+      },
+
+      ...mapGetters({
+        isAuthenticated: 'auth/isAuthenticated',
+      })
     },
 
     methods: {

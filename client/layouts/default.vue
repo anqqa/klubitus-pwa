@@ -24,9 +24,9 @@
           </div>
 
           <section class="user">
-            <button v-if="$auth.loggedIn" @click="logout">Logout</button>
-            <nuxt-link v-if="!$auth.loggedIn" :to="localePath('login')" class="button">Login</nuxt-link>
-            <nuxt-link v-if="!$auth.loggedIn" :to="localePath('register')" class="button">Register</nuxt-link>
+            <button v-if="isAuthenticated" @click="logout">Logout</button>
+            <nuxt-link v-if="!isAuthenticated" :to="localePath('login')" class="button">Login</nuxt-link>
+            <nuxt-link v-if="!isAuthenticated" :to="localePath('register')" class="button">Register</nuxt-link>
           </section>
         </nav>
       </section>
@@ -74,7 +74,10 @@
 
 
 <script>
-  import { mapMutations } from 'vuex';
+  import { mapGetters, mapMutations } from 'vuex';
+
+  import { Actions } from '../store/auth';
+
 
   export default {
 
@@ -93,6 +96,7 @@
     },
 
     computed: {
+      // isAuthenticated() { return !!this.$store.state.auth.user; },
       locale: {
         get() { return this.$i18n.locale; },
         set() {},
@@ -102,17 +106,14 @@
         get() { return this.$store.state.ui.theme; },
         set(theme) { this.toggleTheme(theme); },
       },
+      ...mapGetters({
+        isAuthenticated: 'auth/isAuthenticated',
+      })
     },
 
     methods: {
       async logout() {
-        try {
-          await this.$auth.logout();
-        }
-        // catch (error) {}
-        finally {
-          this.$axios.setToken(false);
-        }
+        await this.$store.dispatch(`auth/${Actions.LOGOUT}`);
       },
       ...mapMutations({
         toggleSidebar: 'ui/toggleSidebar',
