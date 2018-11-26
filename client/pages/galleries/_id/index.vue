@@ -27,8 +27,8 @@
     async asyncData({ app, params }) {
       const galleryId = parseInt(params.id);
 
-      const { data: gallery } = await app.$axios.$get(`gallery/${galleryId}`);
-      const { data: images }  = await app.$axios.$get(`gallery/${galleryId}/images`);
+      const { data: gallery } = await app.$axios.$get(`galleries/${galleryId}`);
+      const { data: images }  = await app.$axios.$get(`galleries/${galleryId}/images`);
 
       return { gallery, images };
     },

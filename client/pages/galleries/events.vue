@@ -3,6 +3,9 @@
   <main class="row">
 
     <nav class="sidebar col-2">
+      <nuxt-link :to="localePath('galleries')">&laquo; Galleries Home</nuxt-link>
+      <br>
+
       <section :class="{ collapsed }">
         <header class="show-phone" @click="toggleList">
           <h2>

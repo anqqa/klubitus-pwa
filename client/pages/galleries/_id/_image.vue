@@ -62,8 +62,8 @@
       const galleryId = parseInt(params.id);
       const imageId   = parseInt(params.image);
 
-      const { data: gallery } = await app.$axios.$get(`gallery/${galleryId}`);
-      const { data: image }   = await app.$axios.$get(`gallery/${galleryId}/${imageId}`);
+      const { data: gallery } = await app.$axios.$get(`galleries/${galleryId}`);
+      const { data: image }   = await app.$axios.$get(`galleries/${galleryId}/${imageId}`);
 
       return { gallery, image };
     },

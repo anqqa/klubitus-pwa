@@ -42,17 +42,18 @@ export const actions = {
    * @param  {Number}    [month]
    * @param  {Number}    [day]
    * @param  {Number}    [page]
+   * @param  {Number}    [limit]
    * @returns  {Promise<void>}
    */
-  async [Actions.GET_GALLERIES_BY_DATE]({ commit }, { year, month, day, page }) {
-    const params = { limit: PAGE_SIZE };
+  async [Actions.GET_GALLERIES_BY_DATE]({ commit }, { year, month, day, page, limit }) {
+    const params = { limit: limit || PAGE_SIZE };
 
     if (year) {
       const { from, to } = dateRange(year, month, undefined, day);
 
       params.from   = format(from, 'YYYY-MM-DD');
       params.to     = format(to, 'YYYY-MM-DD');
-      params.offset = (page - 1) * PAGE_SIZE;
+      params.offset = (page - 1) * params.limit;
     }
 
     const { data } = await this.$axios.get('galleries', { params });
