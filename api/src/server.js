@@ -20,7 +20,7 @@ module.exports = async (fastify, options) => {
   // Security
   fastify.register(require('fastify-helmet'));
   fastify.register(require('fastify-sensible'));
-  fastify.use(require('cors')());
+  fastify.register(require('fastify-cors'));
 
   // Register database connection
   fastify.register(require('./db'), {
@@ -47,7 +47,6 @@ module.exports = async (fastify, options) => {
   fastify.register(require('fastify-swagger'), swaggerOptions);
 
   // Register routes and custom plugins
-  fastify.options('/*', (request, reply) => {});
   fastify.register(require('./auth/plugin'));
   fastify.register(require('./events/routes'));
   fastify.register(require('./forum/routes'));
