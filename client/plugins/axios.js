@@ -1,4 +1,9 @@
-export default ({ app, $axios, route, redirect }) => {
+import cookies from 'js-cookie';
+
+
+let checkToken = true;
+
+export default ({ $axios, route }) => {
   $axios.onError(error => {
     const code = parseInt(error.response && error.response.status);
 
@@ -8,6 +13,18 @@ export default ({ app, $axios, route, redirect }) => {
       // app.$auth.setToken('local', undefined);
 
       // redirect(app.localePath('login'));
+    }
+  });
+
+  $axios.onRequest(() => {
+    if (checkToken) {
+      checkToken = false;
+
+      const token = cookies.get('auth.token');
+
+      if (token) {
+        $axios.setToken(token, 'Bearer');
+      }
     }
   });
 };
