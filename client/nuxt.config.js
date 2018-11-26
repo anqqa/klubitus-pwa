@@ -8,7 +8,7 @@ module.exports = {
   head: {
     title: 'Klubitus',
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'icon', type: 'image/png', href: '/favicon.png' },
       { rel: 'stylesheet', href: 'https://unpkg.com/normalize.css@8.0.0/normalize.css' },
       { rel: 'stylesheet', href: 'https://unpkg.com/boxicons@1.7.1/css/boxicons.min.css' },
     ],
