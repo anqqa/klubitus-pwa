@@ -6944,6 +6944,10 @@ vue-async-computed@^3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/vue-async-computed/-/vue-async-computed-3.3.1.tgz#9d754e649ccabef97e7e3932f1bc097a66a23db7"
 
+vue-autosuggest@^1.7.3:
+  version "1.7.3"
+  resolved "https://registry.yarnpkg.com/vue-autosuggest/-/vue-autosuggest-1.7.3.tgz#692c4d02a426d82f487ba5c5553439f18a943cc7"
+
 vue-hot-reload-api@^2.2.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.0.tgz#97976142405d13d8efae154749e88c4e358cf926"
