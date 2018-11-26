@@ -15,6 +15,9 @@ const {
 
 module.exports = async (fastify, options) => {
 
+  /**
+   * Get galleries ordered by event date.
+   */
   fastify.get('/galleries', getGalleriesSchema, async (request, reply) => {
     const { from, to, limit, offset } = request.query;
 
@@ -30,9 +33,7 @@ module.exports = async (fastify, options) => {
         .whereBetween('event_date', [format(from_date, 'YYYY-MM-DD'), format(to_date, 'YYYY-MM-DD')]);
     }
 
-    if (limit) {
-      query = query.limit(Math.max(1, Math.min(limit, 100)));
-    }
+    query = query.limit(Math.max(1, Math.min(limit || 100, 100)));
 
     if (offset) {
       query = query.offset(offset);
@@ -45,6 +46,9 @@ module.exports = async (fastify, options) => {
   });
 
 
+  /**
+   * Get galleries stats.
+   */
   fastify.get('/galleries/stats', getStatsSchema, async (request, reply) => {
     const data = await Gallery.query()
       .select(
@@ -61,16 +65,10 @@ module.exports = async (fastify, options) => {
   });
 
 
-  fastify.get('/gallery/:galleryId', getGallerySchema, async (request, reply) => {
-    const data = await Gallery.query()
-      .eager('event')
-      .findOne('id', request.params.galleryId);
-
-    return { data };
-  });
-
-
-  fastify.get('/gallery/:galleryId/images', getImagesSchema, async (request, reply) => {
+  /**
+   * Get the images of a gallery.
+   */
+  fastify.get('/galleries/:galleryId/images', getImagesSchema, async (request, reply) => {
     const { limit, offset } = request.query;
 
     let query = Gallery.query()
@@ -97,12 +95,27 @@ module.exports = async (fastify, options) => {
   });
 
 
-  fastify.get('/gallery/:galleryId/:imageId', getImageSchema, async (request, reply) => {
+  /**
+   * Get a single image.
+   */
+  fastify.get('/galleries/:galleryId/:imageId', getImageSchema, async (request, reply) => {
     const data = await Image.query()
       .eager('[author, comments.[author], exif, notes]')
       .findOne('id', request.params.imageId);
 
     return { data: data.toJSON() };
+  });
+
+
+  /**
+   * Get single gallery.
+   */
+  fastify.get('/galleries/:galleryId', getGallerySchema, async (request, reply) => {
+    const data = await Gallery.query()
+      .eager('event')
+      .findOne('id', request.params.galleryId);
+
+    return { data };
   });
 
 };
