@@ -19,18 +19,23 @@ module.exports = async (fastify, options) => {
    * Get galleries ordered by event date.
    */
   fastify.get('/galleries', getGalleriesSchema, async (request, reply) => {
-    const { from, to, limit, offset } = request.query;
+    const { from, to, limit, offset, event_id } = request.query;
 
     let query = Gallery.query()
       .eager('[default_image, event]');
 
-    // If date range is given then order by event date, otherwise updated date
-    if (from && to) {
-      const from_date = parse(from);
-      const to_date   = parse(to);
+    if (event_id) {
+      query = query.where('event_id', event_id);
+    }
+    else if (from && to) {
+
+      // If date range is given then order by event date, otherwise updated date
+      const dateFrom = parse(from);
+      const dateTo   = parse(to);
 
       query = query.orderBy('event_date', 'DESC')
-        .whereBetween('event_date', [format(from_date, 'YYYY-MM-DD'), format(to_date, 'YYYY-MM-DD')]);
+        .whereBetween('event_date', [format(dateFrom, 'YYYY-MM-DD'), format(dateTo, 'YYYY-MM-DD')]);
+
     }
 
     query = query.limit(Math.max(1, Math.min(limit || 100, 100)));

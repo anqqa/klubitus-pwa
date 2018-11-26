@@ -25,7 +25,8 @@ const getEvents = {
       from:   { type: 'string', description: 'Fetch events ending after this date' },
       to:     { type: 'string', description: 'Fetch events starting before this date' },
       limit:  { type: 'integer' },
-      offset: { type: 'integer' }
+      offset: { type: 'integer' },
+      search: { type: 'string' },
     },
     response:    {
       200: {

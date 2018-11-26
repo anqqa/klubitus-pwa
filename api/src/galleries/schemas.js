@@ -5,10 +5,11 @@ const { Image } = require('../models/Image');
 const getGalleries = {
   schema: {
     querystring: {
-      from:   { type: 'string', description: 'Fetch galleries ending after this date' },
-      to:     { type: 'string', description: 'Fetch galleries starting before this date' },
-      limit:  { type: 'integer' },
-      offset: { type: 'integer' }
+      from:     { type: 'string', description: 'Fetch galleries ending after this date' },
+      to:       { type: 'string', description: 'Fetch galleries starting before this date' },
+      limit:    { type: 'integer' },
+      offset:   { type: 'integer' },
+      event_id: { type: 'integer', description: 'Fetch galleries by event id' },
     },
     response:    {
       200: { type: 'object', properties: {
