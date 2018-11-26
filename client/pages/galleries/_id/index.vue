@@ -1,13 +1,27 @@
 <template>
 
   <main>
-    <Breadcrumbs :breadcrumbs="breadcrumbs" />
-    <h1>
-      {{ eventName }}
-      <small> - {{ format(gallery.image_count) }} images</small>
-    </h1>
 
-    <ImageList :images="images" :url="url" />
+    <div class="col main-content">
+      <Breadcrumbs :breadcrumbs="breadcrumbs" />
+
+      <header>
+        <h1>
+          {{ eventName }}
+          <br>
+          <small>{{ format(gallery.image_count) }} images, {{ format(commentCount) }} comments</small>
+        </h1>
+
+        <nav v-if="isAuthenticated" class="actions">
+          <nuxt-link :to="`${localePath('galleries-upload')}?gallery=${gallery.id}`" class="button is-primary">
+            <span class="icon"><i class="bx bx-cloud-upload" /></span>
+            Upload Photos
+          </nuxt-link>
+        </nav>
+      </header>
+
+      <ImageList :images="images" :url="url" />
+    </div>
   </main>
 
 </template>
@@ -15,6 +29,7 @@
 
 <script>
   import format from 'date-fns/format';
+  import { mapGetters } from 'vuex';
 
   import Breadcrumbs from '../../../components/Breadcrumbs';
   import ImageList from '../../../components/galleries/ImageList';
@@ -41,17 +56,19 @@
 
     computed: {
       breadcrumbs() {
+        const pathName = 'galleries-events-year-month-day';
+
         return [
-          { url: this.localePath({ name: 'galleries' }), title: 'Galleries' },
-          { url: this.localePath({ name: 'galleries-events-year-month-day' }), title: 'Events' },
+          { url: this.localePath('galleries'), title: 'Galleries' },
+          { url: this.localePath(pathName), title: 'Events' },
           { url: this.localePath({
-              name: 'galleries-events-year-month-day',
+              name: pathName,
               params: { year: this.eventDate.getFullYear() },
             }),
             title: format(this.eventDate, 'YYYY'),
           },
           { url: this.localePath({
-              name: 'galleries-events-year-month-day',
+              name: pathName,
               params: { year: this.eventDate.getFullYear(), month: this.eventDate.getMonth() + 1 },
             }),
             title: format(this.eventDate, 'MMMM'),
@@ -60,8 +77,20 @@
         ];
       },
 
+      commentCount() {
+        let count = 0;
+
+        this.images.forEach(image => count += image.comment_count);
+
+        return count;
+      },
+
       eventDate() { return new Date(this.gallery.event ? this.gallery.event.begins_at : this.gallery.event_date); },
       eventName() { return this.gallery.event ? this.gallery.event.name : this.gallery.name; },
+
+      ...mapGetters({
+        isAuthenticated: 'auth/isAuthenticated',
+      })
     },
 
     methods: {

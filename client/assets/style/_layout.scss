@@ -59,6 +59,10 @@
       display: flex;
       justify-content: space-between;
 
+      small {
+        color: var(--color-tertiary);
+      }
+
       nav a + a {
         margin-left: 10px;
       }

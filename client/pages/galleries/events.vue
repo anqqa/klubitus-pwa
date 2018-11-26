@@ -54,12 +54,22 @@
     </nav>
 
     <div class="col main-content">
-      <h1>
-        {{ title }}
-        <small v-if="galleries">
-          - {{ format(galleries) }} galleries with {{ format(images) }} images
-        </small>
-      </h1>
+      <header>
+        <h1>
+          {{ title }}
+          <small v-if="galleries">
+            - {{ format(galleries) }} galleries with {{ format(images) }} images
+          </small>
+        </h1>
+
+        <nav v-if="isAuthenticated" class="actions">
+          <nuxt-link :to="localePath('galleries-upload')" class="button is-primary">
+            <span class="icon"><i class="bx bx-cloud-upload" /></span>
+            Upload Photos
+          </nuxt-link>
+        </nav>
+
+      </header>
 
       <Pagination v-if="pages > 1" :pages="pages" :route="route" />
 
@@ -77,6 +87,7 @@
   import get from 'lodash/get';
   import sumBy from 'lodash/sumBy';
   import transform from 'lodash/transform';
+  import { mapGetters } from 'vuex';
 
   import Pagination from '../../components/Pagination';
 
@@ -116,6 +127,10 @@
       images() { return this.getStat('images', this.year, this.month); },
       pages() { return Math.ceil(this.galleries / 20); },
       title() { return this.month ? format(new Date(this.year, this.month - 1), 'MMMM YYYY') : this.year || 'Event Galleries'; },
+
+      ...mapGetters({
+        isAuthenticated: 'auth/isAuthenticated',
+      })
     },
 
     head: {

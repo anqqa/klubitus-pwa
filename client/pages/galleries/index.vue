@@ -33,8 +33,8 @@
       <header>
         <h2>Latest in Event Photography</h2>
 
-        <nav class="actions">
-          <nuxt-link to="" class="button is-primary">
+        <nav v-if="isAuthenticated" class="actions">
+          <nuxt-link :to="localePath('galleries-upload')" class="button is-primary">
             <span class="icon"><i class="bx bx-cloud-upload" /></span>
             Upload Photos
           </nuxt-link>
@@ -51,6 +51,8 @@
 
 
 <script>
+  import { mapGetters } from 'vuex';
+
   import GalleryList from '../../components/galleries/GalleryList';
   import { Actions, Getters } from '../../store/galleries';
 
@@ -85,6 +87,10 @@
 
         return galleriesWithRelations;
       },
+
+      ...mapGetters({
+        isAuthenticated: 'auth/isAuthenticated',
+      })
     },
 
   }
