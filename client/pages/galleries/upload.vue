@@ -10,7 +10,15 @@
 
       <section class="card">
         <header>
-          <h2 class="has-text-secondary">Step 1: Select the event</h2>
+          <h2 class="has-text-secondary">
+            Step 1: Select the event
+          </h2>
+          <nav v-if="event" class="actions">
+            <nuxt-link v-if="event" :to="localePath('galleries-upload')" class="button">
+              <span class="icon"><i class="bx bx-undo" /></span>
+              Change event
+            </nuxt-link>
+          </nav>
         </header>
 
         <div v-if="!event" class="card-content">
@@ -42,9 +50,6 @@
           <div class="col">
             <h3>{{ eventName }}</h3>
             <p>{{ eventInfo }}</p>
-            <nuxt-link :to="localePath('galleries-upload')">
-              &laquo; Select another event
-            </nuxt-link>
           </div>
         </div>
       </section>
