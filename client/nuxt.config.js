@@ -1,6 +1,6 @@
-const nodeExternals = require('webpack-node-externals');
+// import nodeExternals from 'webpack-node-externals';
 
-module.exports = {
+export default {
 
   /**
    * Headers of the page
@@ -114,7 +114,7 @@ module.exports = {
     /**
      * Run ESLint on save
      */
-    extend (config, ctx) {
+    // extend (config, ctx) {
       // if (ctx.isDev && ctx.isClient) {
       //   config.module.rules.push({
       //     enforce: 'pre',
@@ -124,22 +124,20 @@ module.exports = {
       //   });
       // }
 
-      if (ctx.isServer) {
-        config.externals = [
-          nodeExternals({
-            whitelist: [/\.css$/]
-          })
-        ]
-      }
-    },
+      // if (ctx.isServer) {
+      //   config.externals = [
+      //     nodeExternals({
+      //       whitelist: [/\.css$/]
+      //     })
+      //   ]
+      // }
+    // },
 
     extractCSS: true,
 
     postcss: {
-      plugins: {
-        'postcss-cssnext': {
-          features: { customProperties: false },
-        },
+      preset: {
+        features: { customProperties: false },
       },
     },
   },
