@@ -38,16 +38,17 @@ export const count = (number, singular, plural) => {
 };
 
 
-export const nFormatter = (number, digits) => {
+export const nFormatter = (number, digits, bytes) => {
   const regex   = /\.0+|(\.[0-9]*[1-9])0+$/;
+  const base    = bytes ? 1024 : 1000;
   const symbols = [
-    { value: 1, symbol: '' },
-    { value: 1e3, symbol: 'k' },
-    { value: 1e6, symbol: 'M' },
-    { value: 1e9, symbol: 'G' },
-    { value: 1e12, symbol: 'T' },
-    { value: 1e15, symbol: 'P' },
-    { value: 1e18, symbol: 'E' },
+    { value: base ** 0, symbol: '' },
+    { value: base ** 1, symbol: 'k' },
+    { value: base ** 2, symbol: 'M' },
+    { value: base ** 3, symbol: 'G' },
+    { value: base ** 4, symbol: 'T' },
+    { value: base ** 5, symbol: 'P' },
+    { value: base ** 6, symbol: 'E' },
   ];
 
   let i;
@@ -57,7 +58,9 @@ export const nFormatter = (number, digits) => {
     }
   }
 
-  return (number / symbols[i].value).toFixed(digits).replace(regex, '$1') + symbols[i].symbol;
+  const value = (number / symbols[i].value).toFixed(digits).replace(regex, '$1');
+
+  return `${value}${symbols[i].symbol}${bytes && 'B'}`;
 };
 
 
