@@ -34,7 +34,6 @@
   --color-light-tertiary:   rgba(255, 255, 255, 0.5);
   --color-light-divider:    rgba(255, 255, 255, 0.12);
 
-
   --color-background:       var(--color-black);
   --color-background-alt:   var(--color-dark-background);
   --color-primary:          var(--color-pink);
@@ -45,11 +44,17 @@
   --color-input-background: var(--color-separator);
   --color-input-text:       var(--color-secondary);
 
+  --color-fail:             var(--color-red);
+  --color-success:          var(--color-light-green);
+
   --font-family: -apple-system, BlinkMacSystemFont, Avenir, "Avenir Next", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   --font-size: 1.4rem;
   --font-weight-bold: 600;
 
   --form-border-radius: 4px;
+
+  --padding: 1rem 2rem;
+  --padding-dense: 0.5rem 1rem;
 
   --grid-gutter: 2rem;
   --grid-max-width: 120rem;

@@ -1,6 +1,8 @@
 <template>
 
-  <main class="row is-horizontal-center">
+  <main class="row">
+    <div class="col-3" />
+
     <div class="col-6 main-content">
       <header>
         <h1>Upload Photos</h1>
@@ -10,13 +12,11 @@
 
       <section class="card">
         <header>
-          <h2 class="has-text-secondary">
-            Step 1: Select the event
-          </h2>
+          <h2 class="has-text-secondary">Step 1: Select event</h2>
           <nav v-if="event" class="actions">
             <nuxt-link v-if="event" :to="localePath('galleries-upload')" class="button">
               <span class="icon"><i class="bx bx-undo" /></span>
-              Change event
+              Change
             </nuxt-link>
           </nav>
         </header>
@@ -61,11 +61,33 @@
           <h2 class="has-text-secondary">Step 2: Add photos</h2>
         </header>
 
-        <div class="card-content">
+        <div v-if="event" class="card-content">
+          <p v-if="photosRemaining.length">
+            <button class="button is-primary" @click="startUpload">
+              <span class="icon"><i class="bx bx-cloud-upload" /></span>
+              Upload {{ photosRemaining.length }} Photo(s)
+            </button> {{ sizeRemaining }}
+          </p>
 
+          <p v-if="photosUploaded.length" class="notification is-success">
+            🎉 Photos ({{ photosUploaded.length }}) uploaded!
+          </p>
+          <p v-if="photosFailed.length" class="notification is-fail">
+            😭 Some photos ({{ photosFailed.length }}) failed to upload... retry?
+          </p>
+
+          <Upload ref="upload" multiple @filesUpdated="files = $event" />
         </div>
       </section>
     </div>
+
+    <div class="col-1" />
+
+    <aside class="sidebar col-2">
+      <header>
+        <h2>What now</h2>
+      </header>
+    </aside>
   </main>
 
 </template>
@@ -74,6 +96,9 @@
 <script>
   import format from 'date-fns/format';
   import debounce from 'lodash/debounce';
+
+  import Upload from '../../components/Upload';
+  import { nFormatter } from '../../utils/text';
 
 
   export default {
@@ -102,10 +127,13 @@
       return { event: null, gallery: null };
     },
 
+    components: { Upload },
+
     data() {
       return {
         event:       null,
         events:      [],
+        files:       [],
         gallery:     null,
         suggestions: [],
 
@@ -118,7 +146,10 @@
     },
 
     computed: {
-      eventDate() { return new Date(this.event ? this.event.begins_at : this.gallery.event_date); },
+      eventDate() {
+        return new Date(this.event ? this.event.begins_at : this.gallery.event_date);
+      },
+
       eventInfo() {
         if (this.event) {
           return format(this.event.begins_at, 'MMMM D, YYYY')
@@ -128,7 +159,28 @@
           return format(this.gallery.event_date, 'MMMM D, YYYY');
         }
       },
-      eventName() { return this.event ? this.event.name : this.gallery.name; },
+
+      eventName() {
+        return this.event ? this.event.name : this.gallery.name;
+      },
+
+      photosFailed() {
+        return this.files.filter(file => file.failed);
+      },
+
+      photosRemaining() {
+        return this.files.filter(file => !file.uploaded);
+      },
+
+      photosUploaded() {
+        return this.files.filter(file => file.uploaded);
+      },
+
+      sizeRemaining() {
+        const totalSize = this.photosRemaining.reduce((total, file) => total + file.filesize, 0);
+
+        return nFormatter(totalSize, 2, true);
+      }
     },
 
     methods: {
@@ -158,6 +210,10 @@
         const url = this.localePath('galleries-upload') + '?event=' + item.item.id;
 
         this.$router.push({ path: url });
+      },
+
+      startUpload() {
+        this.$refs.upload.upload();
       }
     },
 

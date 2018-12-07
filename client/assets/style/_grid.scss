@@ -24,71 +24,25 @@
 .is-narrow { flex: 0 1; }
 .is-reverse-order { flex-direction: row-reverse; }
 
+
+@mixin col($size) {
+  $width: calc((100% / (12 / #{$size})) - var(--grid-gutter));
+  flex: 0 0 $width;
+  max-width: $width;
+}
+
 @media screen and (min-width: 768px) {
   .container { width: 96%; }
 
   .col { flex: 1; }
   .is-narrow { flex: 0 1; }
 
-  .col-1 {
-    flex: 0 0 calc((100% / (12 / 1)) - var(--grid-gutter));
-    max-width: calc((100% / (12 / 1)) - var(--grid-gutter));
+  @for $col from 1 through 12 {
+    .col-#{$col} {
+      @include col($col);
+    }
   }
 
-  .col-2 {
-    flex: 0 0 calc((100% / (12 / 2)) - var(--grid-gutter));
-    max-width: calc((100% / (12 / 2)) - var(--grid-gutter));
-  }
-
-  .col-3 {
-    flex: 0 0 calc((100% / (12 / 3)) - var(--grid-gutter));
-    max-width: calc((100% / (12 / 3)) - var(--grid-gutter));
-  }
-
-  .col-4 {
-    flex: 0 0 calc((100% / (12 / 4)) - var(--grid-gutter));
-    max-width: calc((100% / (12 / 4)) - var(--grid-gutter));
-  }
-
-  .col-5 {
-    flex: 0 0 calc((100% / (12 / 5)) - var(--grid-gutter));
-    max-width: calc((100% / (12 / 5)) - var(--grid-gutter));
-  }
-
-  .col-6 {
-    flex: 0 0 calc((100% / (12 / 6)) - var(--grid-gutter));
-    max-width: calc((100% / (12 / 6)) - var(--grid-gutter));
-  }
-
-  .col-7 {
-    flex: 0 0 calc((100% / (12 / 7)) - var(--grid-gutter));
-    max-width: calc((100% / (12 / 7)) - var(--grid-gutter));
-  }
-
-  .col-8 {
-    flex: 0 0 calc((100% / (12 / 8)) - var(--grid-gutter));
-    max-width: calc((100% / (12 / 8)) - var(--grid-gutter));
-  }
-
-  .col-9 {
-    flex: 0 0 calc((100% / (12 / 9)) - var(--grid-gutter));
-    max-width: calc((100% / (12 / 9)) - var(--grid-gutter));
-  }
-
-  .col-10 {
-    flex: 0 0 calc((100% / (12 / 10)) - var(--grid-gutter));
-    max-width: calc((100% / (12 / 10)) - var(--grid-gutter));
-  }
-
-  .col-11 {
-    flex: 0 0 calc((100% / (12 / 11)) - var(--grid-gutter));
-    max-width: calc((100% / (12 / 11)) - var(--grid-gutter));
-  }
-
-  .col-12 {
-    flex: 0 0 calc((100% / (12 / 12)) - var(--grid-gutter));
-    max-width: calc((100% / (12 / 12)) - var(--grid-gutter));
-  }
 }
 
 

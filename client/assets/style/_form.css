@@ -73,7 +73,7 @@ button {
   cursor: pointer;
   display: inline-block;
   line-height: 1;
-  padding: 1rem 2rem;
+  padding: 1rem;
   text-align: center;
   transform: scale(1);
   transition: opacity var(--transition-time) ease;
@@ -118,11 +118,11 @@ button.is-clear,
   width: 100%;
 }
 .button.is-small {
-  padding: 0.5rem 1rem;
+  padding: 0.5rem;
 }
 .button.is-tiny {
   font-size: 75%;
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem;
 }
 
 
@@ -151,4 +151,25 @@ button.is-clear,
 
 .button-group .is-active {
   z-index: 1;
+}
+
+
+/* FilePond */
+.upload .filepond--root {
+  font-family: inherit;
+}
+.upload .filepond--panel-root {
+  background-color: var(--color-input-background);
+  border: 1px solid var(--color-separator);
+  border-radius: var(--form-border-radius);
+  font-size: inherit;
+}
+
+.upload .filepond--panel-top:after,
+.upload .filepond--panel-bottom:before {
+  height: 0;
+}
+
+.upload .filepond--drop-label {
+  color: var(--color-input-text);
 }

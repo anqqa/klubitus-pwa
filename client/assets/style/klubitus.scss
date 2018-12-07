@@ -1,14 +1,16 @@
 @import './_base.css';
 @import 'layout';
-@import './_grid.css';
+@import 'grid';
 @import './_form.css';
 @import './_image.css';
 @import './_media.css';
 @import 'nav';
 @import './_tile.css';
 
-@import 'autosuggest.scss';
+@import 'autosuggest';
 @import 'card';
+@import 'filepond';
+@import 'notification';
 @import './_pagination.css';
 @import 'sidebar';
 @import './_tab.css';

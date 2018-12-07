@@ -1,0 +1,30 @@
+.upload {
+  .filepond--root {
+   font-family: inherit;
+  }
+
+  .filepond--panel-root {
+    background-color: var(--color-input-background);
+    border: 1px solid var(--color-separator);
+    border-radius: var(--form-border-radius);
+    font-size: inherit;
+  }
+
+  .filepond--panel-top:after,
+  .filepond--panel-bottom:before {
+    height: 0;
+  }
+
+  .filepond--drop-label {
+    color: var(--color-input-text);
+  }
+
+  [data-filepond-item-state*='error'] .filepond--item-panel,
+  [data-filepond-item-state*='invalid'] .filepond--item-panel {
+    background-color: var(--color-fail);
+  }
+
+  [data-filepond-item-state='processing-complete'] .filepond--item-panel {
+    background-color: var(--color-success);
+  }
+}
