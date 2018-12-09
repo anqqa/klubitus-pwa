@@ -1,4 +1,5 @@
 require('make-promises-safe');
+require('dotenv').config();
 
 const { objectDateToStr } = require('./utils/types');
 
@@ -16,16 +17,21 @@ const swaggerOptions = {
 
 
 module.exports = async (fastify, options) => {
-
-  // Security
   fastify.register(require('fastify-cors'));
   fastify.register(require('fastify-helmet'));
+  fastify.register(require('fastify-multipart'));
   fastify.register(require('fastify-sensible'));
 
   // Register database connection
   fastify.register(require('./db'), {
     client:     'pg',
-    connection: 'postgres://klubitus:klubitus@localhost:5432/klubitus',
+    connection: {
+      host:     process.env.DB_HOST,
+      port:     process.env.DB_PORT,
+      user:     process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: process.env.DB_NAME,
+    },
     debug:      true,
     pool:       {
       afterCreate: (connection, done) => {
@@ -42,9 +48,6 @@ module.exports = async (fastify, options) => {
       return result;
     }
   });
-
-  // File uploads
-  fastify.register(require('fastify-multipart'));
 
   // Register Swagger
   fastify.register(require('fastify-swagger'), swaggerOptions);

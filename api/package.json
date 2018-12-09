@@ -19,6 +19,7 @@
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.4",
     "date-fns": "^1.29.0",
+    "dotenv": "^6.2.0",
     "fastify": "^1.13.0",
     "fastify-auth": "^0.2.0",
     "fastify-cli": "^0.26.1",
