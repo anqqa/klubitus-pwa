@@ -16,6 +16,7 @@
     "start": "nodemon -f src/ --exec \"fastify start src/server.js --port 3001 --pretty-logs --log-level trace\""
   },
   "dependencies": {
+    "aws-sdk": "^2.373.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.4",
     "date-fns": "^1.29.0",
