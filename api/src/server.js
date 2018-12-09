@@ -18,9 +18,9 @@ const swaggerOptions = {
 module.exports = async (fastify, options) => {
 
   // Security
+  fastify.register(require('fastify-cors'));
   fastify.register(require('fastify-helmet'));
   fastify.register(require('fastify-sensible'));
-  fastify.register(require('fastify-cors'));
 
   // Register database connection
   fastify.register(require('./db'), {
@@ -42,6 +42,9 @@ module.exports = async (fastify, options) => {
       return result;
     }
   });
+
+  // File uploads
+  fastify.register(require('fastify-multipart'));
 
   // Register Swagger
   fastify.register(require('fastify-swagger'), swaggerOptions);

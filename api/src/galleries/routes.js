@@ -1,5 +1,11 @@
 const { format, parse } = require('date-fns');
+const fs = require('fs-extra');
+const get = require('lodash').get;
+const mimeTypes = require('mime-types');
 const { raw } = require('objection');
+const path = require('path');
+const pump = require('pump');
+const uuid = require('uuid/v4');
 
 const { Gallery } = require('../models/Gallery');
 const { Image } = require('../models/Image');
@@ -67,6 +73,70 @@ module.exports = async (fastify, options) => {
       .orderBy('month', 'DESC');
 
     return { data };
+  });
+
+
+  /**
+   * Upload images.
+   */
+  fastify.post('/galleries/upload', (request, reply) => {
+    const targetField = 'photos';
+
+    const image = {
+      event_id:          null,
+      file:              null,
+      gallery_id:        null,
+      mime_type:         null,
+      original_filename: null,
+      original_size:     null,
+      uuid:              uuid(),
+    };
+
+
+    function handler(field, file, filename, encoding, mimetype) {
+      image.file              = `${image.uuid}.${mimeTypes.extension(mimetype)}`;
+      image.mime_type         = mimetype;
+      image.original_filename = filename;
+      image.original_size     = 0;
+
+      const uploadPath = path.normalize('./upload/');
+
+      fs.ensureDirSync(uploadPath);
+
+      const filePath    = `${uploadPath}${image.file}`;
+      const writeStream = fs.createWriteStream(filePath);
+
+      pump(file, writeStream);
+    }
+
+
+    function onFinished(error) {
+      if (reply.sent) {
+        return;
+      }
+
+      if (error) {
+        reply.conflict(error);
+      }
+      else {
+        reply.send(image.uuid);
+      }
+    }
+
+
+    function onFormData(key, value) {
+      if (key === targetField) {
+        const metadata = JSON.parse(value);
+
+        image.event_id   = get(metadata, 'event_id', null);
+        image.gallery_id = get(metadata, 'gallery_id', null);
+      }
+    }
+
+
+    const multipart = request.multipart(handler, onFinished);
+
+    multipart.on('field', onFormData);
   });
 
 
