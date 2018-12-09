@@ -1,14 +1,18 @@
 import cookie from 'cookie';
 
-import { Actions } from './auth';
+import { Actions, Mutations } from './auth';
 
 
 export const actions = {
-  async nuxtServerInit({ dispatch }, { req }) {
+  async nuxtServerInit({ commit, dispatch }, { req }) {
     const cookies = cookie.parse(req.headers.cookie || '');
 
     if (cookies.hasOwnProperty('auth.token')) {
-      this.$axios.setToken(cookies['auth.token'], 'Bearer');
+      const token = cookies['auth.token'];
+
+      commit(`auth/${Mutations.SET_TOKEN}`, token);
+
+      this.$axios.setToken(token, 'Bearer');
 
       try {
         await dispatch(`auth/${Actions.ME}`)

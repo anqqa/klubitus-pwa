@@ -15,19 +15,24 @@ export const Getters = {
 };
 
 export const Mutations = {
-  RESET_USER: 'resetUser',
-  SET_USER:   'setUser',
+  RESET_TOKEN: 'resetToken',
+  RESET_USER:  'resetUser',
+  SET_TOKEN:   'setToken',
+  SET_USER:    'setUser',
 };
 
 
 export const state = () => ({
+  token: null,
   user:  null,
 });
 
 
 export const actions = {
-  async [Actions.LOGIN]({ dispatch }, login) {
+  async [Actions.LOGIN]({ commit, dispatch }, login) {
     const { token } = await this.$axios.$post('auth/login', login);
+
+    commit(Mutations.SET_TOKEN, { token });
 
     this.$axios.setToken(token, 'Bearer');
     cookies.set('auth.token', token, { expires: EXPIRES });
@@ -48,6 +53,7 @@ export const actions = {
   },
 
   [Actions.RESET]({ commit }) {
+    commit(Mutations.RESET_TOKEN);
     commit(Mutations.RESET_USER);
 
     this.$axios.setToken(false);
@@ -64,8 +70,16 @@ export const getters = {
 
 
 export const mutations = {
+  [Mutations.RESET_TOKEN](store) {
+    store.token = null;
+  },
+
   [Mutations.RESET_USER](store) {
     store.user = null;
+  },
+
+  [Mutations.SET_TOKEN](store, token) {
+    store.token = token;
   },
 
   [Mutations.SET_USER](store, data) {
