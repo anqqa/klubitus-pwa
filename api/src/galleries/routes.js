@@ -1,14 +1,15 @@
 const { format, parse } = require('date-fns');
-const fs = require('fs-extra');
-const get = require('lodash').get;
-const mimeTypes = require('mime-types');
-const { raw } = require('objection');
-const path = require('path');
-const pump = require('pump');
-const uuid = require('uuid/v4');
+const fs                = require('fs-extra');
+const get               = require('lodash').get;
+const mimeTypes         = require('mime-types');
+const { raw }           = require('objection');
+const path              = require('path');
+const pump              = require('pump');
+const uuid              = require('uuid/v4');
 
 const { Gallery } = require('../models/Gallery');
 const { Image } = require('../models/Image');
+const { getKeyForImage, uploadToS3 } = require('../utils/aws');
 
 const {
   getGalleries: getGalleriesSchema,
@@ -81,6 +82,9 @@ module.exports = async (fastify, options) => {
    */
   fastify.post('/galleries/upload', (request, reply) => {
     const targetField = 'photos';
+    const uploadPath  = path.normalize('./upload/');
+
+    fs.ensureDirSync(uploadPath);
 
     const image = {
       event_id:          null,
@@ -99,10 +103,6 @@ module.exports = async (fastify, options) => {
       image.original_filename = filename;
       image.original_size     = 0;
 
-      const uploadPath = path.normalize('./upload/');
-
-      fs.ensureDirSync(uploadPath);
-
       const filePath    = `${uploadPath}${image.file}`;
       const writeStream = fs.createWriteStream(filePath);
 
@@ -111,6 +111,17 @@ module.exports = async (fastify, options) => {
 
 
     function onFinished(error) {
+
+      // Create db entry
+
+      // Upload to S3
+      const sourcePath = `${uploadPath}${image.file}`;
+      const targetKey  = getKeyForImage(image.file);
+
+      uploadToS3(sourcePath, targetKey);
+
+
+      // Send response
       if (reply.sent) {
         return;
       }
