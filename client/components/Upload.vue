@@ -2,12 +2,12 @@
   <div class="upload">
     <FilePond ref="pond"
               name="files"
-              server="http://localhost:3002/upload"
               :accepted-file-types="types.join(', ')"
               :allow-multiple="multiple"
               :drop-on-element="false"
               :drop-on-page="true"
               :instant-upload="false"
+              :server="server"
               @processfile="onUploaded"
               @processfilestart="onUploading"
               @updatefiles="onFilesUpdated" />
@@ -34,12 +34,34 @@
     components: { FilePond },
 
     props: {
+      endpoint: { default: '', type: String },
+      metadata: { default: () => null, type: Object },
       multiple: { default: false, type: Boolean },
       types:    { default: () => ['image/jpeg', 'image/png'], type: Array },
     },
 
     data() {
       return { files: [] };
+    },
+
+    computed: {
+      server() {
+        return {
+          url:    'http://localhost:3001',
+          fetch:   null,
+          load:    null,
+          restore: null,
+          revert:  null,
+          process: {
+            headers: {
+              'Authorization': `Bearer ${this.$store.state.auth.token}`,
+            },
+            method:  'POST',
+            onerror: response => response.data,
+            url:     this.endpoint,
+          }
+        };
+      }
     },
 
     methods: {
@@ -87,6 +109,12 @@
       },
 
       upload() {
+        if (this.metadata) {
+          this.$refs.pond.getFiles().forEach(file =>
+            Object.entries(this.metadata).forEach(([key, value]) => file.setMetadata(key, value))
+          );
+        }
+
         this.$refs.pond.processFiles()
           .then(() => console.log('All upload finished'))
           .catch(error => console.log('Upload failed', { error }));

@@ -76,7 +76,11 @@
             😭 Some photos ({{ photosFailed.length }}) failed to upload... retry?
           </p>
 
-          <Upload ref="upload" multiple @filesUpdated="files = $event" />
+          <Upload ref="upload"
+                  endpoint="/galleries/upload"
+                  multiple
+                  :metadata="metadata"
+                  @filesUpdated="files = $event" />
         </div>
       </section>
     </div>
@@ -162,6 +166,17 @@
 
       eventName() {
         return this.event ? this.event.name : this.gallery.name;
+      },
+
+      metadata() {
+        if (this.gallery) {
+          return { gallery_id: this.gallery.id };
+        }
+        else if (this.event) {
+          return { event_id: this.event.id };
+        }
+
+        return null;
       },
 
       photosFailed() {
