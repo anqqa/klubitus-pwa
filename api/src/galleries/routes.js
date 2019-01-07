@@ -112,13 +112,19 @@ module.exports = async (fastify, options) => {
 
     function onFinished(error) {
 
+      // Get image info
+
+
       // Create db entry
 
+      
       // Upload to S3
       const sourcePath = `${uploadPath}${image.file}`;
       const targetKey  = getKeyForImage(image.file);
 
-      uploadToS3(sourcePath, targetKey);
+      uploadToS3(sourcePath, targetKey)
+        .then(data => console.log('Success', { data }))
+        .catch(error => console.log('Error', { error }));
 
 
       // Send response
