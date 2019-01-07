@@ -1,0 +1,112 @@
+version: '3'
+
+networks:
+  internal:
+    external: false
+  web:
+    external: true
+
+services:
+  reverse-proxy:
+    container_name: traefik
+    image: traefik
+    command: --docker
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    networks:
+      - web
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik/traefik.toml:/traefik.toml
+      - ./traefik/acme.json:/acme.json
+    labels:
+      - "traefik.backend=dashboard"
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:${DASHBOARD_HOST}"
+      - "traefik.port=${DASHBOARD_PORT}"
+
+  db:
+    container_name: klubitus-db
+    image: postgres:9.6.3-alpine
+#    command: postgres -c logging_collector=on -c log_destination=stderr -c log_directory=/logs
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+      - POSTGRES_INITDB_ARGS=-E UTF8 --locale=fi_FI.UTF8
+    networks:
+      - internal
+    ports:
+      - "127.0.0.1:${DB_PORT}:${DB_PORT}"
+    restart: always
+    tmpfs:
+      - /tmp
+      - /var/run/postgresql
+    volumes:
+      - ./db/logs:/logs
+      - ./db/logs:/var/log/postgresql
+      - db-data:/var/lib/postgresql/data
+    labels:
+      - "traefik.enable=false"
+
+  api:
+    container_name: klubitus-api
+    build: ./api
+    command: yarn start
+    volumes:
+      - ./api/src:/srv/api/src
+      - /srv/api/node_modules
+    environment:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_BUCKET
+      - AWS_DEFAULT_REGION
+      - AWS_IMAGE_PREFIX
+      - API_PORT
+      - DB_HOST=db
+      - DB_PORT
+      - DB_NAME
+      - DB_USER
+      - DB_PASS
+      - NODE_ENV=development
+    networks:
+      - internal
+      - web
+    expose:
+      - ${API_PORT}
+    labels:
+      - "traefik.backend=api"
+      - "traefik.docker.network=web"
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:${API_HOST}"
+      - "traefik.port=${API_PORT}"
+    depends_on:
+      - reverse-proxy
+
+  client:
+    container_name: klubitus-client
+    build: ./client
+    command: yarn dev
+    volumes:
+      - ./client:/srv/client
+      - /srv/client/node_modules
+    environment:
+      - NODE_ENV=development
+    networks:
+      - web
+    expose:
+      - ${CLIENT_PORT}
+    labels:
+      - "traefik.backend=client"
+      - "traefik.docker.network=web"
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:${CLIENT_HOST}"
+      - "traefik.port=${CLIENT_PORT}"
+    depends_on:
+      - reverse-proxy
+
+volumes:
+  db-data:

@@ -1,0 +1,41 @@
+# Traefik global configuration
+debug = false
+checkNewVersion = true
+logLevel = "INFO"
+
+# Entrypoints
+defaultEntryPoints = ["https", "http"]
+
+[entryPoints]
+  [entryPoints.http]
+    address = ":80"
+#    [entryPoints.http.redirect]
+#      entryPoint = "https"
+  [entryPoints.https]
+    address = ":443"
+    [entryPoints.https.tls]
+
+  # Enable dashboard
+  [entryPoints.dash]
+  address = ":8080"
+
+[api]
+  dashboard = true
+  entrypoint = "dash"
+
+[retry]
+
+# Docker backend
+[docker]
+  domain = "localhost.tv"
+  exposedbydefault = false
+  watch = true
+
+# Letsencrypt
+#[acme]
+#  email = ""
+#  storage = "acme.json"
+#  entryPoint = "https"
+#  OnHostRule = true
+#  [acme.httpChallenge]
+#    entryPoint = "http"

@@ -13,7 +13,8 @@
     "api"
   ],
   "scripts": {
-    "start": "nodemon -f src/ --exec \"fastify start src/server.js --port 3001 --pretty-logs --log-level trace\""
+    "start": "nodemon -L --watch src src/index.js",
+    "start2": "nodemon -f src/ --exec \"fastify start src/server.js --port ${API_PORT} --pretty-logs --log-level trace\""
   },
   "dependencies": {
     "aws-sdk": "^2.373.0",
@@ -39,10 +40,11 @@
     "objection": "^1.2.2",
     "pg": "^7.4.1",
     "pump": "^3.0.0",
+    "sharp": "^0.21.1",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "nodemon": "^1.15.0"
+    "nodemon": "^1.18.9"
   },
   "resolutions": {
     "upath": "1.1.0"
