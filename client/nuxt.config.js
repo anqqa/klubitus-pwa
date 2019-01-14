@@ -24,11 +24,16 @@ export default {
     */
   loading: { color: '#E91E63' },
 
-  env: {},
+  env: {
+    API_URL:          process.env.API_URL || 'http://localhost:3001',
+    API_URL_BROWSER:  process.env.API_URL || 'http://localhost:3001',
+    BASE_URL:         process.env.CLIENT_URL || 'http://localhost:3000',
+  },
   server: {
     host: process.env.CLIENT_HOST ? '0.0.0.0' : 'localhost',
     port: process.env.CLIENT_PORT || 3000,
   },
+  srcDir: 'src/',
 
   /**
    * Global modules
@@ -36,8 +41,6 @@ export default {
   modules: [
     ['@nuxtjs/axios', {
       debug: true,
-      host:  process.env.API_HOST || 'localhost',
-      port:  process.env.API_HOST ? 80 : 3001,
     }],
 
     ['@nuxtjs/markdownit', {

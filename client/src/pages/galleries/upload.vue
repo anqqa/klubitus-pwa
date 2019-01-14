@@ -79,6 +79,7 @@
           <Upload ref="upload"
                   endpoint="/galleries/upload"
                   multiple
+                  name="photos"
                   :metadata="metadata"
                   @filesUpdated="files = $event" />
         </div>

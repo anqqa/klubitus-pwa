@@ -17,7 +17,7 @@ services:
       - 8080:8080
     networks:
       - web
-    restart: always
+#    restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/traefik.toml:/traefik.toml
@@ -93,12 +93,14 @@ services:
     restart: always
     command: yarn dev
     volumes:
-      - ./client:/srv/client
+      - ./client/src:/srv/client/src
+      - ./client/nuxt.config.js:/srv/client/nuxt.config.js
       - /srv/client/node_modules
     environment:
-      - API_HOST
+      - API_URL
       - CLIENT_HOST
       - CLIENT_PORT
+      - CLIENT_URL
       - NODE_ENV=development
     networks:
       - web

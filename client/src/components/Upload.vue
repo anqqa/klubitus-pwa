@@ -1,12 +1,13 @@
 <template>
   <div class="upload">
     <FilePond ref="pond"
-              name="files"
               :accepted-file-types="types.join(', ')"
               :allow-multiple="multiple"
+              :allow-revert="false"
               :drop-on-element="false"
               :drop-on-page="true"
               :instant-upload="false"
+              :name="name"
               :server="server"
               @processfile="onUploaded"
               @processfilestart="onUploading"
@@ -37,6 +38,7 @@
       endpoint: { default: '', type: String },
       metadata: { default: () => null, type: Object },
       multiple: { default: false, type: Boolean },
+      name:     { default: 'files', type: String },
       types:    { default: () => ['image/jpeg', 'image/png'], type: Array },
     },
 
@@ -47,7 +49,7 @@
     computed: {
       server() {
         return {
-          url:    'http://localhost:3001',
+          url:     process.env.API_URL,
           fetch:   null,
           load:    null,
           restore: null,
