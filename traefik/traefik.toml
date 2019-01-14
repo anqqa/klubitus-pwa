@@ -1,7 +1,7 @@
 # Traefik global configuration
-debug = true
+debug = false
 checkNewVersion = true
-logLevel = "DEBUG"
+logLevel = "INFO"
 
 # Entrypoints
 defaultEntryPoints = ["https", "http"]

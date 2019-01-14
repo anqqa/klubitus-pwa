@@ -1,6 +1,19 @@
 // import nodeExternals from 'webpack-node-externals';
 
 export default {
+  env: {
+    API_URL:  process.env.API_HOST || 'http://localhost:3001',
+    BASE_URL: process.env.CLIENT_HOST || 'http://localhost:3000',
+  },
+
+  server: {
+    host: process.env.CLIENT_HOST ? '0.0.0.0' : 'localhost',
+    port: process.env.CLIENT_PORT || 3000,
+  },
+
+  srcDir:   'src/',
+  watchers: { webpack: { poll: true }},
+
 
   /**
    * Headers of the page
@@ -21,26 +34,16 @@ export default {
 
   /**
    * Customize the progress bar color
-    */
+   */
   loading: { color: '#E91E63' },
 
-  env: {
-    API_URL:          process.env.API_URL || 'http://localhost:3001',
-    API_URL_BROWSER:  process.env.API_URL || 'http://localhost:3001',
-    BASE_URL:         process.env.CLIENT_URL || 'http://localhost:3000',
-  },
-  server: {
-    host: process.env.CLIENT_HOST ? '0.0.0.0' : 'localhost',
-    port: process.env.CLIENT_PORT || 3000,
-  },
-  srcDir: 'src/',
 
   /**
    * Global modules
    */
   modules: [
     ['@nuxtjs/axios', {
-      debug: true,
+      debug: process.env.NODE_ENV === 'development',
     }],
 
     ['@nuxtjs/markdownit', {

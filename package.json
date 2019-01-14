@@ -5,9 +5,11 @@
   "private": true,
   "scripts": {
     "api:build": "docker-compose build api",
+    "api:shell": "docker-compose exec api sh",
     "api:up": "docker-compose up api",
     "api:yarn": "docker-compose exec api yarn",
     "client:build": "docker-compose build client",
+    "client:shell": "docker-compose exec client sh",
     "client:up": "docker-compose up client",
     "client:yarn": "docker-compose exec client yarn",
     "db:psql": "docker-compose exec db psql -U klubitus klubitus",
