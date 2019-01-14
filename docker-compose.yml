@@ -9,8 +9,8 @@ networks:
 services:
   reverse-proxy:
     container_name: traefik
-    image: traefik
-    command: --docker
+    image: traefik:latest
+#    command: --docker
     ports:
       - 80:80
       - 443:443
@@ -53,8 +53,9 @@ services:
       - "traefik.enable=false"
 
   api:
-    container_name: klubitus-api
     build: ./api
+    container_name: klubitus-api
+    restart: always
     command: yarn start
     volumes:
       - ./api/src:/srv/api/src
@@ -87,13 +88,17 @@ services:
       - reverse-proxy
 
   client:
-    container_name: klubitus-client
     build: ./client
+    container_name: klubitus-client
+    restart: always
     command: yarn dev
     volumes:
       - ./client:/srv/client
       - /srv/client/node_modules
     environment:
+      - API_HOST
+      - CLIENT_HOST
+      - CLIENT_PORT
       - NODE_ENV=development
     networks:
       - web

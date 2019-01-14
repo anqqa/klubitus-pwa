@@ -1,7 +1,7 @@
 # Traefik global configuration
-debug = false
+debug = true
 checkNewVersion = true
-logLevel = "INFO"
+logLevel = "DEBUG"
 
 # Entrypoints
 defaultEntryPoints = ["https", "http"]
@@ -17,7 +17,7 @@ defaultEntryPoints = ["https", "http"]
 
   # Enable dashboard
   [entryPoints.dash]
-  address = ":8080"
+    address = ":8080"
 
 [api]
   dashboard = true
@@ -27,7 +27,7 @@ defaultEntryPoints = ["https", "http"]
 
 # Docker backend
 [docker]
-  domain = "localhost.tv"
+  domain = "localtest.me"
   exposedbydefault = false
   watch = true
 

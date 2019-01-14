@@ -24,14 +24,20 @@ export default {
     */
   loading: { color: '#E91E63' },
 
+  env: {},
+  server: {
+    host: process.env.CLIENT_HOST ? '0.0.0.0' : 'localhost',
+    port: process.env.CLIENT_PORT || 3000,
+  },
+
   /**
    * Global modules
    */
   modules: [
     ['@nuxtjs/axios', {
       debug: true,
-      host:  'localhost',
-      port:  3001,
+      host:  process.env.API_HOST || 'localhost',
+      port:  process.env.API_HOST ? 80 : 3001,
     }],
 
     ['@nuxtjs/markdownit', {

@@ -2,11 +2,25 @@
   "name": "klubitus",
   "version": "9.0.0",
   "license": "MIT",
+  "private": true,
+  "scripts": {
+    "api:build": "docker-compose build api",
+    "api:up": "docker-compose up api",
+    "api:yarn": "docker-compose exec api yarn",
+    "client:build": "docker-compose build client",
+    "client:up": "docker-compose up client",
+    "client:yarn": "docker-compose exec client yarn",
+    "db:psql": "docker-compose exec db psql -U klubitus klubitus",
+    "db:up": "docker-compose up db"
+  },
   "dependencies": {},
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-eslint": "^8.0.1",
-    "eslint": "^4.10.0",
-    "eslint-plugin-react": "^7.4.0"
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.9.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^8.0.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-vue": "^5.0.0"
   }
 }
