@@ -10,6 +10,7 @@ const uuid              = require('uuid/v4');
 const { Gallery } = require('../models/Gallery');
 const { Image } = require('../models/Image');
 const { getKeyForImage, uploadToS3 } = require('../utils/aws');
+const { dominantColor, phash } = require('../utils/image');
 
 const {
   getGalleries: getGalleriesSchema,
@@ -87,12 +88,14 @@ module.exports = async (fastify, options) => {
     fs.ensureDirSync(uploadPath);
 
     const image = {
+      color:             null,
       event_id:          null,
       file:              null,
       gallery_id:        null,
       mime_type:         null,
       original_filename: null,
       original_size:     null,
+      phash:             null,
       uuid:              uuid(),
     };
 
@@ -111,33 +114,33 @@ module.exports = async (fastify, options) => {
 
 
     function onFinished(error) {
-
-      // Get image info
-
-
-      // Create db entry
-
-      
-      // Upload to S3
       const sourcePath = `${uploadPath}${image.file}`;
       const targetKey  = getKeyForImage(image.file);
 
-      uploadToS3(sourcePath, targetKey)
-        .then(data => console.log('Success', { data }))
-        .catch(error => console.log('Error', { error }));
+      Promise.all([
+        dominantColor(sourcePath),
+        phash(sourcePath),
+        uploadToS3(sourcePath, targetKey),
+      ])
+        .then(results => {
+          const [color, hash, s3] = results;
 
+          console.log('Success', { color, hash, s3 });
 
-      // Send response
-      if (reply.sent) {
-        return;
-      }
+          image.color = color;
+          image.phash = hash;
 
-      if (error) {
-        reply.conflict(error);
-      }
-      else {
-        reply.send(image.uuid);
-      }
+          reply.send(image.uuid);
+
+          return true;
+        })
+        .catch(error => {
+          console.log('Failed', error);
+
+          reply.conflict(error);
+        });
+
+      // Create db entry
     }
 
 
