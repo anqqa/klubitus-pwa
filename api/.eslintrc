@@ -1,11 +1,11 @@
 {
-  "env": {
-    "node": true
-  },
-  "extends": "eslint:recommended",
+  "env": { "es6": true, "node": true },
+  "extends": ["eslint:recommended", "plugin:promise/recommended"],
   "parserOptions": {
+    "ecmaFeatures": { "experimentalObjectRestSpread": true },
     "ecmaVersion": 8
   },
+  "plugins": ["promise"],
   "rules": {
     "indent": ["error", 2, { "SwitchCase": 1 }],
     "linebreak-style": ["error", "unix"],
