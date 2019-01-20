@@ -9,7 +9,7 @@ const uuid              = require('uuid/v4');
 
 const { Gallery } = require('../models/Gallery');
 const { Image } = require('../models/Image');
-const { getKeyForImage, uploadToS3 } = require('../utils/aws');
+const { detectLabels, getKeyForImage, uploadToS3 } = require('../utils/aws');
 const { dominantColor, metadata, phash, rgb2hex } = require('../utils/image');
 
 const {
@@ -94,6 +94,7 @@ module.exports = async (fastify, options) => {
       exif:              null,
       file:              null,
       gallery_id:        null,
+      labels:            null,
       mime_type:         null,
       original_filename: null,
       original_height:   null,
@@ -141,12 +142,19 @@ module.exports = async (fastify, options) => {
 
           console.log('Success', { stats, meta, exif, color, hash, s3 });
 
-          image.original_size = stats.size;
-          image.original_width = meta.width;
+          image.original_size   = stats.size;
+          image.original_width  = meta.width;
           image.original_height = meta.height;
-          image.exif = exif;
-          image.color = rgb2hex(color);
-          image.phash = hash.toString();
+          image.exif            = exif;
+          image.color           = rgb2hex(color);
+          image.phash           = hash.toString();
+
+          return detectLabels(targetKey);
+        })
+        .then(labels => {
+          console.log('Labels', labels);
+
+          image.labels = labels;
 
           const { event_id, gallery_id, ...model } = image;
 
