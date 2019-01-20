@@ -22,6 +22,7 @@
     "cors": "^2.8.4",
     "date-fns": "^1.29.0",
     "dotenv": "^6.2.0",
+    "exif-reader": "^1.0.2",
     "fastify": "^1.13.0",
     "fastify-auth": "^0.2.0",
     "fastify-cli": "^0.26.1",
@@ -44,6 +45,8 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "eslint": "^5.12.1",
+    "eslint-plugin-promise": "^4.0.1",
     "nodemon": "^1.18.9"
   },
   "resolutions": {
