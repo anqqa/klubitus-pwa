@@ -10,7 +10,7 @@ const uuid              = require('uuid/v4');
 const { Gallery } = require('../models/Gallery');
 const { Image } = require('../models/Image');
 const { getKeyForImage, uploadToS3 } = require('../utils/aws');
-const { dominantColor, phash } = require('../utils/image');
+const { dominantColor, metadata, phash, rgb2hex } = require('../utils/image');
 
 const {
   getGalleries: getGalleriesSchema,
@@ -88,13 +88,18 @@ module.exports = async (fastify, options) => {
     fs.ensureDirSync(uploadPath);
 
     const image = {
+      author_id:         fastify.auth.userId,
       color:             null,
       event_id:          null,
+      exif:              null,
       file:              null,
       gallery_id:        null,
       mime_type:         null,
       original_filename: null,
+      original_height:   null,
+      original_width:    null,
       original_size:     null,
+      path:              null,
       phash:             null,
       uuid:              uuid(),
     };
@@ -104,7 +109,6 @@ module.exports = async (fastify, options) => {
       image.file              = `${image.uuid}.${mimeTypes.extension(mimetype)}`;
       image.mime_type         = mimetype;
       image.original_filename = filename;
-      image.original_size     = 0;
 
       const filePath    = `${uploadPath}${image.file}`;
       const writeStream = fs.createWriteStream(filePath);
@@ -114,21 +118,42 @@ module.exports = async (fastify, options) => {
 
 
     function onFinished(error) {
+      if (error) {
+        console.log('Failed', error);
+
+        reply.conflict(error);
+
+        return;
+      }
+
       const sourcePath = `${uploadPath}${image.file}`;
-      const targetKey  = getKeyForImage(image.file);
+      const targetKey  = image.path = getKeyForImage(image.file);
 
       Promise.all([
+        fs.stat(sourcePath),
+        metadata(sourcePath),
         dominantColor(sourcePath),
         phash(sourcePath),
         uploadToS3(sourcePath, targetKey),
       ])
         .then(results => {
-          const [color, hash, s3] = results;
+          const [stats, [meta, exif], color, hash, s3] = results;
 
-          console.log('Success', { color, hash, s3 });
+          console.log('Success', { stats, meta, exif, color, hash, s3 });
 
-          image.color = color;
-          image.phash = hash;
+          image.original_size = stats.size;
+          image.original_width = meta.width;
+          image.original_height = meta.height;
+          image.exif = exif;
+          image.color = rgb2hex(color);
+          image.phash = hash.toString();
+
+          const { event_id, gallery_id, ...model } = image;
+
+          return Image.query().insert(model);
+        })
+        .then(model => {
+          console.log('Model inserted', model.id);
 
           reply.send(image.uuid);
 
@@ -139,8 +164,6 @@ module.exports = async (fastify, options) => {
 
           reply.conflict(error);
         });
-
-      // Create db entry
     }
 
 
