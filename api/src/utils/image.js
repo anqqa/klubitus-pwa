@@ -8,28 +8,17 @@ const sharp = require('sharp');
  * @return  {Promise<int[]>}
  */
 const dominantColor = image => {
-  return new Promise((resolve, reject) => {
-    sharp(image)
-      .resize(5, 5, { fit: sharp.fit.cover, position: sharp.strategy.attention })
-      .toBuffer((error, buffer) => {
-        if (error) {
-          reject(error);
-        }
-        else {
-          sharp(buffer)
-            .stats((error, stats) => {
-              if (error) {
-                reject(error);
-              }
-              else {
-                const { channels: [r, g, b] } = stats;
+  console.log('Calculating dominant color...');
 
-                resolve([Math.round(r.mean), Math.round(g.mean), Math.round(b.mean)]);
-              }
-            });
-        }
-      });
-  });
+  return sharp(image)
+    .resize(5, 5, { fit: sharp.fit.cover, position: sharp.strategy.attention })
+    .toBuffer()
+    .then(buffer => sharp(buffer).stats())
+    .then(stats => {
+      const { channels: [r, g, b] } = stats;
+
+      return [Math.round(r.mean), Math.round(g.mean), Math.round(b.mean)];
+    });
   /*
   image = self.convert_image_to_rgb(self.image.resize((150, 150)), alpha=self.alpha).quantize(colors=5)
   colors = image.getcolors()    # list of count, palette index
@@ -101,56 +90,52 @@ const applyDCT = f => {
  * @return  {Promise<Number>}
  */
 const phash = image => {
-  return new Promise((resolve, reject) => {
-    sharp(image)
-      .grayscale()
-      .resize(SAMPLE_SIZE, SAMPLE_SIZE, { fit: 'fill' })
-      .rotate()
-      .raw()
-      .toBuffer((error, buffer) => {
-        if (error) {
-          reject(error);
+  console.log('Calculating phash...');
+
+  return sharp(image)
+    .grayscale()
+    .resize(SAMPLE_SIZE, SAMPLE_SIZE, { fit: 'fill' })
+    .rotate()
+    .raw()
+    .toBuffer()
+    .then(buffer => {
+
+      // Create 2D array
+      const s = new Array(SAMPLE_SIZE);
+
+      for (let x = 0; x < SAMPLE_SIZE; x++) {
+        s[x] = new Array(SAMPLE_SIZE);
+
+        for (let y = 0; y < SAMPLE_SIZE; y++) {
+          s[x][y] = buffer[SAMPLE_SIZE * y + x];
         }
-        else {
+      }
 
-          // Create 2D array
-          const s = new Array(SAMPLE_SIZE);
+      // Apply 2D DCT
+      const dct = applyDCT(s, SAMPLE_SIZE);
 
-          for (let x = 0; x < SAMPLE_SIZE; x++) {
-            s[x] = new Array(SAMPLE_SIZE);
+      // Average on high frequencies
+      let totalSum = 0;
 
-            for (let y = 0; y < SAMPLE_SIZE; y++) {
-              s[x][y] = buffer[SAMPLE_SIZE * y + x];
-            }
-          }
-
-          // Apply 2D DCT
-          const dct = applyDCT(s, SAMPLE_SIZE);
-
-          // Average on high frequencies
-          let totalSum = 0;
-
-          for (let x = 0; x < LOW_SIZE; x++) {
-            for (let y = 0; y < LOW_SIZE; y++) {
-              totalSum += dct[x + 1][y + 1];
-            }
-          }
-
-          const avg = totalSum / (LOW_SIZE * LOW_SIZE);
-
-          // Compute hash
-          let fingerprint = '';
-
-          for (let x = 0; x < LOW_SIZE; x++) {
-            for (let y = 0; y < LOW_SIZE; y++) {
-              fingerprint += dct[x + 1][y + 1] > avg ? '1' : '0';
-            }
-          }
-
-          resolve(parseInt(fingerprint, 2));
+      for (let x = 0; x < LOW_SIZE; x++) {
+        for (let y = 0; y < LOW_SIZE; y++) {
+          totalSum += dct[x + 1][y + 1];
         }
-      });
-  });
+      }
+
+      const avg = totalSum / (LOW_SIZE * LOW_SIZE);
+
+      // Compute hash
+      let fingerprint = '';
+
+      for (let x = 0; x < LOW_SIZE; x++) {
+        for (let y = 0; y < LOW_SIZE; y++) {
+          fingerprint += dct[x + 1][y + 1] > avg ? '1' : '0';
+        }
+      }
+
+      return parseInt(fingerprint, 2);
+    });
 };
 
 
