@@ -38,7 +38,7 @@
   export default {
 
     async asyncData({ app, params }) {
-      const { data } = await app.$axios.$get(`event/${parseInt(params.id)}`);
+      const { data } = await app.$axios.$get(`events/${parseInt(params.id)}`);
       const { begins_at, ends_at, info } = data;
 
       return {
