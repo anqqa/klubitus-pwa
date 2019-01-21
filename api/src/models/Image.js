@@ -18,6 +18,7 @@ class Image extends Model {
         color:         { anyOf: [{ type: 'string' }, { type: 'null' }]},
         created_at:    { type: 'string', description: 'DateTime string' },
         description:   { anyOf: [{ type: 'string' }, { type: 'null' }] },
+        exif:          { type: 'object', additionalProperties: true },
         height:        { anyOf: [{ type: 'integer' }, { type: 'null' }] },
         mime_type:     { anyOf: [{ type: 'string' }, { type: 'null' }] },
         id:            { type: 'integer' },
@@ -66,6 +67,11 @@ class Image extends Model {
 
 
   url() {
+
+    // AWS S3 URL
+    if (this.path) {
+      return `https://${process.env.AWS_BUCKET}/${this.path}`;
+    }
 
     // Convert numeric id to path, e.g. 1234567 -> 01/23/45
     const hex    = this.id.toString(16).padStart(8, '0');

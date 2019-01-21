@@ -263,7 +263,7 @@ module.exports = async (fastify, options) => {
    */
   fastify.get('/galleries/:galleryId/:imageId', getImageSchema, async (request, reply) => {
     const data = await Image.query()
-      .eager('[author, comments.[author], exif, notes]')
+      .eager('[author, comments.[author], notes]')
       .findById(request.params.imageId);
 
     return { data: data.toJSON() };
