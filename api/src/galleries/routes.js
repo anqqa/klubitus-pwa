@@ -1,15 +1,16 @@
-const { format, parse } = require('date-fns');
-const fs                = require('fs-extra');
-const get               = require('lodash').get;
-const mimeTypes         = require('mime-types');
-const { raw }           = require('objection');
-const path              = require('path');
-const pump              = require('pump');
-const uuid              = require('uuid/v4');
+const { format, parse }    = require('date-fns');
+const fs                   = require('fs-extra');
+const get                  = require('lodash').get;
+const mimeTypes            = require('mime-types');
+const { raw, transaction } = require('objection');
+const path                 = require('path');
+const pump                 = require('pump');
+const uuid                 = require('uuid/v4');
 
+const { Event } = require('../models/Event');
 const { Gallery } = require('../models/Gallery');
 const { Image } = require('../models/Image');
-const { detectLabels, getKeyForImage, uploadToS3 } = require('../utils/aws');
+const { deleteFile, detectLabels, getKeyForImage, uploadToS3 } = require('../utils/aws');
 const { dominantColor, metadata, phash, rgb2hex } = require('../utils/image');
 
 const {
@@ -118,7 +119,7 @@ module.exports = async (fastify, options) => {
     }
 
 
-    function onFinished(error) {
+    async function onFinished(error) {
       if (error) {
         console.log('Failed', error);
 
@@ -130,48 +131,85 @@ module.exports = async (fastify, options) => {
       const sourcePath = `${uploadPath}${image.file}`;
       const targetKey  = image.path = getKeyForImage(image.file);
 
-      Promise.all([
-        fs.stat(sourcePath),
-        metadata(sourcePath),
-        dominantColor(sourcePath),
-        phash(sourcePath),
-        uploadToS3(sourcePath, targetKey),
-      ])
-        .then(results => {
-          const [stats, [meta, exif], color, hash, s3] = results;
+      let isUploadedToS3 = false;
 
-          console.log('Success', { stats, meta, exif, color, hash, s3 });
+      try {
 
-          image.original_size   = stats.size;
-          image.original_width  = meta.width;
-          image.original_height = meta.height;
-          image.exif            = exif;
-          image.color           = rgb2hex(color);
-          image.phash           = hash.toString();
+        // Get metadatas
+        const [stats, [meta, exif], color, hash] = await Promise.all([
+          fs.stat(sourcePath),
+          metadata(sourcePath),
+          dominantColor(sourcePath),
+          phash(sourcePath),
+        ]);
 
-          return detectLabels(targetKey);
-        })
-        .then(labels => {
-          console.log('Labels', labels);
+        image.original_size   = stats.size;
+        image.original_width  = meta.width;
+        image.original_height = meta.height;
+        image.exif            = exif;
+        image.color           = rgb2hex(color);
+        image.phash           = hash.toString();
 
-          image.labels = labels;
 
-          const { event_id, gallery_id, ...model } = image;
+        // Upload to S3
+        await uploadToS3(sourcePath, targetKey);
+        isUploadedToS3 = true;
 
-          return Image.query().insert(model);
-        })
-        .then(model => {
-          console.log('Model inserted', model.id);
+        image.labels = await detectLabels(targetKey);
 
-          reply.send(image.uuid);
 
-          return true;
-        })
-        .catch(error => {
-          console.log('Failed', error);
+        // Insert to DB
+        const { event_id, gallery_id, ...model } = image;
 
-          reply.conflict(error);
-        });
+        let galleryModel;
+
+        // Try to get existing gallery
+        if (gallery_id) {
+          galleryModel = await Gallery.query().findById(gallery_id);
+        }
+
+        if (!galleryModel && event_id) {
+          galleryModel = await Gallery.query().where('event_id', event_id).first();
+
+          // Create new gallery?
+          if (!galleryModel) {
+            const eventModel = await Event.query().findById(event_id);
+
+            if (!eventModel) {
+              throw 'Gallery or event id is required';
+            }
+
+            galleryModel = await Gallery.query()
+              .insert({
+                date:       eventModel.begins_at,
+                event_date: eventModel.begins_at,
+                event_id:   eventModel.id,
+                name:       eventModel.name,
+              });
+          }
+        }
+
+        // Insert image
+        const imageModel = await galleryModel.$relatedQuery('images')
+          .insert(model);
+
+        reply.send(imageModel.id);
+      }
+      catch (error) {
+        console.log('Metadata failed', error);
+
+        // Cleanup S3
+        if (isUploadedToS3) {
+          await deleteFile(targetKey);
+        }
+
+        reply.conflict(error);
+      }
+      finally {
+        const filePath = `${uploadPath}${image.file}`;
+
+        fs.removeSync(filePath);
+      }
     }
 
 
@@ -213,7 +251,7 @@ module.exports = async (fastify, options) => {
           return builder;
         }
       })
-      .findOne('id', request.params.galleryId);
+      .findById(request.params.galleryId);
 
     const data = await query.select();
 
@@ -227,7 +265,7 @@ module.exports = async (fastify, options) => {
   fastify.get('/galleries/:galleryId/:imageId', getImageSchema, async (request, reply) => {
     const data = await Image.query()
       .eager('[author, comments.[author], exif, notes]')
-      .findOne('id', request.params.imageId);
+      .findById(request.params.imageId);
 
     return { data: data.toJSON() };
   });
@@ -239,7 +277,7 @@ module.exports = async (fastify, options) => {
   fastify.get('/galleries/:galleryId', getGallerySchema, async (request, reply) => {
     const data = await Gallery.query()
       .eager('event')
-      .findOne('id', request.params.galleryId);
+      .findById(request.params.galleryId);
 
     return { data };
   });
