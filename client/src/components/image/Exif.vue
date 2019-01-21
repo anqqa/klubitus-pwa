@@ -6,6 +6,9 @@
     <span v-if="lens">
       <span class="icon"><i class="bx bx-aperture" /></span> {{ lens }}<br>
     </span>
+    <span v-if="settings">
+      <span class="icon"><i class="bx bx-slider" /></span> {{ settings }}<br>
+    </span>
     <span v-if="taken">
       <span class="icon"><i class="bx bx-watch" /></span> {{ taken }}
     </span>
@@ -16,41 +19,38 @@
 <script>
   import format from 'date-fns/format';
 
+
+  const renderers = {
+    focal:    val => `${val}mm`,
+    aperture: val => `ƒ${val}`,
+    exposure: val => `${val}s`,
+    iso:      val => `ISO ${val}`,
+  };
+
+
   export default {
     props: {
       exif: { default: () => {}, type: Object },
     },
 
     computed: {
-      camera() { return this.exif.model; },
+      camera() { return (this.exif.make || '') + ' ' + (this.exif.model || ''); },
 
-      lens() {
-        const lens = [];
+      lens() { return (this.exif.lens_make || '') + ' ' + (this.exif.lens_model || ''); },
 
-        ['lens', 'focal', 'aperture', 'exposure', 'iso'].forEach(key => {
-          if (key in this.exif && this.exif[key]) {
-            if (key === 'aperture') {
-              lens.push(this.exif[key].replace('f', 'ƒ'));
-            }
-            else if (key === 'exposure') {
-              lens.push(this.exif[key].replace(' sec', 's'));
-            }
-            else if (key === 'focal') {
-              lens.push(this.exif[key].replace(' mm', 'mm'));
-            }
-            else if (key === 'iso') {
-              lens.push(`ISO ${this.exif[key]}`);
-            }
-            else {
-              lens.push(this.exif[key]);
-            }
+      settings() {
+        const settings = [];
+
+        for (const field in renderers) {
+          if (this.exif[field]) {
+            settings.push(renderers[field](this.exif[field]));
           }
-        });
+        }
 
-        return lens.join(' / ');
+        return settings.join(' · ');
       },
 
-      taken() { return this.exif.taken ? format(new Date(this.exif.taken), 'MMMM D, YYYY HH:mm:ss') : null; },
+      taken() { return this.exif.created_at ? format(new Date(this.exif.created_at), 'MMMM D, YYYY HH:mm:ss') : null; },
     }
   };
 </script>
