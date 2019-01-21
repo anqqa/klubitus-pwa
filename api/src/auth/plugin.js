@@ -23,7 +23,7 @@ module.exports = fp(function (fastify, options, next) {
 
 
     // Validate token
-    fastify.jwt.verify(token, (error, decoded) => {
+    fastify.jwt.verify(token, async (error, decoded) => {
       if (error || !decoded.id || !decoded.token) {
         if (error && error.name === 'TokenExpiredError') {
           request.log.info('JWT: Expired token');
@@ -36,26 +36,28 @@ module.exports = fp(function (fastify, options, next) {
         return done(fastify.httpErrors.unauthorized('Invalid token'));
       }
 
-      fastify.knex('user_tokens')
-        .first('expires_at')
-        .where({ token: decoded.token, user_id: decoded.id})
-        .then(token => {
-          if (!token.expires_at || token.expires_at < new Date()) {
-            request.log.info('JWT: Expired token');
+      try {
+        const token = await fastify.knex('user_tokens')
+          .first('expires_at')
+          .where({ token: decoded.token, user_id: decoded.id });
 
-            return done(fastify.httpErrors.unauthorized('Token expired'));
-          }
-          fastify.auth.isAuthenticated = true;
-          fastify.auth.token           = decoded.token;
-          fastify.auth.userId          = decoded.id;
+        if (!token.expires_at || token.expires_at < new Date()) {
+          request.log.info('JWT: Expired token');
 
-          done();
-        })
-        .catch(error => {
-          request.log.warn('JWT: Missing token');
+          return done(fastify.httpErrors.unauthorized('Token expired'));
+        }
 
-          done(fastify.httpErrors.unauthorized('Token missing or expired'));
-        });
+        fastify.auth.isAuthenticated = true;
+        fastify.auth.token           = decoded.token;
+        fastify.auth.userId          = decoded.id;
+
+        done();
+      }
+      catch (error) {
+        request.log.warn('JWT: Missing token');
+
+        done(fastify.httpErrors.unauthorized('Token missing or expired'));
+      }
     });
   };
 
