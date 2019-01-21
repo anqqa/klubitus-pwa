@@ -3,14 +3,30 @@ const fs = require('fs');
 const mimeTypes = require('mime-types');
 
 
+const AWSOptions = {
+  accessKeyId:     process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region:          process.env.AWS_DEFAULT_REGION,
+};
+
+const deleteFile = sourceKey => {
+  console.log('Deleting file', sourceKey);
+
+  const s3 = new AWS.S3(AWSOptions);
+
+  const params = {
+    Bucket: process.env.AWS_BUCKET,
+    Key:    sourceKey,
+  };
+
+  return s3.deleteObject(params).promise();
+};
+
+
 const detectLabels = sourceKey => {
   console.log('Detecting labels', sourceKey);
 
-  const rekognition = new AWS.Rekognition({
-    accessKeyId:     process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region:          process.env.AWS_DEFAULT_REGION,
-  });
+  const rekognition = new AWS.Rekognition(AWSOptions);
 
   const params = {
     Image: {
@@ -34,11 +50,7 @@ const getKeyForImage = filename => {
 const uploadToS3 = (sourcePath, targetKey) => {
   console.log('Uploading to S3', sourcePath, targetKey);
 
-  const s3 = new AWS.S3({
-    accessKeyId:     process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region:          process.env.AWS_DEFAULT_REGION,
-  });
+  const s3 = new AWS.S3(AWSOptions);
 
   const params = {
     ACL:         'public-read',
@@ -53,6 +65,7 @@ const uploadToS3 = (sourcePath, targetKey) => {
 
 
 module.exports = {
+  deleteFile,
   detectLabels,
   getKeyForImage,
   uploadToS3,
