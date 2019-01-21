@@ -181,7 +181,6 @@ module.exports = async (fastify, options) => {
 
             galleryModel = await Gallery.query()
               .insert({
-                date:       eventModel.begins_at,
                 event_date: eventModel.begins_at,
                 event_id:   eventModel.id,
                 name:       eventModel.name,
@@ -196,14 +195,14 @@ module.exports = async (fastify, options) => {
         reply.send(imageModel.id);
       }
       catch (error) {
-        console.log('Metadata failed', error);
+        console.log('Failed', error);
 
         // Cleanup S3
         if (isUploadedToS3) {
           await deleteFile(targetKey);
         }
 
-        reply.conflict(error);
+        reply.conflict(typeof error === 'string' ? error : 'Could not save image');
       }
       finally {
         const filePath = `${uploadPath}${image.file}`;
