@@ -28,12 +28,14 @@
           <span v-else>Tag people</span>
         </button>
         &nbsp;
-        <button v-if="image.exif" class="button is-tiny" @click="showExif = !showExif">
+        <button v-if="image.exif || image.tags" class="button is-tiny" @click="showDetails = !showDetails">
           <span class="icon"><i class="bx bx-info-circle" /></span>
-          <span v-if="showExif">Hide image details</span>
+          <span v-if="showDetails">Hide image details</span>
           <span v-else>Show image details</span>
         </button>
-        <Exif v-if="showExif" :exif="image.exif" />
+        <Exif v-if="showDetails && image.exif" :exif="image.exif" />
+        <hr v-if="showDetails && image.exif && image.tags" />
+        <Labels v-if="showDetails && image.tags" :labels="image.tags" />
 
         <hr>
 
@@ -52,6 +54,7 @@
 
   import CommentList from '../../../components/CommentList';
   import Exif from '../../../components/image/Exif';
+  import Labels from '../../../components/image/Labels';
   import Tags from '../../../components/image/Tags';
   import { count, slug } from '../../../utils/text';
 
@@ -68,11 +71,11 @@
       return { gallery, image };
     },
 
-    components: { CommentList, Exif, Tags },
+    components: { CommentList, Exif, Labels, Tags },
 
     data: () => ({
-      isEditing: false,
-      showExif:  false,
+      isEditing:   false,
+      showDetails: false,
     }),
 
     computed: {
