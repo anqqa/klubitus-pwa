@@ -1,13 +1,9 @@
 require('make-promises-safe');
 
-const fastify = require('fastify')({
-  logger: {
-    level:       'trace',
-    prettyPrint: { levelFirst: true },
-  },
-});
-
+const log = require('./utils/log');
 const { objectDateToStr } = require('./utils/types');
+
+const fastify = require('fastify')({ logger: log });
 
 
 const swaggerOptions = {
