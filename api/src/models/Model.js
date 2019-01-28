@@ -13,7 +13,12 @@ class Model extends ObjectionModel {
       const virtualAttributes = this.virtualAttributes;
 
       virtualAttributes.forEach(attribute => {
-        virtualProperties[attribute] = { anyOf: [{ type: 'string' }, { type: 'null' }] };
+        virtualProperties[attribute] = { anyOf: [
+          { type: 'string' },
+          { type: 'object', additionalProperties: true },
+          { type: 'array', items: { type: 'object', additionalProperties: true } },
+          { type: 'null' },
+        ] };
       });
     }
 

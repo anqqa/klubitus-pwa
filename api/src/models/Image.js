@@ -1,3 +1,5 @@
+const { isEmpty } = require('lodash');
+
 const { Model } = require('./Model');
 
 
@@ -20,6 +22,10 @@ class Image extends Model {
         description:   { anyOf: [{ type: 'string' }, { type: 'null' }] },
         exif:          { type: 'object', additionalProperties: true },
         height:        { anyOf: [{ type: 'integer' }, { type: 'null' }] },
+        labels:        { anyOf: [
+          { type: 'null' },
+          { type: 'array', items: { type: 'object', additionalProperties: true } }
+        ] },
         mime_type:     { anyOf: [{ type: 'string' }, { type: 'null' }] },
         id:            { type: 'integer' },
         path:          { anyOf: [{ type: 'string' }, { type: 'null' }] },
@@ -33,7 +39,7 @@ class Image extends Model {
 
 
   static get virtualAttributes() {
-    return ['url'];
+    return ['tags', 'url'];
   }
 
 
@@ -63,6 +69,51 @@ class Image extends Model {
         join:       { from: 'images.id', to: 'image_notes.image_id' },
       },
     };
+  }
+
+
+  tags() {
+    if (!this.labels) {
+      return [];
+    }
+
+    const parsed = this.labels.map(label => ({
+      name:       label.Name,
+      confidence: Math.round(label.Confidence * 100 + Number.EPSILON) / 100,
+      parents:    label.Parents.map(parent => parent.Name),
+    }));
+
+    const unflatten = (tags, parent, tree) => {
+      tree = typeof tree !== 'undefined' ? tree : [];
+
+      const children = tags
+        .filter(tag => {
+          const isRoot  = !parent && !tag.parents.length;
+          const isChild = parent && tag.parents.includes(parent.name);
+
+          return isRoot || isChild;
+        })
+        .map(child => {
+          const { parents, ...parentless } = child;
+
+          return parentless;
+        });
+
+      if (!isEmpty(children)) {
+        if (!parent) {
+          tree = children;
+        }
+        else {
+          parent['children'] = children;
+        }
+
+        children.map(child => unflatten(tags, child));
+      }
+
+      return tree;
+    };
+
+    return unflatten(parsed);
   }
 
 
