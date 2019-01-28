@@ -2,8 +2,7 @@
   "env": { "es6": true, "node": true },
   "extends": ["eslint:recommended", "plugin:promise/recommended"],
   "parserOptions": {
-    "ecmaFeatures": { "experimentalObjectRestSpread": true },
-    "ecmaVersion": 8
+    "ecmaVersion": 9
   },
   "plugins": ["promise"],
   "rules": {
