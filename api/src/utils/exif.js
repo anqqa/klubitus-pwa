@@ -1,5 +1,7 @@
 const get = require('lodash').get;
 
+const log = require('../utils/log');
+
 
 /**
  * @see  https://sno.phy.queensu.ca/~phil/exiftool/TagNames/EXIF.html
@@ -79,7 +81,7 @@ const MeteringMode = [
 ];
 
 const parseExif = fullExif => {
-  console.log('Parsing EXIF...');
+  log.info('Parsing EXIF...');
 
   let parsedExif = {};
 
@@ -126,7 +128,7 @@ const parseExif = fullExif => {
       }
     }
     catch (error) {
-      console.log('Could not parse EXIF tag', tag, ExifFields[tag], value);
+      log.warn('Could not parse EXIF tag', tag, ExifFields[tag], value);
     }
   }
 

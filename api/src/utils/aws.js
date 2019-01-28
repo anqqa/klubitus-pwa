@@ -2,6 +2,8 @@ const AWS = require('aws-sdk');
 const fs = require('fs');
 const mimeTypes = require('mime-types');
 
+const log = require('../utils/log');
+
 
 const AWSOptions = {
   accessKeyId:     process.env.AWS_ACCESS_KEY_ID,
@@ -10,7 +12,7 @@ const AWSOptions = {
 };
 
 const deleteFile = sourceKey => {
-  console.log('Deleting file', sourceKey);
+  log.info('Deleting file', sourceKey);
 
   const s3 = new AWS.S3(AWSOptions);
 
@@ -24,7 +26,7 @@ const deleteFile = sourceKey => {
 
 
 const detectLabels = sourceKey => {
-  console.log('Detecting labels', sourceKey);
+  log.info('Detecting labels', sourceKey);
 
   const rekognition = new AWS.Rekognition(AWSOptions);
 
@@ -48,7 +50,7 @@ const getKeyForImage = filename => {
 
 
 const uploadToS3 = (sourcePath, targetKey) => {
-  console.log('Uploading to S3', sourcePath, targetKey);
+  log.info('Uploading to S3', sourcePath, targetKey);
 
   const s3 = new AWS.S3(AWSOptions);
 

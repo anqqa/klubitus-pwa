@@ -121,7 +121,7 @@ module.exports = async (fastify, options) => {
 
     async function onFinished(error) {
       if (error) {
-        console.log('Failed', error);
+        request.log.warn('Failed', error);
 
         reply.conflict(error);
 
@@ -151,11 +151,15 @@ module.exports = async (fastify, options) => {
         image.phash           = hash.toString();
 
 
-        // Upload to S3
+        // Upload to S3 and detect labels
         await uploadToS3(sourcePath, targetKey);
         isUploadedToS3 = true;
 
-        image.labels = await detectLabels(targetKey);
+        const { Labels } = await detectLabels(targetKey);
+
+        request.log.debug({ Labels });
+
+        image.labels = Labels;
 
 
         // Insert to DB
@@ -195,7 +199,7 @@ module.exports = async (fastify, options) => {
         reply.send(imageModel.id);
       }
       catch (error) {
-        console.log('Failed', error);
+        request.log.warn('Failed', error);
 
         // Cleanup S3
         if (isUploadedToS3) {

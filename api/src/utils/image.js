@@ -1,7 +1,8 @@
-const exif      = require('exif-reader');
-const sharp     = require('sharp');
+const exif  = require('exif-reader');
+const sharp = require('sharp');
 
 const { parseExif } = require('./exif');
+const log = require('./log');
 
 
 /**
@@ -11,7 +12,7 @@ const { parseExif } = require('./exif');
  * @return  {Promise<int[]>}
  */
 const dominantColor = image => {
-  console.log('Calculating dominant color...');
+  log.info('Calculating dominant color...');
 
   return sharp(image)
     .resize(5, 5, { fit: sharp.fit.cover, position: sharp.strategy.attention })
@@ -50,7 +51,7 @@ const dominantColor = image => {
  * @return  {Promise<Object[]>}
  */
 const metadata = image => {
-  console.log('Getting metadata...');
+  log.info('Getting metadata...');
 
   return sharp(image)
     .metadata()
@@ -113,7 +114,7 @@ const applyDCT = f => {
  * @return  {Promise<Number>}
  */
 const phash = image => {
-  console.log('Calculating phash...');
+  log.info('Calculating phash...');
 
   return sharp(image)
     .grayscale()
