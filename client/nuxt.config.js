@@ -4,6 +4,7 @@ export default {
   env: {
     API_URL:  process.env.API_URL_BROWSER || 'http://localhost:3001',
     BASE_URL: process.env.CLIENT_HOST || 'http://localhost:3000',
+    CDN_HOST: process.env.AWS_BUCKET,
   },
 
   server: {
