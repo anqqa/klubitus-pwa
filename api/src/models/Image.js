@@ -20,7 +20,7 @@ class Image extends Model {
         color:         { anyOf: [{ type: 'string' }, { type: 'null' }]},
         created_at:    { type: 'string', description: 'DateTime string' },
         description:   { anyOf: [{ type: 'string' }, { type: 'null' }] },
-        exif:          { type: 'object', additionalProperties: true },
+        exif:          { anyOf: [{ type: 'string' }, { type: 'object', additionalProperties: true }] },
         height:        { anyOf: [{ type: 'integer' }, { type: 'null' }] },
         labels:        { anyOf: [
           { type: 'null' },

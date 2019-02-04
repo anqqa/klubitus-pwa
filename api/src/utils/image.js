@@ -56,8 +56,8 @@ const metadata = image => {
   return sharp(image)
     .metadata()
     .then(metadata => {
-      const fullExif   = exif(metadata.exif);
-      const parsedExif = parseExif(fullExif);
+      const fullExif   = metadata.exif && exif(metadata.exif);
+      const parsedExif = fullExif && parseExif(fullExif);
 
       return [metadata, parsedExif];
     });
