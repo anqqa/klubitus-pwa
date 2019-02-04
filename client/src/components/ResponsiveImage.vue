@@ -1,7 +1,15 @@
 <template>
   <picture :class="{'is-responsive': isResponsive}">
-    <source v-if="isResponsive && !isWebp" :srcset="srcsetWebp" :sizes="sizes" type="image/webp">
-    <img :alt="alt" :src="defaultSrc" :srcset="srcset" :sizes="sizes" :title="title">
+    <source v-if="isResponsive && !isWebp"
+            :srcset="srcsetWebp"
+            :sizes="sizes"
+            type="image/webp">
+    <img :alt="alt"
+         :src="defaultSrc"
+         :srcset="srcset"
+         :sizes="sizes"
+         :style="style"
+         :title="title">
   </picture>
 </template>
 
@@ -12,6 +20,7 @@
 
     props: {
       alt:   { type: String, default: undefined },
+      color: { type: String, default: undefined },
       ratio: { type: Number, default: undefined },
       src:   { type: String, default: undefined, required: true },
       title: { type: String, default: undefined },
@@ -61,6 +70,10 @@
       srcsetWebp() {
         return this.widths().map(width => this.urlWithWidth(width, 'webp') + ` ${width}w`).join(', ');
       },
+
+      style() {
+        return this.color && 'background: ' + this.color;
+      }
     },
 
     methods: {

@@ -5,8 +5,16 @@
                :key="image.id"
                :to="image.to"
                class="brick">
-      <ResponsiveImage :src="image.url" desktop-size="25vw" tablet-size="33vw" mobile-size="50vw" />
-      <span v-if="image.description">{{ image.description }}</span>
+      <figure>
+        <ResponsiveImage :src="image.url"
+                         :color="image.color"
+                         :ratio="1"
+                         class="image is-square"
+                         desktop-size="25vw"
+                         tablet-size="33vw"
+                         mobile-size="50vw" />
+        <figcaption v-if="image.description">{{ image.description }}</figcaption>
+      </figure>
     </nuxt-link>
   </section>
 
@@ -32,8 +40,7 @@
         this.images.slice(0).forEach(image => {
           images.push({
             ...image,
-            style: `background-image: url(${image.url})`,
-            to:    this.url.replace(':imageId', image.id),
+            to: this.url.replace(':imageId', image.id),
           })
         });
 
@@ -45,7 +52,15 @@
 
 
 <style scoped>
-  .brick span {
+  a {
+    transition: opacity 0.1s ease-in-out;
+  }
+
+  figure {
+    position: relative;
+  }
+
+  figcaption {
     background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
     bottom: 0;
     flex: 1;
