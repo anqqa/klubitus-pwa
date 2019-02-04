@@ -18,11 +18,12 @@
 
       desktopSize: { type: String, default: '100vw', },
       mobileSize:  { type: String, default: undefined, },
+      tabletSize:  { type: String, default: undefined, },
       maxWidth:    { type: Number, default: 1600 },
     },
 
     data: () => ({
-      availableWidths: [1920, 1600, 1440, 1024, 768, 640],
+      availableWidths: [1920, 1600, 1440, 1024, 768, 640, 320],
       defaultWidth:    1600,
     }),
 
@@ -42,8 +43,12 @@
       sizes() {
         const sizes = [this.desktopSize];
 
+        if (typeof this.tabletSize !== 'undefined' && this.tabletSize !== this.desktopSize) {
+          sizes.unshift('(max-width: 767px) ' + this.tabletSize);
+        }
+
         if (typeof this.mobileSize !== 'undefined' && this.mobileSize !== this.desktopSize) {
-          sizes.unshift('(max-width: 767px) ' + this.mobileSize);
+          sizes.unshift('(max-width: 479px) ' + this.mobileSize);
         }
 
         return sizes.join(', ');

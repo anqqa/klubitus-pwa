@@ -1,10 +1,11 @@
 <template>
 
-  <section class="grid">
+  <section class="masonry">
     <nuxt-link v-for="image in imageList"
                :key="image.id"
-               :to="image.url"
-               :style="image.style">
+               :to="image.to"
+               class="brick">
+      <ResponsiveImage :src="image.url" desktop-size="25vw" tablet-size="33vw" mobile-size="50vw" />
       <span v-if="image.description">{{ image.description }}</span>
     </nuxt-link>
   </section>
@@ -13,7 +14,12 @@
 
 
 <script>
+  import ResponsiveImage from '../ResponsiveImage';
+
+
   export default {
+    components: { ResponsiveImage },
+
     props: {
       images: { default: () => [], type: Array },
       url:    { default: '', type: String },
@@ -27,7 +33,7 @@
           images.push({
             ...image,
             style: `background-image: url(${image.url})`,
-            url:   this.url.replace(':imageId', image.id),
+            to:    this.url.replace(':imageId', image.id),
           })
         });
 
@@ -39,12 +45,13 @@
 
 
 <style scoped>
-  .grid a {
-    padding: 0;
-  }
-  .grid a span {
+  .brick span {
     background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
+    bottom: 0;
     flex: 1;
+    left: 0;
     padding: 1rem;
+    position: absolute;
+    right: 0;
   }
 </style>

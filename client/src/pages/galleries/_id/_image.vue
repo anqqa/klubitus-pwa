@@ -5,7 +5,7 @@
 
       <figure class="col-8 has-text-center">
         <Tags :editable="isEditing" :tags="image.notes" :orig-size="origSize">
-          <ResponsiveImage :src="image.url" desktop-size="66vw" mobile-size="100vw" />
+          <ResponsiveImage :src="image.url" desktop-size="66vw" tablet-size="100vw" />
         </Tags>
         <figcaption>{{ description }}</figcaption>
       </figure>

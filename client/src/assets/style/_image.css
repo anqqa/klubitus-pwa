@@ -1,3 +1,8 @@
+picture {
+  display: inline-block;
+}
+
+
 .image {
   display: block;
   overflow: hidden;
