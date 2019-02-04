@@ -5,7 +5,7 @@
 
       <figure class="col-8 has-text-center">
         <Tags :editable="isEditing" :tags="image.notes" :orig-size="origSize">
-          <img :src="image.url">
+          <ResponsiveImage :src="image.url" desktop-size="66vw" mobile-size="100vw" />
         </Tags>
         <figcaption>{{ description }}</figcaption>
       </figure>
@@ -34,7 +34,7 @@
           <span v-else>Show image details</span>
         </button>
         <Exif v-if="showDetails && image.exif" :exif="image.exif" />
-        <hr v-if="showDetails && image.exif && image.tags" />
+        <hr v-if="showDetails && image.exif && image.tags">
         <Labels v-if="showDetails && image.tags" :labels="image.tags" />
 
         <hr>
@@ -53,6 +53,7 @@
   import sortBy from 'lodash/sortBy';
 
   import CommentList from '../../../components/CommentList';
+  import ResponsiveImage from '../../../components/ResponsiveImage';
   import Exif from '../../../components/image/Exif';
   import Labels from '../../../components/image/Labels';
   import Tags from '../../../components/image/Tags';
@@ -71,7 +72,7 @@
       return { gallery, image };
     },
 
-    components: { CommentList, Exif, Labels, Tags },
+    components: { CommentList, Exif, Labels, ResponsiveImage, Tags },
 
     data: () => ({
       isEditing:   false,
@@ -81,9 +82,8 @@
     computed: {
       back() {
         return this.localePath({
-          name: 'galleries-id',
-          params: { id: `${this.gallery.id}-${slug(this.gallery.name)}`
-          }
+          name:   'galleries-id',
+          params: { id: `${this.gallery.id}-${slug(this.gallery.name)}` }
         });
       },
 
