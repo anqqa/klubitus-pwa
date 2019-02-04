@@ -4,10 +4,16 @@
             :srcset="srcsetWebp"
             :sizes="sizes"
             type="image/webp">
-    <img :alt="alt"
+    <img v-if="isResponsive"
+         :alt="alt"
          :src="defaultSrc"
          :srcset="srcset"
          :sizes="sizes"
+         :style="style"
+         :title="title">
+    <img v-else
+         :alt="alt"
+         :src="defaultSrc"
          :style="style"
          :title="title">
   </picture>

@@ -1,10 +1,9 @@
 <template>
 
-  <section class="masonry">
+  <section class="grid">
     <nuxt-link v-for="image in imageList"
                :key="image.id"
-               :to="image.to"
-               class="brick">
+               :to="image.to">
       <figure>
         <ResponsiveImage :src="image.url"
                          :color="image.color"
