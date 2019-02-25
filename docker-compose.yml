@@ -59,6 +59,8 @@ services:
     command: yarn start
     volumes:
       - ./api/src:/srv/api/src
+      - ./api/package.json:/srv/api/package.json
+      - ./api/upload:/srv/api/upload
       - /srv/api/node_modules
     environment:
       - AWS_ACCESS_KEY_ID
@@ -95,11 +97,14 @@ services:
     volumes:
       - ./client/src:/srv/client/src
       - ./client/nuxt.config.js:/srv/client/nuxt.config.js
+      - ./client/package.json:/srv/client/package.json
+      - ./client/yarn.lock:/srv/client/yarn.lock
       - /srv/client/node_modules
     environment:
       - API_HOST
       - API_PORT
       - "API_URL_BROWSER=http://${API_HOST}"
+      - AWS_BUCKET
       - CLIENT_HOST
       - CLIENT_PORT
       - NODE_ENV=development
