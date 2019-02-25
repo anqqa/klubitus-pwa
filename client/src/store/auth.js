@@ -32,7 +32,7 @@ export const actions = {
   async [Actions.LOGIN]({ commit, dispatch }, login) {
     const { token } = await this.$axios.$post('auth/login', login);
 
-    commit(Mutations.SET_TOKEN, { token });
+    commit(Mutations.SET_TOKEN, token);
 
     this.$axios.setToken(token, 'Bearer');
     cookies.set('auth.token', token, { expires: EXPIRES });
