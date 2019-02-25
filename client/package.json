@@ -10,7 +10,8 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "nuxt generate",
+    "precommit": "lint-staged"
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.3.6",
@@ -38,6 +39,7 @@
     "babel-eslint": "^10.0.1",
     "eslint": "^5.14.1",
     "eslint-loader": "^2.1.2",
+    "lint-staged": "^8.1.4",
     "node-sass": "^4.11.0",
     "sass-loader": "^7.1.0"
   },
