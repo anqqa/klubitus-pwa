@@ -8,9 +8,9 @@
         <ResponsiveImage v-if="gallery.imageUrl"
                          :src="gallery.imageUrl"
                          :color="gallery.imageColor"
-                         :ratio="16/9"
-                         class="image is-16by9"
-                         desktop-size="25vw"
+                         :ratio="1"
+                         class="image is-square"
+                         desktop-size="20vw"
                          tablet-size="33vw"
                          mobile-size="50vw" />
         <div v-else class="image is-16by9" />
