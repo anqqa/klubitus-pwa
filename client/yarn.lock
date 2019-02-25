@@ -3176,17 +3176,20 @@ file-type@^9.0.0:
   version "9.0.0"
   resolved "https://registry.yarnpkg.com/file-type/-/file-type-9.0.0.tgz#a68d5ad07f486414dfb2c8866f73161946714a18"
 
-filepond-plugin-file-validate-type@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/filepond-plugin-file-validate-type/-/filepond-plugin-file-validate-type-1.2.0.tgz#5ab8d25cb21c8d632a10b4c1a008fb5c0b1ff73a"
+filepond-plugin-file-validate-type@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/filepond-plugin-file-validate-type/-/filepond-plugin-file-validate-type-1.2.2.tgz#8ac215b893b6beef28d82874cddcff6cd3069451"
+  integrity sha512-ZBVU9a18EWhfk3kkqULp7GX3KcSSAlZbLFqlquJ5VTerecL1BkUlQ/cpFJ5EucAdJ1Qdi1zEyPQ+e7JLxL+5Rg==
 
-filepond-plugin-image-preview@^3.1.4:
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/filepond-plugin-image-preview/-/filepond-plugin-image-preview-3.1.4.tgz#5b40b0059844350490459f633feabbc51f3a54d8"
+filepond-plugin-image-preview@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/filepond-plugin-image-preview/-/filepond-plugin-image-preview-4.0.3.tgz#9e8a6561455751498da29e4a6501ab828dc0d4a2"
+  integrity sha512-umWUAM9Jd2W66/bcT/KWxBh1mmcSJxYi/L0aSxJSRnEebOGtJlNZ3y9nnB6MMNmt+Ybi9ttto6mmc4OPyfbfuQ==
 
-filepond@^3.5.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/filepond/-/filepond-3.5.0.tgz#14e006487a36f9fa4c679ea7998c61f3d9fb426c"
+filepond@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/filepond/-/filepond-4.2.0.tgz#93852e933cc8acd9a60efeb5ef93fbbff15d1fef"
+  integrity sha512-JTSvxTQGbCXMZGoPOIjCKImv+Al3Y5z3f6gRoUGlQdqpnMHdnwOV0WG3hRCVBDN64ctAN3pgKtofkWfsnwwoTA==
 
 filesize@^3.6.1:
   version "3.6.1"
@@ -7450,9 +7453,10 @@ vue-autosuggest@^1.7.3:
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/vue-autosuggest/-/vue-autosuggest-1.7.3.tgz#692c4d02a426d82f487ba5c5553439f18a943cc7"
 
-vue-filepond@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/vue-filepond/-/vue-filepond-4.0.2.tgz#32c824c9a77cd9d230076feaf8dcdf21d0095cc6"
+vue-filepond@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/vue-filepond/-/vue-filepond-5.0.0.tgz#c3d9362fc41ee9dcb44f7962c1d41ff8e29e8cd2"
+  integrity sha512-8ka3ms8WU0vNQKSL1jgF24tCQUw+pA0CLgRRHe9AZ3l1yrehSXGEZZBQbC374PgzFW8CkJOr3cpM+7ZBNSVBvQ==
 
 vue-hot-reload-api@^2.3.0:
   version "2.3.1"

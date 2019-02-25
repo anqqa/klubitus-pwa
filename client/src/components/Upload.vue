@@ -1,17 +1,21 @@
 <template>
   <div class="upload">
-    <FilePond ref="pond"
-              :accepted-file-types="types.join(', ')"
-              :allow-multiple="multiple"
-              :allow-revert="false"
-              :drop-on-element="false"
-              :drop-on-page="true"
-              :instant-upload="false"
-              :name="name"
-              :server="server"
-              @processfile="onUploaded"
-              @processfilestart="onUploading"
-              @updatefiles="onFilesUpdated" />
+    <no-ssr>
+      <FilePond ref="pond"
+                :accepted-file-types="types.join(', ')"
+                :allow-file-type-validation="true"
+                :allow-multiple="multiple"
+                :allow-revert="false"
+                :drop-on-element="false"
+                :drop-on-page="true"
+                :instant-upload="false"
+                :name="name"
+                :server="server"
+                style-item-panel-aspect-ratio="1"
+                @processfile="onUploaded"
+                @processfilestart="onUploading"
+                @updatefiles="onFilesUpdated" />
+    </no-ssr>
   </div>
 </template>
 
@@ -27,7 +31,6 @@
 
 
   const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview);
-
 
   export default {
     name: 'Upload',
@@ -127,5 +130,16 @@
 </script>
 
 
-<style scoped>
+<style>
+  /*
+  .filepond--item {
+    width: calc(50% - 0.5em);
+  }
+
+  @media (min-width: 480px) {
+    .filepond--item {
+      width: calc(33% - 0.5em);
+    }
+  }
+   */
 </style>
