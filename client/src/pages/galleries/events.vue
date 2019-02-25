@@ -126,15 +126,15 @@
       galleries() { return this.getStat('galleries', this.year, this.month); },
       images() { return this.getStat('images', this.year, this.month); },
       pages() { return Math.ceil(this.galleries / 20); },
-      title() { return this.month ? format(new Date(this.year, this.month - 1), 'MMMM YYYY') : this.year || 'Event Galleries'; },
+      title() { return this.month ? format(new Date(this.year, this.month - 1), 'MMMM YYYY') : this.year || 'Event Photography'; },
 
       ...mapGetters({
         isAuthenticated: 'auth/isAuthenticated',
       })
     },
 
-    head: {
-      title: this.title
+    head() {
+      return { title: this.title };
     },
 
     methods: {
