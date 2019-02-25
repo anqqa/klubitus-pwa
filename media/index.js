@@ -67,7 +67,7 @@ exports.handler = function(event, context, callback) {
   S3.getObject({ Bucket: BUCKET, Key: originalKey }).promise()
     .then(data => Sharp(data.Body)
       .resize(targetWidth, targetHeight)
-      .crop(Sharp.strategy.attention)
+      .crop(Sharp.gravity.north)
       .jpeg({ force: target === 'jpeg' })
       .png({ force: target === 'png' })
       .webp({ force: target === 'webp' })
