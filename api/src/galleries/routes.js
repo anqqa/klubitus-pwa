@@ -1,11 +1,11 @@
-const { format, parse }    = require('date-fns');
-const fs                   = require('fs-extra');
-const get                  = require('lodash').get;
-const mimeTypes            = require('mime-types');
-const { raw, transaction } = require('objection');
-const path                 = require('path');
-const pump                 = require('pump');
-const uuid                 = require('uuid/v4');
+const { format, parse } = require('date-fns');
+const fs                = require('fs-extra');
+const get               = require('lodash').get;
+const mimeTypes         = require('mime-types');
+const { raw }           = require('objection');
+const path              = require('path');
+const pump              = require('pump');
+const uuid              = require('uuid/v4');
 
 const { Event } = require('../models/Event');
 const { Gallery } = require('../models/Gallery');
@@ -43,7 +43,8 @@ module.exports = async (fastify, options) => {
       const dateTo   = parse(to);
 
       query = query.orderBy('event_date', 'DESC')
-        .whereBetween('event_date', [format(dateFrom, 'YYYY-MM-DD'), format(dateTo, 'YYYY-MM-DD')]);
+        .whereBetween('event_date', [format(dateFrom, 'YYYY-MM-DD'), format(dateTo, 'YYYY-MM-DD')])
+        .where('image_count', '>', 0);
 
     }
 
@@ -71,6 +72,7 @@ module.exports = async (fastify, options) => {
         raw('COUNT(id) AS gallery_count'),
         raw('SUM(image_count) AS image_count')
       )
+      .where('image_count', '>', 0)
       .groupBy('year', 'month')
       .orderBy('year', 'DESC')
       .orderBy('month', 'DESC');
