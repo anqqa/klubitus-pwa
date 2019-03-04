@@ -61,7 +61,7 @@ services:
       - ./api/src:/srv/api/src
       - ./api/package.json:/srv/api/package.json
       - ./api/upload:/srv/api/upload
-      - /srv/api/node_modules
+#      - /srv/api/node_modules
     environment:
       - AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY
@@ -98,8 +98,7 @@ services:
       - ./client/src:/srv/client/src
       - ./client/nuxt.config.js:/srv/client/nuxt.config.js
       - ./client/package.json:/srv/client/package.json
-      - ./client/yarn.lock:/srv/client/yarn.lock
-      - /srv/client/node_modules
+#      - /srv/client/node_modules
     environment:
       - API_HOST
       - API_PORT
