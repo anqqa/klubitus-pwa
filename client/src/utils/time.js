@@ -1,4 +1,3 @@
-import addDays from 'date-fns/add_days';
 import endOfMonth from 'date-fns/end_of_month';
 import endOfISOWeek from 'date-fns/end_of_iso_week';
 import setISOWeek from 'date-fns/set_iso_week';
@@ -17,7 +16,7 @@ const MONTH = 30 * DAY;
  * @param  {number}  [month]
  * @param  {number}  [week]
  * @param  {number}  [day]
- * @return  {{from: string, to: string, range: string}}
+ * @return  {{from: Date, to: Date, range: string}}
  */
 export const dateRange = (year, month, week, day) => {
   let from, to, range;
@@ -25,7 +24,7 @@ export const dateRange = (year, month, week, day) => {
   if (!year) {
     // Default to this week if no date given
     from = startOfISOWeek(new Date());
-    to = addDays(from, 7);
+    to = endOfISOWeek(from);
     range = 'week';
   } else {
     if (week) {
