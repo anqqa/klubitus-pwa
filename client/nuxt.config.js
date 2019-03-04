@@ -2,7 +2,7 @@
 
 export default {
   env: {
-    API_URL:  process.env.API_URL_BROWSER || 'http://localhost:3001',
+    API_URL: process.env.API_URL_BROWSER || 'http://localhost:3001',
     BASE_URL: process.env.CLIENT_HOST || 'http://localhost:3000',
     CDN_HOST: process.env.AWS_BUCKET,
   },
@@ -12,9 +12,8 @@ export default {
     port: process.env.CLIENT_PORT || 3000,
   },
 
-  srcDir:   'src/',
-  watchers: { webpack: { poll: true }},
-
+  srcDir: 'src/',
+  watchers: { webpack: { poll: true } },
 
   /**
    * Headers of the page
@@ -38,76 +37,92 @@ export default {
    */
   loading: { color: '#E91E63' },
 
-
   /**
    * Global modules
    */
   modules: [
-    ['@nuxtjs/axios', {
-      debug: process.env.NODE_ENV === 'development',
-    }],
+    [
+      '@nuxtjs/axios',
+      {
+        debug: process.env.NODE_ENV === 'development',
+      },
+    ],
 
-    ['@nuxtjs/markdownit', {
-      breaks:      true,
-      injected:    true,
-      linkify:     true,
-      typographer: true,
-      use: [
-        ['markdown-it-link-attributes', [{
-          pattern: /^(https?:)?\/\/([\w.]*\.)?klubitus\.org/,
-          attrs:   {
-            class:  'internal-link',
-          }}, {
-          attrs: {
-            class:  'external-link',
-            rel:    'noopener',
-            target: '_blank',
-          },
-        }]],
-      ]
-    }],
+    [
+      '@nuxtjs/markdownit',
+      {
+        breaks: true,
+        injected: true,
+        linkify: true,
+        typographer: true,
+        use: [
+          [
+            'markdown-it-link-attributes',
+            [
+              {
+                pattern: /^(https?:)?\/\/([\w.]*\.)?klubitus\.org/,
+                attrs: {
+                  class: 'internal-link',
+                },
+              },
+              {
+                attrs: {
+                  class: 'external-link',
+                  rel: 'noopener',
+                  target: '_blank',
+                },
+              },
+            ],
+          ],
+        ],
+      },
+    ],
 
     ['@nuxtjs/pwa', { icon: false }],
 
-    ['nuxt-i18n', {
-      defaultLocale: 'en',
-      locales: [
-        { code: 'en', iso: 'en-US', langFile: 'en.js', name: 'English' },
-        { code: 'fi', iso: 'fi-FI', langFile: 'fi.js', name: 'suomi' },
-      ],
+    [
+      'nuxt-i18n',
+      {
+        defaultLocale: 'en',
+        locales: [
+          { code: 'en', iso: 'en-US', langFile: 'en.js', name: 'English' },
+          { code: 'fi', iso: 'fi-FI', langFile: 'fi.js', name: 'suomi' },
+        ],
 
-      pages: {
-        'events/index':                { fi: '/tapahtumat' },
-        'events/_id':                  { fi: '/tapahtumat/:id' },
-        'events/_year/wk/_week/index': { fi: '/tapahtumat/:year/vk/:week' },
-        'events/_year/_month/_day':    { fi: '/tapahtumat/:year/:month/:day?' },
+        pages: {
+          'events/index': { fi: '/tapahtumat' },
+          'events/_id': { fi: '/tapahtumat/:id' },
+          'events/_year/wk/_week/index': { fi: '/tapahtumat/:year/vk/:week' },
+          'events/_year/_month/_day': { fi: '/tapahtumat/:year/:month/:day' },
+          'events/_year/_month': { fi: '/tapahtumat/:year/:month' },
 
-        'forum/topic/_id': { fi: '/forum/aihe/:id' },
+          'forum/topic/_id': { fi: '/forum/aihe/:id' },
 
-        'galleries/index':                     { fi: '/kuvastot' },
-        'galleries/events':                    { fi: '/kuvastot/tapahtumat' },
-        'galleries/events/_year/_month/index': { fi: '/kuvastot/tapahtumat/:year/:month?' },
-        'galleries/events/_year/_month/_day':  { fi: '/kuvastot/tapahtumat/:year/:month?/:day?' },
-        'galleries/flyers':                    { fi: '/kuvastot/flyerit' },
-        'galleries/upload':                    { fi: '/kuvastot/upload' },
-        'galleries/_id':                       { fi: '/kuvastot/:id' },
+          'galleries/index': { fi: '/kuvastot' },
+          'galleries/events': { fi: '/kuvastot/tapahtumat' },
+          'galleries/events/_year/_month/index': { fi: '/kuvastot/tapahtumat/:year/:month?' },
+          'galleries/events/_year/_month/_day': { fi: '/kuvastot/tapahtumat/:year/:month?/:day?' },
+          'galleries/flyers': { fi: '/kuvastot/flyerit' },
+          'galleries/upload': { fi: '/kuvastot/upload' },
+          'galleries/_id': { fi: '/kuvastot/:id' },
 
-        'login':    { fi: '/kirjaudu' },
-        'password': { fi: '/salasana' },
-        'register': { fi: '/liity' },
+          login: { fi: '/kirjaudu' },
+          password: { fi: '/salasana' },
+          register: { fi: '/liity' },
+        },
+        parsePages: false,
+        rootRedirect: 'en',
+        strategy: 'prefix',
+
+        vueI18n: {
+          fallbackLocale: 'en',
+        },
       },
-      parsePages: false,
-      rootRedirect: 'en',
-      strategy: 'prefix',
-
-      vueI18n: {
-        fallbackLocale: 'en',
-      },
-    }],
+    ],
   ],
 
   router: {
-    linkActiveClass:      'is-active',
+    linkActiveClass: 'is-active',
     linkExactActiveClass: 'is-active-exact',
   },
 
@@ -116,8 +131,8 @@ export default {
    */
   manifest: {
     background_color: '#212121',
-    name:             'Klubitus',
-    short_name:       'Klubitus',
+    name: 'Klubitus',
+    short_name: 'Klubitus',
   },
 
   /**
@@ -128,22 +143,22 @@ export default {
      * Run ESLint on save
      */
     // extend (config, ctx) {
-      // if (ctx.isDev && ctx.isClient) {
-      //   config.module.rules.push({
-      //     enforce: 'pre',
-      //     test:    /\.(js|vue)$/,
-      //     loader:  'eslint-loader',
-      //     exclude: /(node_modules)/
-      //   });
-      // }
+    // if (ctx.isDev && ctx.isClient) {
+    //   config.module.rules.push({
+    //     enforce: 'pre',
+    //     test:    /\.(js|vue)$/,
+    //     loader:  'eslint-loader',
+    //     exclude: /(node_modules)/
+    //   });
+    // }
 
-      // if (ctx.isServer) {
-      //   config.externals = [
-      //     nodeExternals({
-      //       whitelist: [/\.css$/]
-      //     })
-      //   ]
-      // }
+    // if (ctx.isServer) {
+    //   config.externals = [
+    //     nodeExternals({
+    //       whitelist: [/\.css$/]
+    //     })
+    //   ]
+    // }
     // },
 
     extractCSS: true,
@@ -154,5 +169,4 @@ export default {
       },
     },
   },
-
 };

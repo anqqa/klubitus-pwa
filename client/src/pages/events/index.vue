@@ -7,6 +7,7 @@
         :monday-first="true"
         :open-date="highlighted.from"
         wrapper-class="calendar"
+        @selected="dateSelected"
       />
     </div>
 
@@ -76,83 +77,35 @@ import { pad, slug } from '../../utils/text';
 import { dateRange, hours } from '../../utils/time';
 
 const buildPagination = (from, to, range) => {
-  const pagination = {
-    previous: { title: undefined, url: undefined },
-    next: { title: undefined, url: undefined },
-  };
-  let previousDate, nextDate;
+  let previousDate, nextDate, previousTitle, nextTitle;
 
   switch (range) {
     case 'day':
+      previousTitle = 'Previous day';
+      nextTitle = 'Next day';
       previousDate = addDays(from, -1);
       nextDate = addDays(from, 1);
-
-      pagination.previous.title = 'Previous day';
-      pagination.previous.url = {
-        name: 'events-year-month-day',
-        params: {
-          year: previousDate.getFullYear(),
-          month: pad(previousDate.getMonth() + 1, 2),
-          day: pad(previousDate.getDate(), 2),
-        },
-      };
-      pagination.next.title = 'Next day';
-      pagination.next.url = {
-        name: 'events-year-month-day',
-        params: {
-          year: nextDate.getFullYear(),
-          month: pad(nextDate.getMonth() + 1, 2),
-          day: pad(nextDate.getDate(), 2),
-        },
-      };
       break;
 
     case 'week':
+      previousTitle = 'Previous week';
+      nextTitle = 'Next week';
       previousDate = addDays(from, -7);
       nextDate = addDays(from, 7);
-
-      pagination.previous.title = 'Previous week';
-      pagination.previous.url = {
-        name: 'events-year-wk-week',
-        params: {
-          year: previousDate.getFullYear(),
-          week: pad(getISOWeek(previousDate), 2),
-        },
-      };
-      pagination.next.title = 'Next week';
-      pagination.next.url = {
-        name: 'events-year-wk-week',
-        params: {
-          year: nextDate.getFullYear(),
-          week: pad(getISOWeek(nextDate), 2),
-        },
-      };
       break;
 
     case 'month':
+      previousTitle = 'Previous month';
+      nextTitle = 'Next month';
       previousDate = addMonths(from, -1);
       nextDate = addMonths(from, 1);
-
-      pagination.previous.title = 'Previous month';
-      pagination.previous.url = {
-        name: 'events-year-month-day',
-        params: {
-          year: previousDate.getFullYear(),
-          month: pad(previousDate.getMonth() + 1, 2),
-        },
-      };
-      pagination.next.title = 'Next month';
-      pagination.next.url = {
-        name: 'events-year-month-day',
-        params: {
-          year: nextDate.getFullYear(),
-          month: pad(nextDate.getMonth() + 1, 2),
-        },
-      };
       break;
   }
 
-  return pagination;
+  return {
+    previous: { title: previousTitle, url: getRoute(range, previousDate) },
+    next: { title: nextTitle, url: getRoute(range, nextDate) },
+  };
 };
 
 const buildTitle = (from, to) => {
@@ -173,6 +126,29 @@ const buildTitle = (from, to) => {
   }
 
   return `Events, ${dates.join('–')}`;
+};
+
+const getRoute = (range, date) => {
+  const route = { name: 'events-year-month-day', params: { year: date.getFullYear() } };
+
+  switch (range) {
+    case 'day':
+      route.name = 'events-year-month-day';
+      route.params.month = pad(date.getMonth() + 1, 2);
+      route.params.day = pad(date.getDate(), 2);
+      break;
+
+    case 'week':
+      route.name = 'events-year-wk-week';
+      route.params.week = pad(getISOWeek(date), 2);
+      break;
+
+    case 'month':
+      route.name = 'events-year-month';
+      route.params.month = pad(date.getMonth() + 1, 2);
+  }
+
+  return route;
 };
 
 const groupByDate = data => {
@@ -226,10 +202,18 @@ export default {
     const title = buildTitle(from, to);
     const pagination = buildPagination(from, to, range);
 
-    return { days, highlighted: { from, to: addDays(to, -1) }, pagination, title };
+    return { days, highlighted: { from, to }, pagination, range, title };
   },
 
   components: { Datepicker, EventList },
+
+  methods: {
+    dateSelected(date) {
+      const route = this.localePath(getRoute(this.range, date));
+
+      this.$router.push(route);
+    },
+  },
 
   head: {
     title: 'Events',
