@@ -1,5 +1,15 @@
 <template>
   <main class="row">
+    <div class="sidebar col-3">
+      <datepicker
+        :highlighted="highlighted"
+        :inline="true"
+        :monday-first="true"
+        :open-date="highlighted.from"
+        wrapper-class="calendar"
+      />
+    </div>
+
     <div class="col main-content">
       <header>
         <h1>{{ title }}</h1>
@@ -59,6 +69,7 @@ import addDays from 'date-fns/add_days';
 import addMonths from 'date-fns/add_months';
 import format from 'date-fns/format';
 import getISOWeek from 'date-fns/get_iso_week';
+import Datepicker from 'vuejs-datepicker';
 
 import EventList from '../../components/events/EventList';
 import { pad, slug } from '../../utils/text';
@@ -215,10 +226,10 @@ export default {
     const title = buildTitle(from, to);
     const pagination = buildPagination(from, to, range);
 
-    return { days, pagination, title };
+    return { days, highlighted: { from, to: addDays(to, -1) }, pagination, title };
   },
 
-  components: { EventList },
+  components: { Datepicker, EventList },
 
   head: {
     title: 'Events',

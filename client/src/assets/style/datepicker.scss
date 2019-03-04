@@ -1,0 +1,40 @@
+.calendar {
+  .vdp-datepicker__calendar {
+    background: inherit;
+    border: inherit;
+    width: auto;
+
+    header {
+      .next:after {
+        border-left-color: var(--color-text);
+      }
+      .prev:after {
+        border-right-color: var(--color-text);
+      }
+      .next:not(.disabled):hover,
+      .prev:not(.disabled):hover,
+      .up:not(.disabled):hover {
+        background: var(--color-separator);
+      }
+    }
+
+    .cell {
+      &.today,
+      &:not(.blank):not(.disabled):hover {
+        border-color: var(--color-primary);
+      }
+      &.highlighted {
+        background-color: var(--color-background);
+      }
+      &.highlight-start {
+        border-left: 1px solid var(--color-primary);
+      }
+      &.highlight-end {
+        border-right: 1px solid var(--color-primary);
+      }
+      &.selected {
+        background-color: var(--color-primary);
+      }
+    }
+  }
+}
