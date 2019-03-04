@@ -9,7 +9,7 @@ module.exports = {
   plugins: ['vue'],
   rules: {
     'vue/component-name-in-template-casing': ['error', 'kebab-case'],
-    'vue/html-closing-bracket-newline': ['error', { multiline: 'never' }],
+    // 'vue/html-closing-bracket-newline': ['error', { multiline: 'never' }],
     'vue/max-attributes-per-line': [
       'error',
       { singleline: 5, multiline: { allowFirstLine: true } },
