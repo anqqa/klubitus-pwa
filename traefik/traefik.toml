@@ -9,8 +9,8 @@ defaultEntryPoints = ["https", "http"]
 [entryPoints]
   [entryPoints.http]
     address = ":80"
-#    [entryPoints.http.redirect]
-#      entryPoint = "https"
+    [entryPoints.http.redirect]
+      entryPoint = "https"
   [entryPoints.https]
     address = ":443"
     [entryPoints.https.tls]
@@ -32,10 +32,14 @@ defaultEntryPoints = ["https", "http"]
   watch = true
 
 # Letsencrypt
-#[acme]
-#  email = ""
-#  storage = "acme.json"
-#  entryPoint = "https"
-#  OnHostRule = true
-#  [acme.httpChallenge]
-#    entryPoint = "http"
+[acme]
+  email = "anqqa@klubitus.org"
+  storage = "acme.json"
+  entryPoint = "https"
+  OnHostRule = true
+#  [acme.tlsChallenge]
+  [acme.httpChallenge]
+    entryPoint = "http"
+  [[acme.domains]]
+    main = "localtest.me"
+    sans = ["api.localtest.me", "client.localtest.me"]
