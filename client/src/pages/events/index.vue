@@ -2,6 +2,7 @@
   <main class="row">
     <div class="sidebar col-3">
       <datepicker
+        :full-month-name="true"
         :highlighted="highlighted"
         :inline="true"
         :monday-first="true"
@@ -40,9 +41,13 @@
           <div class="col">
             <nuxt-link :to="localePath(event.url)">{{ event.name }}</nuxt-link>
             <br />
-            <span class="text--secondary">{{ event.hours }}</span>
-            &sdot;
-            <span>{{ event.venue_name }}, {{ event.city_name }}</span>
+            <!--            <span class="icon"><i class="bx bxs-map" /></span>-->
+            <span>{{ event.venue_name }} &sdot; {{ event.city_name }}</span>
+            <br />
+            <span class="has-text-tertiary">
+              <!--              <span class="icon"><i class="bx bx-time" /></span>-->
+              {{ event.hours }}
+            </span>
           </div>
         </div>
       </section>
@@ -233,5 +238,12 @@ export default {
 <style scoped>
 .flyer {
   flex-basis: 120px;
+}
+.pagination {
+  margin: var(--grid-gutter) 0;
+}
+
+section + section {
+  margin-top: var(--grid-gutter);
 }
 </style>

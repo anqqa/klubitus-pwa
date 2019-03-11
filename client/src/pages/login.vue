@@ -1,6 +1,5 @@
 <template>
   <main class="is-center">
-
     <section class="card">
       <header>
         <h1 class="h3">Login</h1>
@@ -8,7 +7,7 @@
 
       <form class="card-content" @submit.prevent="login">
         <button class="button is-full is-outlined">
-          <span class="icon"><i class="bx bx-facebook" /></span>
+          <span class="icon"><i class="bx bx-facebook"/></span>
           Login with Facebook
         </button>
 
@@ -17,12 +16,14 @@
         <div :class="{ 'has-error': error || $v.username.$error }" class="field">
           <label for="input-username">Email or username *</label>
           <div class="control has-icon-left">
-            <input id="input-username"
-                   v-model.trim="$v.username.$model"
-                   name="username"
-                   required
-                   type="text">
-            <span class="icon"><i class="bx bx-user" /></span>
+            <input
+              id="input-username"
+              v-model.trim="$v.username.$model"
+              name="username"
+              required
+              type="text"
+            />
+            <span class="icon"><i class="bx bx-user"/></span>
           </div>
           <p v-if="$v.username.$error && !$v.username.required" class="help">Please fill in</p>
         </div>
@@ -30,12 +31,14 @@
         <div :class="{ 'has-error': error || $v.password.$error }" class="field">
           <label for="input-password">Password *</label>
           <div class="control has-icon-left">
-            <input id="input-password"
-                   v-model.trim="$v.password.$model"
-                   name="password"
-                   required
-                   type="password">
-            <span class="icon"><i class="bx bx-lock" /></span>
+            <input
+              id="input-password"
+              v-model.trim="$v.password.$model"
+              name="password"
+              required
+              type="password"
+            />
+            <span class="icon"><i class="bx bx-lock"/></span>
           </div>
           <p v-if="$v.password.$error && !$v.password.required" class="help">Please fill in</p>
         </div>
@@ -50,61 +53,53 @@
         <nuxt-link :to="localePath('register')">Register</nuxt-link>
       </footer>
     </section>
-
   </main>
 </template>
 
 <script>
-  import get from 'lodash/get';
-  import { required } from 'vuelidate/lib/validators';
+import get from 'lodash/get';
+import { required } from 'vuelidate/lib/validators';
 
-  import { Actions } from '../store/auth';
+export default {
+  data: () => ({
+    error: null,
+    username: '',
+    password: '',
+  }),
 
+  methods: {
+    async login() {
+      this.$v.$touch();
 
-  export default {
+      if (this.$v.$invalid) {
+        return;
+      }
 
-    data: () => ({
-      error:    null,
-      username: '',
-      password: '',
-    }),
+      try {
+        await this.$store.dispatch('auth/login', {
+          username: this.username,
+          password: this.password,
+        });
 
-    methods: {
-      async login() {
-        this.$v.$touch();
+        this.error = null;
 
-        if (this.$v.$invalid) {
-          return;
-        }
-
-        try {
-          await this.$store.dispatch(`auth/${Actions.LOGIN}`, {
-            username: this.username,
-            password: this.password,
-          });
-
-          this.error = null;
-
-          this.$router.push('/');
-        }
-        catch (error) {
-          console.log('error', { error });
-          this.error = get(error, 'response.data.message', 'Fail');
-        }
-      },
+        this.$router.push('/');
+      } catch (error) {
+        this.error = get(error, 'response.data.message', 'Fail');
+      }
     },
+  },
 
-    validations: {
-      username: { required },
-      password: { required },
-    }
-
-  };
+  validations: {
+    username: { required },
+    password: { required },
+  },
+};
 </script>
 
 <style scoped>
-  .card {
-    max-width: 300px;
-    width: 100%;
-  }
+.card {
+  max-width: 300px;
+  width: 100%;
+}
 </style>

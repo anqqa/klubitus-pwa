@@ -1,88 +1,57 @@
 import cookies from 'js-cookie';
 
-
 const EXPIRES = 30;
-
-export const Actions = {
-  ME:     'me',
-  LOGOUT: 'logout',
-  LOGIN:  'login',
-  RESET:  'reset',
-};
-
-export const Getters = {
-  isAuthenticated: 'isAuthenticated',
-};
-
-export const Mutations = {
-  RESET_TOKEN: 'resetToken',
-  RESET_USER:  'resetUser',
-  SET_TOKEN:   'setToken',
-  SET_USER:    'setUser',
-};
-
 
 export const state = () => ({
   token: null,
-  user:  null,
+  user: null,
 });
 
-
 export const actions = {
-  async [Actions.LOGIN]({ commit, dispatch }, login) {
+  async login({ commit, dispatch }, login) {
     const { token } = await this.$axios.$post('auth/login', login);
 
-    commit(Mutations.SET_TOKEN, token);
+    commit('setToken', token);
 
     this.$axios.setToken(token, 'Bearer');
     cookies.set('auth.token', token, { expires: EXPIRES });
 
-    dispatch(Actions.ME)
+    dispatch('me');
   },
 
-  async [Actions.LOGOUT]({ dispatch }) {
-    dispatch(Actions.RESET);
+  async logout({ dispatch }) {
+    dispatch('reset');
 
     await this.$axios.post('auth/logout');
   },
 
-  async [Actions.ME]({ commit }) {
+  async me({ commit }) {
     const { data: user } = await this.$axios.$get('auth/me');
 
-    commit(Mutations.SET_USER, user);
+    commit('setUser', user);
   },
 
-  [Actions.RESET]({ commit }) {
-    commit(Mutations.RESET_TOKEN);
-    commit(Mutations.RESET_USER);
+  reset({ commit }) {
+    commit('setToken', null);
+    commit('setUser', null);
 
     this.$axios.setToken(false);
     cookies.remove('auth.token');
   },
 };
 
-
 export const getters = {
-  [Getters.isAuthenticated]: state => {
+  isAuthenticated: state => {
     return !!state.user;
   },
 };
 
-
 export const mutations = {
-  [Mutations.RESET_TOKEN](store) {
-    store.token = null;
-  },
-
-  [Mutations.RESET_USER](store) {
-    store.user = null;
-  },
-
-  [Mutations.SET_TOKEN](store, token) {
+  setToken(store, token) {
     store.token = token;
   },
 
-  [Mutations.SET_USER](store, data) {
+  setUser(store, data) {
     store.user = data;
   },
 };
