@@ -1,5 +1,5 @@
 <template>
-  <button v-if="isSdkReady" class="button is-full is-outlined" @click="onClick">
+  <button v-if="isSdkReady" class="button fb is-full is-outlined" @click="onClick">
     <span class="icon"><i class="bx bxl-facebook"/></span>
     <span v-if="name">Continue as {{ name }}</span>
     <span v-else>Login with Facebook</span>
@@ -118,4 +118,10 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.fb {
+  background-color: #3b66a0;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: white;
+}
+</style>
