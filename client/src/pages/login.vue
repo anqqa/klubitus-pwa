@@ -6,10 +6,9 @@
       </header>
 
       <form class="card-content" @submit.prevent="login">
-        <button class="button is-full is-outlined">
-          <span class="icon"><i class="bx bx-facebook"/></span>
-          Login with Facebook
-        </button>
+        <no-ssr>
+          <fb-login :params="fbParams" @success="onFbSuccess" @error="onFbError"></fb-login>
+        </no-ssr>
 
         <span class="separator">or</span>
 
@@ -60,11 +59,19 @@
 import get from 'lodash/get';
 import { required } from 'vuelidate/lib/validators';
 
+import FbLogin from '../components/FBLogin';
+
 export default {
+  components: { FbLogin },
+
   data: () => ({
     error: null,
-    username: '',
+    fbParams: {
+      return_scopes: true,
+      scope: 'email',
+    },
     password: '',
+    username: '',
   }),
 
   methods: {
@@ -87,6 +94,14 @@ export default {
       } catch (error) {
         this.error = get(error, 'response.data.message', 'Fail');
       }
+    },
+
+    onFbError(error) {
+      console.warn(error);
+    },
+
+    onFbSuccess(response) {
+      console.log(response);
     },
   },
 
