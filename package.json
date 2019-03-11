@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "api:build": "docker-compose build api",
+    "api:precommit": "cd api && yarn precommit",
     "api:shell": "docker-compose run api sh",
     "api:up": "docker-compose up api",
     "api:yarn": "docker-compose exec api yarn",
@@ -18,7 +19,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn client:precommit && git -p diff --cached"
+      "pre-commit": "yarn api:precommit && yarn client:precommit && git -p diff --cached"
     }
   },
   "dependencies": {},

@@ -13,6 +13,8 @@
     "api"
   ],
   "scripts": {
+    "lint": "eslint --ext .js .",
+    "precommit": "lint-staged",
     "start": "nodemon -L --watch src src/index.js",
     "start2": "nodemon -f src/ --exec \"fastify start src/server.js --port ${API_PORT} --pretty-logs --log-level trace\""
   },
@@ -49,6 +51,7 @@
   "devDependencies": {
     "eslint": "^5.15.1",
     "eslint-plugin-promise": "^4.0.1",
+    "lint-staged": "^8.1.5",
     "nodemon": "^1.18.10"
   },
   "resolutions": {
