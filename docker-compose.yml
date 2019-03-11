@@ -17,7 +17,7 @@ services:
       - 8080:8080
     networks:
       - web
-#    restart: always
+    restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/traefik.toml:/traefik.toml
@@ -74,6 +74,8 @@ services:
       - DB_NAME
       - DB_USER
       - DB_PASS
+      - FB_APP_ID
+      - FB_CLIENT_TOKEN
       - NODE_ENV=development
     networks:
       - internal
@@ -102,10 +104,12 @@ services:
     environment:
       - API_HOST
       - API_PORT
-      - "API_URL_BROWSER=http://${API_HOST}"
+      - "API_URL_BROWSER=https://${API_HOST}"
       - AWS_BUCKET
       - CLIENT_HOST
       - CLIENT_PORT
+      - FB_APP_ID
+      - FB_CLIENT_TOKEN
       - NODE_ENV=development
     networks:
       - web
