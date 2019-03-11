@@ -8,6 +8,9 @@
       <form class="card-content" @submit.prevent="login">
         <no-ssr>
           <fb-login :params="fbParams" @success="onFbSuccess" @error="onFbError"></fb-login>
+          <button slot="placeholder" class="button fb is-full" disabled>
+            <i class="bx bx-loader-alt bx-spin" /> Just a moment...
+          </button>
         </no-ssr>
 
         <span class="separator">or</span>

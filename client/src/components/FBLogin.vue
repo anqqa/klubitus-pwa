@@ -1,8 +1,11 @@
 <template>
-  <button v-if="isSdkReady" class="button fb is-full is-outlined" @click="onClick">
-    <span class="icon"><i class="bx bxl-facebook"/></span>
+  <button v-if="isSdkReady" class="button fb is-full" @click="onClick">
+    <i class="bx bxl-facebook-square" />
     <span v-if="name">Continue as {{ name }}</span>
     <span v-else>Login with Facebook</span>
+  </button>
+  <button v-else class="button fb is-full" disabled>
+    <i class="bx bx-loader-alt bx-spin" /> Preparing Facebook...
   </button>
 </template>
 
