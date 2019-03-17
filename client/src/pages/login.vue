@@ -6,15 +6,6 @@
       </header>
 
       <form class="card-content" @submit.prevent="login">
-        <no-ssr>
-          <fb-login :params="fbParams" @success="onFbSuccess" @error="onFbError"></fb-login>
-          <button slot="placeholder" class="button fb is-full" disabled>
-            <i class="bx bx-loader-alt bx-spin" /> Just a moment...
-          </button>
-        </no-ssr>
-
-        <span class="separator">or</span>
-
         <div :class="{ 'has-error': error || $v.username.$error }" class="field">
           <label for="input-username">Email or username *</label>
           <div class="control has-icon-left">
@@ -48,6 +39,25 @@
         <div v-if="error" class="field has-error" v-html="error" />
 
         <button class="button is-primary is-full" type="submit">Login</button>
+
+        <no-ssr>
+          <span class="separator">or</span>
+
+          <button slot="placeholder" class="button fb is-full" disabled>
+            <i class="bx bx-loader-alt bx-spin" /> Just a moment...
+          </button>
+
+          <div v-if="!fbProcessing">
+            <fb-login :params="fbParams" @success="onFbSuccess" @error="onFbError"></fb-login>
+          </div>
+          <div v-else>
+            <button class="button fb is-full" disabled>
+              <i class="bx bx-loader-alt bx-spin" /> Logging in...
+            </button>
+          </div>
+
+          <div v-if="fbError" class="field has-error" v-html="fbError" />
+        </no-ssr>
       </form>
 
       <footer>
@@ -69,10 +79,12 @@ export default {
 
   data: () => ({
     error: null,
+    fbError: null,
     fbParams: {
       return_scopes: true,
       scope: 'email',
     },
+    fbProcessing: false,
     password: '',
     username: '',
   }),
@@ -101,10 +113,25 @@ export default {
 
     onFbError(error) {
       console.warn(error);
+
+      this.fbError = 'Fail';
+      this.fbProcessing = false;
     },
 
-    onFbSuccess(response) {
+    async onFbSuccess(response) {
       console.log(response);
+
+      this.fbProcessing = true;
+
+      const { accessToken: access_token, userID: external_user_id } = response.authResponse;
+
+      try {
+        await this.$store.dispatch('auth/fbLogin', { access_token, external_user_id });
+      } catch (error) {
+        this.fbError = get(error, 'response.data.message', 'Fail');
+      } finally {
+        this.fbProcessing = false;
+      }
     },
   },
 
@@ -119,5 +146,9 @@ export default {
 .card {
   max-width: 300px;
   width: 100%;
+}
+
+.separator {
+  margin: 1rem 0;
 }
 </style>

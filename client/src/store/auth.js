@@ -8,6 +8,10 @@ export const state = () => ({
 });
 
 export const actions = {
+  async fbLogin({ commit, dispatch }, login) {
+    const { token } = await this.$axios.$post('auth/facebook/login', login);
+  },
+
   async login({ commit, dispatch }, login) {
     const { token } = await this.$axios.$post('auth/login', login);
 
@@ -41,9 +45,7 @@ export const actions = {
 };
 
 export const getters = {
-  isAuthenticated: state => {
-    return !!state.user;
-  },
+  isAuthenticated: state => !!state.user,
 };
 
 export const mutations = {
