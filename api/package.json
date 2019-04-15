@@ -13,15 +13,23 @@
     "api"
   ],
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
     "lint": "eslint --ext .js .",
+    "lint2": "tslint -p tsconfig.json",
     "precommit": "lint-staged",
-    "start": "nodemon -L --watch src src/index.js",
-    "start2": "nodemon -f src/ --exec \"fastify start src/server.js --port ${API_PORT} --pretty-logs --log-level trace\""
+    "start": "nodemon -L",
+    "start2": "nodemon -L --watch src src/index.js"
   },
   "dependencies": {
+    "@nestjs/common": "^6.1.0",
+    "@nestjs/core": "^6.1.0",
+    "@nestjs/platform-fastify": "^6.1.0",
+    "@nestjs/typeorm": "^6.0.0",
     "aws-sdk": "^2.418.0",
     "axios": "^0.18.0",
     "bcryptjs": "^2.4.3",
+    "class-transformer": "^0.2.0",
+    "class-validator": "^0.9.1",
     "cors": "^2.8.5",
     "date-fns": "^1.30.1",
     "dotenv": "^6.2.0",
@@ -46,14 +54,23 @@
     "pino": "^5.11.1",
     "pino-pretty": "^2.5.0",
     "pump": "^3.0.0",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^6.4.0",
     "sharp": "^0.21.3",
+    "typeorm": "^0.2.16",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "@nestjs/cli": "^6.3.0",
+    "@types/node": "^11.13.4",
     "eslint": "^5.15.1",
     "eslint-plugin-promise": "^4.0.1",
     "lint-staged": "^8.1.5",
-    "nodemon": "^1.18.10"
+    "nodemon": "^1.18.10",
+    "ts": "^0.2.2",
+    "ts-node": "^8.1.0",
+    "tslint": "^5.15.0",
+    "typescript": "^3.4.3"
   },
   "resolutions": {
     "upath": "1.1.0"
