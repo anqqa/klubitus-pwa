@@ -32,18 +32,19 @@
 <script>
   import format from 'date-fns/format';
 
+  import Event from '../../models/Event';
   import { hours } from '../../utils/time';
 
 
   export default {
 
     async asyncData({ app, params }) {
-      const { data } = await app.$axios.$get(`events/${parseInt(params.id)}`);
-      const { begins_at, ends_at, info } = data;
+      const event = await Event.find(parseInt(params.id));
+      const { begins_at, ends_at, info } = event;
 
       return {
         event: {
-          ...data,
+          ...event,
           date:  format(begins_at, 'dddd, MMMM D, YYYY'),
           hours: hours(begins_at, ends_at),
           info:  app.$md.render(info),

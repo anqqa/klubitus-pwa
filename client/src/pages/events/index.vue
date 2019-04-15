@@ -78,6 +78,7 @@ import getISOWeek from 'date-fns/get_iso_week';
 import Datepicker from 'vuejs-datepicker';
 
 import EventList from '../../components/events/EventList';
+import Event from '../../models/Event';
 import { pad, slug } from '../../utils/text';
 import { dateRange, hours } from '../../utils/time';
 
@@ -187,7 +188,7 @@ const groupByDate = data => {
 };
 
 export default {
-  async asyncData({ app, params }) {
+  async asyncData({ params }) {
     let { year, month, week, day } = params;
 
     [year, month, week, day].map(parseInt);
@@ -196,14 +197,14 @@ export default {
     const { from, to, range } = dateRange(year, month, week, day);
 
     // Fetch events
-    const { data } = await app.$axios.$get('events', {
-      params: {
-        from: format(from, 'YYYY-MM-DD'),
-        to: format(to, 'YYYY-MM-DD'),
-      },
-    });
+    const events = await Event
+      .where('from', format(from, 'YYYY-MM-DD'))
+      .where('to', format(to, 'YYYY-MM-DD'))
+      .$get();
 
-    const days = groupByDate(data);
+    console.log({ events });
+
+    const days = groupByDate(events);
     const title = buildTitle(from, to);
     const pagination = buildPagination(from, to, range);
 
