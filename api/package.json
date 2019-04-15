@@ -24,6 +24,7 @@
     "@nestjs/common": "^6.1.0",
     "@nestjs/core": "^6.1.0",
     "@nestjs/platform-fastify": "^6.1.0",
+    "@nestjs/swagger": "^3.0.2",
     "@nestjs/typeorm": "^6.0.0",
     "aws-sdk": "^2.418.0",
     "axios": "^0.18.0",
