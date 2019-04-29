@@ -4,7 +4,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 export const setupSwagger = (app: INestApplication) => {
   const options = new DocumentBuilder()
     .setTitle('Klubitus API')
-    // .addBearerAuth('Authorization', 'header')
+    .setSchemes('https')
+    .addTag('events', 'Event calendar.')
     .build();
 
   const document = SwaggerModule.createDocument(app, options);
