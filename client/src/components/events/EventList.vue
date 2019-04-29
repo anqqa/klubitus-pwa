@@ -18,6 +18,7 @@
 <script>
 import format from 'date-fns/format';
 
+import Event from '../../models/Event';
 import { slug } from '../../utils/text';
 
 export const EventListType = {
@@ -39,9 +40,17 @@ export default {
         return cachedData;
       }
 
-      const { data } = await this.$axios.$get(`events/${this.type}`, {
-        params: { limit: Math.min(this.limit, 50) },
-      });
+      let orderBy = 'id';
+
+      switch (this.type) {
+        case EventListType.LATEST:
+          orderBy = '-id';
+          break;
+      }
+
+      const data = await Event.orderBy(orderBy)
+        .limit(Math.min(this.limit, 50))
+        .$get();
 
       data.forEach(event => {
         event.stamp = format(event.begins_at, 'DD MMM');

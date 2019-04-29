@@ -197,12 +197,12 @@ export default {
     const { from, to, range } = dateRange(year, month, week, day);
 
     // Fetch events
-    const events = await Event
-      .where('from', format(from, 'YYYY-MM-DD'))
-      .where('to', format(to, 'YYYY-MM-DD'))
+    const events = await Event.params({
+      from: format(from, 'YYYY-MM-DD'),
+      to: format(to, 'YYYY-MM-DD'),
+    })
+      .orderBy('begins_at')
       .$get();
-
-    console.log({ events });
 
     const days = groupByDate(events);
     const title = buildTitle(from, to);
