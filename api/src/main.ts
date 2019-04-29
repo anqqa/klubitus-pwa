@@ -16,13 +16,16 @@ async function bootstrap() {
   // API documentation
   setupSwagger(app);
 
+  // Security
+  app.enableCors();
+
   // Log requests
   app.use(requestLogger);
 
   // Intercept EntityNotFound error and return 404
   app.useGlobalInterceptors(new ErrorsInterceptor());
 
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
 
   await app.listen(process.env.API_PORT, '0.0.0.0');
 }
