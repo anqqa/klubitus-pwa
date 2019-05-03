@@ -50,7 +50,7 @@ export default {
 
       const data = await Event.orderBy(orderBy)
         .limit(Math.min(this.limit, 50))
-        .$get();
+        .get();
 
       data.forEach(event => {
         event.stamp = format(event.begins_at, 'DD MMM');

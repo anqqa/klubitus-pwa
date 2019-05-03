@@ -202,7 +202,7 @@ export default {
       to: format(to, 'YYYY-MM-DD'),
     })
       .orderBy('begins_at')
-      .$get();
+      .get();
 
     const days = groupByDate(events);
     const title = buildTitle(from, to);
