@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { format, parse } from 'date-fns';
 import { MoreThanOrEqual, Raw, Repository } from 'typeorm';
 
+import { PaginationService } from '../common/pagination/pagination.service';
 import { Event } from './event.entity';
 import { EventsQuery } from './events.dto';
 
@@ -11,7 +12,6 @@ export class EventsService {
   constructor(@InjectRepository(Event) private readonly eventRepository: Repository<Event>) {}
 
   async findAll(query: EventsQuery): Promise<Event[]> {
-    const MAX = 500;
     let where;
     let enforceLimit = true;
     let order: Record<string, string> = { id: 'DESC' };
@@ -46,7 +46,7 @@ export class EventsService {
     }
 
     // Pagination
-    const take = Math.max(1, Math.min(query.limit || (enforceLimit ? 25 : MAX), MAX));
+    const { take } = PaginationService.parseQuery(query, enforceLimit ? 25 : 500, 500);
 
     return await this.eventRepository.find({ where, order, take });
   }
