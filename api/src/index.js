@@ -52,7 +52,6 @@ fastify.register(require('fastify-swagger'), swaggerOptions);
 
 // Register routes and custom plugins
 fastify.register(require('./auth/plugin'));
-fastify.register(require('./events/routes'));
 fastify.register(require('./forum/routes'));
 fastify.register(require('./galleries/routes'));
 fastify.register(require('./newsfeed/routes'));
