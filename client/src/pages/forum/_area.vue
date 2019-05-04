@@ -1,66 +1,61 @@
 <template>
-
   <main class="row">
-
     <nav class="sidebar col-2">
-      <ForumAreaList :areas="areas" />
+      <forum-area-list :areas="areas" />
     </nav>
 
     <div class="col-7 main-content">
       <h1 v-text="area.name" />
       <h2 v-html="area.description" />
 
-      <Pagination :pages="pages" :route="route" />
+      <pagination :pages="pages" :route="route" />
 
       <nuxt-child :key="$route.fullPath" />
     </div>
-
   </main>
-
 </template>
 
-
 <script>
-  import ForumAreaList from '../../components/forum/ForumAreaList';
-  import Pagination from '../../components/Pagination';
+import ForumAreaList from '../../components/forum/ForumAreaList';
+import Pagination from '../../components/Pagination';
+import ForumArea from '../../models/ForumArea';
 
+export default {
+  async asyncData({ params }) {
+    const areaId = parseInt(params.area);
+    const areas = await ForumArea.get();
 
-  export default {
+    let area;
 
-    async asyncData({ app, params }) {
-      const areaId          = parseInt(params.area);
-      const { data: areas } = await app.$axios.$get('forum/areas');
+    areas.forEach(_area => {
+      if (_area.id === areaId) area = _area;
+    });
 
-      let area;
+    const pages = Math.ceil(area.topic_count / 20);
 
-      areas.forEach(_area => { if (_area.id === areaId) area = _area; });
+    return { area, areaId, areas, pages };
+  },
 
-      const pages = Math.ceil(area.topic_count / 20);
+  components: { ForumAreaList, Pagination },
 
-      return { area, areaId, areas, pages };
+  data() {
+    return {
+      route: { name: 'forum-area', params: this.$route.params },
+    };
+  },
+
+  computed: {
+    page() {
+      return parseInt(this.$route.query.page) || 1;
     },
+  },
 
-    components: { ForumAreaList, Pagination },
-
-    data() {
-      return {
-        route:  { name: 'forum-area', params: this.$route.params },
-      };
-    },
-
-    computed: {
-      page() { return parseInt(this.$route.query.page) || 1; },
-    },
-
-    head() {
-      return {
-        title: this.area ? this.area.name : 'Forum',
-      };
-    },
-
-  };
+  head() {
+    return {
+      title: this.area ? this.area.name : 'Forum',
+    };
+  },
+};
 </script>
 
-
-<style scoped>
-</style>
+<style scoped></style>

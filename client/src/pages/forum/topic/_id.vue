@@ -1,51 +1,46 @@
 <template>
-
   <main class="column section">
     <h1 class="title">{{ topic.name }}</h1>
 
-    <Pagination :pages="pages" :route="route" />
+    <pagination :pages="pages" :route="route" />
 
     <nuxt-child :key="topicId" />
 
-    <Pagination :pages="pages" :route="route" />
+    <pagination :pages="pages" :route="route" />
   </main>
-
 </template>
 
-
 <script>
-  import Pagination from '../../../components/Pagination';
+import Pagination from '../../../components/Pagination';
+import ForumTopic from '../../../models/ForumTopic';
 
+export default {
+  async asyncData({ params }) {
+    const topicId = parseInt(params.id);
+    const topic = await ForumTopic.find(topicId);
+    const pages = Math.ceil(topic.post_count / 20);
 
-  export default {
+    return { pages, topic, topicId };
+  },
 
-    async asyncData({ app, params }) {
-      const topicId = parseInt(params.id);
+  components: { Pagination },
 
-      const { data: topic } = await app.$axios.$get(`forum/topic/${topicId}`);
+  data() {
+    return {
+      route: { name: 'forum-topic-id', params: this.$route.params },
+    };
+  },
 
-      const pages = Math.ceil(topic.post_count / 20);
-
-      return { pages, topic, topicId };
+  computed: {
+    page() {
+      return parseInt(this.$route.query.page) || 1;
     },
+  },
 
-    components: { Pagination },
-
-    data() {
-      return {
-        route: { name: 'forum-topic-id', params: this.$route.params },
-      };
-    },
-
-    computed: {
-      page() { return parseInt(this.$route.query.page) || 1; },
-    },
-
-    head() {
-      return {
-        title: this.topic ? this.topic.name : 'Forum',
-      };
-    },
-
-  };
+  head() {
+    return {
+      title: this.topic ? this.topic.name : 'Forum',
+    };
+  },
+};
 </script>

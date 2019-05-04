@@ -1,27 +1,27 @@
 <template>
-  <ForumTopicList :topics="topics" area />
+  <forum-topic-list :topics="topics" area />
 </template>
 
-
 <script>
-  import ForumTopicList from '../../../components/forum/ForumTopicList';
+import ForumTopicList from '../../../components/forum/ForumTopicList';
+import ForumTopic from '../../../models/ForumTopic';
 
+export default {
+  async asyncData({ params, query }) {
+    const area = parseInt(params.area);
+    const page = parseInt(query.page) || 1;
+    const limit = 20;
 
-  export default {
+    const topics = await ForumTopic.params({ area_id: area })
+      .limit(limit)
+      .page(page)
+      .get();
 
-    async asyncData({ app, params, query }) {
-      const area  = parseInt(params.area);
-      const page  = parseInt(query.page) || 1;
-      const limit = 20;
+    return { topics };
+  },
 
-      const { data: topics } = await app.$axios.$get('forum/topics', { params: { area, limit, page } });
+  components: { ForumTopicList },
 
-      return { topics };
-    },
-
-    components: { ForumTopicList },
-
-    watchQuery: ['page'],
-
-  };
+  watchQuery: ['page'],
+};
 </script>
