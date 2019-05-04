@@ -3,12 +3,26 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
+import { Area } from '../areas/area.entity';
+import { Topic } from '../topics/topic.entity';
+import { User } from '../users/user.entity';
+
 @Entity('forum_posts')
 export class Post {
+  @ManyToOne(() => Area)
+  @JoinColumn({ name: 'forum_area_id' })
+  area: Area;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'author_id' })
+  author: User;
+
   @Column()
   author_name: string;
 
@@ -29,6 +43,10 @@ export class Post {
 
   @Column()
   post: string;
+
+  @ManyToOne(() => Topic, topic => topic.posts)
+  @JoinColumn({ name: 'forum_topic_id' })
+  topic: Topic;
 
   @UpdateDateColumn()
   updated_at: Date;

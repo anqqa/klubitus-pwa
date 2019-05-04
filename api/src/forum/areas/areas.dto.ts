@@ -3,6 +3,8 @@
 import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
 import { IsOptional } from 'class-validator';
 
+import { Topic } from '../topics/topics.dto';
+
 export class Area {
   @ApiModelPropertyOptional()
   description?: string;
@@ -15,6 +17,9 @@ export class Area {
 
   @ApiModelProperty()
   is_private: boolean;
+
+  @ApiModelPropertyOptional()
+  last_topic?: Topic;
 
   @ApiModelPropertyOptional()
   last_topic_id?: number;

@@ -19,6 +19,7 @@ export class TopicsService {
 
   async findAll(query: TopicsQuery): Promise<Topic[]> {
     const areaIds: number[] = await this.areasService.getAccessibleIds();
+    const relations = ['author', 'last_post', 'last_post.author'];
 
     // Filter by area
     let areaFilter;
@@ -30,6 +31,7 @@ export class TopicsService {
       }
     } else {
       areaFilter = In(areaIds);
+      relations.push('area');
     }
 
     // Pagination
@@ -37,6 +39,7 @@ export class TopicsService {
 
     return await this.topicRepository.find({
       order: { last_post_at: 'DESC' },
+      relations,
       skip,
       take,
       where: { forum_area_id: areaFilter },
@@ -44,6 +47,6 @@ export class TopicsService {
   }
 
   async get(topicId: number): Promise<Topic> {
-    return await this.topicRepository.findOneOrFail(topicId);
+    return await this.topicRepository.findOneOrFail(topicId, { relations: ['area', 'author'] });
   }
 }

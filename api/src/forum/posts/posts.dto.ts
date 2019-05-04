@@ -2,11 +2,15 @@
 // tslint:disable:variable-name
 import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsNumber, IsOptional } from 'class-validator';
+import { IsNumber } from 'class-validator';
 
 import { Pagination } from '../../common/pagination/pagination.dto';
+import { User } from '../users/users.dto';
 
 export class Post {
+  @ApiModelPropertyOptional()
+  author?: User;
+
   @ApiModelProperty()
   author_name: string;
 

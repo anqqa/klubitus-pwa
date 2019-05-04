@@ -1,5 +1,7 @@
 // tslint:disable:variable-name
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+
+import { Topic } from '../topics/topic.entity';
 
 @Entity('forum_areas')
 export class Area {
@@ -14,6 +16,10 @@ export class Area {
 
   @Column()
   is_private: boolean;
+
+  @OneToOne(() => Topic)
+  @JoinColumn({ name: 'last_topic_id' })
+  last_topic: Topic;
 
   @Column({ nullable: true })
   last_topic_id: number | null;
@@ -38,4 +44,7 @@ export class Area {
 
   @Column()
   topic_count: number;
+
+  @OneToMany(() => Topic, topic => topic.area)
+  topics: Topic[];
 }

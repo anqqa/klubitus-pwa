@@ -5,8 +5,17 @@ import { Transform } from 'class-transformer';
 import { IsNumber, IsOptional } from 'class-validator';
 
 import { Pagination } from '../../common/pagination/pagination.dto';
+import { Area } from '../areas/areas.dto';
+import { Post } from '../posts/posts.dto';
+import { User } from '../users/users.dto';
 
 export class Topic {
+  @ApiModelPropertyOptional()
+  area?: Area;
+
+  @ApiModelPropertyOptional()
+  author?: User;
+
   @ApiModelProperty()
   author_name: string;
 
@@ -30,6 +39,9 @@ export class Topic {
 
   @ApiModelPropertyOptional()
   is_sticky?: boolean;
+
+  @ApiModelPropertyOptional()
+  last_post?: Post;
 
   @ApiModelProperty({ type: String, format: 'date-time' })
   last_post_at: Date;

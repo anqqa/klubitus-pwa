@@ -10,8 +10,14 @@ export class AreasService {
   constructor(@InjectRepository(Area) private readonly areaRepository: Repository<Area>) {}
 
   async findAll(query?: AreasQuery): Promise<Area[]> {
+    const relations =
+      query && query.details
+        ? ['last_topic', 'last_topic.author', 'last_topic.last_post', 'last_topic.last_post.author']
+        : undefined;
+
     return await this.areaRepository.find({
       order: { nest_left: 'ASC' },
+      relations,
       where: { is_hidden: false },
     });
   }
@@ -23,7 +29,7 @@ export class AreasService {
   async getAccessibleIds(): Promise<number[]> {
     return (await this.areaRepository.find({
       select: ['id'],
-      where: { is_hidden: false },
+      where: { is_hidden: false, is_private: false },
     })).map(({ id }) => id);
   }
 }

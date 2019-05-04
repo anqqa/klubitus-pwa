@@ -31,6 +31,7 @@ export class PostsService {
 
     return await this.postRepository.find({
       order: { id: 'ASC' },
+      relations: ['author'],
       skip,
       take,
       where: { forum_topic_id: topic.id },
