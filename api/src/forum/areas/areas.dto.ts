@@ -1,8 +1,9 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:variable-name
 import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
+import { IsOptional } from 'class-validator';
 
-export class DArea {
+export class Area {
   @ApiModelPropertyOptional()
   description?: string;
 
@@ -38,4 +39,10 @@ export class DArea {
 
   @ApiModelProperty()
   topic_count: number;
+}
+
+export class AreasQuery {
+  @ApiModelProperty()
+  @IsOptional()
+  details?: boolean;
 }

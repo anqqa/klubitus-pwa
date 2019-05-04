@@ -4,13 +4,13 @@ import { format, parse } from 'date-fns';
 import { MoreThanOrEqual, Raw, Repository } from 'typeorm';
 
 import { Event } from './event.entity';
-import { DEventsQuery } from './events.dto';
+import { EventsQuery } from './events.dto';
 
 @Injectable()
 export class EventsService {
   constructor(@InjectRepository(Event) private readonly eventRepository: Repository<Event>) {}
 
-  async findAll(query: DEventsQuery): Promise<Event[]> {
+  async findAll(query: EventsQuery): Promise<Event[]> {
     const MAX = 500;
     let where;
     let enforceLimit = true;
@@ -26,17 +26,15 @@ export class EventsService {
         begins_at: Raw(() => `begins_at::DATE <= '${format(parse(to), 'YYYY-MM-DD')}'`),
         ends_at: MoreThanOrEqual(format(parse(from), 'YYYY-MM-DD [09:59]')),
       };
+    } else if (from) {
+      // Load events from date
+      where = {
+        begins_at: Raw(() => `begins_at::DATE >= '${format(parse(from), 'YYYY-MM-DD')}'`),
+      };
     } else if (to) {
       // Load events up to date
       where = {
         begins_at: Raw(() => `begins_at::DATE <= '${format(parse(to), 'YYYY-MM-DD')}'`),
-      };
-    } else {
-      // Load events from date
-      where = {
-        begins_at: Raw(
-          () => `begins_at::DATE >= '${format(from ? parse(from) : Date.now(), 'YYYY-MM-DD')}`,
-        ),
       };
     }
 

@@ -5,7 +5,13 @@ export const setupSwagger = (app: INestApplication) => {
   const options = new DocumentBuilder()
     .setTitle('Klubitus API')
     .setSchemes('https')
-    .addTag('events', 'Event calendar.')
+    .addTag('Events', 'Event calendar')
+    .addTag('Forum', 'Discussion forums')
+    .addTag('Images', 'Image galleries')
+    .addTag('Music', 'Tracks and mixtapes')
+    .addTag('Newsfeed', 'News feed')
+    .addTag('Shouts', 'Shouts')
+    .addTag('Users', 'Users')
     .build();
 
   const document = SwaggerModule.createDocument(app, options);

@@ -1,14 +1,19 @@
 import { ApiModelPropertyOptional } from '@nestjs/swagger';
-import { IsInt, IsNumberString, IsOptional } from 'class-validator';
+import { IsNumberString, IsOptional } from 'class-validator';
 
-export class DPagination {
-  @ApiModelPropertyOptional({ description: 'Max number of items.' })
+export class Pagination {
+  @ApiModelPropertyOptional({ description: 'Max number of items or page size.' })
   @IsOptional()
   @IsNumberString()
   limit?: number;
 
-  @ApiModelPropertyOptional({ description: 'Start from offset.' })
+  @ApiModelPropertyOptional({ description: 'Start from offset. Requires limit, conflicts offset.' })
   @IsOptional()
   @IsNumberString()
   offset?: number;
+
+  @ApiModelPropertyOptional({ description: 'Page number. Requires limit, conflicts offset.' })
+  @IsOptional()
+  @IsNumberString()
+  page?: number;
 }

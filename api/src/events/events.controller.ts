@@ -1,28 +1,26 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger';
 
-import { DEvent, DEventsQuery } from './events.dto';
+import { Event, EventsQuery } from './events.dto';
 import { EventsService } from './events.service';
 
-@ApiUseTags('events')
+@ApiUseTags('Events')
 @Controller('events')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
-  @ApiOperation({ title: 'Get multiple events' })
-  @ApiOkResponse({ description: 'Return multiple events.', type: DEvent, isArray: true })
+  @ApiOperation({ title: 'List events' })
+  @ApiOkResponse({ description: 'Success', type: Event, isArray: true })
   @Get()
-  async getAll(@Query() query: DEventsQuery): Promise<DEvent[]> {
+  async getAll(@Query() query: EventsQuery): Promise<Event[]> {
     return await this.eventsService.findAll(query);
   }
 
-  @ApiOperation({ title: 'Get single event' })
-  @ApiOkResponse({ description: 'Return single event', type: DEvent })
-  @ApiNotFoundResponse({ description: 'Event not found.' })
-  @Get(':eventId')
-  async getById(@Param('eventId') eventId: number | string): Promise<DEvent> {
-    const id: number = typeof eventId === 'string' ? parseInt(eventId, 10) : eventId;
-
+  @ApiOperation({ title: 'Get an event' })
+  @ApiOkResponse({ description: 'Success', type: Event })
+  @ApiNotFoundResponse({ description: 'Event not found' })
+  @Get(':id')
+  async getById(@Param('id', new ParseIntPipe()) id: number): Promise<Event> {
     return await this.eventsService.get(id);
   }
 }

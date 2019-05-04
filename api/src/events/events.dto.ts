@@ -3,10 +3,10 @@
 import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
 import { IsISO8601, IsOptional } from 'class-validator';
 
-import { DPagination } from '../common/pagination/pagination.dto';
+import { Pagination } from '../common/pagination/pagination.dto';
 import { IsSortString } from '../common/validators/IsSortString';
 
-export class DEvent {
+export class Event {
   @ApiModelProperty({ type: String, format: 'date-time' })
   begins_at: Date;
   @ApiModelPropertyOptional()
@@ -29,7 +29,7 @@ export class DEvent {
   venue_name?: string;
 }
 
-export class DEventsQuery extends DPagination {
+export class EventsQuery extends Pagination {
   @ApiModelPropertyOptional({
     description: 'List events starting after date.',
     format: 'date',
