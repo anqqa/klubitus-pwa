@@ -11,6 +11,7 @@ export class TopicsController {
 
   @ApiOperation({ title: 'List topics' })
   @ApiOkResponse({ type: Topic, isArray: true })
+  @ApiNotFoundResponse({ description: 'Topics not found.' })
   @Get()
   async getAll(@Query() query: TopicsQuery): Promise<Topic[]> {
     return await this.topicsService.findAll(query);

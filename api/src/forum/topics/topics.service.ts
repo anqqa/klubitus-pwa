@@ -18,17 +18,15 @@ export class TopicsService {
   ) {}
 
   async findAll(query: TopicsQuery): Promise<Topic[]> {
-    // Accessible areas
     const areaIds: number[] = await this.areasService.getAccessibleIds();
 
     // Filter by area
     let areaFilter;
     if ('area_id' in query) {
-      const areaId = query.area_id;
-      areaFilter = areaId;
+      areaFilter = query.area_id;
 
-      if (!areaIds.includes(areaId)) {
-        throw new EntityNotFoundError(Area, areaId);
+      if (!areaIds.includes(areaFilter)) {
+        throw new EntityNotFoundError(Area, areaFilter);
       }
     } else {
       areaFilter = In(areaIds);

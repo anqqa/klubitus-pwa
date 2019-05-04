@@ -1,7 +1,8 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:variable-name
 import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
-import { IsNumberString, IsOptional } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsNumber, IsOptional } from 'class-validator';
 
 import { Pagination } from '../../common/pagination/pagination.dto';
 
@@ -48,7 +49,8 @@ export class Topic {
 
 export class TopicsQuery extends Pagination {
   @ApiModelPropertyOptional({ description: 'Filter topics by an area.' })
+  @Transform((area_id: string) => parseInt(area_id, 10))
   @IsOptional()
-  @IsNumberString()
+  @IsNumber()
   area_id?: number;
 }

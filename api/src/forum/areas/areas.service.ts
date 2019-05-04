@@ -9,7 +9,7 @@ import { AreasQuery } from './areas.dto';
 export class AreasService {
   constructor(@InjectRepository(Area) private readonly areaRepository: Repository<Area>) {}
 
-  async findAll(query: AreasQuery): Promise<Area[]> {
+  async findAll(query?: AreasQuery): Promise<Area[]> {
     return await this.areaRepository.find({
       order: { nest_left: 'ASC' },
       where: { is_hidden: false },
@@ -18,5 +18,12 @@ export class AreasService {
 
   async get(areaId: number): Promise<Area> {
     return await this.areaRepository.findOneOrFail(areaId);
+  }
+
+  async getAccessibleIds(): Promise<number[]> {
+    return (await this.areaRepository.find({
+      select: ['id'],
+      where: { is_hidden: false },
+    })).map(({ id }) => id);
   }
 }
