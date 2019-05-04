@@ -33,9 +33,8 @@ export class Post {
 }
 
 export class PostsQuery extends Pagination {
-  @ApiModelPropertyOptional({ description: 'Filter posts by a topic.' })
+  @ApiModelProperty({ description: 'Topic ID.' })
   @Transform((topic_id: string) => parseInt(topic_id, 10))
-  @IsOptional()
   @IsNumber()
-  topic_id?: number;
+  topic_id: number;
 }
