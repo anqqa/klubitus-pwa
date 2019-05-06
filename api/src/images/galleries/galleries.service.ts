@@ -13,7 +13,7 @@ export class GalleriesService {
 
   async findAll(query: GalleriesQuery): Promise<Gallery[]> {
     const { event_id, from, to } = query;
-    const relations = ['event'];
+    const relations = ['default_image', 'event'];
     let order: Record<string, string> = { updated_at: 'DESC' };
     let where = {};
 

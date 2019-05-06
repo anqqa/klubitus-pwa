@@ -5,6 +5,7 @@ import { IsISO8601, IsOptional } from 'class-validator';
 
 import { Pagination } from '../../common/pagination/pagination.dto';
 import { Event } from '../../events/events.dto';
+import { Image } from '../images.dto';
 
 export class Gallery {
   @ApiModelProperty()
@@ -12,6 +13,9 @@ export class Gallery {
 
   @ApiModelProperty({ type: String, format: 'date-time' })
   created_at: Date;
+
+  @ApiModelPropertyOptional()
+  default_image?: Image;
 
   @ApiModelPropertyOptional()
   default_image_id?: number;

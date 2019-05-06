@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 
 import { Event } from '../../events/event.entity';
+import { Image } from '../image.entity';
 
 @Entity('galleries')
 export class Gallery {
@@ -18,6 +19,10 @@ export class Gallery {
 
   @CreateDateColumn()
   created_at: Date;
+
+  @OneToOne(() => Image)
+  @JoinColumn({ name: 'default_image_id' })
+  default_image: Image;
 
   @Column({ nullable: true })
   default_image_id: number | null;
