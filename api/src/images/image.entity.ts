@@ -6,10 +6,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { User } from '../forum/users/user.entity';
+import { Note } from './notes/note.entity';
 
 interface Label {
   Confidence: number;
@@ -53,6 +55,9 @@ export class Image {
 
   @Column({ nullable: true })
   mime_type: string | null;
+
+  @OneToMany(() => Note, note => note.image)
+  notes: Note[];
 
   @Column({ nullable: true })
   path: string | null;

@@ -6,6 +6,7 @@ import { isEmpty } from 'lodash';
 
 import { User } from '../users/users.dto';
 import { Image as ImageEntity } from './image.entity';
+import { Note } from './notes/notes.dto';
 
 @Expose()
 class Label {
@@ -125,6 +126,11 @@ export class Image {
   @ApiModelPropertyOptional()
   @Expose()
   mime_type?: string;
+
+  @ApiModelPropertyOptional({ type: Note, isArray: true })
+  @Expose()
+  @Type(() => Note)
+  notes: Note[];
 
   @ApiModelPropertyOptional()
   @Expose()
