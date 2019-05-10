@@ -47,6 +47,11 @@ export class Gallery {
   @Expose()
   image_count: number;
 
+  @ApiModelPropertyOptional({ type: Image, isArray: true })
+  @Expose()
+  @Type(() => Image)
+  images: Image[];
+
   @ApiModelProperty()
   @Expose()
   name: string;

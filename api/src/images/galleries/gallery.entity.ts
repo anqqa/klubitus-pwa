@@ -4,6 +4,8 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -42,6 +44,14 @@ export class Gallery {
 
   @Column()
   image_count: number;
+
+  @ManyToMany(() => Image)
+  @JoinTable({
+    inverseJoinColumn: { name: 'images' },
+    joinColumn: { name: 'galleries' },
+    name: 'galleries_images',
+  })
+  images: Image[];
 
   @Column()
   name: string;
