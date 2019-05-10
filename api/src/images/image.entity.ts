@@ -1,3 +1,4 @@
+// tslint:disable:max-classes-per-file
 // tslint:disable:variable-name
 import {
   Column,
@@ -10,11 +11,18 @@ import {
 
 import { User } from '../forum/users/user.entity';
 
+interface Label {
+  Confidence: number;
+  Instances: object[];
+  Name: string;
+  Parents: Array<{ Name: string }>;
+}
+
 @Entity('images')
 export class Image {
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'author_id' })
-  author?: User;
+  author: User | null;
 
   @Column({ nullable: true })
   author_id: number | null;
@@ -31,7 +39,7 @@ export class Image {
   @Column({ nullable: true })
   description: string | null;
 
-  @Column({ nullable: true, type: 'jsonb' })
+  @Column('jsonb', { nullable: true })
   exif: Record<string, string | number> | null;
 
   @Column({ nullable: true })
@@ -40,8 +48,8 @@ export class Image {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: true, type: 'jsonb' })
-  labels: object | null;
+  @Column('jsonb', { nullable: true })
+  labels: Label[] | null;
 
   @Column({ nullable: true })
   mime_type: string | null;
@@ -52,7 +60,7 @@ export class Image {
   @Column({ nullable: true })
   postfix: string | null;
 
-  @Column({ nullable: true, type: 'uuid' })
+  @Column('uuid', { nullable: true })
   uuid: string | null;
 
   @Column()

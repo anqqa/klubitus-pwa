@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Query, UseInterceptors } from '@nestjs/common';
 import {
   ApiForbiddenResponse,
   ApiNotFoundResponse,
@@ -7,6 +7,7 @@ import {
   ApiUseTags,
 } from '@nestjs/swagger';
 
+import { TransformerInterceptor } from '../../common/interceptors/transformer.interceptor';
 import { Post, PostsQuery } from './posts.dto';
 import { PostsService } from './posts.service';
 
@@ -19,16 +20,18 @@ export class PostsController {
   @ApiOkResponse({ type: Post, isArray: true })
   @ApiNotFoundResponse({ description: 'Topic not found.' })
   @ApiForbiddenResponse({ description: 'Topic not accessible.' })
+  @UseInterceptors(new TransformerInterceptor(Post))
   @Get()
-  async getAll(@Query() query: PostsQuery): Promise<Post[]> {
+  async getAll(@Query() query: PostsQuery) {
     return await this.postsService.findAll(query);
   }
 
   @ApiOperation({ title: 'Get a post' })
   @ApiOkResponse({ type: Post })
   @ApiNotFoundResponse({ description: 'Post not found.' })
+  @UseInterceptors(new TransformerInterceptor(Post))
   @Get(':id')
-  async getById(@Param('id', new ParseIntPipe()) id: number): Promise<Post> {
+  async getById(@Param('id', new ParseIntPipe()) id: number) {
     return await this.postsService.get(id);
   }
 }

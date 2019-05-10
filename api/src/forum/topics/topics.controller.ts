@@ -1,6 +1,7 @@
-import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Query, UseInterceptors } from '@nestjs/common';
 import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger';
 
+import { TransformerInterceptor } from '../../common/interceptors/transformer.interceptor';
 import { Topic, TopicsQuery } from './topics.dto';
 import { TopicsService } from './topics.service';
 
@@ -12,16 +13,18 @@ export class TopicsController {
   @ApiOperation({ title: 'List topics' })
   @ApiOkResponse({ type: Topic, isArray: true })
   @ApiNotFoundResponse({ description: 'Topics not found.' })
+  @UseInterceptors(new TransformerInterceptor(Topic))
   @Get()
-  async getAll(@Query() query: TopicsQuery): Promise<Topic[]> {
+  async getAll(@Query() query: TopicsQuery) {
     return await this.topicsService.findAll(query);
   }
 
   @ApiOperation({ title: 'Get a topic' })
   @ApiOkResponse({ type: Topic })
+  @UseInterceptors(new TransformerInterceptor(Topic))
   @ApiNotFoundResponse({ description: 'Topic not found.' })
   @Get(':id')
-  async getById(@Param('id', new ParseIntPipe()) id: number): Promise<Topic> {
+  async getById(@Param('id', new ParseIntPipe()) id: number) {
     return await this.topicsService.get(id);
   }
 }

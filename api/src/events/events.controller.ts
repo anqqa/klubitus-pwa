@@ -1,6 +1,7 @@
-import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Query, UseInterceptors } from '@nestjs/common';
 import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger';
 
+import { TransformerInterceptor } from '../common/interceptors/transformer.interceptor';
 import { Event, EventsQuery } from './events.dto';
 import { EventsService } from './events.service';
 
@@ -11,16 +12,18 @@ export class EventsController {
 
   @ApiOperation({ title: 'List events' })
   @ApiOkResponse({ description: 'Success', type: Event, isArray: true })
+  @UseInterceptors(new TransformerInterceptor(Event))
   @Get()
-  async getAll(@Query() query: EventsQuery): Promise<Event[]> {
+  async getAll(@Query() query: EventsQuery) {
     return await this.eventsService.findAll(query);
   }
 
   @ApiOperation({ title: 'Get an event' })
   @ApiOkResponse({ description: 'Success', type: Event })
   @ApiNotFoundResponse({ description: 'Event not found' })
+  @UseInterceptors(new TransformerInterceptor(Event))
   @Get(':id')
-  async getById(@Param('id', new ParseIntPipe()) id: number): Promise<Event> {
+  async getById(@Param('id', new ParseIntPipe()) id: number) {
     return await this.eventsService.get(id);
   }
 }

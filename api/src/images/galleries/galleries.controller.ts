@@ -1,7 +1,8 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseInterceptors } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger';
-import { GalleriesQuery, Gallery } from './galleries.dto';
+import { TransformerInterceptor } from '../../common/interceptors/transformer.interceptor';
 
+import { GalleriesQuery, Gallery } from './galleries.dto';
 import { GalleriesService } from './galleries.service';
 
 @ApiUseTags('Images')
@@ -11,8 +12,9 @@ export class GalleriesController {
 
   @ApiOperation({ title: 'List galleries' })
   @ApiOkResponse({ description: 'Success', type: Gallery, isArray: true })
+  @UseInterceptors(new TransformerInterceptor(Gallery))
   @Get()
-  async getAll(@Query() query: GalleriesQuery): Promise<Gallery[]> {
+  async getAll(@Query() query: GalleriesQuery) {
     return await this.galleriesService.findAll(query);
   }
 }
