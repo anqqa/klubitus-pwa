@@ -11,8 +11,8 @@ import {
 import { User } from '../../users/user.entity';
 import { Image } from '../image.entity';
 
-@Entity('image_notes')
-export class Note {
+@Entity('image_comments')
+export class Comment {
   @OneToOne(() => User)
   @JoinColumn({ name: 'author_id' })
   author: User;
@@ -22,9 +22,6 @@ export class Note {
 
   @CreateDateColumn()
   created_at: Date;
-
-  @Column({ nullable: true })
-  height: number | null;
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -37,7 +34,7 @@ export class Note {
   image_id: number;
 
   @Column()
-  name: string;
+  comment: string;
 
   @OneToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'user_id' })
@@ -45,13 +42,4 @@ export class Note {
 
   @Column({ nullable: true })
   user_id: number | null;
-
-  @Column({ nullable: true })
-  width: number | null;
-
-  @Column({ nullable: true })
-  x: number | null;
-
-  @Column({ nullable: true })
-  y: number | null;
 }

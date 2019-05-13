@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 
 import { User } from '../forum/users/user.entity';
+import { Comment } from './comments/comment.entity';
 import { Note } from './notes/note.entity';
 
 interface Label {
@@ -34,6 +35,9 @@ export class Image {
 
   @Column()
   comment_count: number;
+
+  @OneToMany(() => Comment, comment => comment.image)
+  comments: Comment[];
 
   @CreateDateColumn()
   created_at: Date;

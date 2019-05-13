@@ -5,7 +5,7 @@ import { Expose, Type } from 'class-transformer';
 import { User } from '../../users/users.dto';
 import { Image } from '../images.dto';
 
-export class Note {
+export class Comment {
   @ApiModelProperty()
   @Expose()
   @Type(() => User)
@@ -18,10 +18,6 @@ export class Note {
   @ApiModelProperty({ type: String, format: 'date-time' })
   @Expose()
   created_at: Date;
-
-  @ApiModelPropertyOptional()
-  @Expose()
-  height?: number;
 
   @ApiModelProperty()
   @Expose()
@@ -38,7 +34,7 @@ export class Note {
 
   @ApiModelProperty()
   @Expose()
-  name: string;
+  comment: string;
 
   @ApiModelPropertyOptional()
   @Expose()
@@ -48,16 +44,4 @@ export class Note {
   @ApiModelPropertyOptional()
   @Expose()
   user_id?: number;
-
-  @ApiModelPropertyOptional()
-  @Expose()
-  width?: number;
-
-  @ApiModelPropertyOptional()
-  @Expose()
-  x?: number;
-
-  @ApiModelPropertyOptional()
-  @Expose()
-  y?: number;
 }

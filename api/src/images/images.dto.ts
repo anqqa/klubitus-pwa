@@ -5,6 +5,7 @@ import { Expose, Transform, Type } from 'class-transformer';
 import { isEmpty } from 'lodash';
 
 import { User } from '../users/users.dto';
+import { Comment } from './comments/comments.dto';
 import { Image as ImageEntity } from './image.entity';
 import { Note } from './notes/notes.dto';
 
@@ -101,6 +102,11 @@ export class Image {
   @ApiModelProperty()
   @Expose()
   comment_count: number;
+
+  @ApiModelPropertyOptional({ type: Comment, isArray: true })
+  @Expose()
+  @Type(() => Comment)
+  comments: Comment[];
 
   @ApiModelProperty({ type: String, format: 'date-time' })
   @Expose()
