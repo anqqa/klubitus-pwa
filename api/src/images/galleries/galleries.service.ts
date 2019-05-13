@@ -6,7 +6,7 @@ import { Between, MoreThan, Repository } from 'typeorm';
 import { Pagination } from '../../common/pagination/pagination.dto';
 import { PaginationService } from '../../common/pagination/pagination.service';
 import { Image } from '../image.entity';
-import { GalleriesQuery } from './galleries.dto';
+import { GalleriesQuery, Stats } from './galleries.dto';
 import { Gallery } from './gallery.entity';
 
 @Injectable()
@@ -61,5 +61,20 @@ export class GalleriesService {
       .take(take)
       .skip(skip)
       .getMany();
+  }
+
+  async getStats(): Promise<Stats[]> {
+    return await this.galleryRepository
+      .createQueryBuilder('gallery')
+      .select('EXTRACT (YEAR FROM event_date)', 'year')
+      .addSelect('EXTRACT (MONTH FROM event_date)', 'month')
+      .addSelect('COUNT(id)', 'gallery_count')
+      .addSelect('SUM(image_count)', 'image_count')
+      .where('image_count > 0')
+      .groupBy('year')
+      .addGroupBy('month')
+      .orderBy('year', 'DESC')
+      .addOrderBy('month', 'DESC')
+      .getRawMany();
   }
 }

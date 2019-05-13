@@ -4,7 +4,7 @@ import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiUseTags } from '@n
 import { TransformerInterceptor } from '../../common/interceptors/transformer.interceptor';
 import { Pagination } from '../../common/pagination/pagination.dto';
 import { Image } from '../images.dto';
-import { GalleriesQuery, Gallery } from './galleries.dto';
+import { GalleriesQuery, Gallery, Stats } from './galleries.dto';
 import { GalleriesService } from './galleries.service';
 
 @ApiUseTags('Images')
@@ -18,6 +18,14 @@ export class GalleriesController {
   @Get()
   async getAll(@Query() query: GalleriesQuery) {
     return await this.galleriesService.findAll(query);
+  }
+
+  @ApiOperation({ title: 'Get gallery statistics' })
+  @ApiOkResponse({ type: Stats, isArray: true })
+  @UseInterceptors(new TransformerInterceptor(Stats))
+  @Get('/stats')
+  async getStats() {
+    return await this.galleriesService.getStats();
   }
 
   @ApiOperation({ title: 'Get images of a gallery' })

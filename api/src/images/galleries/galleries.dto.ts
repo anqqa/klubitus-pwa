@@ -8,56 +8,45 @@ import { Pagination } from '../../common/pagination/pagination.dto';
 import { Event } from '../../events/events.dto';
 import { Image } from '../images.dto';
 
+@Expose()
 export class Gallery {
   @ApiModelProperty()
-  @Expose()
   copyright: string;
 
   @ApiModelProperty({ type: String, format: 'date-time' })
-  @Expose()
   created_at: Date;
 
   @ApiModelPropertyOptional()
-  @Expose()
   @Type(() => Image)
   default_image?: Image;
 
   @ApiModelPropertyOptional()
-  @Expose()
   default_image_id?: number;
 
   @ApiModelPropertyOptional()
-  @Expose()
   @Type(() => Event)
   event?: Event;
 
   @ApiModelProperty({ type: String, format: 'date' })
-  @Expose()
   event_date: Date;
 
   @ApiModelProperty()
-  @Expose()
   event_id: number;
 
   @ApiModelProperty()
-  @Expose()
   id: number;
 
   @ApiModelProperty()
-  @Expose()
   image_count: number;
 
   @ApiModelPropertyOptional({ type: Image, isArray: true })
-  @Expose()
   @Type(() => Image)
   images: Image[];
 
   @ApiModelProperty()
-  @Expose()
   name: string;
 
   @ApiModelProperty({ type: String, format: 'date-time' })
-  @Expose()
   updated_at: Date;
 }
 
@@ -83,4 +72,23 @@ export class GalleriesQuery extends Pagination {
   @ApiModelPropertyOptional({ description: 'Filter galleries by event ID.' })
   @IsOptional()
   event_id?: number;
+}
+
+@Expose()
+export class Stats {
+  @ApiModelProperty()
+  @Type(() => Number)
+  gallery_count: number;
+
+  @ApiModelProperty()
+  @Type(() => Number)
+  image_count: number;
+
+  @ApiModelProperty()
+  @Type(() => Number)
+  month: number;
+
+  @ApiModelProperty()
+  @Type(() => Number)
+  year: number;
 }
