@@ -30,17 +30,15 @@ export const colorFromText = text => {
   return colors[number % colors.length];
 };
 
-
 const formatter = new Intl.NumberFormat();
 
 export const count = (number, singular, plural) => {
-  return `${formatter.format(number)} ${number === 1 ? singular : plural }`;
+  return `${formatter.format(number)} ${number === 1 ? singular : plural}`;
 };
 
-
 export const nFormatter = (number, digits, bytes) => {
-  const regex   = /\.0+|(\.[0-9]*[1-9])0+$/;
-  const base    = bytes ? 1024 : 1000;
+  const regex = /\.0+|(\.[0-9]*[1-9])0+$/;
+  const base = bytes ? 1024 : 1000;
   const symbols = [
     { value: base ** 0, symbol: '' },
     { value: base ** 1, symbol: 'k' },
@@ -60,9 +58,8 @@ export const nFormatter = (number, digits, bytes) => {
 
   const value = (number / symbols[i].value).toFixed(digits).replace(regex, '$1');
 
-  return `${value}${symbols[i].symbol}${bytes && 'B'}`;
+  return `${value}${symbols[i].symbol}${bytes ? 'B' : ''}`;
 };
-
 
 export const pad = (number, size) => {
   let padded = String(number);
@@ -74,18 +71,19 @@ export const pad = (number, size) => {
   return padded;
 };
 
-
 export const slug = text => {
-  return text.toString().toLowerCase()
-    .replace(/[àáäâã]/g, 'a')  // Transliterate
+  return text
+    .toString()
+    .toLowerCase()
+    .replace(/[àáäâã]/g, 'a') // Transliterate
     .replace(/[èéëê]/g, 'e')
     .replace(/[ìíïî]/g, 'i')
     .replace(/[òóöôõ]/g, 'o')
     .replace(/[ùúüû]/g, 'u')
     .replace(/ç/g, 'c')
     .replace(/ñ/g, 'n')
-    .replace(/[^\w]/g, '-')   // Dashify
-    .replace(/-+/g, '-')      // Collapse dashes
-    .replace(/^-/, '')        // Trim leading and trailing dashes
+    .replace(/[^\w]/g, '-') // Dashify
+    .replace(/-+/g, '-') // Collapse dashes
+    .replace(/^-/, '') // Trim leading and trailing dashes
     .replace(/-$/, '');
 };
