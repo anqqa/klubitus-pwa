@@ -14,11 +14,9 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "lint": "eslint --ext .js .",
-    "lint2": "tslint -p tsconfig.json",
+    "lint": "tslint -p tsconfig.json",
     "precommit": "lint-staged",
-    "start": "nodemon -L",
-    "start2": "nodemon -L --watch src src/index.js"
+    "start": "nodemon -L"
   },
   "dependencies": {
     "@nestjs/common": "^6.1.0",
