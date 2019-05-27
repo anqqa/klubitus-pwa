@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { Connection } from 'typeorm';
 
+import { AuthModule } from './auth/auth.module';
 import DatabaseModule from './db.module';
 import { EventsModule } from './events/events.module';
 import { ForumModule } from './forum/forum.module';
@@ -11,13 +12,14 @@ import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
+    AuthModule,
     DatabaseModule,
     EventsModule,
     ForumModule,
     ImagesModule,
+    NewsfeedModule,
     ShoutsModule,
     UsersModule,
-    NewsfeedModule,
   ],
 })
 export class ApplicationModule {
