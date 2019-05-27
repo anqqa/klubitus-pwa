@@ -38,6 +38,9 @@ export class Item {
   target_event?: Event;
 
   @ApiModelPropertyOptional()
+  target_event_id?: number;
+
+  @ApiModelPropertyOptional()
   target_flyer_id?: number;
 
   @ApiModelPropertyOptional()
@@ -45,16 +48,28 @@ export class Item {
   target_forum_post?: Post;
 
   @ApiModelPropertyOptional()
+  target_forum_post_id?: number;
+
+  @ApiModelPropertyOptional()
   @Type(() => Topic)
   target_forum_topic?: Topic;
+
+  @ApiModelPropertyOptional()
+  target_forum_topic_id?: number;
 
   @ApiModelPropertyOptional()
   @Type(() => Gallery)
   target_gallery?: Gallery;
 
   @ApiModelPropertyOptional()
+  target_gallery_id?: number;
+
+  @ApiModelPropertyOptional()
   @Type(() => Image)
   target_image?: Image;
+
+  @ApiModelPropertyOptional()
+  target_image_id?: number;
 
   @ApiModelPropertyOptional()
   target_track_id?: number;
@@ -62,6 +77,9 @@ export class Item {
   @ApiModelPropertyOptional()
   @Type(() => User)
   target_user?: User;
+
+  @ApiModelPropertyOptional()
+  target_user_id?: number;
 
   @ApiModelPropertyOptional()
   target_venue_id?: number;

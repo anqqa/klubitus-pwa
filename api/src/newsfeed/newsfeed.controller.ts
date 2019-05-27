@@ -20,6 +20,8 @@ export class NewsfeedController {
     const datePart = aggregate && Object.keys(DATE_FORMATS).includes(aggregate) ? aggregate : 'day';
     const items = await this.newsfeedService.findAll(query, datePart);
 
+    await this.newsfeedService.fillRelations(items);
+
     // Aggregated transforms aren't supported, do it manually
     const aggregated = this.newsfeedService.aggregate(items, datePart);
 
