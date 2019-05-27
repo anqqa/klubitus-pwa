@@ -4,7 +4,7 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 
 import { ApplicationModule } from './app.module';
 import { ErrorsInterceptor } from './common/interceptors/errors.interceptor';
-import requestLogger from './common/middlewares/requestlogger.middleware';
+import { RequestLoggerInterceptor } from './common/interceptors/requestlogger.interceptor';
 import { setupSwagger } from './swagger';
 
 async function bootstrap() {
@@ -19,11 +19,7 @@ async function bootstrap() {
   // Security
   app.enableCors();
 
-  // Log requests
-  app.use(requestLogger);
-
-  // Intercept EntityNotFound error and return 404
-  app.useGlobalInterceptors(new ErrorsInterceptor());
+  app.useGlobalInterceptors(new ErrorsInterceptor(), new RequestLoggerInterceptor());
 
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
 
