@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { format, parse } from 'date-fns';
 import { groupBy, values } from 'lodash';
-import { Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 
 import { PaginationService } from '../common/pagination/pagination.service';
-import { Item } from './items/item.entity';
+import { Item, Relations } from './items/item.entity';
 import { DATE_FORMATS } from './newsfeed.constants';
 import { NewsfeedQuery } from './newsfeed.dto';
 
@@ -47,13 +47,13 @@ export class NewsfeedService {
     const itemQuery = this.itemRepository
       .createQueryBuilder('item')
       .select('item')
-      .leftJoinAndSelect('item.target_event', 'target_event')
-      .leftJoinAndSelect('item.target_forum_post', 'target_post')
-      .leftJoinAndSelect('item.target_forum_topic', 'target_topic')
-      .leftJoinAndSelect('item.target_gallery', 'target_gallery')
-      .leftJoinAndSelect('item.target_image', 'target_image')
-      .leftJoinAndSelect('item.target_user', 'target_user')
-      .leftJoinAndSelect('item.user', 'user')
+      // .leftJoinAndSelect('item.target_event', 'target_event')
+      // .leftJoinAndSelect('item.target_forum_post', 'target_post')
+      // .leftJoinAndSelect('item.target_forum_topic', 'target_topic')
+      // .leftJoinAndSelect('item.target_gallery', 'target_gallery')
+      // .leftJoinAndSelect('item.target_image', 'target_image')
+      // .leftJoinAndSelect('item.target_user', 'target_user')
+      // .leftJoinAndSelect('item.user', 'user')
       .where(qb => {
         const subquery = qb
           .subQuery()
@@ -63,7 +63,46 @@ export class NewsfeedService {
         return 'item.id IN ' + subquery.getQuery();
       })
       .orderBy('item.id', 'DESC');
+    const items = await itemQuery.getMany();
 
-    return await itemQuery.getMany();
+    // Build a list of related entity ids
+    const relatedIds: Record<string, { entity: any; ids: number[] }> = {};
+
+    items.forEach((item: any) => {
+      for (const [target, [entity, alias]] of Object.entries(Relations)) {
+        const id = item[`${target}_id`];
+
+        if (id) {
+          if (!relatedIds[alias]) {
+            relatedIds[alias] = { entity, ids: [] };
+          }
+
+          relatedIds[alias].ids.push(id);
+        }
+      }
+    });
+
+    // Fetch those entities
+    const entities: Record<string, any[]> = {};
+
+    for (const [alias, { entity, ids }] of Object.entries(relatedIds)) {
+      entities[alias] = await getRepository(entity)
+        .createQueryBuilder(alias)
+        .where(`${alias}.id IN (:...ids)`, { ids })
+        .getMany();
+    }
+
+    // Populate parents
+    items.forEach((item: any) => {
+      for (const [target, [entity, alias]] of Object.entries(Relations)) {
+        const targetId = item[`${target}_id`];
+
+        if (targetId && entities[alias]) {
+          item[target] = entities[alias].find(e => e.id === targetId);
+        }
+      }
+    });
+
+    return items;
   }
 }
