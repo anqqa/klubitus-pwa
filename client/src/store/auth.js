@@ -12,15 +12,14 @@ export const actions = {
     const { token } = await this.$axios.$post('auth/facebook/login', login);
   },
 
-  async login({ commit, dispatch }, login) {
-    const { token } = await this.$axios.$post('auth/login', login);
+  async login({ commit }, login) {
+    const { token, user } = await this.$axios.$post('auth/login', login);
 
     commit('setToken', token);
+    commit('setUser', user);
 
     this.$axios.setToken(token, 'Bearer');
     cookies.set('auth.token', token, { expires: EXPIRES });
-
-    dispatch('me');
   },
 
   async logout({ dispatch }) {
@@ -30,7 +29,7 @@ export const actions = {
   },
 
   async me({ commit }) {
-    const { data: user } = await this.$axios.$get('auth/me');
+    const user = await this.$axios.$get('auth/me');
 
     commit('setUser', user);
   },
