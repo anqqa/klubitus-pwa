@@ -12,6 +12,7 @@ export const setupSwagger = (app: INestApplication) => {
     .addTag('Newsfeed', 'News feed')
     .addTag('Shouts', 'Shouts')
     .addTag('Users', 'Users')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, options);
