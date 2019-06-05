@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Post,
+  Req,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
@@ -30,6 +39,18 @@ export class AuthController {
     return { token, user };
   }
 
+  @ApiOperation({ title: 'Logout' })
+  @ApiOkResponse({ description: 'Success' })
+  @ApiUnauthorizedResponse({ description: 'Not authenticated' })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  @Post('logout')
+  async logout(@Headers('authorization') authorization: string): Promise<any> {
+    const [bearer, token] = authorization.split(' ');
+
+    await this.authService.deleteToken(token);
+  }
+
   @ApiOperation({ title: 'Get authenticated user info' })
   @ApiOkResponse({ description: 'Success', type: User })
   @ApiUnauthorizedResponse({ description: 'Not authenticated' })
@@ -37,7 +58,7 @@ export class AuthController {
   @UseGuards(AuthGuard())
   @UseInterceptors(new TransformerInterceptor(User))
   @Get('me')
-  me(@Req() req: any): User {
-    return req.user;
+  me(@Req() { user }: any): User {
+    return user;
   }
 }

@@ -23,9 +23,11 @@ export const actions = {
   },
 
   async logout({ dispatch }) {
-    dispatch('reset');
+    try {
+      await this.$axios.post('auth/logout');
+    } catch (error) {}
 
-    await this.$axios.post('auth/logout');
+    dispatch('reset');
   },
 
   async me({ commit }) {

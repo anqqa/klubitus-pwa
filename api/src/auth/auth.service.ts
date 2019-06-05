@@ -18,6 +18,18 @@ export class AuthService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
+  async deleteToken(token: string): Promise<boolean> {
+    const userToken = await this.tokenRepository.findOne({ token });
+
+    if (userToken) {
+      await this.tokenRepository.remove(userToken);
+
+      return true;
+    }
+
+    return false;
+  }
+
   async generateToken(user: User): Promise<string> {
     // Generate session token, valid for 30 days
     const token = randomBytes(16).toString('hex');
