@@ -36,10 +36,28 @@ export class AuthService {
     const validator = new Validator();
     const where = validator.isEmail(username) ? { email: username } : { username };
 
-    const user = await this.userRepository.findOne({ where });
+    let user = await this.userRepository.findOne({ where });
 
-    if (!user || !user.verifyPassword(password)) {
-      Logger.log(user ? 'Invalid password' : 'User not found', LOG_CONTEXT, false);
+    if (!user) {
+      Logger.log('User not found', LOG_CONTEXT, false);
+
+      throw new UnauthorizedException();
+    }
+
+    if (!user.password) {
+      Logger.log(`Migrating password [user:${user.id}]`, LOG_CONTEXT, false);
+
+      if (user.verifyOldPassword(password)) {
+        user.setPassword(password);
+
+        user = await this.userRepository.save(user);
+      } else {
+        Logger.log(`Invalid old password  [user:${user.id}]`, LOG_CONTEXT, false);
+
+        throw new UnauthorizedException();
+      }
+    } else if (!user.verifyPassword(password)) {
+      Logger.log(`Invalid password  [user:${user.id}]`, LOG_CONTEXT, false);
 
       throw new UnauthorizedException();
     }
