@@ -16,16 +16,34 @@ import {
   ApiUnauthorizedResponse,
   ApiUseTags,
 } from '@nestjs/swagger';
+import { plainToClass } from 'class-transformer';
 
 import { TransformerInterceptor } from '../common/interceptors/transformer.interceptor';
 import { User } from '../users/users.dto';
-import { LoginPayload, LoginResponse } from './auth.dto';
+import { FacebookPayload, FacebookResponse, LoginPayload, LoginResponse } from './auth.dto';
 import { AuthService } from './auth.service';
 
 @ApiUseTags('Users')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @ApiOperation({ title: 'Connect with Facebook' })
+  @ApiOkResponse({ description: 'Success', type: LoginResponse })
+  @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
+  @Post('facebook')
+  async facebook(@Body() payload: FacebookPayload): Promise<LoginResponse | FacebookResponse> {
+    const { access_token: fbToken, external_user_id: fbUserId } = payload;
+    const { email, existing, name, user } = await this.authService.facebook(fbToken, fbUserId);
+
+    if (user) {
+      const token = await this.authService.generateToken(user);
+
+      return plainToClass(LoginResponse, { token, user });
+    }
+
+    return plainToClass(FacebookResponse, { email, existing, name });
+  }
 
   @ApiOperation({ title: 'Login with email or username' })
   @ApiOkResponse({ description: 'Success', type: LoginResponse })

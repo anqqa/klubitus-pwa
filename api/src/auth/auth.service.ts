@@ -8,12 +8,15 @@ import { Repository } from 'typeorm';
 import { Token } from '../users/tokens/token.entity';
 import { User } from '../users/user.entity';
 import { LoginPayload } from './auth.dto';
+import { IFacebookLogin } from './facebook.interface';
+import { FacebookService } from './facebook.service';
 
 const LOG_CONTEXT = 'Auth';
 
 @Injectable()
 export class AuthService {
   constructor(
+    private facebookService: FacebookService,
     @InjectRepository(Token) private readonly tokenRepository: Repository<Token>,
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
@@ -28,6 +31,10 @@ export class AuthService {
     }
 
     return false;
+  }
+
+  async facebook(token: string, userId: number): Promise<IFacebookLogin> {
+    return this.facebookService.login(token, userId);
   }
 
   async generateToken(user: User): Promise<string> {
