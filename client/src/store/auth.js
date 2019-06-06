@@ -9,7 +9,7 @@ export const state = () => ({
 
 export const actions = {
   async fbLogin({ commit, dispatch }, login) {
-    const { token } = await this.$axios.$post('auth/facebook/login', login);
+    const { token } = await this.$axios.$post('auth/facebook', login);
   },
 
   async login({ commit }, login) {
