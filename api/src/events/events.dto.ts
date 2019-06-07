@@ -68,6 +68,10 @@ export class EventsQuery extends Pagination {
   @IsISO8601()
   to?: Date;
 
+  @ApiModelPropertyOptional()
+  @IsOptional()
+  search?: string;
+
   @ApiModelPropertyOptional({
     description: 'Sort events by column.',
     pattern: '^[+-]?(begins_at|created_at|id|updated_at)$',

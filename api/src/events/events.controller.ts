@@ -15,7 +15,7 @@ export class EventsController {
   @UseInterceptors(new TransformerInterceptor(Event))
   @Get()
   async getAll(@Query() query: EventsQuery) {
-    return await this.eventsService.findAll(query);
+    return this.eventsService.findAll(query);
   }
 
   @ApiOperation({ title: 'Get an event' })
@@ -24,6 +24,6 @@ export class EventsController {
   @UseInterceptors(new TransformerInterceptor(Event))
   @Get(':id')
   async getById(@Param('id', new ParseIntPipe()) id: number) {
-    return await this.eventsService.get(id);
+    return this.eventsService.get(id);
   }
 }
