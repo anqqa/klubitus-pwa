@@ -21,6 +21,9 @@ export class BaseUser {
 @Entity('users')
 export class User extends BaseUser {
   @Column()
+  email: string;
+
+  @Column()
   password?: string;
 
   @Column()

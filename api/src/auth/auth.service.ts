@@ -33,8 +33,8 @@ export class AuthService {
     return false;
   }
 
-  async facebook(token: string, userId: number): Promise<IFacebookLogin> {
-    return this.facebookService.login(token, userId);
+  async facebook(token: string, userId: number, authenticatedUser?: User): Promise<IFacebookLogin> {
+    return this.facebookService.login(token, userId, authenticatedUser);
   }
 
   async generateToken(user: User): Promise<string> {

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   InternalServerErrorException,
@@ -53,7 +54,7 @@ export class FacebookService {
     );
   }
 
-  async login(token: string, userId: number): Promise<IFacebookLogin> {
+  async login(token: string, userId: number, authenticatedUser?: User): Promise<IFacebookLogin> {
     Logger.log('Attempting login', LOG_CONTEXT, false);
 
     let email: string;
@@ -90,7 +91,33 @@ export class FacebookService {
     if (externalUser) {
       Logger.log('Login with connected user', LOG_CONTEXT, false);
 
+      if (authenticatedUser && authenticatedUser.id !== externalUser.user.id) {
+        Logger.warn('Connected to another user', LOG_CONTEXT, false);
+
+        throw new ConflictException('Facebook already connected to another account');
+      }
+
       return { user: externalUser.user };
+    }
+
+    // Connect authenticated user
+    if (authenticatedUser) {
+      Logger.log('Connected existing user', LOG_CONTEXT, false);
+
+      await this.externalRepository.save({
+        external_user_id: id,
+        provider: 'facebook',
+        token,
+        user: authenticatedUser,
+      });
+
+      return { existing: true, user: authenticatedUser };
+    }
+
+    if (!email) {
+      Logger.log('Login attempt with unknown user without email', LOG_CONTEXT, false);
+
+      throw new BadRequestException('Email not provided');
     }
 
     // Match existing email

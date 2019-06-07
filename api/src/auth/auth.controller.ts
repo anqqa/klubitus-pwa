@@ -11,6 +11,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
+  ApiConflictResponse,
   ApiOkResponse,
   ApiOperation,
   ApiUnauthorizedResponse,
@@ -28,15 +29,36 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @ApiOperation({ title: 'Connect with Facebook' })
-  @ApiOkResponse({ description: 'Success', type: LoginResponse })
+  @ApiOperation({
+    description:
+      'Authenticated user: connect accounts.\n' +
+      'Unauthenticated user: log in if accounts connected, offer login/register if not.',
+    title: 'Connect with Facebook',
+  })
+  @ApiOkResponse({ description: 'Success' })
+  @ApiConflictResponse({
+    description: 'Facebook account mismatch, e.g. connected to another authenticated user',
+  })
   @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
   @Post('facebook')
-  async facebook(@Body() payload: FacebookPayload): Promise<LoginResponse | FacebookResponse> {
+  async facebook(
+    @Body() payload: FacebookPayload,
+    @Req() { user: authenticated }: any,
+  ): Promise<LoginResponse | FacebookResponse | boolean> {
     const { access_token: fbToken, external_user_id: fbUserId } = payload;
-    const { email, existing, name, user } = await this.authService.facebook(fbToken, fbUserId);
+
+    const { email, existing, name, user } = await this.authService.facebook(
+      fbToken,
+      fbUserId,
+      authenticated,
+    );
 
     if (user) {
+      // Connected existing user?
+      if (existing) {
+        return true;
+      }
+
       const token = await this.authService.generateToken(user);
 
       return plainToClass(LoginResponse, { token, user });
