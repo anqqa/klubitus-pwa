@@ -14,7 +14,7 @@ export class PaginationService {
     }
 
     let skip: number;
-    let take: number;
+    let take: number = defaultLimit;
 
     if ('limit' in query) {
       take = query.limit;
