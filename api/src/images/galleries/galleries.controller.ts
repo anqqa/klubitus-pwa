@@ -17,7 +17,7 @@ export class GalleriesController {
   @UseInterceptors(new TransformerInterceptor(Gallery))
   @Get()
   async getAll(@Query() query: GalleriesQuery) {
-    return await this.galleriesService.findAll(query);
+    return this.galleriesService.findAll(query);
   }
 
   @ApiOperation({ title: 'Get gallery statistics' })
@@ -25,7 +25,19 @@ export class GalleriesController {
   @UseInterceptors(new TransformerInterceptor(Stats))
   @Get('/stats')
   async getStats() {
-    return await this.galleriesService.getStats();
+    return this.galleriesService.getStats();
+  }
+
+  @ApiOperation({ title: 'Get an images of a gallery' })
+  @ApiOkResponse({ type: Image })
+  @ApiNotFoundResponse({ description: 'Gallery or image not found.' })
+  @UseInterceptors(new TransformerInterceptor(Image))
+  @Get('/:id/images/:imageId')
+  async getImageByIds(
+    @Param('id', new ParseIntPipe()) id: number,
+    @Param('imageId', new ParseIntPipe()) imageId: number,
+  ) {
+    return this.galleriesService.getImage(id, imageId);
   }
 
   @ApiOperation({ title: 'Get images of a gallery' })
@@ -34,7 +46,7 @@ export class GalleriesController {
   @UseInterceptors(new TransformerInterceptor(Image))
   @Get('/:id/images')
   async getImagesById(@Param('id', new ParseIntPipe()) id: number, @Query() query: Pagination) {
-    return await this.galleriesService.getImages(id, query);
+    return this.galleriesService.getImages(id, query);
   }
 
   @ApiOperation({ title: 'Get a gallery' })
@@ -43,6 +55,6 @@ export class GalleriesController {
   @UseInterceptors(new TransformerInterceptor(Gallery))
   @Get('/:id')
   async getById(@Param('id', new ParseIntPipe()) id: number) {
-    return await this.galleriesService.get(id);
+    return this.galleriesService.get(id);
   }
 }

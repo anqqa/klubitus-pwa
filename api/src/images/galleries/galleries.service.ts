@@ -41,18 +41,28 @@ export class GalleriesService {
     // Pagination
     const { take, skip } = PaginationService.parseQuery(query, 100, 100);
 
-    return await this.galleryRepository.find({ order, relations, skip, take, where });
+    return this.galleryRepository.find({ order, relations, skip, take, where });
   }
 
   async get(id: number): Promise<Gallery> {
-    return await this.galleryRepository.findOneOrFail(id, { relations: ['event'] });
+    return this.galleryRepository.findOneOrFail(id, { relations: ['event'] });
+  }
+
+  async getImage(id: number, imageId: number): Promise<Image> {
+    return this.imageRepository
+      .createQueryBuilder('image')
+      .innerJoin('galleries_images', 'gallery', 'gallery.image_id = image.id')
+      .leftJoinAndSelect('image.author', 'author')
+      .where('gallery.gallery_id = :id', { id })
+      .andWhere('image.id = :imageId', { imageId })
+      .getOne();
   }
 
   async getImages(id: number, query?: Pagination): Promise<Image[]> {
     // Pagination
     const { take, skip } = PaginationService.parseQuery(query, 100, 100);
 
-    return await this.imageRepository
+    return this.imageRepository
       .createQueryBuilder('image')
       .innerJoin('galleries_images', 'gallery', 'gallery.image_id = image.id')
       .leftJoinAndSelect('image.author', 'author')
@@ -64,7 +74,7 @@ export class GalleriesService {
   }
 
   async getStats(): Promise<Stats[]> {
-    return await this.galleryRepository
+    return this.galleryRepository
       .createQueryBuilder('gallery')
       .select('EXTRACT (YEAR FROM event_date)', 'year')
       .addSelect('EXTRACT (MONTH FROM event_date)', 'month')
