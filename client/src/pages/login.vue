@@ -6,6 +6,30 @@
       </header>
 
       <form class="card-content" @submit.prevent="login">
+        <no-ssr>
+          <button slot="placeholder" class="button fb is-full" disabled>
+            <i class="bx bx-loader-alt bx-spin" /> Just a moment...
+          </button>
+
+          <div v-if="!fbProcessing">
+            <fb-login :params="fbParams" @success="onFbSuccess" @error="onFbError"></fb-login>
+          </div>
+          <div v-else>
+            <button class="button fb is-full" disabled>
+              <i class="bx bx-loader-alt bx-spin" /> Logging in...
+            </button>
+          </div>
+
+          <div v-if="fbError" class="field has-error" v-html="fbError" />
+
+          <p v-if="fbLogin">
+            You haven't connected your Facebook account to your klubitus account yet. Log in to
+            klubitus to automagically connect your accounts, after that you may log in with your
+            Facebook account!
+          </p>
+          <span v-else class="separator">or</span>
+        </no-ssr>
+
         <div :class="{ 'has-error': error || $v.username.$error }" class="field">
           <label for="input-username">Email or username *</label>
           <div class="control has-icon-left">
@@ -39,25 +63,6 @@
         <div v-if="error" class="field has-error" v-html="error" />
 
         <button class="button is-primary is-full" type="submit">Login</button>
-
-        <no-ssr>
-          <span class="separator">or</span>
-
-          <button slot="placeholder" class="button fb is-full" disabled>
-            <i class="bx bx-loader-alt bx-spin" /> Just a moment...
-          </button>
-
-          <div v-if="!fbProcessing">
-            <fb-login :params="fbParams" @success="onFbSuccess" @error="onFbError"></fb-login>
-          </div>
-          <div v-else>
-            <button class="button fb is-full" disabled>
-              <i class="bx bx-loader-alt bx-spin" /> Logging in...
-            </button>
-          </div>
-
-          <div v-if="fbError" class="field has-error" v-html="fbError" />
-        </no-ssr>
       </form>
 
       <footer>
@@ -80,6 +85,7 @@ export default {
   data: () => ({
     error: null,
     fbError: null,
+    fbLogin: false,
     fbParams: {
       return_scopes: true,
       scope: 'email',
@@ -107,6 +113,7 @@ export default {
 
         this.$router.push('/');
       } catch (error) {
+        console.log({ error });
         this.error = get(error, 'response.data.message', 'Fail');
       }
     },
@@ -126,7 +133,23 @@ export default {
       const { accessToken: access_token, userID: external_user_id } = response.authResponse;
 
       try {
-        await this.$store.dispatch('auth/fbLogin', { access_token, external_user_id });
+        const apiResponse = await this.$store.dispatch('auth/fbLogin', {
+          access_token,
+          external_user_id,
+        });
+
+        if (apiResponse) {
+          const { email, existing } = apiResponse;
+
+          if (!existing) {
+            this.$router.push(this.localePath('register'));
+
+            return;
+          }
+
+          this.username = email;
+          this.fbLogin = existing;
+        }
       } catch (error) {
         this.fbError = get(error, 'response.data.message', 'Fail');
       } finally {
