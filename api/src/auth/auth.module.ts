@@ -9,6 +9,7 @@ import { HttpStrategy } from './http.strategy';
 
 @Module({
   controllers: [AuthController],
+  exports: [AuthService, PassportModule],
   imports: [PassportModule.register({ defaultStrategy: 'bearer' }), UsersModule],
   providers: [AuthService, FacebookService, HttpStrategy],
 })

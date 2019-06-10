@@ -1,16 +1,40 @@
-import { Controller, Get, Param, ParseIntPipe, Query, UseInterceptors } from '@nestjs/common';
-import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Query,
+  Req,
+  Res,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiImplicitFile,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiUseTags,
+} from '@nestjs/swagger';
 
 import { TransformerInterceptor } from '../../common/interceptors/transformer.interceptor';
 import { Pagination } from '../../common/pagination/pagination.dto';
 import { Image } from '../images.dto';
+import { ImageUploadService } from '../upload/imageupload.service';
 import { GalleriesQuery, Gallery, Stats } from './galleries.dto';
 import { GalleriesService } from './galleries.service';
 
 @ApiUseTags('Images')
 @Controller('galleries')
 export class GalleriesController {
-  constructor(private readonly galleriesService: GalleriesService) {}
+  constructor(
+    private readonly galleriesService: GalleriesService,
+    private readonly imageUploadService: ImageUploadService,
+  ) {}
 
   @ApiOperation({ title: 'List galleries' })
   @ApiOkResponse({ description: 'Success', type: Gallery, isArray: true })
@@ -56,5 +80,18 @@ export class GalleriesController {
   @Get('/:id')
   async getById(@Param('id', new ParseIntPipe()) id: number) {
     return this.galleriesService.get(id);
+  }
+
+  @ApiConsumes('multipart/form-data')
+  @ApiImplicitFile({ name: 'file', required: true })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  @Post('upload')
+  async upload(@Req() request: any, @Res() response: any) {
+    try {
+      await this.imageUploadService.handleUpload(request, response);
+    } catch (error) {
+      return response.status(500).json(error.message);
+    }
   }
 }

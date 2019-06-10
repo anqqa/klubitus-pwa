@@ -8,10 +8,10 @@ import { RequestLoggerInterceptor } from './common/interceptors/requestlogger.in
 import { setupSwagger } from './swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(
-    ApplicationModule,
-    new FastifyAdapter(),
-  );
+  const fastify = new FastifyAdapter();
+  fastify.register(require('fastify-multipart'));
+
+  const app = await NestFactory.create<NestFastifyApplication>(ApplicationModule, fastify);
 
   // API documentation
   setupSwagger(app);
