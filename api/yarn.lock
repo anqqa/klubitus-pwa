@@ -235,10 +235,22 @@
     "@types/express-serve-static-core" "*"
     "@types/serve-static" "*"
 
+"@types/fs-extra@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-7.0.0.tgz#9c4ad9e1339e7448a76698829def1f159c1b636c"
+  integrity sha512-ndoMMbGyuToTy4qB6Lex/inR98nPiNHacsgMPvy+zqMLgSxbt8VtWpDArpGp69h1fEDQHn1KB+9DWD++wgbwYA==
+  dependencies:
+    "@types/node" "*"
+
 "@types/lodash@^4.14.123":
   version "4.14.123"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.123.tgz#39be5d211478c8dd3bdae98ee75bb7efe4abfe4d"
   integrity sha512-pQvPkc4Nltyx7G1Ww45OjVqUsJP4UsZm+GWJpigXgkikZqJgRm4c48g027o6tdgubWHwFRF15iFd+Y4Pmqv6+Q==
+
+"@types/mime-types@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@types/mime-types/-/mime-types-2.1.0.tgz#9ca52cda363f699c69466c2a6ccdaad913ea7a73"
+  integrity sha1-nKUs2jY/aZxpRmwqbM2q2RPqenM=
 
 "@types/mime@*":
   version "2.0.1"
@@ -270,6 +282,13 @@
   dependencies:
     "@types/express" "*"
 
+"@types/pump@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@types/pump/-/pump-1.1.0.tgz#ed5214af511da32b6ee85c8d33ad3d59bb79ad8f"
+  integrity sha512-YGGbsqf5o7sF8gGANP8ZYxgaRGlFgEAImx5tCvA4YKRCfqbsDQZO48UmWynZzSjbhn0ZWSlsWOcb5NwvOx8KcQ==
+  dependencies:
+    "@types/node" "*"
+
 "@types/range-parser@*":
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.3.tgz#7ee330ba7caafb98090bece86a5ee44115904c2c"
@@ -287,6 +306,13 @@
   version "2.0.15"
   resolved "https://registry.yarnpkg.com/@types/swagger-schema-official/-/swagger-schema-official-2.0.15.tgz#5591141e8e3e2e81a4b49c3a3d2321d1367d4ebc"
   integrity sha512-ZQKcczZbsfVKf+QKViMvjGni1BADoWCjnimkUc3l4zV/d0sM4cj+Hbtg9gjwUaPhi4m3Q8ne62B+fYubUIPqZQ==
+
+"@types/uuid@^3.4.4":
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-3.4.4.tgz#7af69360fa65ef0decb41fd150bf4ca5c0cefdf5"
+  integrity sha512-tPIgT0GUmdJQNSHxp0X2jnpQfBSTfGxUMc/2CXBU2mnyTFVYVa2ojpoQ74w0U2yn2vw3jnC640+77lkFFpdVDw==
+  dependencies:
+    "@types/node" "*"
 
 abbrev@1:
   version "1.1.1"
