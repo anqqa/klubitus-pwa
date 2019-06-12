@@ -1,11 +1,30 @@
 // tslint:disable:no-bitwise
 import { Injectable, Logger } from '@nestjs/common';
-import sharp from 'sharp';
+import * as sharp from 'sharp';
 
 const LOG_CONTEXT = 'Color';
 
 @Injectable()
 export class ColorService {
+  /**
+   * Calculate the dominant color of an image.
+   */
+  static dominantColor(image: string): Promise<[number, number, number]> {
+    Logger.debug('Calculating dominant color', LOG_CONTEXT);
+
+    return sharp(image)
+      .resize(5, 5, { fit: sharp.fit.cover, position: sharp.strategy.attention })
+      .toBuffer()
+      .then(buffer => sharp(buffer).stats())
+      .then(stats => {
+        const {
+          channels: [r, g, b],
+        } = stats;
+
+        return [Math.round(r.mean), Math.round(g.mean), Math.round(b.mean)];
+      });
+  }
+
   /**
    * Converts HEX to RGB array.
    *
@@ -24,24 +43,5 @@ export class ColorService {
    */
   static rgb2hex([r, g, b]: number[]): string {
     return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-  }
-
-  /**
-   * Calculate the dominant color of an image.
-   */
-  dominantColor(image: string): Promise<[number, number, number]> {
-    Logger.debug('Calculating dominant color', LOG_CONTEXT);
-
-    return sharp(image)
-      .resize(5, 5, { fit: sharp.fit.cover, position: sharp.strategy.attention })
-      .toBuffer()
-      .then(buffer => sharp(buffer).stats())
-      .then(stats => {
-        const {
-          channels: [r, g, b],
-        } = stats;
-
-        return [Math.round(r.mean), Math.round(g.mean), Math.round(b.mean)];
-      });
   }
 }

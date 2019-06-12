@@ -12,7 +12,7 @@ import { ColorService } from '../color.service';
 import { GalleriesService } from '../galleries/galleries.service';
 import { Gallery } from '../galleries/gallery.entity';
 import { Image } from '../image.entity';
-import { ImagesService } from '../images.service';
+import { MetaService } from '../meta.service';
 import { PhashService } from '../phash.service';
 
 const LOG_CONTEXT = 'Upload';
@@ -21,19 +21,13 @@ const LOG_CONTEXT = 'Upload';
 export class ImageUploadService {
   constructor(
     @InjectRepository(Image) private readonly imageRepository: Repository<Image>,
-    private readonly colorService: ColorService,
     private readonly galleriesService: GalleriesService,
-    private readonly imagesService: ImagesService,
-    private readonly phashService: PhashService,
     private readonly s3Client: S3Client,
   ) {}
 
   async handleUpload(@Req() req: any, @Res() res: any) {
-    const colors = this.colorService;
     const galleries = this.galleriesService;
     const imageRepository = this.imageRepository;
-    const images = this.imagesService;
-    const phash = this.phashService;
     const s3Client = this.s3Client;
     const targetField = 'photos';
     const uploadPath = normalize('./upload/');
@@ -89,19 +83,17 @@ export class ImageUploadService {
 
       try {
         // Get metadatas
-        const [stats, /*, [meta, exif],*/ color, hash] = await Promise.all([
+        const [stats, [meta, exif], color, hash] = await Promise.all([
           fs.stat(sourcePath),
-          // metadata(sourcePath),
-          colors.dominantColor(sourcePath),
-          phash.phash(sourcePath),
+          MetaService.metadata(sourcePath),
+          ColorService.dominantColor(sourcePath),
+          PhashService.phash(sourcePath),
         ]);
 
         image.original_size = stats.size;
-        /*
-        image.original_width  = meta.width;
+        image.original_width = meta.width;
         image.original_height = meta.height;
-        image.exif            = exif;
-        */
+        image.exif = exif;
         image.color = ColorService.rgb2hex(color);
         image.phash = hash.toString();
 
