@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from '../auth/auth.module';
 import { AwsModule } from '../common/aws/aws.module';
 import { Event } from '../events/event.entity';
+import { ColorService } from './color.service';
 import { Comment } from './comments/comment.entity';
 import { GalleriesController } from './galleries/galleries.controller';
 import { GalleriesService } from './galleries/galleries.service';
@@ -12,6 +13,7 @@ import { Image } from './image.entity';
 import { ImagesController } from './images.controller';
 import { ImagesService } from './images.service';
 import { Note } from './notes/note.entity';
+import { PhashService } from './phash.service';
 import { ImageUploadService } from './upload/imageupload.service';
 
 @Module({
@@ -27,6 +29,6 @@ import { ImageUploadService } from './upload/imageupload.service';
     ),
     TypeOrmModule.forFeature([Comment, Event, Gallery, Image, Note]),
   ],
-  providers: [GalleriesService, ImagesService, ImageUploadService],
+  providers: [ColorService, GalleriesService, ImagesService, ImageUploadService, PhashService],
 })
 export class ImagesModule {}
