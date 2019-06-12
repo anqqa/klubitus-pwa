@@ -5,6 +5,7 @@ import { Between, MoreThan, Repository } from 'typeorm';
 
 import { Pagination } from '../../common/pagination/pagination.dto';
 import { PaginationService } from '../../common/pagination/pagination.service';
+import { Event } from '../../events/event.entity';
 import { Image } from '../image.entity';
 import { GalleriesQuery, Stats } from './galleries.dto';
 import { Gallery } from './gallery.entity';
@@ -12,10 +13,9 @@ import { Gallery } from './gallery.entity';
 @Injectable()
 export class GalleriesService {
   constructor(
-    @InjectRepository(Gallery)
-    private readonly galleryRepository: Repository<Gallery>,
-    @InjectRepository(Image)
-    private readonly imageRepository: Repository<Image>,
+    @InjectRepository(Event) private readonly eventRepository: Repository<Event>,
+    @InjectRepository(Gallery) private readonly galleryRepository: Repository<Gallery>,
+    @InjectRepository(Image) private readonly imageRepository: Repository<Image>,
   ) {}
 
   async findAll(query: GalleriesQuery): Promise<Gallery[]> {
@@ -71,6 +71,28 @@ export class GalleriesService {
       .take(take)
       .skip(skip)
       .getMany();
+  }
+
+  async getOrCreateByEvent(id?: number, eventId?: number): Promise<Gallery> {
+    if (id) {
+      return this.galleryRepository.findOneOrFail(id);
+    }
+
+    if (eventId) {
+      try {
+        return await this.galleryRepository.findOneOrFail({ event_id: eventId });
+      } catch (error) {
+        const event = await this.eventRepository.findOneOrFail(eventId);
+
+        return this.galleryRepository.create({
+          event_date: event.begins_at,
+          event_id: event.id,
+          name: event.name,
+        });
+      }
+    }
+
+    throw new Error('Gallery or event ID required');
   }
 
   async getStats(): Promise<Stats[]> {

@@ -1,37 +1,43 @@
 import { ConflictException, Injectable, Logger, Req, Res } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs-extra';
 import { extension } from 'mime-types';
 import { normalize } from 'path';
 import * as pump from 'pump';
+import { DeepPartial, getConnection, Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
+
+import { S3Client } from '../../common/aws/s3.client';
+import { GalleriesService } from '../galleries/galleries.service';
+import { Gallery } from '../galleries/gallery.entity';
+import { Image } from '../image.entity';
 
 const LOG_CONTEXT = 'Upload';
 
 @Injectable()
 export class ImageUploadService {
-  constructor() {}
+  constructor(
+    @InjectRepository(Image) private readonly imageRepository: Repository<Image>,
+    private readonly galleriesService: GalleriesService,
+    private readonly s3Client: S3Client,
+  ) {}
 
   async handleUpload(@Req() req: any, @Res() res: any) {
+    const galleries = this.galleriesService;
+    const imageRepository = this.imageRepository;
+    const s3Client = this.s3Client;
     const targetField = 'photos';
     const uploadPath = normalize('./upload/');
 
     fs.ensureDirSync(uploadPath);
 
-    const image: any = {
-      author_id: req.user.id,
-      color: null,
+    const target: any = {
       event_id: null,
-      exif: null,
-      file: null,
       gallery_id: null,
-      labels: null,
-      mime_type: null,
-      original_filename: null,
-      original_height: null,
-      original_size: null,
-      original_width: null,
-      path: null,
-      phash: null,
+    };
+
+    const image: DeepPartial<Image> = {
+      author_id: req.user.id,
       uuid: uuid(),
     };
 
@@ -60,17 +66,17 @@ export class ImageUploadService {
       if (error) {
         Logger.warn('Image upload failed', LOG_CONTEXT);
 
-        console.log({ error });
-
         throw new ConflictException(error);
       }
 
       Logger.debug(`Upload of ${image.file} finished`, LOG_CONTEXT);
 
       const sourcePath = `${uploadPath}${image.file}`;
-      // const targetKey  = image.path = getKeyForImage(image.file);
 
-      const isUploadedToS3 = false;
+      image.path = s3Client.getKeyForImage(image.file);
+
+      let isUploadedToS3 = false;
+      let imageModel;
 
       try {
         // Get metadatas
@@ -88,67 +94,41 @@ export class ImageUploadService {
         image.exif            = exif;
         image.color           = rgb2hex(color);
         image.phash           = hash.toString();
+        */
 
         // Upload to S3 and detect labels
-        await uploadToS3(sourcePath, targetKey);
+        await s3Client.upload(sourcePath, image.path);
         isUploadedToS3 = true;
 
-        const { Labels } = await detectLabels(targetKey);
-
-        request.log.debug({ Labels });
-
+        const { Labels } = await s3Client.detectLabels(image.path);
         image.labels = Labels;
 
         // Insert to DB
-        const { event_id, gallery_id, ...model } = image;
+        const gallery = await galleries.getOrCreateByEvent(target.gallery_id, target.event_id);
+        imageModel = await imageRepository.save(image);
 
-        let galleryModel;
+        await getConnection()
+          .createQueryBuilder()
+          .relation(Gallery, 'images')
+          .of(gallery)
+          .add(imageModel);
 
-        // Try to get existing gallery
-        if (gallery_id) {
-          galleryModel = await Gallery.query().findById(gallery_id);
-        }
-
-        if (!galleryModel && event_id) {
-          galleryModel = await Gallery.query().where('event_id', event_id).first();
-
-          // Create new gallery?
-          if (!galleryModel) {
-            const eventModel = await Event.query().findById(event_id);
-
-            if (!eventModel) {
-              throw 'Gallery or event id is required';
-            }
-
-            galleryModel = await Gallery.query()
-              .insert({
-                event_date: eventModel.begins_at,
-                event_id:   eventModel.id,
-                name:       eventModel.name,
-              });
-          }
-        }
-
-        // Insert image
-        const imageModel = await galleryModel.$relatedQuery('images')
-          .insert(model);
-
-        reply.send(imageModel.id);
-        */
-        res.send('ok');
+        res.send(imageModel.id);
       } catch (error) {
-        Logger.warn('Failed', LOG_CONTEXT, false);
+        Logger.warn('Failed', LOG_CONTEXT);
 
-        console.log({ error });
+        // Cleanup
+        if (isUploadedToS3 && image.path) {
+          await s3Client.delete(image.path);
+        }
 
-        // Cleanup S3
-        // if (isUploadedToS3) {
-        //   await deleteFile(targetKey);
-        // }
+        if (imageModel) {
+          await imageRepository.remove(imageModel);
+        }
 
         throw new ConflictException(typeof error === 'string' ? error : 'Could not save image');
       } finally {
-        Logger.debug(`Removing ${sourcePath}`, LOG_CONTEXT);
+        Logger.debug(`Deleting ${sourcePath}`, LOG_CONTEXT);
 
         fs.removeSync(sourcePath);
       }
@@ -158,8 +138,8 @@ export class ImageUploadService {
       if (key === targetField) {
         const metadata = JSON.parse(value);
 
-        image.event_id = (metadata && metadata.event_id) || null;
-        image.gallery_id = (metadata && metadata.gallery_id) || null;
+        target.event_id = (metadata && metadata.event_id) || null;
+        target.gallery_id = (metadata && metadata.gallery_id) || null;
       }
     }
 
