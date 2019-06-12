@@ -47,8 +47,8 @@ export class Gallery {
 
   @ManyToMany(() => Image)
   @JoinTable({
-    inverseJoinColumn: { name: 'images' },
-    joinColumn: { name: 'galleries' },
+    inverseJoinColumn: { name: 'image_id' },
+    joinColumn: { name: 'gallery_id' },
     name: 'galleries_images',
   })
   images: Image[];

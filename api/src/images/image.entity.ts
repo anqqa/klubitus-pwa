@@ -49,6 +49,9 @@ export class Image {
   exif: Record<string, string | number> | null;
 
   @Column({ nullable: true })
+  file: string | null;
+
+  @Column({ nullable: true })
   height: number | null;
 
   @PrimaryGeneratedColumn()
@@ -64,7 +67,22 @@ export class Image {
   notes: Note[];
 
   @Column({ nullable: true })
+  original_filename: string | null;
+
+  @Column({ nullable: true })
+  original_height: number | null;
+
+  @Column({ nullable: true })
+  original_size: number | null;
+
+  @Column({ nullable: true })
+  original_width: number | null;
+
+  @Column({ nullable: true })
   path: string | null;
+
+  @Column({ nullable: true })
+  phash: string | null;
 
   @Column({ nullable: true })
   postfix: string | null;
