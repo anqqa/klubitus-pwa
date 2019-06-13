@@ -83,7 +83,7 @@ const MeteringMode: string[] = [
   'Partial',
 ];
 
-export class ExifService {
+export class ExifUtil {
   static parse(exifBuffer: Buffer): Record<string, string | number> {
     Logger.debug('Parsing EXIF...', LOG_CONTEXT);
 

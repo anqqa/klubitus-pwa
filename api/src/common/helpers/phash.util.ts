@@ -23,7 +23,7 @@ const COS: number[][] = (() => {
 })();
 
 /* pHash with sharp, using implementation from sharp-phash. */
-export class PhashService {
+export class PhashUtil {
   /**
    * Return a perceptual hash of an image.
    *
@@ -52,7 +52,7 @@ export class PhashService {
         }
 
         // Apply 2D DCT
-        const dct = PhashService.applyDCT(s);
+        const dct = PhashUtil.applyDCT(s);
 
         // Average on high frequencies
         let totalSum = 0;

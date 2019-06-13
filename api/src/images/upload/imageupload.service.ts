@@ -8,12 +8,12 @@ import { DeepPartial, getConnection, Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 
 import { S3Client } from '../../common/aws/s3.client';
-import { ColorService } from '../color.service';
+import { ColorUtil } from '../../common/helpers/color.util';
+import { MetadataUtil } from '../../common/helpers/metadata.util';
+import { PhashUtil } from '../../common/helpers/phash.util';
 import { GalleriesService } from '../galleries/galleries.service';
 import { Gallery } from '../galleries/gallery.entity';
 import { Image } from '../image.entity';
-import { MetaService } from '../meta.service';
-import { PhashService } from '../phash.service';
 
 const LOG_CONTEXT = 'Upload';
 
@@ -85,16 +85,16 @@ export class ImageUploadService {
         // Get metadatas
         const [stats, [meta, exif], color, hash] = await Promise.all([
           fs.stat(sourcePath),
-          MetaService.metadata(sourcePath),
-          ColorService.dominantColor(sourcePath),
-          PhashService.phash(sourcePath),
+          MetadataUtil.getMetadataAndExif(sourcePath),
+          ColorUtil.dominantColor(sourcePath),
+          PhashUtil.phash(sourcePath),
         ]);
 
         image.original_size = stats.size;
         image.original_width = meta.width;
         image.original_height = meta.height;
         image.exif = exif;
-        image.color = ColorService.rgb2hex(color);
+        image.color = ColorUtil.rgb2hex(color);
         image.phash = hash.toString();
 
         // Upload to S3 and detect labels

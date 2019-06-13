@@ -4,7 +4,7 @@ import * as sharp from 'sharp';
 
 const LOG_CONTEXT = 'Color';
 
-export class ColorService {
+export class ColorUtil {
   /**
    * Calculate the dominant color of an image.
    */
