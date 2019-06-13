@@ -160,6 +160,13 @@ button.is-clear,
 }
 
 
+/* Facebook */
+.button.fb {
+  background-color: #3b66a0;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
 /* FilePond */
 .upload .filepond--root {
   font-family: inherit;

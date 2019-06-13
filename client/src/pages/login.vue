@@ -7,13 +7,28 @@
 
       <form class="card-content" @submit.prevent="login">
         <no-ssr>
-          <fb-login :params="fbParams" @success="onFbSuccess" @error="onFbError"></fb-login>
           <button slot="placeholder" class="button fb is-full" disabled>
             <i class="bx bx-loader-alt bx-spin" /> Just a moment...
           </button>
-        </no-ssr>
 
-        <span class="separator">or</span>
+          <div v-if="!fbProcessing">
+            <fb-login :params="fbParams" @success="onFbSuccess" @error="onFbError"></fb-login>
+          </div>
+          <div v-else>
+            <button class="button fb is-full" disabled>
+              <i class="bx bx-loader-alt bx-spin" /> Logging in...
+            </button>
+          </div>
+
+          <div v-if="fbError" class="field has-error" v-html="fbError" />
+
+          <p v-if="fbLogin">
+            You haven't connected your Facebook account to your klubitus account yet. Log in to
+            klubitus to automagically connect your accounts, after that you may log in with your
+            Facebook account!
+          </p>
+          <span v-else class="separator">or</span>
+        </no-ssr>
 
         <div :class="{ 'has-error': error || $v.username.$error }" class="field">
           <label for="input-username">Email or username *</label>
@@ -69,10 +84,13 @@ export default {
 
   data: () => ({
     error: null,
+    fbError: null,
+    fbLogin: false,
     fbParams: {
       return_scopes: true,
       scope: 'email',
     },
+    fbProcessing: false,
     password: '',
     username: '',
   }),
@@ -95,16 +113,48 @@ export default {
 
         this.$router.push('/');
       } catch (error) {
+        console.log({ error });
         this.error = get(error, 'response.data.message', 'Fail');
       }
     },
 
     onFbError(error) {
       console.warn(error);
+
+      this.fbError = 'Fail';
+      this.fbProcessing = false;
     },
 
-    onFbSuccess(response) {
+    async onFbSuccess(response) {
       console.log(response);
+
+      this.fbProcessing = true;
+
+      const { accessToken: access_token, userID: external_user_id } = response.authResponse;
+
+      try {
+        const apiResponse = await this.$store.dispatch('auth/fbLogin', {
+          access_token,
+          external_user_id,
+        });
+
+        if (apiResponse) {
+          const { email, existing } = apiResponse;
+
+          if (!existing) {
+            this.$router.push(this.localePath('register'));
+
+            return;
+          }
+
+          this.username = email;
+          this.fbLogin = existing;
+        }
+      } catch (error) {
+        this.fbError = get(error, 'response.data.message', 'Fail');
+      } finally {
+        this.fbProcessing = false;
+      }
     },
   },
 
@@ -119,5 +169,9 @@ export default {
 .card {
   max-width: 300px;
   width: 100%;
+}
+
+.separator {
+  margin: 1rem 0;
 }
 </style>

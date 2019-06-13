@@ -114,17 +114,8 @@ export default {
         this.token = response.authResponse.accessToken;
       }
 
-      console.log('onClick', response);
       this.$emit(response.authResponse ? 'success' : 'error', response);
     },
   },
 };
 </script>
-
-<style scoped>
-.fb {
-  background-color: #3b66a0;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  color: white;
-}
-</style>

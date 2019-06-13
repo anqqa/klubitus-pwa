@@ -1,27 +1,27 @@
 <template>
-  <ForumPostList :posts="posts" />
+  <forum-post-list :posts="posts" />
 </template>
 
-
 <script>
-  import ForumPostList from '../../../../components/forum/ForumPostList';
+import ForumPostList from '../../../../components/forum/ForumPostList';
+import ForumPost from '../../../../models/ForumPost';
 
+export default {
+  async asyncData({ params, query }) {
+    const topic_id = parseInt(params.id);
+    const page = parseInt(query.page) || 1;
+    const limit = 20;
 
-  export default {
+    const posts = await ForumPost.params({ topic_id })
+      .limit(limit)
+      .page(page)
+      .get();
 
-    async asyncData({ app, params, query }) {
-      const topicId = parseInt(params.id);
-      const page    = parseInt(query.page) || 1;
-      const limit   = 20;
+    return { posts };
+  },
 
-      const { data: posts } = await app.$axios.$get(`forum/posts/${topicId}`, { params: { limit, page } });
+  components: { ForumPostList },
 
-      return { posts };
-    },
-
-    components: { ForumPostList },
-
-    watchQuery: ['page'],
-
-  };
+  watchQuery: ['page'],
+};
 </script>
