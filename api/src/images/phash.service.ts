@@ -1,5 +1,5 @@
 // tslint:disable:no-bitwise
-import { Injectable, Logger } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import * as sharp from 'sharp';
 
 const LOG_CONTEXT = 'PHash';
@@ -23,7 +23,6 @@ const COS: number[][] = (() => {
 })();
 
 /* pHash with sharp, using implementation from sharp-phash. */
-@Injectable()
 export class PhashService {
   /**
    * Return a perceptual hash of an image.

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { get } from 'lodash';
 
 // tslint:disable-next-line:no-var-requires
@@ -83,7 +83,6 @@ const MeteringMode: string[] = [
   'Partial',
 ];
 
-@Injectable()
 export class ExifService {
   static parse(exifBuffer: Buffer): Record<string, string | number> {
     Logger.debug('Parsing EXIF...', LOG_CONTEXT);

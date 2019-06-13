@@ -1,10 +1,9 @@
 // tslint:disable:no-bitwise
-import { Injectable, Logger } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import * as sharp from 'sharp';
 
 const LOG_CONTEXT = 'Color';
 
-@Injectable()
 export class ColorService {
   /**
    * Calculate the dominant color of an image.

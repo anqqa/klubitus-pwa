@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { Metadata } from 'sharp';
 import * as sharp from 'sharp';
 
@@ -6,7 +6,6 @@ import { ExifService } from './exif.service';
 
 const LOG_CONTEXT = 'ImageMeta';
 
-@Injectable()
 export class MetaService {
   /**
    * Get image metadata and EXIF.
