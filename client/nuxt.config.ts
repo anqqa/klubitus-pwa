@@ -1,12 +1,13 @@
+import NuxtConfiguration from '@nuxt/config';
 // import nodeExternals from 'webpack-node-externals';
 
-export default {
+const config: NuxtConfiguration = {
   env: {
-    API_URL: process.env.API_URL_BROWSER || 'http://localhost:3001',
-    BASE_URL: process.env.CLIENT_HOST || 'http://localhost:3000',
-    CDN_HOST: process.env.AWS_BUCKET,
-    FB_APP_ID: process.env.FB_APP_ID,
-    FB_CLIENT_TOKEN: process.env.FB_CLIENT_TOKEN,
+    'API_URL': process.env.API_URL_BROWSER || 'http://localhost:3001',
+    'BASE_URL': process.env.CLIENT_HOST || 'http://localhost:3000',
+    'CDN_HOST': process.env.AWS_BUCKET || '',
+    'FB_APP_ID': process.env.FB_APP_ID || '',
+    'FB_CLIENT_TOKEN': process.env.FB_CLIENT_TOKEN || '',
   },
 
   server: {
@@ -172,3 +173,5 @@ export default {
     },
   },
 };
+
+export default config;
