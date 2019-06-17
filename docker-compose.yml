@@ -100,9 +100,9 @@ services:
     command: yarn dev
     volumes:
       - ./client/src:/srv/client/src
-      - ./client/nuxt.config.js:/srv/client/nuxt.config.js
+      - ./client/nuxt.config.ts:/srv/client/nuxt.config.ts
+      - ./client/tsconfig.json:/srv/client/tsconfig.json
       - ./client/package.json:/srv/client/package.json
-#      - /srv/client/node_modules
     environment:
       - API_HOST
       - API_PORT

@@ -1,0 +1,14 @@
+{
+  "defaultSeverity": "warning",
+  "extends": ["tslint:recommended", "tslint-config-prettier"],
+  "rulesDirectory": ["tslint-plugin-prettier"],
+  "linterOptions": {
+    "exclude": ["node_modules/**", ",.nuxt/**"]
+  },
+
+  "jsRules": {},
+  "rules": {
+    "prettier": true,
+    "object-literal-sort-keys": false
+  }
+}

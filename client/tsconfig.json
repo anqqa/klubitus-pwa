@@ -1,0 +1,25 @@
+{
+  //  "extends": "@nuxt/typescript",
+
+  "compilerOptions": {
+    "allowJs": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "lib": ["esnext", "esnext.asynciterable", "dom"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noImplicitAny": false,
+    "paths": {
+      "@/*": ["*"],
+      "~/*": ["*"]
+    },
+    "strict": true,
+    "target": "esnext",
+    "types": ["@types/node", "@nuxt/vue-app"],
+    "sourceMap": true
+  },
+
+  "exclude": ["node_modules"]
+}
