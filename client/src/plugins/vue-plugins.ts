@@ -7,8 +7,6 @@ Vue.use(VueAsyncComputed);
 Vue.use(VueAutosuggest);
 Vue.use(Vuelidate);
 
-
 import AutoFocus from '../directives/autofocus';
 
 Vue.directive('autofocus', AutoFocus);
-

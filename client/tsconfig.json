@@ -12,13 +12,14 @@
     "noEmit": true,
     "noImplicitAny": false,
     "paths": {
-      "@/*": ["*"],
-      "~/*": ["*"]
+      "@/*": ["./src/*"],
+      "~/*": ["./src/*"],
+      "*": ["./src/@types/*"]
     },
+    "sourceMap": true,
     "strict": true,
     "target": "esnext",
-    "types": ["@types/node", "@nuxt/vue-app"],
-    "sourceMap": true
+    "types": ["@types/node", "@nuxt/vue-app"]
   },
 
   "exclude": ["node_modules"]

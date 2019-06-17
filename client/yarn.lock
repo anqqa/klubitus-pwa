@@ -1489,6 +1489,11 @@
     "@types/relateurl" "*"
     "@types/uglify-js" "*"
 
+"@types/js-cookie@^2.2.2":
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@types/js-cookie/-/js-cookie-2.2.2.tgz#84e8848e14d44418726ceb52dd887c7bfe45d678"
+  integrity sha512-vkuGzldF9mNsWS9cmmMFfW1rufa7IdPUorS150gKoU/2fzLJ/0LXiMMtRqIBWz0sZ/VF2VxwB25WXEOo6akU6w==
+
 "@types/loglevel@*":
   version "1.5.4"
   resolved "https://registry.yarnpkg.com/@types/loglevel/-/loglevel-1.5.4.tgz#6e296bf20d9f6b0a3274cfb01a918f1d634e4c32"
@@ -1565,6 +1570,13 @@
   integrity sha512-SudIN9TRJ+v8g5pTG8RRCqfqTMNqgWCKKd3vtynhGzkIIjxaicNAMuY5TRadJ6tzDu3Dotf3ngaMILtmOdmWEQ==
   dependencies:
     source-map "^0.6.1"
+
+"@types/vuelidate@^0.7.5":
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/@types/vuelidate/-/vuelidate-0.7.5.tgz#903708687403c8e33ae2f992769b3c09979841e5"
+  integrity sha512-Xz4znSLv5VAiTvxaCvF5mlXwzJiOWAV0BysCHk0cyXUK7LpMSnXQcYNSbPioa821O1Vcs4SBuM+VAuHbIhFdqw==
+  dependencies:
+    vue "^2.5.16"
 
 "@types/webpack-bundle-analyzer@^2.13.1":
   version "2.13.1"
@@ -9450,7 +9462,7 @@ vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
 
-vue@^2.6.10:
+vue@^2.5.16, vue@^2.6.10:
   version "2.6.10"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
   integrity sha512-ImThpeNU9HbdZL3utgMCq0oiMzAkt1mcgy3/E6zWC/G6AaQoeuFdsl9nDhTDU3X1R6FK7nsIUuRACVcjI+A2GQ==

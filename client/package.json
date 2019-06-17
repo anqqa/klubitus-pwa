@@ -44,6 +44,8 @@
   "devDependencies": {
     "@nuxt/typescript": "^2.8.1",
     "@nuxtjs/eslint-config": "^0.0.1",
+    "@types/js-cookie": "^2.2.2",
+    "@types/vuelidate": "^0.7.5",
     "@typescript-eslint/eslint-plugin": "^1.10.2",
     "@typescript-eslint/parser": "^1.10.2",
     "babel-eslint": "^10.0.1",
