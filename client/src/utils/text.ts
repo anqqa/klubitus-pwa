@@ -20,23 +20,23 @@ const colors = [
   'yellow',
 ];
 
-export const colorFromText = text => {
-  let number = 0;
+export const colorFromText = (text: string): string => {
+  let index = 0;
 
   for (let c = 0; c < text.length; c++) {
-    number += text.charCodeAt(c);
+    index += text.charCodeAt(c);
   }
 
-  return colors[number % colors.length];
+  return colors[index % colors.length];
 };
 
 const formatter = new Intl.NumberFormat();
 
-export const count = (number, singular, plural) => {
-  return `${formatter.format(number)} ${number === 1 ? singular : plural}`;
+export const count = (value: number, singular: string, plural: string): string => {
+  return `${formatter.format(value)} ${value === 1 ? singular : plural}`;
 };
 
-export const nFormatter = (number, digits, bytes) => {
+export const nFormatter = (value: number, digits: number, bytes?: boolean): string => {
   const regex = /\.0+|(\.[0-9]*[1-9])0+$/;
   const base = bytes ? 1024 : 1000;
   const symbols = [
@@ -51,18 +51,18 @@ export const nFormatter = (number, digits, bytes) => {
 
   let i;
   for (i = symbols.length - 1; i > 0; i--) {
-    if (number > symbols[i].value) {
+    if (value > symbols[i].value) {
       break;
     }
   }
 
-  const value = (number / symbols[i].value).toFixed(digits).replace(regex, '$1');
+  const result = (value / symbols[i].value).toFixed(digits).replace(regex, '$1');
 
-  return `${value}${symbols[i].symbol}${bytes ? 'B' : ''}`;
+  return `${result}${symbols[i].symbol}${bytes ? 'B' : ''}`;
 };
 
-export const pad = (number, size) => {
-  let padded = String(number);
+export const pad = (value: number, size: number): string => {
+  let padded = String(value);
 
   while (padded.length < size) {
     padded = '0' + padded;
@@ -71,7 +71,7 @@ export const pad = (number, size) => {
   return padded;
 };
 
-export const slug = text => {
+export const slug = (text: string): string => {
   return text
     .toString()
     .toLowerCase()

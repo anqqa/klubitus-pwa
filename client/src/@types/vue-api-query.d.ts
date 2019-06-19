@@ -64,6 +64,8 @@ export abstract class Model extends StaticModel {
   public static $http: NuxtAxiosInstance;
   public _builder: Builder;
 
+  protected constructor(...attributes);
+
   public attach(params: any): Promise<any>;
   public custom(...args): Model;
   public delete(): Promise<any>;

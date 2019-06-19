@@ -7,8 +7,6 @@ export default class NewsfeedItem extends Model {
 
   /**
    * Newsfeed items are returned as list of list of items.
-   *
-   * @returns  { Promise<NewsfeedItem>}
    */
   get() {
     let base = this._fromResource || `${this.baseURL()}/${this.resource()}`;
@@ -16,7 +14,7 @@ export default class NewsfeedItem extends Model {
     const url = `${base}${this._builder.query()}`;
 
     const parser = data => {
-      const item = new this.constructor(data);
+      const item = new NewsfeedItem(data);
 
       Object.defineProperty(item, '_fromResource', { get: () => this._fromResource });
 
