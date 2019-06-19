@@ -6,8 +6,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "lintjs": "eslint --ext .ts,.js,.vue --ignore-path .gitignore .",
-    "lint": "tslint -p tsconfig.json",
+    "lint": "wotan -p tsconfig.json",
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
@@ -42,6 +41,9 @@
     "vuex": "^3.1.1"
   },
   "devDependencies": {
+    "@fimbul/valtyr": "^0.21.0",
+    "@fimbul/ve": "^0.21.0",
+    "@fimbul/wotan": "^0.21.0",
     "@nuxt/typescript": "^2.8.1",
     "@nuxtjs/eslint-config": "^0.0.1",
     "@types/js-cookie": "^2.2.2",
@@ -64,7 +66,6 @@
     "node-sass": "^4.12.0",
     "nuxt-property-decorator": "^2.3.0",
     "sass-loader": "^7.1.0",
-    "tslint": "^5.17.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-plugin-prettier": "^2.0.1",
     "typescript": "^3.5.2"
