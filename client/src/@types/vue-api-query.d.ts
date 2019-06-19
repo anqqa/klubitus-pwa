@@ -58,7 +58,7 @@ interface IParameterNames {
   sort: string;
 }
 
-export class Model extends StaticModel {
+export abstract class Model extends StaticModel {
   [key: string]: any;
 
   public static $http: NuxtAxiosInstance;
@@ -92,4 +92,7 @@ export class Model extends StaticModel {
   public sync(params: any): Promise<any>;
   public where(field: string, value: any): Model;
   public whereIn(field: string, array: any[]): Model;
+
+  public abstract baseURL(): string;
+  public abstract request(options: any): Promise<any>;
 }

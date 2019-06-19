@@ -21,37 +21,35 @@
   </section>
 </template>
 
-<script>
+<script lang="ts">
 import format from 'date-fns/format';
+import { Component, Prop, Vue } from 'nuxt-property-decorator';
 
-import Avatar from './Avatar';
+import { AsyncComputed } from '@/decorators/AsyncComputed';
+import Avatar from './Avatar.vue';
 import Shout from '../models/Shout';
-import { avatarUrl } from '../utils/url';
+import { avatarUrl } from '@/utils/url';
 
-export default {
-  name: 'Chat',
-
+@Component({
   components: { Avatar },
+})
+export default class Chat extends Vue {
+  @Prop({ default: 10 }) limit!: number;
 
-  props: {
-    limit: { default: 10, type: Number },
-  },
+  @AsyncComputed()
+  async shouts(): Promise<any[]> {
+    const data: Shout[] = await Shout.limit(Math.min(this.limit || 10, 50)).get();
 
-  asyncComputed: {
-    async shouts() {
-      const data = await Shout.limit(Math.min(this.limit || 10, 50)).get();
-
-      return data
-        .map(shout => ({
-          ...shout,
-          avatar: avatarUrl(shout.author.avatar_url),
-          html: this.$md.render(shout.shout),
-          stamp: format(shout.created_at, 'HH:mm'),
-        }))
-        .reverse();
-    },
-  },
-};
+    return data
+      .map(shout => ({
+        ...shout,
+        avatar: avatarUrl(shout.author.avatar_url),
+        html: this.$md.render(shout.shout),
+        stamp: format(shout.created_at, 'HH:mm'),
+      }))
+      .reverse();
+  }
+}
 </script>
 
 <style scoped>
