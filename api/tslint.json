@@ -1,8 +1,11 @@
 {
   "defaultSeverity": "error",
-  "extends": ["tslint:recommended"],
+  "extends": ["tslint:recommended", "tslint-config-prettier"],
   "jsRules": {
     "no-unused-expression": true
+  },
+  "linterOptions": {
+    "exclude": ["node_modules/**"]
   },
   "rules": {
     "arrow-parens": false,
@@ -10,7 +13,8 @@
     "max-line-length": [true, 100],
     "member-access": [false],
     "ordered-imports": [true],
+    "prettier": true,
     "quotemark": [true, "single"]
   },
-  "rulesDirectory": []
+  "rulesDirectory": ["tslint-plugin-prettier"]
 }
