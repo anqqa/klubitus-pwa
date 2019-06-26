@@ -9,113 +9,81 @@
   </button>
 </template>
 
-<script>
-export default {
-  name: 'FBLogin',
+<script lang="ts">
+import { Component, Prop, Vue, Watch } from 'nuxt-property-decorator';
 
-  props: {
-    params: { default: () => {}, type: Object },
-  },
+@Component({})
+export default class FBLogin extends Vue {
+  isSdkReady = false;
+  name: string | null = null;
+  token: string | null = null;
 
-  data() {
-    return {
-      isSdkReady: false,
-      name: null,
-      token: null,
-    };
-  },
+  @Prop() params!: object;
 
-  computed: {
-    isConnected() {
-      return !!this.token;
-    },
-  },
-
-  watch: {
-    async isConnected(connected) {
-      if (connected) {
-        this.$emit('connected');
-
-        const response = await this.getMe('name');
-
-        this.name = response.name;
-      }
-    },
-  },
-
-  async mounted() {
-    try {
-      await this.initFbSdk();
+  initFbSdk(d, s, id) {
+    if (d.getElementById(id)) {
       this.isSdkReady = true;
 
-      const response = await this.getStatus();
-      console.log('getStatus', response);
-      if (response.status === 'connected') {
-        this.token = response.authResponse.accessToken;
-      }
-    } catch (error) {
-      console.warn(error);
+      return;
     }
-  },
 
-  methods: {
-    async getMe(fields = 'id') {
-      return new Promise(resolve => {
-        window.FB.api(`/me?fields=${fields}`, response => resolve(response));
+    const fjs = d.getElementsByTagName(s)[0];
+    const js = d.createElement('script');
+    js.id = id;
+    js.src = 'https://connect.facebook.net/en_US/sdk.js';
+    fjs.parentNode.insertBefore(js, fjs);
+
+    (window as any).fbAsyncInit = () => {
+      FB.init({
+        appId: process.env.FB_APP_ID || '',
+        cookie: true,
+        xfbml: false,
+        version: 'v3.2',
       });
-    },
 
-    async getStatus() {
-      return new Promise(resolve => {
-        window.FB.getLoginStatus(response => resolve(response));
-      });
-    },
+      this.isSdkReady = true;
+    };
+  }
 
-    async initFbSdk() {
-      return new Promise(resolve => {
-        window.fbAsyncInit = () => {
-          window.FB.init({
-            appId: process.env.FB_APP_ID,
-            cookie: true,
-            xfbml: false,
-            version: 'v3.2',
-          });
+  get isConnected(): boolean {
+    return !!this.token;
+  }
 
-          resolve();
-        };
+  onClick(event) {
+    event.preventDefault();
 
-        ((d, s, id) => {
-          if (d.getElementById(id)) {
-            resolve();
-
-            return;
-          }
-
-          const fjs = d.getElementsByTagName(s)[0];
-          const js = d.createElement('script');
-          js.id = id;
-          js.src = 'https://connect.facebook.net/en_US/sdk.js';
-          fjs.parentNode.insertBefore(js, fjs);
-        })(document, 'script', 'facebook-jssdk');
-      });
-    },
-
-    async login(options) {
-      return new Promise(resolve => {
-        window.FB.login(response => resolve(response), options);
-      });
-    },
-
-    async onClick(event) {
-      event.preventDefault();
-
-      const response = await this.login(this.params);
+    FB.login(response => {
       if (response.status === 'connected') {
         this.token = response.authResponse.accessToken;
       }
 
       this.$emit(response.authResponse ? 'success' : 'error', response);
-    },
-  },
-};
+    });
+  }
+
+  @Watch('isConnected')
+  onConnectionChange(connected: boolean) {
+    if (connected) {
+      this.$emit('connected');
+
+      FB.api(`/me?fields=name`, ({ name }) => {
+        this.name = name;
+      });
+    }
+  }
+
+  mounted() {
+    try {
+      this.initFbSdk(document, 'script', 'facebook-jssdk');
+
+      FB.getLoginStatus(response => {
+        if (response.status === 'connected') {
+          this.token = response.authResponse.accessToken;
+        }
+      });
+    } catch (error) {
+      console.warn(error);
+    }
+  }
+}
 </script>

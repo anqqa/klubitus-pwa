@@ -73,96 +73,86 @@
   </main>
 </template>
 
-<script>
+<script lang="ts">
 import get from 'lodash/get';
+import { Action, Component, Vue } from 'nuxt-property-decorator';
+import { validationMixin } from 'vuelidate';
 import { required } from 'vuelidate/lib/validators';
 
-import FbLogin from '../components/FBLogin';
+import FbLogin from '@/components/FBLogin.vue';
 
-export default {
+@Component({
   components: { FbLogin },
-
-  data: () => ({
-    error: null,
-    fbError: null,
-    fbLogin: false,
-    fbParams: {
-      return_scopes: true,
-      scope: 'email',
-    },
-    fbProcessing: false,
-    password: '',
-    username: '',
-  }),
-
-  methods: {
-    async login() {
-      this.$v.$touch();
-
-      if (this.$v.$invalid) {
-        return;
-      }
-
-      try {
-        await this.$store.dispatch('auth/login', {
-          username: this.username,
-          password: this.password,
-        });
-
-        this.error = null;
-
-        this.$router.push('/');
-      } catch (error) {
-        console.log({ error });
-        this.error = get(error, 'response.data.message', 'Fail');
-      }
-    },
-
-    onFbError(error) {
-      console.warn(error);
-
-      this.fbError = 'Fail';
-      this.fbProcessing = false;
-    },
-
-    async onFbSuccess(response) {
-      console.log(response);
-
-      this.fbProcessing = true;
-
-      const { accessToken: access_token, userID: external_user_id } = response.authResponse;
-
-      try {
-        const apiResponse = await this.$store.dispatch('auth/fbLogin', {
-          access_token,
-          external_user_id,
-        });
-
-        if (apiResponse) {
-          const { email, existing } = apiResponse;
-
-          if (!existing) {
-            this.$router.push(this.localePath('register'));
-
-            return;
-          }
-
-          this.username = email;
-          this.fbLogin = existing;
-        }
-      } catch (error) {
-        this.fbError = get(error, 'response.data.message', 'Fail');
-      } finally {
-        this.fbProcessing = false;
-      }
-    },
-  },
-
+  mixins: [validationMixin],
   validations: {
     username: { required },
     password: { required },
   },
-};
+})
+export default class Login extends Vue {
+  error: string | null = null;
+  fbError: string | null = null;
+  fbLogin = false;
+  fbParams = { return_scopes: true, scope: 'email' };
+  fbProcessing = false;
+  password = '';
+  username = '';
+
+  @Action('auth/fbLogin') actionFBLogin;
+
+  async login() {
+    this.$v.$touch();
+
+    if (this.$v.$invalid) {
+      return;
+    }
+
+    try {
+      await this.$store.dispatch('auth/login', {
+        username: this.username,
+        password: this.password,
+      });
+
+      this.error = null;
+
+      this.$router.push('/');
+    } catch (error) {
+      this.error = get(error, 'response.data.message', 'Login failed :(');
+    }
+  }
+
+  onFbError(error) {
+    this.fbError = 'Login with Facebook failed :(';
+    this.fbProcessing = false;
+  }
+
+  async onFbSuccess(response) {
+    console.log(response);
+
+    this.fbProcessing = true;
+
+    const { accessToken: access_token, userID: external_user_id } = response.authResponse;
+
+    try {
+      const apiResponse = await this.actionFBLogin({ access_token, external_user_id });
+
+      if (apiResponse) {
+        const { email, is_new_user } = apiResponse;
+
+        if (!is_new_user) {
+          return this.$router.push(this.localePath('register'));
+        }
+
+        this.username = email;
+        this.fbLogin = is_new_user;
+      }
+    } catch (error) {
+      this.fbError = get(error, 'response.data.message', 'Fail');
+    } finally {
+      this.fbProcessing = false;
+    }
+  }
+}
 </script>
 
 <style scoped>

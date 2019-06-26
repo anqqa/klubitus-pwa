@@ -1517,6 +1517,11 @@
     "@types/express-serve-static-core" "*"
     "@types/serve-static" "*"
 
+"@types/facebook-js-sdk@^3.3.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@types/facebook-js-sdk/-/facebook-js-sdk-3.3.0.tgz#603d77a89be203d88f228810b54bb772fc25eedd"
+  integrity sha512-jSoLJd8g5cHHkbJc7MBebfiHYGYtFT8fbt5RUSGAPlpQWuzzi/LkwgpaC/F2pYLUDR7GSinXNbohsjKl2rc+9w==
+
 "@types/html-minifier@^3.5.3":
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/@types/html-minifier/-/html-minifier-3.5.3.tgz#5276845138db2cebc54c789e0aaf87621a21e84f"
@@ -1535,6 +1540,11 @@
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@types/linkify-it/-/linkify-it-2.1.0.tgz#ea3dd64c4805597311790b61e872cbd1ed2cd806"
   integrity sha512-Q7DYAOi9O/+cLLhdaSvKdaumWyHbm7HAk/bFwwyTuU0arR5yyCeW5GOoqt4tJTpDRxhpx9Q8kQL6vMpuw9hDSw==
+
+"@types/lodash@^4.14.134":
+  version "4.14.134"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.134.tgz#9032b440122db3a2a56200e91191996161dde5b9"
+  integrity sha512-2/O0khFUCFeDlbi7sZ7ZFRCcT812fAeOLm7Ev4KbwASkZ575TDrDcY7YyaoHdTOzKcNbfiwLYZqPmoC4wadrsw==
 
 "@types/loglevel@*":
   version "1.5.4"

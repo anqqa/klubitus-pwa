@@ -19,7 +19,7 @@
     "sourceMap": true,
     "strict": true,
     "target": "esnext",
-    "types": ["@types/node", "@nuxt/vue-app"]
+    "types": ["node", "@nuxt/vue-app", "nuxt-i18n", "facebook-js-sdk"]
   },
 
   "exclude": ["node_modules"]
