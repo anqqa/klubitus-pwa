@@ -75,11 +75,12 @@
 
 <script lang="ts">
 import get from 'lodash/get';
-import { Action, Component, Vue } from 'nuxt-property-decorator';
+import { Component, Vue } from 'nuxt-property-decorator';
 import { validationMixin } from 'vuelidate';
 import { required } from 'vuelidate/lib/validators';
 
 import FbLogin from '@/components/FBLogin.vue';
+import { Actions, authStore, FBLoginPayload, FBLoginResponse, LoginPayload } from '@/store/auth';
 
 @Component({
   components: { FbLogin },
@@ -95,10 +96,14 @@ export default class Login extends Vue {
   fbLogin = false;
   fbParams = { return_scopes: true, scope: 'email' };
   fbProcessing = false;
-  password = '';
-  username = '';
+  password: string = '';
+  username: string = '';
 
-  @Action('auth/fbLogin') actionFBLogin;
+  @authStore.Action(Actions.FB_LOGIN)
+  actionFBLogin!: (payload: FBLoginPayload) => Promise<FBLoginResponse>;
+
+  @authStore.Action(Actions.LOGIN)
+  actionLogin!: (payload: LoginPayload) => Promise<void>;
 
   async login() {
     this.$v.$touch();
@@ -108,7 +113,7 @@ export default class Login extends Vue {
     }
 
     try {
-      await this.$store.dispatch('auth/login', {
+      await this.actionLogin({
         username: this.username,
         password: this.password,
       });
@@ -139,12 +144,12 @@ export default class Login extends Vue {
       if (apiResponse) {
         const { email, is_new_user } = apiResponse;
 
-        if (!is_new_user) {
+        if (is_new_user) {
           return this.$router.push(this.localePath('register'));
         }
 
-        this.username = email;
-        this.fbLogin = is_new_user;
+        this.username = email || '';
+        this.fbLogin = true;
       }
     } catch (error) {
       this.fbError = get(error, 'response.data.message', 'Fail');
