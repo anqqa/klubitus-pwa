@@ -22,7 +22,7 @@ export class FacebookService {
 
   constructor(
     @InjectRepository(External) private readonly externalRepository: Repository<External>,
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(User) private readonly userRepository: Repository<User>
   ) {
     this.client = axios.create({ baseURL: this.baseUrl });
 
@@ -50,7 +50,7 @@ export class FacebookService {
         Logger.warn(`Request to ${config.url} failed: ${status}:${statusText}`, LOG_CONTEXT, false);
 
         return Promise.reject(data.error);
-      },
+      }
     );
   }
 
@@ -111,7 +111,7 @@ export class FacebookService {
         user: authenticatedUser,
       });
 
-      return { existing: true, user: authenticatedUser };
+      return { connected: true, user: authenticatedUser };
     }
 
     if (!email) {
@@ -126,12 +126,12 @@ export class FacebookService {
     if (user) {
       Logger.log('Login attempt with non-connected user', LOG_CONTEXT, false);
 
-      return { email, name, existing: true };
+      return { email, name, is_new_user: false };
     }
 
     Logger.log('Login attempt with unknown user', LOG_CONTEXT, false);
 
-    return { email, name, existing: false };
+    return { email, name, is_new_user: true };
   }
 
   public async me(accessToken: string, fields: string[] = ['id']) {

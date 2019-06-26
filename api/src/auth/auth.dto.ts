@@ -23,7 +23,7 @@ export class FacebookResponse {
 
   @ApiModelPropertyOptional()
   @Expose()
-  existing?: boolean;
+  is_new_user?: boolean;
 
   @ApiModelPropertyOptional()
   @Expose()
