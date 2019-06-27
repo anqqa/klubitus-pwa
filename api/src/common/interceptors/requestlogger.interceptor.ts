@@ -18,9 +18,9 @@ export class RequestLoggerInterceptor implements NestInterceptor {
 
     const logRequest = (status: number = HttpStatus.OK) =>
       Logger.debug(
-        `${req.method} ${req.url} ${status} ${Date.now() - startTime}ms`,
+        `[${status} ${HttpStatus[status]}] [${req.method}] ${req.url} ${Date.now() - startTime}ms`,
         'Request',
-        false,
+        false
       );
 
     return next.handle().pipe(
@@ -36,7 +36,7 @@ export class RequestLoggerInterceptor implements NestInterceptor {
         logRequest(status);
 
         return throwError(error);
-      }),
+      })
     );
   }
 }
