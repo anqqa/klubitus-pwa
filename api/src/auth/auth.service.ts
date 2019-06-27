@@ -18,7 +18,7 @@ export class AuthService {
   constructor(
     private facebookService: FacebookService,
     @InjectRepository(Token) private readonly tokenRepository: Repository<Token>,
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(User) private readonly userRepository: Repository<User>
   ) {}
 
   async deleteToken(token: string): Promise<boolean> {
@@ -50,8 +50,8 @@ export class AuthService {
     return token;
   }
 
-  async login(credentials: LoginPayload): Promise<User> {
-    const { username, password } = credentials;
+  async login(payload: LoginPayload): Promise<User> {
+    const { username, password } = payload;
     const validator = new Validator();
     const where = validator.isEmail(username) ? { email: username } : { username };
 
