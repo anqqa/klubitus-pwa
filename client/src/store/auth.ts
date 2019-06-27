@@ -25,7 +25,7 @@ export const state = (): AuthState => ({
 
 export interface FBLoginPayload {
   access_token: string;
-  external_user_id: number;
+  external_user_id: string;
 }
 
 export interface FBLoginResponse {
@@ -39,6 +39,12 @@ export interface LoginPayload {
   password: string;
 }
 
+export interface RegisterPayload {
+  email: string;
+  username: string;
+  password: string;
+}
+
 interface AuthActionContext extends ActionContext<AuthState, any> {}
 
 export const Actions = {
@@ -46,6 +52,7 @@ export const Actions = {
   LOGIN: 'login',
   LOGOUT: 'logout',
   ME: 'me',
+  REGISTER: 'register',
   RESET: 'reset',
 };
 
@@ -83,9 +90,9 @@ export const actions: ActionTree<AuthState, any> = {
       commit,
     }: // state: { facebook },
     AuthActionContext,
-    login: LoginPayload
+    payload: LoginPayload
   ): Promise<void> {
-    const { token, user } = await this.$axios.$post('auth/login', login);
+    const { token, user } = await this.$axios.$post('auth/login', payload);
 
     commit(Mutations.SET_TOKEN, token);
     commit(Mutations.SET_USER, user);
@@ -115,6 +122,16 @@ export const actions: ActionTree<AuthState, any> = {
     const user = await this.$axios.$get('auth/me');
 
     commit(Mutations.SET_USER, user);
+  },
+
+  async [Actions.REGISTER]({ commit }: AuthActionContext, payload: RegisterPayload): Promise<void> {
+    const { token, user } = await this.$axios.$post('auth/register', payload);
+
+    commit(Mutations.SET_TOKEN, token);
+    commit(Mutations.SET_USER, user);
+
+    this.$axios.setToken(token, 'Bearer');
+    cookies.set('auth.token', token, { expires: EXPIRES });
   },
 
   [Actions.RESET]({ commit }: AuthActionContext): void {

@@ -111,7 +111,7 @@ const config: NuxtConfiguration = {
 
           login: { fi: '/kirjaudu' },
           password: { fi: '/salasana' },
-          register: { fi: '/liity' },
+          signup: { fi: '/liity' },
         },
         parsePages: false,
         rootRedirect: 'en',
