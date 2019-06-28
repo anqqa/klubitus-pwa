@@ -35,14 +35,13 @@ export interface FBLoginResponse {
 }
 
 export interface LoginPayload {
-  username: string;
+  connect_facebook?: boolean;
   password: string;
+  username: string;
 }
 
-export interface RegisterPayload {
+export interface RegisterPayload extends LoginPayload {
   email: string;
-  username: string;
-  password: string;
 }
 
 interface AuthActionContext extends ActionContext<AuthState, any> {}
@@ -59,16 +58,16 @@ export const Actions = {
 export const actions: ActionTree<AuthState, any> = {
   async [Actions.FB_LOGIN](
     { commit }: AuthActionContext,
-    login: FBLoginPayload
+    payload: FBLoginPayload
   ): Promise<FBLoginResponse> {
     const { email, is_new_user, name, user, token } = await this.$axios.$post(
       'auth/facebook',
-      login
+      payload
     );
 
     commit(Mutations.SET_FACEBOOK, {
-      token: login.access_token,
-      userId: login.external_user_id,
+      token: payload.access_token,
+      userId: payload.external_user_id,
       email,
       name,
     });
@@ -86,13 +85,11 @@ export const actions: ActionTree<AuthState, any> = {
   },
 
   async [Actions.LOGIN](
-    {
-      commit,
-    }: // state: { facebook },
-    AuthActionContext,
+    { commit, state: { facebook } }: AuthActionContext,
     payload: LoginPayload
   ): Promise<void> {
-    const { token, user } = await this.$axios.$post('auth/login', payload);
+    const { connect_facebook, ...rest } = payload;
+    const { token, user } = await this.$axios.$post('auth/login', rest);
 
     commit(Mutations.SET_TOKEN, token);
     commit(Mutations.SET_USER, user);
@@ -101,13 +98,14 @@ export const actions: ActionTree<AuthState, any> = {
     cookies.set('auth.token', token, { expires: EXPIRES });
 
     // Connect Facebook after login?
-    // if (facebook && facebook.token && facebook.userId) {
-    //   const { token: access_token, userId: external_user_id } = facebook;
-    //
-    //   try {
-    //     await this.$axios.$post('auth/facebook', { access_token, external_user_id })
-    //   } catch (error) {}
-    // }
+    if (connect_facebook && facebook) {
+      try {
+        // tslint:disable-next-line:variable-name
+        const { token: access_token, userId: external_user_id } = facebook;
+
+        await this.$axios.$post('auth/facebook', { access_token, external_user_id });
+      } catch (error) {}
+    }
   },
 
   async [Actions.LOGOUT]({ dispatch }: AuthActionContext): Promise<void> {
@@ -124,14 +122,28 @@ export const actions: ActionTree<AuthState, any> = {
     commit(Mutations.SET_USER, user);
   },
 
-  async [Actions.REGISTER]({ commit }: AuthActionContext, payload: RegisterPayload): Promise<void> {
-    const { token, user } = await this.$axios.$post('auth/register', payload);
+  async [Actions.REGISTER](
+    { commit, state: { facebook } }: AuthActionContext,
+    payload: RegisterPayload
+  ): Promise<void> {
+    const { connect_facebook, ...rest } = payload;
+    const { token, user } = await this.$axios.$post('users', rest);
 
     commit(Mutations.SET_TOKEN, token);
     commit(Mutations.SET_USER, user);
 
     this.$axios.setToken(token, 'Bearer');
     cookies.set('auth.token', token, { expires: EXPIRES });
+
+    // Connect Facebook after registering?
+    if (connect_facebook && facebook) {
+      try {
+        // tslint:disable-next-line:variable-name
+        const { token: access_token, userId: external_user_id } = facebook;
+
+        await this.$axios.$post('auth/facebook', { access_token, external_user_id });
+      } catch (error) {}
+    }
   },
 
   [Actions.RESET]({ commit }: AuthActionContext): void {
