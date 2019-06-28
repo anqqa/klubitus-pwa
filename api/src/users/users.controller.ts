@@ -22,7 +22,7 @@ export class UsersController {
 
   @ApiOperation({ title: 'Create a user' })
   @ApiCreatedResponse({ description: 'Success', type: LoginResponse })
-  @ApiBadRequestResponse({ description: 'Failed' })
+  @ApiBadRequestResponse({ description: 'Validation failed. Returns field(s) with error(s).' })
   @UseInterceptors(new TransformerInterceptor(LoginResponse))
   @Post()
   async create(@Body() payload: CreatePayload): Promise<any> {

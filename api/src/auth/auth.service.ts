@@ -60,7 +60,10 @@ export class AuthService {
     if (!user) {
       Logger.log('User not found', LOG_CONTEXT, false);
 
-      throw new UnauthorizedException();
+      throw new UnauthorizedException({
+        errors: { username: ['Unknown user'] },
+        message: 'Unknown user',
+      });
     }
 
     if (!user.password) {
@@ -73,12 +76,18 @@ export class AuthService {
       } else {
         Logger.log(`Invalid old password  [user:${user.id}]`, LOG_CONTEXT, false);
 
-        throw new UnauthorizedException();
+        throw new UnauthorizedException({
+          errors: { password: ['Incorrect password'] },
+          message: 'Incorrect password',
+        });
       }
     } else if (!user.verifyPassword(password)) {
       Logger.log(`Invalid password  [user:${user.id}]`, LOG_CONTEXT, false);
 
-      throw new UnauthorizedException();
+      throw new UnauthorizedException({
+        errors: { password: ['Incorrect password'] },
+        message: 'Incorrect password',
+      });
     }
 
     return user;
