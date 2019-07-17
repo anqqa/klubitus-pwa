@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AuthModule } from '../auth/auth.module';
+import { AuthModule } from '../auth';
 import { IsUnique } from '../common/validators/IsUnique';
 import DbModule from '../db.module';
 import { External } from './externals/external.entity';
@@ -13,7 +13,7 @@ import { UsersService } from './users.service';
 @Module({
   controllers: [UsersController],
   exports: [UsersService],
-  imports: [DbModule, TypeOrmModule.forFeature([External, Token, User]), AuthModule],
+  imports: [AuthModule, DbModule, TypeOrmModule.forFeature([External, Token, User])],
   providers: [IsUnique, UsersService],
 })
 export class UsersModule {}

@@ -6,8 +6,7 @@ import {
   ApiUseTags,
 } from '@nestjs/swagger';
 
-import { LoginResponse } from '../auth/auth.dto';
-import { AuthService } from '../auth/auth.service';
+import { AuthService, LoginResponse } from '../auth';
 import { TransformerInterceptor } from '../common/interceptors/transformer.interceptor';
 import { CreatePayload } from './users.dto';
 import { UsersService } from './users.service';

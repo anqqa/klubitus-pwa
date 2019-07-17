@@ -93,7 +93,7 @@ export class AuthService {
     return user;
   }
 
-  async validateUser(token: string): Promise<any> {
+  async validateUser(token: string): Promise<User> {
     const userToken = await this.tokenRepository.findOneOrFail({
       relations: ['user'],
       where: { token },

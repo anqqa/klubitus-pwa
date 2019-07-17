@@ -17,6 +17,8 @@ export class HttpStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException();
     }
 
+    user.is_authenticated = true;
+
     return user;
   }
 }
