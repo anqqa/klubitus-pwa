@@ -9,7 +9,8 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
-import { EntityForbiddenError } from '../exceptions/entityforbidden.error';
+
+import { EntityForbiddenError } from '../errors/entityforbidden.error';
 
 @Injectable()
 export class ErrorsInterceptor implements NestInterceptor {

@@ -1,10 +1,18 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
+import { CrudConfigService } from '@nestjsx/crud';
 import { useContainer } from 'class-validator';
 
+CrudConfigService.load({
+  query: { maxLimit: 500 },
+  routes: {
+    exclude: ['createManyBase', 'replaceOneBase'],
+  },
+});
+
 import { ApplicationModule } from './app.module';
-import { ValidationException } from './common/exceptions/validation.exception';
+import { ValidationException } from './common/errors/validation.exception';
 import { ErrorsInterceptor } from './common/interceptors/errors.interceptor';
 import { RequestLoggerInterceptor } from './common/interceptors/requestlogger.interceptor';
 import { TrimPipe } from './common/pipes/TrimPipe';
@@ -23,7 +31,7 @@ async function bootstrap() {
   // Security
   app.enableCors();
 
-  app.useGlobalInterceptors(new ErrorsInterceptor(), new RequestLoggerInterceptor());
+  app.useGlobalInterceptors(new RequestLoggerInterceptor(), new ErrorsInterceptor());
 
   app.useGlobalPipes(
     new TrimPipe(),
