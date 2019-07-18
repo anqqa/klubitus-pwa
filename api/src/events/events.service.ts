@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { format, parse } from 'date-fns';
 import { Repository } from 'typeorm';
 
@@ -8,12 +9,14 @@ import { Event } from './event.entity';
 import { EventsQuery } from './events.dto';
 
 @Injectable()
-export class EventsService {
-  constructor(@InjectRepository(Event) private readonly eventRepository: Repository<Event>) {}
+export class EventsService extends TypeOrmCrudService<Event> {
+  constructor(@InjectRepository(Event) repo: Repository<Event>) {
+    super(repo);
+  }
 
   async findAll(query: EventsQuery): Promise<Event[]> {
     let enforceLimit = true;
-    let qb = this.eventRepository.createQueryBuilder().orderBy('id', 'DESC');
+    let qb = this.repo.createQueryBuilder().orderBy('id', 'DESC');
 
     // Filter by date
     const { from, to } = query;
@@ -63,6 +66,6 @@ export class EventsService {
   }
 
   async get(eventId: number): Promise<Event> {
-    return this.eventRepository.findOneOrFail(eventId);
+    return this.repo.findOneOrFail(eventId);
   }
 }
