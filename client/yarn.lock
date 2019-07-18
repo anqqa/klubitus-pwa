@@ -1053,6 +1053,16 @@
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@kazupon/vue-i18n-loader/-/vue-i18n-loader-0.3.0.tgz#e068de2d75d891275814ae28ad1fcaf1b537694f"
 
+"@nestjsx/crud-request@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@nestjsx/crud-request/-/crud-request-4.1.0.tgz#89c0e54e8633e3e47dbaf7737a4d0b75ac069574"
+  integrity sha512-k8fs1Z81zn8f4u/h2TQTuY+YLCp7DVaVTdZOr1rZWpxOKVj03fV2IRtCNUjDT9JgoQWs0gAcoLy53myE4BJZuA==
+
+"@nestjsx/util@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@nestjsx/util/-/util-4.1.0.tgz#ce7ea06a1f11db87a323e29d3aeaad21b3fe156a"
+  integrity sha512-VJ6qPalAexk86J6ia6FBMcy5R4QV7MyIOLiTKBE607VGXI94V0txlauAnr2HlAVFSx0LNvisVGwb+pe6VmJFbQ==
+
 "@nuxt/babel-preset-app@2.8.1":
   version "2.8.1"
   resolved "https://registry.yarnpkg.com/@nuxt/babel-preset-app/-/babel-preset-app-2.8.1.tgz#4b6b9ec293d66426034b30409ebda8b17e625014"
