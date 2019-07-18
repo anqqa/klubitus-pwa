@@ -6,6 +6,13 @@ import { useContainer } from 'class-validator';
 
 CrudConfigService.load({
   query: { maxLimit: 500 },
+  queryParser: {
+    delim: ':',
+    paramNamesMap: {
+      join: ['include', 'include[]'],
+      limit: 'limit',
+    },
+  },
   routes: {
     exclude: ['createManyBase', 'replaceOneBase'],
   },
