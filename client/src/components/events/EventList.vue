@@ -40,15 +40,16 @@ export default {
         return cachedData;
       }
 
-      let orderBy = 'id';
+      let order = 'ASC';
 
       switch (this.type) {
         case EventListType.LATEST:
-          orderBy = '-id';
+          order = 'DESC';
           break;
       }
 
-      const data = await Event.orderBy(orderBy)
+      const data = await new Event()
+        .sort('id', order)
         .limit(Math.min(this.limit, 50))
         .get();
 
