@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { format, parse } from 'date-fns';
 import { Repository } from 'typeorm';
 
+import { BaseCrudService } from '../common/basecrud.service';
 import { PaginationService } from '../common/pagination/pagination.service';
 import { Event } from './event.entity';
 import { EventsQuery } from './events.dto';
 
 @Injectable()
-export class EventsService extends TypeOrmCrudService<Event> {
+export class EventsService extends BaseCrudService<Event> {
   constructor(@InjectRepository(Event) repo: Repository<Event>) {
     super(repo);
   }
