@@ -15,6 +15,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "lint": "tslint -p tsconfig.json",
+    "postinstall": "patch-package",
     "precommit": "lint-staged",
     "start": "nodemon -L"
   },
@@ -66,6 +67,7 @@
     "@types/uuid": "^3.4.5",
     "lint-staged": "^9.2.0",
     "nodemon": "^1.19.1",
+    "patch-package": "^6.1.2",
     "ts": "^0.2.2",
     "tslint": "^5.18.0",
     "tslint-config-prettier": "^1.18.0",
