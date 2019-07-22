@@ -1,8 +1,8 @@
-import endOfMonth from 'date-fns/end_of_month';
 import endOfISOWeek from 'date-fns/end_of_iso_week';
+import endOfMonth from 'date-fns/end_of_month';
+import format from 'date-fns/format';
 import setISOWeek from 'date-fns/set_iso_week';
 import startOfISOWeek from 'date-fns/start_of_iso_week';
-import format from 'date-fns/format';
 
 const MINUTE = 60;
 const HOUR = 60 * MINUTE;
@@ -18,8 +18,15 @@ const MONTH = 30 * DAY;
  * @param  {number}  [day]
  * @return  {{from: Date, to: Date, range: string}}
  */
-export const dateRange = (year, month, week, day) => {
-  let from, to, range;
+export const dateRange = (
+  year?: number,
+  month?: number,
+  week?: number,
+  day?: number
+): { from: Date; to: Date; range: 'day' | 'week' | 'month' | 'year' } => {
+  let from;
+  let to;
+  let range;
 
   if (!year) {
     // Default to this week if no date given
@@ -50,9 +57,9 @@ export const dateRange = (year, month, week, day) => {
   return { from, to, range };
 };
 
-export const fuzzyTimeDistance = since => {
-  const now = new Date();
-  const distance = now - since;
+export const fuzzyTimeDistance = (since: Date): string => {
+  const now: Date = new Date();
+  const distance: number = now.valueOf() - since.valueOf();
 
   if (distance < MINUTE) {
     return `${distance}s`;
@@ -62,13 +69,13 @@ export const fuzzyTimeDistance = since => {
     return `${Math.round(distance / HOUR)}h`;
   } else if (distance < MONTH) {
     return `${Math.round(distance / DAY)}d`;
-  } else if (now.getYear() === since.getYear()) {
+  } else if (now.getFullYear() === since.getFullYear()) {
     return format(since, 'MMM D');
   } else {
     return format(since, "MMM 'YY");
   }
 };
 
-export const hours = (from, to) => {
+export const hours = (from: Date, to: Date): string => {
   return format(from, 'HH:mm') + (to ? '–' + format(to, 'HH:mm') : '→');
 };

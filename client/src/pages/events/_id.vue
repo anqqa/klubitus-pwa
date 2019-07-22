@@ -29,16 +29,18 @@
   </main>
 </template>
 
-<script>
+<script lang="ts">
 import format from 'date-fns/format';
+import { Component, Vue } from 'nuxt-property-decorator';
 
-import Event from '../../models/Event';
-import { hours } from '../../utils/time';
+import Event from '@/models/Event';
+import { hours } from '@/utils/time';
 
-export default {
+@Component({})
+export default class SingleEvent extends Vue {
   async asyncData({ app, params }) {
-    const event = await Event.find(parseInt(params.id));
-    const { begins_at, ends_at, info } = event;
+    const event = await new Event().find(parseInt(params.id));
+    const { begins_at, ends_at, info } = event as any;
 
     return {
       item: {
@@ -48,12 +50,12 @@ export default {
         info: app.$md.render(info),
       },
     };
-  },
+  }
 
   validate({ params }) {
     return /^\d+/.test(params.id);
-  },
-};
+  }
+}
 </script>
 
 <style scoped>
