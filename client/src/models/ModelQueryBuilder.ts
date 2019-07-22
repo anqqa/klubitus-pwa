@@ -6,9 +6,8 @@ import {
 } from '@nestjsx/crud-request';
 
 RequestQueryBuilder.setOptions({
-  delim: ':',
   paramNamesMap: {
-    join: ['include', 'include[]'],
+    join: 'include',
     limit: 'limit',
   },
 });
@@ -58,7 +57,7 @@ export class ModelQueryBuilder {
   }
 
   query(): string {
-    return this._builder.query();
+    return this._builder.query().replace(/\[]/g, '');
   }
 
   select(fields: QueryFields): this {

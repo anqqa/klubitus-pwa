@@ -199,7 +199,7 @@ export default {
     // Fetch events
     const events = await new Event()
       .filter('ends_at', 'gte', format(from, 'YYYY-MM-DD'))
-      .filter('begins_at', 'lte', format(to, 'YYYY-MM-DD'))
+      .filter('begins_at', 'lte', format(to, 'YYYY-MM-DDT23:59:59'))
       .limit(10)
       .sort('begins_at', 'ASC')
       .get();
