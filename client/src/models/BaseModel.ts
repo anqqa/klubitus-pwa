@@ -21,6 +21,14 @@ export class BaseModel extends ModelQueryBuilder {
     return 'id';
   }
 
+  async find(identifier: string | number): Promise<BaseModel> {
+    const endpoint = this.resource() + '/' + identifier;
+
+    const data = await BaseModel.$http.$get(endpoint);
+
+    return new this.constructor(data);
+  }
+
   endpoint(): string {
     const endpoint = this.resource();
     const id = this.getPrimaryKey();
@@ -28,7 +36,7 @@ export class BaseModel extends ModelQueryBuilder {
     return id ? `${endpoint}/${id}` : endpoint;
   }
 
-  async get() {
+  async get(): Promise<BaseModel[]> {
     const query = this.query();
     const endpoint = this.endpoint();
 
