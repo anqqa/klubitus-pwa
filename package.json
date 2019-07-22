@@ -3,29 +3,35 @@
   "version": "9.0.0",
   "license": "MIT",
   "private": true,
+  "workspaces": [
+    "api",
+    "client"
+  ],
   "scripts": {
     "api:build": "docker-compose build api",
-    "api:precommit": "cd api && yarn precommit",
+    "api:precommit": "yarn workspace klubitus-api precommit",
     "api:shell": "docker-compose run api sh",
     "api:up": "docker-compose up api",
     "api:yarn": "docker-compose exec api yarn",
     "client:build": "docker-compose build --no-cache client",
-    "client:precommit": "cd client && yarn precommit",
+    "client:precommit": "yarn workspace klubitus-client precommit",
     "client:shell": "docker-compose run client sh",
     "client:up": "docker-compose up client",
     "client:yarn": "docker-compose exec client yarn",
     "db:psql": "docker-compose exec db psql -U klubitus klubitus",
-    "db:up": "docker-compose up db"
+    "db:up": "docker-compose up db",
+    "postinstall": "patch-package"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn api:precommit && yarn client:precommit && git -p diff --cached"
+      "pre-commit": "yarn workspaces run precommit && git -p diff --cached"
     }
   },
   "dependencies": {},
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "husky": "^1.3.1",
-    "prettier": "^1.16.4"
+    "husky": "^3.0.1",
+    "patch-package": "^6.1.2",
+    "prettier": "^1.18.2"
   }
 }
