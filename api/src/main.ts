@@ -7,9 +7,8 @@ import { useContainer } from 'class-validator';
 CrudConfigService.load({
   query: { maxLimit: 500 },
   queryParser: {
-    delim: ':',
     paramNamesMap: {
-      join: ['include', 'include[]'],
+      join: 'include',
       limit: 'limit',
     },
   },

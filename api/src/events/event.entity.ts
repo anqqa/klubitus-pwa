@@ -1,7 +1,7 @@
 // tslint:disable:variable-name
 import { CrudActions, CrudValidationGroups } from '@nestjsx/crud';
 import { Type } from 'class-transformer';
-import { IsFQDN, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsDateString, IsFQDN, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import {
   Column,
   CreateDateColumn,
@@ -20,6 +20,7 @@ const { CREATE, UPDATE } = CrudValidationGroups;
 export class Event extends BaseEntity {
   @IsNotEmpty({ groups: [CREATE] })
   @IsOptional({ groups: [UPDATE] })
+  @IsDateString({ always: true })
   @Column('timestamp')
   begins_at: Date;
 
@@ -33,6 +34,7 @@ export class Event extends BaseEntity {
   created_at: Date;
 
   @IsOptional({ always: true })
+  @IsDateString({ always: true })
   @Column('timestamp', { nullable: true })
   ends_at?: Date;
 
