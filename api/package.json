@@ -14,9 +14,8 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "lint": "tslint -p tsconfig.json",
+    "lint": "wotan -p tsconfig.json",
     "postinstall": "patch-package",
-    "precommit": "lint-staged",
     "start": "nodemon -L"
   },
   "dependencies": {
@@ -65,13 +64,9 @@
     "@types/pump": "^1.1.0",
     "@types/sharp": "^0.22.2",
     "@types/uuid": "^3.4.5",
-    "lint-staged": "^9.2.0",
     "nodemon": "^1.19.1",
     "patch-package": "^6.1.2",
     "ts": "^0.2.2",
-    "tslint": "^5.18.0",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-plugin-prettier": "^2.0.1",
     "typescript": "^3.5.3"
   }
 }

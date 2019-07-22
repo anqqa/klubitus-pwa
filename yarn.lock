@@ -812,7 +812,7 @@
     tslib "^1.8.1"
     void-elements "^3.1.0"
 
-"@fimbul/wotan@^0.21.0":
+"@fimbul/wotan@^0.21.1":
   version "0.21.1"
   resolved "https://registry.yarnpkg.com/@fimbul/wotan/-/wotan-0.21.1.tgz#e5f8d39189cd9bcce390476c6bfc0f4f436bc9d5"
   integrity sha512-OQn+KAKjDCv9aoj6MsxYFXbSDwJosqWH2B9xevauK/OZgZ6/l+wCxqE+svuL9CGlpow6MUT3HOWVkx0WiF8n6g==
@@ -11297,7 +11297,7 @@ tslint-plugin-prettier@^2.0.1:
     lines-and-columns "^1.1.6"
     tslib "^1.7.1"
 
-tslint@5.*, tslint@^5.0.0, tslint@^5.18.0:
+tslint@5.*, tslint@^5.0.0:
   version "5.18.0"
   resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.18.0.tgz#f61a6ddcf372344ac5e41708095bbf043a147ac6"
   integrity sha512-Q3kXkuDEijQ37nXZZLKErssQVnwCV/+23gFEMROi8IlbaBG6tXqLPQJ5Wjcyt/yHPKBC+hD5SzuGaMora+ZS6w==

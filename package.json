@@ -3,10 +3,15 @@
   "version": "9.0.0",
   "license": "MIT",
   "private": true,
-  "workspaces": [
-    "api",
-    "client"
-  ],
+  "workspaces": {
+    "packages": [
+      "api",
+      "client"
+    ],
+    "nohoist": [
+      "**/patch-package"
+    ]
+  },
   "scripts": {
     "api:build": "docker-compose build api",
     "api:precommit": "yarn workspace klubitus-api precommit",
@@ -19,19 +24,25 @@
     "client:up": "docker-compose up client",
     "client:yarn": "docker-compose exec client yarn",
     "db:psql": "docker-compose exec db psql -U klubitus klubitus",
-    "db:up": "docker-compose up db",
-    "postinstall": "patch-package"
+    "db:up": "docker-compose up db"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn workspaces run precommit && git -p diff --cached"
+      "pre-commit": "lint-staged && git -p diff --cached",
+      "post-commit": "git update-index --again"
     }
   },
   "dependencies": {},
   "devDependencies": {
+    "@fimbul/valtyr": "^0.21.0",
+    "@fimbul/ve": "^0.21.0",
+    "@fimbul/wotan": "^0.21.1",
     "babel-cli": "^6.26.0",
     "husky": "^3.0.1",
-    "patch-package": "^6.1.2",
-    "prettier": "^1.18.2"
+    "lint-staged": "^9.2.0",
+    "prettier": "^1.18.2",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.0.1",
+    "typescript": "^3.5.3"
   }
 }
