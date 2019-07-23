@@ -24,23 +24,26 @@
   </main>
 </template>
 
-<script>
-import ForumAreaList from '../../components/forum/ForumAreaList';
-import ForumTopicList from '../../components/forum/ForumTopicList';
-import ForumArea from '../../models/ForumArea';
-import ForumTopic from '../../models/ForumTopic';
+<script lang="ts">
+import { Component, Vue } from 'nuxt-property-decorator';
 
-export default {
+import ForumAreaList from '@/components/forum/ForumAreaList.vue';
+import ForumTopicList from '@/components/forum/ForumTopicList.vue';
+import ForumArea from '@/models/ForumArea';
+import ForumTopic from '@/models/ForumTopic';
+
+@Component({
+  components: { ForumTopicList, ForumAreaList },
+  head: { title: 'Forum' },
+})
+export default class ForumIndex extends Vue {
   async asyncData() {
-    const [areas, topics] = await Promise.all([ForumArea.get(), ForumTopic.limit(20).get()]);
+    const [areas, topics] = await Promise.all([
+      new ForumArea().getAll(),
+      ForumTopic.limit(20).get(),
+    ]);
 
     return { areas, topics };
-  },
-
-  components: { ForumTopicList, ForumAreaList },
-
-  head: {
-    title: 'Forum',
-  },
-};
+  }
+}
 </script>

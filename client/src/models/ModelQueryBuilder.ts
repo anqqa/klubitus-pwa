@@ -20,12 +20,6 @@ export class ModelQueryBuilder {
     this._builder = RequestQueryBuilder.create();
   }
 
-  embed(join: QueryJoin): this {
-    this._builder.setJoin(join);
-
-    return this;
-  }
-
   filter(field: string, operator: ComparisonOperator, value?: any): this {
     this._builder.setFilter({ field, operator, value });
 
@@ -52,6 +46,12 @@ export class ModelQueryBuilder {
 
   page(page: number): this {
     this._builder.setPage(page);
+
+    return this;
+  }
+
+  relation(field: string, select?: string[]): this {
+    this._builder.setJoin({ field, select: select as any });
 
     return this;
   }

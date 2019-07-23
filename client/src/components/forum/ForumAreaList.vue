@@ -1,5 +1,4 @@
 <template>
-
   <section :class="{ collapsed }">
     <header class="show-phone" @click="toggleList">
       <h2>
@@ -13,7 +12,6 @@
     <div v-for="group in groupList" :key="group.id" class="collapsible">
       <h3 class="h6 has-text-tertiary">{{ group.name }}</h3>
       <ul>
-
         <template v-for="area in group.areas">
           <li v-if="area.url" :key="area.id">
             <nuxt-link :to="area.url">
@@ -22,78 +20,61 @@
           </li>
           <li v-else :key="area.id">
             <a>
-              <h4><span class="icon"><i class="bx bx-lock" /></span> {{ area.name }}</h4>
+              <h4>
+                <span class="icon"><i class="bx bx-lock"/></span> {{ area.name }}
+              </h4>
             </a>
           </li>
         </template>
-
       </ul>
     </div>
   </section>
-
 </template>
 
+<script lang="ts">
+import { Component, Prop, Vue } from 'nuxt-property-decorator';
 
-<script>
-  import { mapGetters } from 'vuex';
+import ForumArea from '@/models/ForumArea';
+import { authStore } from '@/store/auth';
+import { slug } from '@/utils/text';
 
-  import { slug } from '../../utils/text';
+@Component({})
+export default class ForumAreaList extends Vue {
+  collapsed = true;
 
+  @Prop() areas!: ForumArea[];
 
-  export default {
+  @authStore.Getter isAuthenticated: boolean;
 
-    props: {
-      areas: { default: () => [], type: Array },
-    },
+  get groupList() {
+    const groups: any[] = [];
+    let areas: any[] = [];
 
-    data() {
-      return { collapsed: true };
-    },
-
-    computed: {
-      groupList() {
-        const groups = [];
-        let   areas  = [];
-
-        this.areas.slice(0).forEach(area => {
-          if (!area.nest_depth) {
-
-            // Group
-            areas = [];
-            groups.push({ id: area.id, name: area.name, areas })
-
-          }
-          else {
-
-            // Area
-            areas.push({
-              ...area,
-              url: this.isAuthenticated || !area.is_private
-                     ? this.localePath({ name: 'forum-area', params: { area: `${area.id}-${slug(area.name)}` }})
-                     : null,
-            });
-
-          }
+    this.areas.slice(0).forEach(area => {
+      if (!area.nest_depth) {
+        // Group
+        areas = [];
+        groups.push({ id: area.id, name: area.name, areas });
+      } else {
+        // Area
+        areas.push({
+          ...area,
+          url:
+            this.isAuthenticated || !area.is_private
+              ? this.localePath({
+                  name: 'forum-area',
+                  params: { area: `${area.id}-${slug(area.name!)}` },
+                })
+              : null,
         });
-
-        return groups;
-      },
-
-      ...mapGetters({
-        isAuthenticated: 'auth/isAuthenticated',
-      })
-    },
-
-    methods: {
-      toggleList() {
-        this.collapsed = !this.collapsed;
       }
-    }
+    });
 
-  };
+    return groups;
+  }
+
+  toggleList() {
+    this.collapsed = !this.collapsed;
+  }
+}
 </script>
-
-
-<style scoped>
-
-</style>
