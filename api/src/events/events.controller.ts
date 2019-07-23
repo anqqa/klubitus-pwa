@@ -1,37 +1,16 @@
-import {
-  Controller,
-  ForbiddenException,
-  Get,
-  Param,
-  ParseIntPipe,
-  Query,
-  Req,
-  UnauthorizedException,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Controller, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import {
-  ApiBearerAuth,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiUnauthorizedResponse,
-  ApiUseTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiUseTags } from '@nestjs/swagger';
 import {
   Crud,
   CrudActions,
   CrudController,
   CrudRequest,
-  Feature,
   Override,
   ParsedRequest,
 } from '@nestjsx/crud';
-import { EntityForbiddenError } from '../common/errors/entityforbidden.error';
 
-import { TransformerInterceptor } from '../common/interceptors/transformer.interceptor';
-import { User } from '../users/user.entity';
+import { EntityForbiddenError } from '../common/errors/entityforbidden.error';
 import { Event } from './event.entity';
 import { EventsService } from './events.service';
 
@@ -60,23 +39,4 @@ export class EventsController implements CrudController<Event> {
 
     return this.base.deleteOneBase(req);
   }
-
-  /*
-    @ApiOperation({ title: 'List events' })
-    @ApiOkResponse({ description: 'Success', type: Event, isArray: true })
-    @UseInterceptors(new TransformerInterceptor(Event))
-    @Get()
-    async getAll(@Query() query: EventsQuery) {
-      return this.service.findAll(query);
-    }
-
-    @ApiOperation({ title: 'Get an event' })
-    @ApiOkResponse({ description: 'Success', type: Event })
-    @ApiNotFoundResponse({ description: 'Event not found' })
-    @UseInterceptors(new TransformerInterceptor(Event))
-    @Get(':id')
-    async getById(@Param('id', new ParseIntPipe()) id: number) {
-      return this.service.get(id);
-    }
-  */
 }

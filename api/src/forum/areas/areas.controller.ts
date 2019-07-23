@@ -1,29 +1,21 @@
-import { Controller, Get, Param, ParseIntPipe, Query, UseInterceptors } from '@nestjs/common';
-import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger';
+import { Controller } from '@nestjs/common';
+import { ApiUseTags } from '@nestjs/swagger';
+import { Crud, CrudController } from '@nestjsx/crud';
 
-import { TransformerInterceptor } from '../../common/interceptors/transformer.interceptor';
-import { Area, AreasQuery } from './areas.dto';
+import { Area } from './area.entity';
 import { AreasService } from './areas.service';
 
+@Crud({
+  model: { type: Area },
+  query: { filter: [{ field: 'is_hidden', operator: 'eq', value: false }] },
+  routes: { only: ['getManyBase', 'getOneBase'] },
+})
 @ApiUseTags('Forum')
 @Controller('areas')
-export class AreasController {
-  constructor(private readonly areasService: AreasService) {}
+export class AreasController implements CrudController<Area> {
+  constructor(readonly service: AreasService) {}
 
-  @ApiOperation({ title: 'List areas' })
-  @ApiOkResponse({ description: 'Success', type: Area, isArray: true })
-  @UseInterceptors(new TransformerInterceptor(Area))
-  @Get()
-  async getAll(@Query() query: AreasQuery) {
-    return await this.areasService.findAll(query);
-  }
-
-  @ApiOperation({ title: 'Get an area' })
-  @ApiOkResponse({ description: 'Success', type: Area })
-  @ApiNotFoundResponse({ description: 'Area not found' })
-  @UseInterceptors(new TransformerInterceptor(Area))
-  @Get(':id')
-  async getById(@Param('id', new ParseIntPipe()) id: number) {
-    return await this.areasService.get(id);
+  get base(): CrudController<Area> {
+    return this;
   }
 }

@@ -1,15 +1,16 @@
 // tslint:disable:variable-name
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 
+import { BaseEntity } from '../../common/base.entity';
 import { Topic } from '../topics/topic.entity';
 
 @Entity('forum_areas')
-export class Area {
+export class Area extends BaseEntity {
   @Column({ nullable: true })
-  description: string | null;
+  description?: string;
 
-  @PrimaryGeneratedColumn()
-  id: number;
+  @Column()
+  is_hidden: boolean;
 
   @Column()
   is_moderated: boolean;
@@ -22,7 +23,7 @@ export class Area {
   last_topic: Topic;
 
   @Column({ nullable: true })
-  last_topic_id: number | null;
+  last_topic_id?: number;
 
   @Column()
   name: string;
@@ -37,7 +38,7 @@ export class Area {
   nest_right: number;
 
   @Column({ nullable: true })
-  parent_id: number | null;
+  parent_id?: number;
 
   @Column()
   post_count: number;
