@@ -3,6 +3,11 @@ import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { ObjectLiteral } from 'typeorm';
 
 export class BaseCrudService<T> extends TypeOrmCrudService<T> {
+  public decidePagination(parsed: any, options: any): boolean {
+    // Never return pagination data
+    return false;
+  }
+
   protected mapOperatorsToQuery = (
     cond: QueryFilter,
     param: any
