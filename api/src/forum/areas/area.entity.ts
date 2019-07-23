@@ -1,4 +1,5 @@
 // tslint:disable:variable-name
+import { Type } from 'class-transformer';
 import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 
 import { BaseEntity } from '../../common/base.entity';
@@ -18,6 +19,7 @@ export class Area extends BaseEntity {
   @Column()
   is_private: boolean;
 
+  @Type(type => Topic)
   @OneToOne(() => Topic)
   @JoinColumn({ name: 'last_topic_id' })
   last_topic: Topic;

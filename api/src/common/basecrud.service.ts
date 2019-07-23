@@ -44,3 +44,6 @@ export class BaseCrudService<T> extends TypeOrmCrudService<T> {
     return { str, params };
   };
 }
+
+// @ts-ignore
+BaseCrudService.prototype.getJoinType = (relationType: string) => 'leftJoin';

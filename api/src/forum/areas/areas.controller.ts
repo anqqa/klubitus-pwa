@@ -7,7 +7,17 @@ import { AreasService } from './areas.service';
 
 @Crud({
   model: { type: Area },
-  query: { filter: [{ field: 'is_hidden', operator: 'eq', value: false }] },
+  query: {
+    filter: [{ field: 'is_hidden', operator: 'ne', value: true }],
+    join: {
+      last_topic: {},
+      'last_topic.author': {
+        allow: ['avatar_url', 'id', 'signature', 'title', 'username'],
+      },
+      'last_topic.last_post': {},
+      // 'last_topic.last_post.author': {},
+    },
+  },
   routes: { only: ['getManyBase', 'getOneBase'] },
 })
 @ApiUseTags('Forum')
