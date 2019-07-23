@@ -90,8 +90,7 @@ import { avatarUrl } from '@/utils/url';
   head: { title: 'Forum areas' },
 })
 export default class ForumAreas extends Vue {
-  @authStore.Getter
-  isAuthenticated: boolean = false;
+  @authStore.Getter isAuthenticated!: boolean;
 
   areas: ForumArea[] = [];
 

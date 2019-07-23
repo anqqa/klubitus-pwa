@@ -40,7 +40,12 @@ export default class ForumIndex extends Vue {
   async asyncData() {
     const [areas, topics] = await Promise.all([
       new ForumArea().getAll(),
-      ForumTopic.limit(20).get(),
+      new ForumTopic()
+        .relation('area')
+        .relation('author')
+        .sort('last_post_at', 'DESC')
+        .limit(20)
+        .get(),
     ]);
 
     return { areas, topics };

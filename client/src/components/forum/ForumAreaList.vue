@@ -44,7 +44,7 @@ export default class ForumAreaList extends Vue {
 
   @Prop() areas!: ForumArea[];
 
-  @authStore.Getter isAuthenticated: boolean;
+  @authStore.Getter isAuthenticated!: boolean;
 
   get groupList() {
     const groups: any[] = [];

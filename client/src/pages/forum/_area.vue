@@ -34,20 +34,18 @@ export default class SingleForumArea extends Vue {
   async asyncData({ params }) {
     const areaId = parseInt(params.area);
     const areas = await new ForumArea().getAll();
-    const area = areas.find(area => area.id === areaId);
+    const area: ForumArea = areas.find(area => area.id === areaId) as ForumArea;
 
     return {
       areas,
       description: area.description,
       name: area.name,
-      pages: Math.ceil(area.topic_count / 20),
+      pages: Math.ceil(area.topic_count! / 20),
     };
   }
 
   head() {
-    return {
-      title: this.name || 'Forum',
-    };
+    return { title: this.name || 'Forum' };
   }
 
   get page() {

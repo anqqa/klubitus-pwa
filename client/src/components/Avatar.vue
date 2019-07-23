@@ -16,10 +16,10 @@ export default class Avatar extends Vue {
   @Prop() name!: string;
 
   get initials() {
-    return this.name.substr(0, 2);
+    return this.name ? this.name.substr(0, 2) : '??';
   }
   get theme() {
-    return 'theme-' + colorFromText(this.name);
+    return 'theme-' + colorFromText(this.name || '');
   }
 }
 </script>

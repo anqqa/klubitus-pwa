@@ -71,7 +71,11 @@ export const pad = (value: number, size: number): string => {
   return padded;
 };
 
-export const slug = (text: string): string => {
+export const slug = (text?: string): string => {
+  if (!text) {
+    return '';
+  }
+
   return text
     .toString()
     .toLowerCase()

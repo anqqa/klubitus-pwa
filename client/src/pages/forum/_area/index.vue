@@ -2,26 +2,31 @@
   <forum-topic-list :topics="topics" area />
 </template>
 
-<script>
-import ForumTopicList from '../../../components/forum/ForumTopicList';
-import ForumTopic from '../../../models/ForumTopic';
+<script lang="ts">
+import { Component, Vue } from 'nuxt-property-decorator';
 
-export default {
+import ForumTopicList from '@/components/forum/ForumTopicList.vue';
+import ForumTopic from '@/models/ForumTopic';
+
+@Component({
+  components: { ForumTopicList },
+  watchQuery: ['page'],
+})
+export default class SingleArea extends Vue {
   async asyncData({ params, query }) {
-    const area = parseInt(params.area);
+    const areaId = parseInt(params.area);
     const page = parseInt(query.page) || 1;
     const limit = 20;
 
-    const topics = await ForumTopic.params({ area_id: area })
+    const topics = await new ForumTopic()
+      .filter('forum_area_id', 'eq', areaId)
+      .relation('area')
+      .relation('author')
       .limit(limit)
       .page(page)
       .get();
 
     return { topics };
-  },
-
-  components: { ForumTopicList },
-
-  watchQuery: ['page'],
-};
+  }
+}
 </script>
