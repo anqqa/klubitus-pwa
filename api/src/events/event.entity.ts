@@ -2,14 +2,7 @@
 import { CrudActions, CrudValidationGroups } from '@nestjsx/crud';
 import { Type } from 'class-transformer';
 import { IsDateString, IsFQDN, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../common/base.entity';
 import { Roles, userRole } from '../common/utils/role.util';
 import { User } from '../users/user.entity';
@@ -30,10 +23,6 @@ export class Event extends BaseEntity {
   city_name?: string;
 
   @IsOptional({ always: true })
-  @CreateDateColumn()
-  created_at: Date;
-
-  @IsOptional({ always: true })
   @IsDateString({ always: true })
   @Column('timestamp', { nullable: true })
   ends_at?: Date;
@@ -44,12 +33,9 @@ export class Event extends BaseEntity {
   facebook_id?: number;
 
   @IsOptional({ always: true })
-  @IsFQDN(null, { always: true })
+  @IsFQDN(undefined, { always: true })
   @Column({ nullable: true })
   flyer_front_url?: string;
-
-  @PrimaryGeneratedColumn()
-  id: number;
 
   @IsOptional({ always: true })
   @IsString({ always: true })
