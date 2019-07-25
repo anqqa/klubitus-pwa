@@ -15,11 +15,11 @@
   "scripts": {
     "api:build": "docker-compose build api",
     "api:exec": "docker-compose exec api",
-    "api:shell": "docker-compose run api sh",
+    "api:shell": "docker-compose run --rm api sh",
     "api:up": "docker-compose up api",
     "client:build": "docker-compose build --no-cache client",
     "client:exec": "docker-compose exec client",
-    "client:shell": "docker-compose run client sh",
+    "client:shell": "docker-compose run --rm client sh",
     "client:up": "docker-compose up client",
     "db:psql": "docker-compose exec db psql -U klubitus klubitus",
     "db:up": "docker-compose up db"
