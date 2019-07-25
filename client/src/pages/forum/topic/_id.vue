@@ -24,7 +24,7 @@ export default class SingleTopic extends Vue {
 
   async asyncData({ params }) {
     const topicId = parseInt(params.id);
-    const topic = await new ForumTopic().find(topicId);
+    const topic = await new ForumTopic().select(['name', 'post_count']).find(topicId);
     const pages = Math.ceil(topic.post_count! / 20);
 
     return { name: topic.name, pages, topicId };

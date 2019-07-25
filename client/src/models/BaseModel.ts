@@ -5,6 +5,8 @@ import { ModelQueryBuilder } from '@/models/ModelQueryBuilder';
 export class BaseModel extends ModelQueryBuilder {
   static $http: NuxtAxiosInstance;
 
+  id?: number | string;
+
   // tslint:disable-next-line:variable-name
   private _parentEndpoint?: string;
 
@@ -24,13 +26,14 @@ export class BaseModel extends ModelQueryBuilder {
     return 'id';
   }
 
-  async find(identifier: string | number): Promise<this> {
-    const endpoint = this.resource() + '/' + identifier;
+  async find(identifier: number | string): Promise<this> {
+    this.id = identifier;
 
-    const data = await BaseModel.$http.$get(endpoint);
+    return this.first();
+  }
 
-    // @ts-ignore
-    return new this.constructor(data);
+  async first(): Promise<this> {
+    return (await this.get())[0];
   }
 
   endpoint(): string {
