@@ -1,24 +1,20 @@
 // tslint:disable:variable-name
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Type } from 'class-transformer';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
+import { BaseEntity } from '../../common/base.entity';
 import { Area } from '../areas/area.entity';
 import { Topic } from '../topics/topic.entity';
 import { User } from '../users/user.entity';
 
 @Entity('forum_posts')
-export class Post {
+export class Post extends BaseEntity {
+  @Type(() => Area)
   @ManyToOne(() => Area)
   @JoinColumn({ name: 'forum_area_id' })
   area: Area;
 
+  @Type(() => User)
   @ManyToOne(() => User)
   @JoinColumn({ name: 'author_id' })
   author: User;
@@ -26,17 +22,11 @@ export class Post {
   @Column()
   author_name: string;
 
-  @CreateDateColumn()
-  created_at: Date;
-
   @Column()
   forum_area_id: number;
 
   @Column()
   forum_topic_id: number;
-
-  @PrimaryGeneratedColumn()
-  id: number;
 
   @Column({ nullable: true })
   parent_id: number;
@@ -44,10 +34,8 @@ export class Post {
   @Column()
   post: string;
 
+  @Type(() => Topic)
   @ManyToOne(() => Topic, topic => topic.posts)
   @JoinColumn({ name: 'forum_topic_id' })
   topic: Topic;
-
-  @UpdateDateColumn()
-  updated_at: Date;
 }
