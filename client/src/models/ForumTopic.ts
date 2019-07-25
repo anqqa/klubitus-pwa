@@ -1,5 +1,6 @@
 // tslint:disable:variable-name
 import { BaseModel } from '@/models/BaseModel';
+import ForumPost from '@/models/ForumPost';
 
 export default class ForumTopic extends BaseModel {
   area?: any;
@@ -16,5 +17,9 @@ export default class ForumTopic extends BaseModel {
 
   resource() {
     return 'topics';
+  }
+
+  posts(): ForumPost {
+    return this.hasMany(ForumPost);
   }
 }

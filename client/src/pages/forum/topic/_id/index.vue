@@ -2,26 +2,30 @@
   <forum-post-list :posts="posts" />
 </template>
 
-<script>
-import ForumPostList from '../../../../components/forum/ForumPostList';
-import ForumPost from '../../../../models/ForumPost';
+<script lang="ts">
+import { Component, Vue } from 'nuxt-property-decorator';
 
-export default {
+import ForumPostList from '@/components/forum/ForumPostList.vue';
+import ForumTopic from '@/models/ForumTopic';
+
+@Component({
+  components: { ForumPostList },
+  watchQuery: ['page'],
+})
+export default class TopicPosts extends Vue {
   async asyncData({ params, query }) {
     const topic_id = parseInt(params.id);
     const page = parseInt(query.page) || 1;
     const limit = 20;
 
-    const posts = await ForumPost.params({ topic_id })
+    const posts = await new ForumTopic({ id: topic_id })
+      .posts()
+      .relation('author')
       .limit(limit)
       .page(page)
       .get();
 
     return { posts };
-  },
-
-  components: { ForumPostList },
-
-  watchQuery: ['page'],
-};
+  }
+}
 </script>

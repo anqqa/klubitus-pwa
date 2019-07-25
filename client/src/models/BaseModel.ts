@@ -5,6 +5,9 @@ import { ModelQueryBuilder } from '@/models/ModelQueryBuilder';
 export class BaseModel extends ModelQueryBuilder {
   static $http: NuxtAxiosInstance;
 
+  // tslint:disable-next-line:variable-name
+  private _parentEndpoint?: string;
+
   constructor(...attributes) {
     super();
 
@@ -34,6 +37,12 @@ export class BaseModel extends ModelQueryBuilder {
     const endpoint = this.resource();
     const id = this.getPrimaryKey();
 
+    if (this._parentEndpoint) {
+      return id
+        ? `${this._parentEndpoint}/${endpoint}/${id}`
+        : `${this._parentEndpoint}/${endpoint}`;
+    }
+
     return id ? `${endpoint}/${id}` : endpoint;
   }
 
@@ -46,6 +55,19 @@ export class BaseModel extends ModelQueryBuilder {
 
     // @ts-ignore
     return collection.map(item => new this.constructor(item));
+  }
+
+  hasMany<T extends typeof BaseModel>(model: T): InstanceType<T> {
+    const instance = new model() as InstanceType<T>;
+    const endpoint = this.endpoint();
+
+    instance._parent(endpoint);
+
+    return instance;
+  }
+
+  _parent(endpoint: string) {
+    this._parentEndpoint = endpoint;
   }
 
   protected resource(): string {
