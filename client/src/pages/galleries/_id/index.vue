@@ -28,91 +28,94 @@
   </main>
 </template>
 
-<script>
+<script lang="ts">
 import format from 'date-fns/format';
-import { mapGetters } from 'vuex';
+import { Component, Vue } from 'nuxt-property-decorator';
 
-import Breadcrumbs from '../../../components/Breadcrumbs';
-import ImageList from '../../../components/galleries/ImageList';
-import Gallery from '../../../models/Gallery';
+import Gallery from '@/models/Gallery';
+import Image from '@/models/Image';
+import Breadcrumbs from '../../../components/Breadcrumbs.vue';
+import ImageList from '../../../components/galleries/ImageList.vue';
 
 const formatter = new Intl.NumberFormat();
 
-export default {
+@Component({
+  components: { Breadcrumbs, ImageList },
+})
+export default class SingleGallery extends Vue {
+  gallery?: Gallery;
+  images?: Image[];
+
   async asyncData({ params }) {
     const galleryId = parseInt(params.id);
 
-    const gallery = await Gallery.find(galleryId);
+    const gallery = await new Gallery().find(galleryId);
     const images = await gallery.images().get();
 
     return { gallery, images };
-  },
+  }
 
-  components: { Breadcrumbs, ImageList },
+  get url() {
+    return `${this.$route.path}/:imageId`;
+  }
 
-  data() {
-    return { url: `${this.$route.path}/:imageId` };
-  },
+  get breadcrumbs() {
+    const pathName = 'galleries-events-year-month-day';
 
-  computed: {
-    breadcrumbs() {
-      const pathName = 'galleries-events-year-month-day';
+    return [
+      { url: this.localePath('galleries'), title: 'Galleries' },
+      { url: this.localePath(pathName), title: 'Events' },
+      {
+        url: this.localePath({
+          name: pathName,
+          params: { year: this.eventDate.getFullYear().toString() },
+        }),
+        title: format(this.eventDate, 'YYYY'),
+      },
+      {
+        url: this.localePath({
+          name: pathName,
+          params: {
+            year: this.eventDate.getFullYear().toString(),
+            month: (this.eventDate.getMonth() + 1).toString(),
+          },
+        }),
+        title: format(this.eventDate, 'MMMM'),
+      },
+      { url: this.$route.fullPath, title: this.eventName, current: true },
+    ];
+  }
 
-      return [
-        { url: this.localePath('galleries'), title: 'Galleries' },
-        { url: this.localePath(pathName), title: 'Events' },
-        {
-          url: this.localePath({
-            name: pathName,
-            params: { year: this.eventDate.getFullYear() },
-          }),
-          title: format(this.eventDate, 'YYYY'),
-        },
-        {
-          url: this.localePath({
-            name: pathName,
-            params: { year: this.eventDate.getFullYear(), month: this.eventDate.getMonth() + 1 },
-          }),
-          title: format(this.eventDate, 'MMMM'),
-        },
-        { url: this.$route.fullPath, title: this.eventName, current: true },
-      ];
-    },
+  get commentCount() {
+    let count = 0;
 
-    commentCount() {
-      let count = 0;
+    this.images!.forEach(image => (count += image.comment_count!));
 
-      this.images.forEach(image => (count += image.comment_count));
+    return count;
+  }
 
-      return count;
-    },
+  get eventDate() {
+    return new Date(
+      this.gallery!.event ? this.gallery!.event.begins_at! : this.gallery!.event_date!
+    );
+  }
 
-    eventDate() {
-      return new Date(this.gallery.event ? this.gallery.event.begins_at : this.gallery.event_date);
-    },
-    eventName() {
-      return this.gallery.event ? this.gallery.event.name : this.gallery.name;
-    },
+  get eventName() {
+    return this.gallery!.event ? this.gallery!.event.name : this.gallery!.name;
+  }
 
-    ...mapGetters({
-      isAuthenticated: 'auth/isAuthenticated',
-    }),
-  },
-
-  methods: {
-    format: formatter.format,
-  },
+  format(value: number) {
+    return formatter.format(value);
+  }
 
   head() {
     return {
       title: this.gallery ? this.gallery.name : 'Gallery',
     };
-  },
+  }
 
   validate({ params }) {
     return /^\d+/.test(params.id);
-  },
-};
+  }
+}
 </script>
-
-<style scoped></style>

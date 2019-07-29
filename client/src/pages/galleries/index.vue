@@ -1,15 +1,15 @@
 <template>
-
   <main class="row">
-
     <nav class="sidebar col-2">
       <nuxt-link :to="localePath('galleries')">Galleries Home</nuxt-link>
-      <br>
+      <br />
 
       <h3 class="h6 has-text-tertiary">Event Photography</h3>
       <ul>
         <li>
-          <nuxt-link :to="localePath('galleries-events-year-month-day')">Browse Galleries</nuxt-link>
+          <nuxt-link :to="localePath('galleries-events-year-month-day')"
+            >Browse Galleries</nuxt-link
+          >
         </li>
         <li>
           Top 10
@@ -35,7 +35,7 @@
 
         <nav v-if="isAuthenticated" class="actions">
           <nuxt-link :to="localePath('galleries-upload')" class="button is-primary">
-            <span class="icon"><i class="bx bx-cloud-upload" /></span>
+            <span class="icon"><i class="bx bx-cloud-upload"/></span>
             Upload Photos
           </nuxt-link>
         </nav>
@@ -46,52 +46,44 @@
       <h2>Latest in Flyers</h2>
     </div>
   </main>
-
 </template>
 
+<script lang="ts">
+import { Component, Vue } from 'nuxt-property-decorator';
 
-<script>
-  import { mapGetters } from 'vuex';
+import GalleryList from '@/components/galleries/GalleryList.vue';
+import { authStore } from '@/store/auth';
+import { Actions, Getters } from '../../store/galleries';
 
-  import GalleryList from '../../components/galleries/GalleryList';
-  import { Actions, Getters } from '../../store/galleries';
+@Component({
+  components: { GalleryList },
+  head: { title: 'Galleries' },
+})
+export default class GalleriesIndex extends Vue {
+  @authStore.Getter isAuthenticated!: boolean;
 
+  async fetch({ store }) {
+    const getGalleries = store.getters[`galleries/${Getters.GALLERIES_BY_DATE}`];
 
-  export default {
-
-    head: {
-      title: 'Galleries'
-    },
-
-    async fetch({ store }) {
-      const getGalleries = store.getters[`galleries/${Getters.GALLERIES_BY_DATE}`];
-
-      if (!getGalleries({}).length) {
-        await store.dispatch(`galleries/${Actions.GET_GALLERIES_BY_DATE}`, { limit: 8 });
-      }
-    },
-
-    components: { GalleryList },
-
-    computed: {
-      galleries() {
-        const galleriesWithRelations = [];
-
-        const getGalleries = this.$store.getters[`galleries/${Getters.GALLERIES_BY_DATE}`];
-        const galleries    = getGalleries({});
-
-        galleries.forEach(gallery => galleriesWithRelations.push({
-          ...gallery,
-          default_image: gallery.default_image_id && this.$store.state.images.images[gallery.default_image_id],
-        }));
-
-        return galleriesWithRelations;
-      },
-
-      ...mapGetters({
-        isAuthenticated: 'auth/isAuthenticated',
-      })
-    },
-
+    if (!getGalleries({}).length) {
+      await store.dispatch(`galleries/${Actions.GET_GALLERIES_BY_DATE}`, { limit: 8 });
+    }
   }
+
+  get galleries() {
+    const galleriesWithRelations: any[] = [];
+    const getGalleries = this.$store.getters[`galleries/${Getters.GALLERIES_BY_DATE}`];
+    const galleries: any[] = getGalleries({});
+
+    galleries.forEach(gallery =>
+      galleriesWithRelations.push({
+        ...gallery,
+        default_image:
+          gallery.default_image_id && this.$store.state.images.images[gallery.default_image_id],
+      })
+    );
+
+    return galleriesWithRelations;
+  }
+}
 </script>
