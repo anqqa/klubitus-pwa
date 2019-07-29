@@ -1,21 +1,16 @@
-import { Controller, Get, Param, ParseIntPipe, UseInterceptors } from '@nestjs/common';
-import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger';
+import { Controller } from '@nestjs/common';
+import { ApiUseTags } from '@nestjs/swagger';
+import { CrudController } from '@nestjsx/crud';
 
-import { TransformerInterceptor } from '../common/interceptors/transformer.interceptor';
-import { Image } from './images.dto';
+import { Image } from './image.entity';
 import { ImagesService } from './images.service';
 
 @ApiUseTags('Images')
 @Controller('images')
-export class ImagesController {
-  constructor(private readonly imagesService: ImagesService) {}
+export class ImagesController implements CrudController<Image> {
+  constructor(readonly service: ImagesService) {}
 
-  @ApiOperation({ title: 'Get an image' })
-  @ApiOkResponse({ type: Image })
-  @ApiNotFoundResponse({ description: 'Image not found.' })
-  @UseInterceptors(new TransformerInterceptor(Image))
-  @Get('/:id')
-  async getById(@Param('id', new ParseIntPipe()) id: number) {
-    return await this.imagesService.get(id);
+  get base(): CrudController<Image> {
+    return this;
   }
 }

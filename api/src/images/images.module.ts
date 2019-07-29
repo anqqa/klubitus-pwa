@@ -9,6 +9,7 @@ import { Note } from './notes/note.entity';
 
 @Module({
   controllers: [ImagesController],
+  exports: [ImagesService],
   imports: [TypeOrmModule.forFeature([Comment, Image, Note])],
   providers: [ImagesService],
 })

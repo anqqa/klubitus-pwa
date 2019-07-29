@@ -1,23 +1,23 @@
 // tslint:disable:variable-name
 import { Type } from 'class-transformer';
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne } from 'typeorm';
 
 import { BaseEntity } from '../common/base.entity';
 import { Event } from '../events';
-import { Image } from '../images/image.entity';
+import { GalleryImage } from './images';
 
 @Entity('galleries')
 export class Gallery extends BaseEntity {
   @Column()
   copyright: string;
 
-  @Type(() => Image)
-  @OneToOne(() => Image)
+  @Type(() => GalleryImage)
+  @OneToOne(() => GalleryImage)
   @JoinColumn({ name: 'default_image_id' })
-  default_image: Image;
+  default_image?: GalleryImage;
 
   @Column({ nullable: true })
-  default_image_id: number | null;
+  default_image_id?: number;
 
   @Type(() => Event)
   @OneToOne(() => Event)
@@ -33,13 +33,14 @@ export class Gallery extends BaseEntity {
   @Column()
   image_count: number;
 
-  @ManyToMany(() => Image)
+  @Type(() => GalleryImage)
+  @ManyToMany(type => GalleryImage, image => image.gallery)
   @JoinTable({
     inverseJoinColumn: { name: 'image_id' },
     joinColumn: { name: 'gallery_id' },
     name: 'galleries_images',
   })
-  images: Image[];
+  images?: GalleryImage[];
 
   @Column()
   name: string;

@@ -1,27 +1,19 @@
-import { Controller, Get, Post, Req, Res, UseGuards, UseInterceptors } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import {
-  ApiBearerAuth,
-  ApiConsumes,
-  ApiImplicitFile,
-  ApiOkResponse,
-  ApiOperation,
-  ApiUseTags,
-} from '@nestjs/swagger';
+import { Controller, Get, UseInterceptors } from '@nestjs/common';
+import { ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger';
 import { Crud, CrudController } from '@nestjsx/crud';
 
 import { TransformerInterceptor } from '../common/interceptors/transformer.interceptor';
 import { Stats } from './galleries.dto';
 import { GalleriesService } from './galleries.service';
 import { Gallery } from './gallery.entity';
-import { ImageUploadService } from './upload/imageupload.service';
 
 @Crud({
   model: { type: Gallery },
   query: {
     join: {
-      default_image: {},
+      default_image: { exclude: ['updated_at'] },
       event: {},
+      images: {},
     },
   },
   routes: {
@@ -31,10 +23,7 @@ import { ImageUploadService } from './upload/imageupload.service';
 @ApiUseTags('Images')
 @Controller('galleries')
 export class GalleriesController implements CrudController<Gallery> {
-  constructor(
-    readonly service: GalleriesService,
-    readonly imageUploadService: ImageUploadService
-  ) {}
+  constructor(readonly service: GalleriesService) {}
 
   get base(): CrudController<Gallery> {
     return this;
@@ -46,18 +35,5 @@ export class GalleriesController implements CrudController<Gallery> {
   @Get('/stats')
   async getStats() {
     return this.service.getStats();
-  }
-
-  @ApiConsumes('multipart/form-data')
-  @ApiImplicitFile({ name: 'file', required: true })
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard())
-  @Post('upload')
-  async upload(@Req() request: any, @Res() response: any) {
-    try {
-      await this.imageUploadService.handleUpload(request, response);
-    } catch (error) {
-      return response.status(500).json(error.message);
-    }
   }
 }

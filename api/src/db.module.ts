@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 export default TypeOrmModule.forRoot({
   type: 'postgres',
   synchronize: false,
+  // logging: true,
 
   host: process.env.DB_HOST,
   port: parseInt(process.env.DB_PORT, 10),

@@ -6,21 +6,21 @@ import { BaseCrudService } from '../common/basecrud.service';
 import { Pagination } from '../common/pagination/pagination.dto';
 import { PaginationService } from '../common/pagination/pagination.service';
 import { Event } from '../events';
-import { Image } from '../images/image.entity';
-import { GalleriesQuery, Stats } from './galleries.dto';
+import { Stats } from './galleries.dto';
 import { Gallery } from './gallery.entity';
+import { GalleryImage } from './images';
 
 @Injectable()
 export class GalleriesService extends BaseCrudService<Gallery> {
   constructor(
     @InjectRepository(Gallery) repo: Repository<Gallery>,
     @InjectRepository(Event) private eventRepository: Repository<Event>,
-    @InjectRepository(Image) private imageRepository: Repository<Image>
+    @InjectRepository(GalleryImage) private imageRepository: Repository<GalleryImage>
   ) {
     super(repo);
   }
 
-  async getImage(id: number, imageId: number): Promise<Image> {
+  async getImage(id: number, imageId: number): Promise<GalleryImage> {
     return this.imageRepository
       .createQueryBuilder('image')
       .innerJoin('galleries_images', 'gallery', 'gallery.image_id = image.id')
@@ -30,7 +30,7 @@ export class GalleriesService extends BaseCrudService<Gallery> {
       .getOne();
   }
 
-  async getImages(id: number, query?: Pagination): Promise<Image[]> {
+  async getImages(id: number, query?: Pagination): Promise<GalleryImage[]> {
     // Pagination
     const { take, skip } = PaginationService.parseQuery(query, 100, 100);
 

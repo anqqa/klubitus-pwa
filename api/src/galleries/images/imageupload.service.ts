@@ -11,16 +11,16 @@ import { S3Client } from '../../common/aws/s3.client';
 import { ColorUtil } from '../../common/helpers/color.util';
 import { MetadataUtil } from '../../common/helpers/metadata.util';
 import { PhashUtil } from '../../common/helpers/phash.util';
-import { Image } from '../../images/image.entity';
 import { GalleriesService } from '../galleries.service';
 import { Gallery } from '../gallery.entity';
+import { GalleryImage } from './image.entity';
 
 const LOG_CONTEXT = 'Upload';
 
 @Injectable()
 export class ImageUploadService {
   constructor(
-    @InjectRepository(Image) private readonly imageRepository: Repository<Image>,
+    @InjectRepository(GalleryImage) private readonly imageRepository: Repository<GalleryImage>,
     private readonly galleriesService: GalleriesService,
     private readonly s3Client: S3Client
   ) {}
@@ -39,7 +39,7 @@ export class ImageUploadService {
       gallery_id: null,
     };
 
-    const image: DeepPartial<Image> = {
+    const image: DeepPartial<GalleryImage> = {
       author_id: req.user.id,
       uuid: uuid(),
     };
@@ -49,7 +49,7 @@ export class ImageUploadService {
       file: pump.Stream,
       filename: string,
       encoding: string,
-      mimetype: string,
+      mimetype: string
     ) {
       Logger.debug(`Handling ${filename} (${mimetype})`, LOG_CONTEXT);
 
@@ -148,4 +148,5 @@ export class ImageUploadService {
 
     multipart.on('field', onFormData);
   }
+
 }

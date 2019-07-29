@@ -5,13 +5,13 @@ import { GalleriesController, GalleriesService, Gallery } from '.';
 import { AuthModule } from '../auth';
 import { AwsModule } from '../common/aws/aws.module';
 import { Event } from '../events';
-import { Image } from '../images/image.entity';
-import { ImagesModule } from '../images/images.module';
-import { ImagesService } from '../images/images.service';
-import { ImageUploadService } from './upload/imageupload.service';
+import { EventsModule } from '../events/events.module';
+import { Image, ImagesModule } from '../images';
+import { GalleryImage, GalleryImagesController, GalleryImagesService } from './images';
 
 @Module({
-  controllers: [GalleriesController],
+  controllers: [GalleriesController, GalleryImagesController],
+  // exports: [GalleriesService],
   imports: [
     AuthModule,
     AwsModule.forRoot(
@@ -21,9 +21,10 @@ import { ImageUploadService } from './upload/imageupload.service';
       process.env.AWS_ACCESS_KEY_ID,
       process.env.AWS_SECRET_ACCESS_KEY
     ),
+    EventsModule,
     ImagesModule,
-    TypeOrmModule.forFeature([Event, Gallery, Image]),
+    TypeOrmModule.forFeature([Event, Gallery, GalleryImage]),
   ],
-  providers: [GalleriesService, ImagesService, ImageUploadService],
+  providers: [GalleriesService, GalleryImagesService /*, ImageUploadService*/],
 })
 export class GalleriesModule {}

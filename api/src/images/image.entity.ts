@@ -1,16 +1,11 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:variable-name
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { isEmpty } from 'lodash';
+import { AfterLoad, Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
-import { User } from '../forum/users/user.entity';
+import { BaseEntity } from '../common/base.entity';
+import { imageUrl } from '../common/helpers/url.util';
+import { User } from '../users/user.entity';
 import { Comment } from './comments/comment.entity';
 import { Note } from './notes/note.entity';
 
@@ -21,78 +16,134 @@ interface Label {
   Parents: Array<{ Name: string }>;
 }
 
-@Entity('images')
-export class Image {
+interface Tag {
+  children?: Tag[];
+  confidence: number;
+  name: string;
+  parents?: string[];
+}
+
+export abstract class BaseImage extends BaseEntity {
   @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'author_id' })
-  author: User | null;
+  author?: User;
 
   @Column({ nullable: true })
-  author_id: number | null;
+  author_id?: number;
 
   @Column({ nullable: true })
-  color: string | null;
+  color?: string;
 
   @Column()
   comment_count: number;
 
   @OneToMany(() => Comment, comment => comment.image)
-  comments: Comment[];
-
-  @CreateDateColumn()
-  created_at: Date;
+  comments?: Comment[];
 
   @Column({ nullable: true })
-  description: string | null;
+  description?: string;
 
   @Column('jsonb', { nullable: true })
-  exif: Record<string, string | number> | null;
+  exif?: Record<string, string | number> | null;
 
   @Column({ nullable: true })
-  file: string | null;
+  file?: string;
 
   @Column({ nullable: true })
-  height: number | null;
-
-  @PrimaryGeneratedColumn()
-  id: number;
+  height?: number;
 
   @Column('jsonb', { nullable: true })
-  labels: Label[] | null;
+  labels?: Label[];
 
   @Column({ nullable: true })
-  mime_type: string | null;
+  mime_type?: string;
 
   @OneToMany(() => Note, note => note.image)
-  notes: Note[];
+  notes?: Note[];
 
   @Column({ nullable: true })
-  original_filename: string | null;
+  original_filename?: string;
 
   @Column({ nullable: true })
-  original_height: number | null;
+  original_height?: number;
 
   @Column({ nullable: true })
-  original_size: number | null;
+  original_size?: number;
 
   @Column({ nullable: true })
-  original_width: number | null;
+  original_width?: number;
 
   @Column({ nullable: true })
-  path: string | null;
+  path?: string;
 
   @Column({ nullable: true })
-  phash: string | null;
+  phash?: string;
 
   @Column({ nullable: true })
-  postfix: string | null;
+  postfix?: string;
+
+  tags?: Tag[];
+
+  url?: string;
 
   @Column('uuid', { nullable: true })
-  uuid: string | null;
+  uuid?: string;
 
   @Column()
   view_count: number;
 
   @Column({ nullable: true })
-  width: number | null;
+  width?: number;
+
+  @AfterLoad()
+  computedColumns() {
+    this.tags = labelsToTags(this.labels);
+    this.url = imageUrl(this.id, this.path, this.postfix);
+  }
 }
+
+@Entity('images')
+export class Image extends BaseImage {}
+
+const labelsToTags = (labels?: Label[]): Tag[] => {
+  if (!labels) {
+    return [];
+  }
+
+  const parsed: Tag[] = labels.map(label => ({
+    confidence: Math.round(label.Confidence * 100 + Number.EPSILON) / 100,
+    name: label.Name,
+    parents: label.Parents.map(parent => parent.Name),
+  }));
+
+  const unflatten = (tags: Tag[], parent?: Tag, tree?: Tag[]): Tag[] => {
+    tree = typeof tree !== 'undefined' ? tree : [];
+
+    const children = tags
+      .filter(tag => {
+        const isRoot = !parent && !tag.parents.length;
+        const isChild = parent && tag.parents.includes(parent.name);
+
+        return isRoot || isChild;
+      })
+      .map(child => {
+        const { parents, ...parentless } = child;
+
+        return parentless;
+      });
+
+    if (!isEmpty(children)) {
+      if (!parent) {
+        tree = children;
+      } else {
+        parent.children = children;
+      }
+
+      children.map(child => unflatten(tags, child));
+    }
+
+    return tree;
+  };
+
+  return unflatten(parsed);
+};

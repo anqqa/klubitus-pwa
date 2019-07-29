@@ -1,7 +1,7 @@
 // tslint:disable:variable-name
 import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-export class BaseEntity {
+export abstract class BaseEntity {
   @CreateDateColumn()
   created_at: Date;
 
