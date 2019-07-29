@@ -50,9 +50,7 @@ export const actions = {
     if (year) {
       const { from, to } = dateRange(year, month, undefined, day);
 
-      query
-        .filter('event_date', 'gte', format(from, 'YYYY-MM-DD'))
-        .filter('event_date', 'lte', format(to, 'YYYY-MM-DD'));
+      query.filter('event_date', 'between', [format(from, 'YYYY-MM-DD'), format(to, 'YYYY-MM-DD')]);
     }
 
     const galleries = await query.get();

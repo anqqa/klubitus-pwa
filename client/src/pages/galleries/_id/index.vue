@@ -7,9 +7,9 @@
         <h1>
           {{ eventName }}
           <br />
-          <small
-            >{{ format(gallery.image_count) }} images, {{ format(commentCount) }} comments</small
-          >
+          <small>
+            {{ format(gallery.image_count) }} images, {{ format(commentCount) }} comments
+          </small>
         </h1>
 
         <nav v-if="isAuthenticated" class="actions">
@@ -23,7 +23,7 @@
         </nav>
       </header>
 
-      <image-list :images="images" :url="url" />
+      <ImageList :images="images" :url="url" />
     </div>
   </main>
 </template>
@@ -32,10 +32,11 @@
 import format from 'date-fns/format';
 import { Component, Vue } from 'nuxt-property-decorator';
 
+import Breadcrumbs from '@/components/Breadcrumbs.vue';
+import ImageList from '@/components/galleries/ImageList.vue';
 import Gallery from '@/models/Gallery';
 import Image from '@/models/Image';
-import Breadcrumbs from '../../../components/Breadcrumbs.vue';
-import ImageList from '../../../components/galleries/ImageList.vue';
+import { authStore } from '@/store/auth';
 
 const formatter = new Intl.NumberFormat();
 
@@ -43,6 +44,8 @@ const formatter = new Intl.NumberFormat();
   components: { Breadcrumbs, ImageList },
 })
 export default class SingleGallery extends Vue {
+  @authStore.Getter isAuthenticated!: boolean;
+
   gallery?: Gallery;
   images?: Image[];
 
@@ -50,7 +53,10 @@ export default class SingleGallery extends Vue {
     const galleryId = parseInt(params.id);
 
     const gallery = await new Gallery().find(galleryId);
-    const images = await gallery.images().get();
+    const images = await gallery
+      .images()
+      .sort('id', 'DESC')
+      .get();
 
     return { gallery, images };
   }
