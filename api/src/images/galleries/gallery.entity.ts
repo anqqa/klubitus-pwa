@@ -1,27 +1,17 @@
 // tslint:disable:variable-name
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Type } from 'class-transformer';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne } from 'typeorm';
 
-import { Event } from '../../events/event.entity';
+import { BaseEntity } from '../../common/base.entity';
+import { Event } from '../../events';
 import { Image } from '../image.entity';
 
 @Entity('galleries')
-export class Gallery {
+export class Gallery extends BaseEntity {
   @Column()
   copyright: string;
 
-  @CreateDateColumn()
-  created_at: Date;
-
+  @Type(() => Image)
   @OneToOne(() => Image)
   @JoinColumn({ name: 'default_image_id' })
   default_image: Image;
@@ -29,6 +19,7 @@ export class Gallery {
   @Column({ nullable: true })
   default_image_id: number | null;
 
+  @Type(() => Event)
   @OneToOne(() => Event)
   @JoinColumn({ name: 'event_id' })
   event: Event;
@@ -38,9 +29,6 @@ export class Gallery {
 
   @Column()
   event_id: number;
-
-  @PrimaryGeneratedColumn()
-  id: number;
 
   @Column()
   image_count: number;
@@ -55,7 +43,4 @@ export class Gallery {
 
   @Column()
   name: string;
-
-  @UpdateDateColumn()
-  updated_at: Date;
 }

@@ -2,21 +2,24 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { format, parse } from 'date-fns';
 import { Between, MoreThan, Repository } from 'typeorm';
+import { BaseCrudService } from '../../common/basecrud.service';
 
 import { Pagination } from '../../common/pagination/pagination.dto';
 import { PaginationService } from '../../common/pagination/pagination.service';
-import { Event } from '../../events/event.entity';
+import { Event } from '../../events';
 import { Image } from '../image.entity';
 import { GalleriesQuery, Stats } from './galleries.dto';
 import { Gallery } from './gallery.entity';
 
 @Injectable()
-export class GalleriesService {
+export class GalleriesService extends BaseCrudService<Gallery> {
   constructor(
-    @InjectRepository(Event) private readonly eventRepository: Repository<Event>,
-    @InjectRepository(Gallery) private readonly galleryRepository: Repository<Gallery>,
-    @InjectRepository(Image) private readonly imageRepository: Repository<Image>,
-  ) {}
+    @InjectRepository(Gallery) repo: Repository<Gallery>,
+    @InjectRepository(Event) private eventRepository: Repository<Event>,
+    @InjectRepository(Image) private imageRepository: Repository<Image>
+  ) {
+    super(repo);
+  }
 
   async findAll(query: GalleriesQuery): Promise<Gallery[]> {
     const { event_id, from, to } = query;
@@ -41,11 +44,11 @@ export class GalleriesService {
     // Pagination
     const { take, skip } = PaginationService.parseQuery(query, 100, 100);
 
-    return this.galleryRepository.find({ order, relations, skip, take, where });
+    return this.repo.find({ order, relations, skip, take, where });
   }
 
   async get(id: number): Promise<Gallery> {
-    return this.galleryRepository.findOneOrFail(id, { relations: ['event'] });
+    return this.repo.findOneOrFail(id, { relations: ['event'] });
   }
 
   async getImage(id: number, imageId: number): Promise<Image> {
@@ -75,16 +78,16 @@ export class GalleriesService {
 
   async getOrCreateByEvent(id?: number, eventId?: number): Promise<Gallery> {
     if (id) {
-      return this.galleryRepository.findOneOrFail(id);
+      return this.repo.findOneOrFail(id);
     }
 
     if (eventId) {
       try {
-        return await this.galleryRepository.findOneOrFail({ event_id: eventId });
+        return await this.repo.findOneOrFail({ event_id: eventId });
       } catch (error) {
         const event = await this.eventRepository.findOneOrFail(eventId);
 
-        return this.galleryRepository.create({
+        return this.repo.create({
           event_date: event.begins_at,
           event_id: event.id,
           name: event.name,
@@ -96,7 +99,7 @@ export class GalleriesService {
   }
 
   async getStats(): Promise<Stats[]> {
-    return this.galleryRepository
+    return this.repo
       .createQueryBuilder('gallery')
       .select('EXTRACT (YEAR FROM event_date)', 'year')
       .addSelect('EXTRACT (MONTH FROM event_date)', 'month')
