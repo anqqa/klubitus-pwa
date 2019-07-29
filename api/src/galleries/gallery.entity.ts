@@ -2,9 +2,9 @@
 import { Type } from 'class-transformer';
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne } from 'typeorm';
 
-import { BaseEntity } from '../../common/base.entity';
-import { Event } from '../../events';
-import { Image } from '../image.entity';
+import { BaseEntity } from '../common/base.entity';
+import { Event } from '../events';
+import { Image } from '../images/image.entity';
 
 @Entity('galleries')
 export class Gallery extends BaseEntity {

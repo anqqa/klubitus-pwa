@@ -10,11 +10,11 @@ import {
 } from '@nestjs/swagger';
 import { Crud, CrudController } from '@nestjsx/crud';
 
-import { TransformerInterceptor } from '../../common/interceptors/transformer.interceptor';
-import { ImageUploadService } from '../upload/imageupload.service';
+import { TransformerInterceptor } from '../common/interceptors/transformer.interceptor';
 import { Stats } from './galleries.dto';
 import { GalleriesService } from './galleries.service';
 import { Gallery } from './gallery.entity';
+import { ImageUploadService } from './upload/imageupload.service';
 
 @Crud({
   model: { type: Gallery },

@@ -11,9 +11,9 @@ import { S3Client } from '../../common/aws/s3.client';
 import { ColorUtil } from '../../common/helpers/color.util';
 import { MetadataUtil } from '../../common/helpers/metadata.util';
 import { PhashUtil } from '../../common/helpers/phash.util';
-import { GalleriesService } from '../galleries/galleries.service';
-import { Gallery } from '../galleries/gallery.entity';
-import { Image } from '../image.entity';
+import { Image } from '../../images/image.entity';
+import { GalleriesService } from '../galleries.service';
+import { Gallery } from '../gallery.entity';
 
 const LOG_CONTEXT = 'Upload';
 
@@ -22,7 +22,7 @@ export class ImageUploadService {
   constructor(
     @InjectRepository(Image) private readonly imageRepository: Repository<Image>,
     private readonly galleriesService: GalleriesService,
-    private readonly s3Client: S3Client,
+    private readonly s3Client: S3Client
   ) {}
 
   async handleUpload(@Req() req: any, @Res() res: any) {

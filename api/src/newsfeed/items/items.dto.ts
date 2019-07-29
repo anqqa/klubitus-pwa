@@ -5,7 +5,7 @@ import { Expose, Type } from 'class-transformer';
 import { Event } from '../../events/events.dto';
 import { Post } from '../../forum/posts/posts.dto';
 import { Topic } from '../../forum/topics/topics.dto';
-import { Gallery } from '../../images/galleries/galleries.dto';
+import { Gallery } from '../../galleries/galleries.dto';
 import { Image } from '../../images/images.dto';
 import { User } from '../../users/users.dto';
 

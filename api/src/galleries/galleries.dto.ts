@@ -4,9 +4,9 @@ import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import { IsISO8601, IsOptional } from 'class-validator';
 
-import { Pagination } from '../../common/pagination/pagination.dto';
-import { Event } from '../../events/events.dto';
-import { Image } from '../images.dto';
+import { Pagination } from '../common/pagination/pagination.dto';
+import { Event } from '../events/events.dto';
+import { Image } from '../images/images.dto';
 
 @Expose()
 export class Gallery {
