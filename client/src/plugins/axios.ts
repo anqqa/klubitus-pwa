@@ -1,8 +1,12 @@
 import cookies from 'js-cookie';
 
+import { BaseModel } from '@/models/BaseModel';
+
 let checkToken = true;
 
 export default ({ $axios, route }) => {
+  BaseModel.$http = $axios;
+
   $axios.onError(error => {
     const code = parseInt(error.response && error.response.status, 10);
 

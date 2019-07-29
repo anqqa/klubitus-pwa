@@ -33,7 +33,7 @@ const config: NuxtConfiguration = {
     description: 'Clubbers guide to... Finland',
   },
   css: ['@/assets/style/klubitus.scss'],
-  plugins: ['~/plugins/axios', '~/plugins/vue-api-query', '~/plugins/vue-plugins'],
+  plugins: ['~/plugins/axios', '~/plugins/vue-plugins'],
 
   /**
    * Customize the progress bar color
