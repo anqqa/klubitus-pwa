@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Exclude, Type } from 'class-transformer';
 import { Entity, ManyToMany } from 'typeorm';
 
 import { BaseImage } from '../../images';

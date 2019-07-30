@@ -2,6 +2,7 @@ import { Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiConsumes, ApiImplicitFile, ApiUseTags } from '@nestjs/swagger';
 import { Crud, CrudController } from '@nestjsx/crud';
+import { TransformerInterceptor } from '../../common/interceptors/transformer.interceptor';
 
 import { GalleryImage } from './image.entity';
 import { GalleryImagesService } from './images.service';
@@ -15,10 +16,19 @@ import { ImageUploadService } from './imageupload.service';
   },
   query: {
     join: {
+      author: { allow: ['avatar_url', 'id', 'signature', 'title', 'username'] },
+      comments: {},
       gallery: { allow: ['id'], eager: true },
+      notes: {},
     },
   },
   routes: {
+    getManyBase: {
+      interceptors: [new TransformerInterceptor(GalleryImage, true)],
+    },
+    getOneBase: {
+      interceptors: [new TransformerInterceptor(GalleryImage, true)],
+    },
     only: ['getManyBase', 'getOneBase'],
   },
 })

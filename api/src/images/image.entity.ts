@@ -1,5 +1,6 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:variable-name
+import { Exclude } from 'class-transformer';
 import { isEmpty } from 'lodash';
 import { AfterLoad, Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
@@ -46,21 +47,26 @@ export abstract class BaseImage extends BaseEntity {
   @Column('jsonb', { nullable: true })
   exif?: Record<string, string | number> | null;
 
+  @Exclude()
   @Column({ nullable: true })
   file?: string;
 
+  @Exclude()
   @Column({ nullable: true })
   height?: number;
 
+  @Exclude()
   @Column('jsonb', { nullable: true })
   labels?: Label[];
 
+  @Exclude()
   @Column({ nullable: true })
   mime_type?: string;
 
   @OneToMany(() => Note, note => note.image)
   notes?: Note[];
 
+  @Exclude()
   @Column({ nullable: true })
   original_filename?: string;
 
@@ -73,12 +79,14 @@ export abstract class BaseImage extends BaseEntity {
   @Column({ nullable: true })
   original_width?: number;
 
+  @Exclude()
   @Column({ nullable: true })
   path?: string;
 
   @Column({ nullable: true })
   phash?: string;
 
+  @Exclude()
   @Column({ nullable: true })
   postfix?: string;
 
@@ -86,12 +94,17 @@ export abstract class BaseImage extends BaseEntity {
 
   url?: string;
 
+  @Exclude()
+  updated_at?: Date;
+
+  @Exclude()
   @Column('uuid', { nullable: true })
   uuid?: string;
 
   @Column()
   view_count: number;
 
+  @Exclude()
   @Column({ nullable: true })
   width?: number;
 
