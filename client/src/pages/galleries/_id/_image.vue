@@ -54,14 +54,14 @@ import format from 'date-fns/format';
 import sortBy from 'lodash/sortBy';
 import { Component, Vue } from 'nuxt-property-decorator';
 
+import CommentList from '@/components/CommentList.vue';
+import Exif from '@/components/image/Exif.vue';
+import Labels from '@/components/image/Labels.vue';
+import Tags from '@/components/image/Tags.vue';
 import ResponsiveImage from '@/components/ResponsiveImage.vue';
 import Gallery from '@/models/Gallery';
 import Image from '@/models/Image';
 import { count, slug } from '@/utils/text';
-import CommentList from '../../../components/CommentList.vue';
-import Exif from '../../../components/image/Exif.vue';
-import Labels from '../../../components/image/Labels.vue';
-import Tags from '../../../components/image/Tags.vue';
 
 @Component({
   components: { CommentList, Exif, Labels, ResponsiveImage, Tags },

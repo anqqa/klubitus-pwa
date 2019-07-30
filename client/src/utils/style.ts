@@ -1,4 +1,7 @@
-export const sizeToStyle = (size, origSize) => {
+type Size = Record<'height' | 'width' | 'x' | 'y', number>;
+type SizeStyle = Record<'left' | 'top' | 'width' | 'height', string>
+
+export const sizeToStyle = (size: Size, origSize?: Pick<Size, 'height' | 'width'>): SizeStyle => {
 
   // Support negative sizes
   const correctedSize = {
@@ -9,7 +12,7 @@ export const sizeToStyle = (size, origSize) => {
   };
 
   if (origSize) {
-    const relative = (child, parent) => Math.floor(100 * child / parent);
+    const relative = (child, parent) => Math.floor((100 * child) / parent);
 
     // Relative size
     return {
