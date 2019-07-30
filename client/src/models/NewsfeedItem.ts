@@ -1,6 +1,17 @@
-import Model from './Model';
+// tslint:disable:variable-name
+import { BaseModel } from '@/models/BaseModel';
 
-export default class NewsfeedItem extends Model {
+export default class NewsfeedItem extends BaseModel {
+  class?: string;
+  target_blog_entry?: any;
+  target_event?: any;
+  target_forum_topic?: any;
+  target_track?: any;
+  target_user?: any;
+  target_venue?: any;
+  type?: string;
+  user?: any;
+
   resource() {
     return 'newsfeed';
   }
@@ -8,36 +19,7 @@ export default class NewsfeedItem extends Model {
   /**
    * Newsfeed items are returned as list of list of items.
    */
-  get() {
-    let base = this._fromResource || `${this.baseURL()}/${this.resource()}`;
-    base = this._customResource ? `${this.baseURL()}/${this._customResource}` : base;
-    const url = `${base}${this._builder.query()}`;
-
-    const parser = data => {
-      const item = new NewsfeedItem(data);
-
-      Object.defineProperty(item, '_fromResource', { get: () => this._fromResource });
-
-      return item;
-    };
-
-    return this.request({ url, method: 'GET' }).then(response => {
-      let collection = response.data.data || response.data;
-      collection = Array.isArray(collection) ? collection : [collection];
-
-      collection = collection.map(c => {
-        const subCollection = Array.isArray(c) ? c : [c];
-
-        return subCollection.map(parser);
-      });
-
-      if (response.data.data !== undefined) {
-        response.data.data = collection;
-      } else {
-        response.data = collection;
-      }
-
-      return response.data;
-    });
+  protected parseCollection(collection: any[]): this[] {
+    return collection.map(subCollection => subCollection.map(item => new NewsfeedItem(item)));
   }
 }

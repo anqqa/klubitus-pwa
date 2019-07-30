@@ -86,6 +86,7 @@ interface Item {
   text: string;
   url: string;
 }
+
 interface ItemGroup {
   avatar: string;
   created_at: string;
@@ -106,13 +107,18 @@ export default class Newsfeed extends Vue {
 
     return 'did something weird';
   }
+
   @Prop({ default: 10 }) limit!: number;
 
-  @AsyncComputed()
-  async groups(): Promise<ItemGroup[]> {
+  groups: ItemGroup[] = [];
+
+  async mounted() {
     const groups: ItemGroup[] = [];
 
-    const data = await NewsfeedItem.limit(Math.min(this.limit || 10, 50)).get();
+    // @ts-ignore
+    const data = (await new NewsfeedItem()
+      .limit(Math.min(this.limit || 10, 50))
+      .get()) as NewsfeedItem[][];
 
     data.forEach(group => {
       const first = group[0];
@@ -121,16 +127,16 @@ export default class Newsfeed extends Vue {
       group.forEach(item => items.push(this.newsfeedItem(item)));
 
       groups.push({
-        avatar: avatarUrl(first.user.avatar_url),
-        created_at: first.created_at,
-        stamp: format(first.created_at, 'HH:mm'),
-        text: Newsfeed.newsfeedText(first.class, first.type, group.length > 1),
-        username: first.user.username,
+        avatar: avatarUrl(first.user!.avatar_url),
+        created_at: first.created_at!,
+        stamp: format(first.created_at!, 'HH:mm'),
+        text: Newsfeed.newsfeedText(first.class!, first.type!, group.length > 1),
+        username: first.user!.username,
         items,
       });
     });
 
-    return groups;
+    this.groups = groups;
   }
 
   private newsfeedItem(item: NewsfeedItem): Item {
@@ -188,7 +194,7 @@ export default class Newsfeed extends Vue {
         break;
     }
 
-    return { id: item.id, icon, text, url };
+    return { id: item.id, icon, text, url } as Item;
   }
 }
 </script>
