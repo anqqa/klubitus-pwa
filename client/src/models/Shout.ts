@@ -1,3 +1,6 @@
-import Model from './Model';
+import { BaseModel } from '@/models/BaseModel';
 
-export default class Shout extends Model {}
+export default class Shout extends BaseModel {
+  author?: any;
+  shout?: string;
+}

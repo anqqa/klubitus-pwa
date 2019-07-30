@@ -1,3 +1,4 @@
+// tslint:disable:variable-name
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
 
 import { ModelQueryBuilder } from '@/models/ModelQueryBuilder';
@@ -5,6 +6,7 @@ import { ModelQueryBuilder } from '@/models/ModelQueryBuilder';
 export class BaseModel extends ModelQueryBuilder {
   static $http: NuxtAxiosInstance;
 
+  created_at?: string;
   id?: number | string;
 
   // tslint:disable-next-line:variable-name
@@ -56,8 +58,7 @@ export class BaseModel extends ModelQueryBuilder {
     const data = await BaseModel.$http.$get(query ? `${endpoint}?${query}` : endpoint);
     const collection = Array.isArray(data) ? data : [data];
 
-    // @ts-ignore
-    return collection.map(item => new this.constructor(item));
+    return this.parseCollection(collection);
   }
 
   hasMany<T extends typeof BaseModel>(model: T): InstanceType<T> {
@@ -71,6 +72,11 @@ export class BaseModel extends ModelQueryBuilder {
 
   _parent(endpoint: string) {
     this._parentEndpoint = endpoint;
+  }
+
+  protected parseCollection(collection: any[]): this[] {
+    // @ts-ignore
+    return collection.map(item => new this.constructor(item));
   }
 
   protected resource(): string {
