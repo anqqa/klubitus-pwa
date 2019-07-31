@@ -13,8 +13,7 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "@nestjsx/crud-request": "^4.1.0",
-    "@nestjsx/util": "^4.1.0",
+    "@nestjsx/crud-request": "^4.2.0",
     "@nuxtjs/axios": "^5.5.4",
     "@nuxtjs/markdownit": "^1.2.5",
     "@nuxtjs/pwa": "^3.0.0-beta.16",

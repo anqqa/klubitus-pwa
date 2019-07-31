@@ -1183,29 +1183,31 @@
   dependencies:
     uuid "3.3.2"
 
-"@nestjsx/crud-request@^4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@nestjsx/crud-request/-/crud-request-4.1.0.tgz#89c0e54e8633e3e47dbaf7737a4d0b75ac069574"
-  integrity sha512-k8fs1Z81zn8f4u/h2TQTuY+YLCp7DVaVTdZOr1rZWpxOKVj03fV2IRtCNUjDT9JgoQWs0gAcoLy53myE4BJZuA==
-
-"@nestjsx/crud-typeorm@^4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@nestjsx/crud-typeorm/-/crud-typeorm-4.1.0.tgz#859dfa69278ef8bbdda901a7f675a31549cade4b"
-  integrity sha512-CcGrnC/jeki8bnr+iqU18ymZb1CdSzWp9ECbNp3zumYcF67UUkEW/mANmF3SdfByx5PR678bCkGOaFZahdct+w==
-
-"@nestjsx/crud@^4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@nestjsx/crud/-/crud-4.1.0.tgz#d6bc482f41d78fd3bc0284387dfa765d9057250c"
-  integrity sha512-FkvYvFGCD+L75A8ssswevkHkwpolBDcw9KQRe7xfPXle/YPSUrAHdG78yY9bFNXFhCrwuZMIAN+fLknxZXQhyA==
+"@nestjsx/crud-request@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@nestjsx/crud-request/-/crud-request-4.2.0.tgz#82d81d406157e83e7fa9816ce1f24d03824c24a6"
+  integrity sha512-Zw3yFgy0ycU7k3rAOmUNVKW54JGdZySxNd7Y3/Om+mJ6RybTnapht0e0qDe+fG9m2vyx8wYiheA0L7FNwn4VEQ==
   dependencies:
-    "@nestjsx/crud-request" "^4.1.0"
-    "@nestjsx/util" "^4.1.0"
+    "@nestjsx/util" "^4.2.0"
+
+"@nestjsx/crud-typeorm@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@nestjsx/crud-typeorm/-/crud-typeorm-4.2.0.tgz#1b0b176b5ef7b56c255bc2e0d3c911ca23673cfa"
+  integrity sha512-hii/SXnLUrgq73OuSlDwEc6iDTClX6bi554FjjHPQgl2PSm+W7D/mjr4mqfqgQHCqLH1ZvuGsT7Kv3gWGJD+bw==
+
+"@nestjsx/crud@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@nestjsx/crud/-/crud-4.2.0.tgz#8cb94716f6f7eaa32ad72645056b386468ac71c7"
+  integrity sha512-PBh5rxoc3Ep7uS8cT4zoE71ZUptE9DBedEvXr9gy/uII/bTCfAEZGIe8UR0zxSHTovT+GtsfL+GNx9YjISBYnw==
+  dependencies:
+    "@nestjsx/crud-request" "^4.2.0"
+    "@nestjsx/util" "^4.2.0"
     deepmerge "^3.2.0"
 
-"@nestjsx/util@^4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@nestjsx/util/-/util-4.1.0.tgz#ce7ea06a1f11db87a323e29d3aeaad21b3fe156a"
-  integrity sha512-VJ6qPalAexk86J6ia6FBMcy5R4QV7MyIOLiTKBE607VGXI94V0txlauAnr2HlAVFSx0LNvisVGwb+pe6VmJFbQ==
+"@nestjsx/util@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@nestjsx/util/-/util-4.2.0.tgz#28a9eab85e01390dcc0d8fd32074256b08ff6c1d"
+  integrity sha512-dGu4UlHibcv4nWfYpIdbY4CEHe87mua3QTu43FFE/F76BIwQc0Bq9ohnUnR0Cgp4MjutNGXff9L9DakQaE7eWQ==
 
 "@nodelib/fs.scandir@2.1.1":
   version "2.1.1"
@@ -2242,7 +2244,7 @@ ajv@^4.9.1:
     co "^4.6.0"
     json-stable-stringify "^1.0.1"
 
-ajv@^6.1.0, ajv@^6.5.5, ajv@^6.8.1, ajv@^6.9.2:
+ajv@^6.1.0, ajv@^6.10.2, ajv@^6.5.5, ajv@^6.8.1, ajv@^6.9.2:
   version "6.10.2"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.10.2.tgz#d3cea04d6b017b2894ad69040fec8b623eb4bd52"
   integrity sha512-TXtUUEYHuaTEbLZWIKUr5pmBuhDLy+8KYtPYdcV8qC+pOZL+NKqYwvWSRrVXHn+ZmRRAu8vJTAznH7Oag6RVRw==
@@ -4963,7 +4965,7 @@ fastify-swagger@^2.4.0:
     fastify-static "^2.3.4"
     js-yaml "^3.12.1"
 
-fastify@2.6.0, fastify@^2.6.0:
+fastify@2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/fastify/-/fastify-2.6.0.tgz#45397b760f75278633fe0dcb30fcb4a26d1f66f6"
   integrity sha512-3GxGV2P8731o2S5T6ng5NMJ9S7vFpZA4mk2mJEbMbhQ5aj1HhNGBOe39TYa2gWRrJVJuXxYYYIlY/5cFhiHpNg==
@@ -4977,6 +4979,26 @@ fastify@2.6.0, fastify@^2.6.0:
     light-my-request "^3.2.0"
     middie "^4.0.1"
     pino "^5.11.1"
+    proxy-addr "^2.0.4"
+    readable-stream "^3.1.1"
+    rfdc "^1.1.2"
+    secure-json-parse "^1.0.0"
+    tiny-lru "^6.0.1"
+
+fastify@^2.7.1:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/fastify/-/fastify-2.7.1.tgz#09ec9dfaa67b453f90537501a1e148b0d98486ac"
+  integrity sha512-ScKPXD84lkdCgz7q0zjyBr1aLxKbXRt9HYL3XIt/L8ZD2f3fAcsLEyQ2/rHxLUzLGjPlEjIvprWUL3RZvlLRLw==
+  dependencies:
+    abstract-logging "^1.0.0"
+    ajv "^6.10.2"
+    avvio "^6.1.1"
+    fast-json-stringify "^1.15.0"
+    find-my-way "^2.0.0"
+    flatstr "^1.0.12"
+    light-my-request "^3.4.1"
+    middie "^4.0.1"
+    pino "^5.13.1"
     proxy-addr "^2.0.4"
     readable-stream "^3.1.1"
     rfdc "^1.1.2"
@@ -6817,7 +6839,7 @@ lcid@^1.0.0:
   dependencies:
     invert-kv "^1.0.0"
 
-light-my-request@^3.2.0:
+light-my-request@^3.2.0, light-my-request@^3.4.1:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/light-my-request/-/light-my-request-3.4.1.tgz#c30087005f6ae64ce5ef92c2484b1ab93c71ad3e"
   integrity sha512-E1zMvRWjqsaCS60dTkD7c//xKV1KOFD2zo92Ru3o3e95lCfQSDCC9aS8MZm1V+zXaA/SeKDwK9gvrfaCseTusg==
@@ -8624,6 +8646,18 @@ pino@^5.11.1:
     pino-std-serializers "^2.3.0"
     quick-format-unescaped "^3.0.2"
     sonic-boom "^0.7.3"
+
+pino@^5.13.1:
+  version "5.13.1"
+  resolved "https://registry.yarnpkg.com/pino/-/pino-5.13.1.tgz#583eb92be0ccbaa2a98ab2842817a1fa103cb26e"
+  integrity sha512-IxusG28L0g50uuf21kZELypdFOeNrJ/kRhktdi7LtdZQWCxLliMxG5iOrGUQ/ng7MiJ4XqXi/hfyXwZeKc1MxA==
+  dependencies:
+    fast-redact "^1.4.4"
+    fast-safe-stringify "^2.0.6"
+    flatstr "^1.0.9"
+    pino-std-serializers "^2.3.0"
+    quick-format-unescaped "^3.0.2"
+    sonic-boom "^0.7.5"
 
 pixelmatch@^4.0.2:
   version "4.0.2"
@@ -10476,6 +10510,13 @@ sonic-boom@^0.7.3:
   integrity sha512-8JRAJg0RxZtFLQMxolwETvWd2JSlH3ZGo/Z4xPxMbpqF14xCgVYPVeFCFOR3zyr3pcfG82QDVj6537Sx5ZWdNw==
   dependencies:
     flatstr "^1.0.9"
+
+sonic-boom@^0.7.5:
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/sonic-boom/-/sonic-boom-0.7.5.tgz#b383d92cdaaa8e66d1f77bdec71b49806d01b5f1"
+  integrity sha512-1pKrnAV6RfvntPnarY71tpthFTM3pWZWWQdghZY8ARjtDPGzG/inxqSuRwQY/7V1woUjfyxPb437zn4p5phgnQ==
+  dependencies:
+    flatstr "^1.0.12"
 
 sort-keys@^1.0.0:
   version "1.1.2"

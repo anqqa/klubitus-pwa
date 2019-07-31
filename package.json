@@ -7,16 +7,15 @@
     "packages": [
       "api",
       "client"
-    ],
-    "nohoist": [
-      "**/patch-package"
     ]
   },
   "scripts": {
+    "api": "yarn workspace klubitus-api",
     "api:build": "docker-compose build api",
     "api:exec": "docker-compose exec api",
     "api:shell": "docker-compose run --rm api sh",
     "api:up": "docker-compose up api",
+    "client": "yarn workspace klubitus-client",
     "client:build": "docker-compose build --no-cache client",
     "client:exec": "docker-compose exec client",
     "client:shell": "docker-compose run --rm client sh",
@@ -38,6 +37,7 @@
     "babel-cli": "^6.26.0",
     "husky": "^3.0.1",
     "lint-staged": "^9.2.0",
+    "patch-package": "^6.1.2",
     "prettier": "^1.18.2",
     "tslint-config-prettier": "^1.18.0",
     "tslint-plugin-prettier": "^2.0.1",

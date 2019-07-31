@@ -1,5 +1,5 @@
 diff --git a/node_modules/@nestjsx/crud-typeorm/lib/typeorm-crud.service.d.ts b/node_modules/@nestjsx/crud-typeorm/lib/typeorm-crud.service.d.ts
-index 124f1e0..2155a15 100644
+index 4e15a74..6e21c45 100644
 --- a/node_modules/@nestjsx/crud-typeorm/lib/typeorm-crud.service.d.ts
 +++ b/node_modules/@nestjsx/crud-typeorm/lib/typeorm-crud.service.d.ts
 @@ -12,7 +12,7 @@ export declare class TypeOrmCrudService<T> extends CrudService<T> {
@@ -11,9 +11,9 @@ index 124f1e0..2155a15 100644
      getMany(req: CrudRequest): Promise<GetManyDefaultResponse<T> | T[]>;
      getOne(req: CrudRequest): Promise<T>;
      createOne(req: CrudRequest, dto: T): Promise<T>;
-@@ -40,5 +40,5 @@ export declare class TypeOrmCrudService<T> extends CrudService<T> {
-     private getTake;
+@@ -41,5 +41,5 @@ export declare class TypeOrmCrudService<T> extends CrudService<T> {
      private getSort;
+     private getFieldWithAlias;
      private mapSort;
 -    private mapOperatorsToQuery;
 +    protected mapOperatorsToQuery;
