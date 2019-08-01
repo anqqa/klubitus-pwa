@@ -12,7 +12,7 @@
     "removeComments": true,
     "sourceMap": true,
     "target": "es6",
-    "types": ["node"]
+    "types": ["fastify-multipart", "node"]
   },
   "exclude": ["node_modules"]
 }
