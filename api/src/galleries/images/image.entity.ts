@@ -1,7 +1,7 @@
-import { Exclude, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import { Entity, ManyToMany } from 'typeorm';
 
-import { BaseImage } from '../../images';
+import { BaseImage } from '../../images/image.entity';
 import { Gallery } from '../gallery.entity';
 
 @Entity('images')

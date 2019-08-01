@@ -1,17 +1,18 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { GalleriesController, GalleriesService, Gallery } from '.';
-import { AuthModule } from '../auth';
+import { AuthModule } from '../auth/auth.module';
 import { AwsModule } from '../common/aws/aws.module';
-import { Event } from '../events';
-import { EventsModule } from '../events/events.module';
-import { Image, ImagesModule } from '../images';
-import { GalleryImage, GalleryImagesController, GalleryImagesService } from './images';
+import { Event } from '../events/event.entity';
+import { GalleriesController } from './galleries.controller';
+import { GalleriesService } from './galleries.service';
+import { Gallery } from './gallery.entity';
+import { GalleryImage } from './images/image.entity';
+import { GalleryImagesController } from './images/images.controller';
+import { GalleryImagesService } from './images/images.service';
 
 @Module({
   controllers: [GalleriesController, GalleryImagesController],
-  // exports: [GalleriesService],
   imports: [
     AuthModule,
     AwsModule.forRoot(
@@ -21,10 +22,8 @@ import { GalleryImage, GalleryImagesController, GalleryImagesService } from './i
       process.env.AWS_ACCESS_KEY_ID,
       process.env.AWS_SECRET_ACCESS_KEY
     ),
-    EventsModule,
-    ImagesModule,
     TypeOrmModule.forFeature([Event, Gallery, GalleryImage]),
   ],
-  providers: [GalleriesService, GalleryImagesService /*, ImageUploadService*/],
+  providers: [GalleriesService, GalleryImagesService],
 })
 export class GalleriesModule {}

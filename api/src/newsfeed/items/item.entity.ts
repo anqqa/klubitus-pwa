@@ -8,10 +8,10 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { Event } from '../../events';
-import { Post } from '../../forum/posts';
-import { Topic } from '../../forum/topics';
-import { Gallery } from '../../galleries';
+import { Event } from '../../events/event.entity';
+import { Post } from '../../forum/posts/post.entity';
+import { Topic } from '../../forum/topics/topic.entity';
+import { Gallery } from '../../galleries/gallery.entity';
 import { Image } from '../../images/image.entity';
 import { User } from '../../users/user.entity';
 

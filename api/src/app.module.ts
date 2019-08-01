@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { Connection } from 'typeorm';
 
-import { AuthModule } from './auth';
+import { AuthModule } from './auth/auth.module';
 import DbModule from './db.module';
 import { EventsModule } from './events/events.module';
 import { ForumModule } from './forum/forum.module';

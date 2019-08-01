@@ -4,7 +4,7 @@ import { compareSync, hashSync } from 'bcryptjs';
 import { IsFQDN } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-import { deprecatedMatch } from '../auth';
+import { deprecatedMatch } from '../auth/password';
 import { BaseEntity } from '../common/base.entity';
 import { Roles, userRole } from '../common/utils/role.util';
 

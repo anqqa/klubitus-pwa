@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AuthModule } from '../auth';
+import { AuthModule } from '../auth/auth.module';
 import { IsUnique } from '../common/validators/IsUnique';
 import DbModule from '../db.module';
 import { External } from './externals/external.entity';

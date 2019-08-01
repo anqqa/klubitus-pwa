@@ -3,46 +3,17 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { BaseCrudService } from '../common/basecrud.service';
-import { Pagination } from '../common/pagination/pagination.dto';
-import { PaginationService } from '../common/pagination/pagination.service';
-import { Event } from '../events';
+import { Event } from '../events/event.entity';
 import { Stats } from './galleries.dto';
 import { Gallery } from './gallery.entity';
-import { GalleryImage } from './images';
 
 @Injectable()
 export class GalleriesService extends BaseCrudService<Gallery> {
   constructor(
     @InjectRepository(Gallery) repo: Repository<Gallery>,
-    @InjectRepository(Event) private eventRepository: Repository<Event>,
-    @InjectRepository(GalleryImage) private imageRepository: Repository<GalleryImage>
+    @InjectRepository(Event) readonly eventRepository: Repository<Event>
   ) {
     super(repo);
-  }
-
-  async getImage(id: number, imageId: number): Promise<GalleryImage> {
-    return this.imageRepository
-      .createQueryBuilder('image')
-      .innerJoin('galleries_images', 'gallery', 'gallery.image_id = image.id')
-      .leftJoinAndSelect('image.author', 'author')
-      .where('gallery.gallery_id = :id', { id })
-      .andWhere('image.id = :imageId', { imageId })
-      .getOne();
-  }
-
-  async getImages(id: number, query?: Pagination): Promise<GalleryImage[]> {
-    // Pagination
-    const { take, skip } = PaginationService.parseQuery(query, 100, 100);
-
-    return this.imageRepository
-      .createQueryBuilder('image')
-      .innerJoin('galleries_images', 'gallery', 'gallery.image_id = image.id')
-      .leftJoinAndSelect('image.author', 'author')
-      .where('gallery.gallery_id = :id', { id })
-      .orderBy('image.id', 'ASC')
-      .take(take)
-      .skip(skip)
-      .getMany();
   }
 
   async getOrCreateByEvent(id?: number, eventId?: number): Promise<Gallery> {

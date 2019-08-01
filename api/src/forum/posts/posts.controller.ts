@@ -9,7 +9,7 @@ import {
   ParsedRequest,
 } from '@nestjsx/crud';
 
-import { AreasService } from '../areas';
+import { AreasService } from '../areas/areas.service';
 import { Post } from './post.entity';
 import { PostsService } from './posts.service';
 
