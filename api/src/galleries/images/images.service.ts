@@ -16,6 +16,7 @@ import { GalleryImage } from './image.entity';
 export class GalleryImagesService extends BaseCrudService<GalleryImage> {
   constructor(
     @InjectRepository(GalleryImage) repo: Repository<GalleryImage>,
+    @InjectRepository(Gallery) readonly galleryRepo: Repository<Gallery>,
     readonly s3Client: S3Client
   ) {
     super(repo);
@@ -58,6 +59,9 @@ export class GalleryImagesService extends BaseCrudService<GalleryImage> {
         .relation(Gallery, 'images')
         .of(gallery)
         .add(image);
+
+      gallery.updated_at = new Date();
+      await this.galleryRepo.save(gallery);
 
       return image;
     } catch (error) {
