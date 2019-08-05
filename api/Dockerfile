@@ -1,8 +1,9 @@
-FROM node:10-alpine
+FROM node:11-alpine
 
 WORKDIR /srv/api
 
-COPY package.json nodemon.json yarn.lock ./
+COPY api/package.json api/nodemon.json yarn.lock ./
+COPY api/patches patches/
 RUN yarn install --pure-lockfile && yarn cache clean --force
 
 #COPY . .

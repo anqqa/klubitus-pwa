@@ -23,12 +23,12 @@
           </div>
 
           <section class="user">
-            <button v-if="isAuthenticated" @click="logout">Logout</button>
+            <button v-if="isAuthenticated" @click="logout">Log Out</button>
             <nuxt-link v-if="!isAuthenticated" :to="localePath('login')" class="button">
-              Login
+              Log In
             </nuxt-link>
-            <nuxt-link v-if="!isAuthenticated" :to="localePath('register')" class="button">
-              Register
+            <nuxt-link v-if="!isAuthenticated" :to="localePath('signup')" class="button">
+              Sign Up
             </nuxt-link>
           </section>
         </nav>

@@ -189,7 +189,7 @@ const groupByDate = data => {
 
 export default {
   async asyncData({ params }) {
-    let { year, month, week, day } = params;
+    const { year, month, week, day } = params;
 
     [year, month, week, day].map(parseInt);
 
@@ -197,11 +197,11 @@ export default {
     const { from, to, range } = dateRange(year, month, week, day);
 
     // Fetch events
-    const events = await Event.params({
-      from: format(from, 'YYYY-MM-DD'),
-      to: format(to, 'YYYY-MM-DD'),
-    })
-      .orderBy('begins_at')
+    const events = await new Event()
+      .filter('ends_at', 'gte', format(from, 'YYYY-MM-DD'))
+      .filter('begins_at', 'lte', format(to, 'YYYY-MM-DDT23:59:59'))
+      .limit(10)
+      .sort('begins_at', 'ASC')
       .get();
 
     const days = groupByDate(events);

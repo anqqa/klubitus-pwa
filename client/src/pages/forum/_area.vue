@@ -5,8 +5,8 @@
     </nav>
 
     <div class="col-7 main-content">
-      <h1 v-text="area.name" />
-      <h2 v-html="area.description" />
+      <h1 v-text="name" />
+      <h2 v-html="description" />
 
       <pagination :pages="pages" :route="route" />
 
@@ -15,47 +15,45 @@
   </main>
 </template>
 
-<script>
-import ForumAreaList from '../../components/forum/ForumAreaList';
-import Pagination from '../../components/Pagination';
-import ForumArea from '../../models/ForumArea';
+<script lang="ts">
+import { Component, Vue } from 'nuxt-property-decorator';
 
-export default {
+import ForumAreaList from '@/components/forum/ForumAreaList.vue';
+import ForumArea from '@/models/ForumArea';
+import Pagination from '../../components/Pagination.vue';
+
+@Component({
+  components: { ForumAreaList, Pagination },
+})
+export default class SingleForumArea extends Vue {
+  areas: ForumArea[] = [];
+  description = '';
+  name = '';
+  pages: number = 0;
+
   async asyncData({ params }) {
     const areaId = parseInt(params.area);
-    const areas = await ForumArea.get();
+    const areas = await new ForumArea().getAll();
+    const area: ForumArea = areas.find(area => area.id === areaId) as ForumArea;
 
-    let area;
-
-    areas.forEach(_area => {
-      if (_area.id === areaId) area = _area;
-    });
-
-    const pages = Math.ceil(area.topic_count / 20);
-
-    return { area, areaId, areas, pages };
-  },
-
-  components: { ForumAreaList, Pagination },
-
-  data() {
     return {
-      route: { name: 'forum-area', params: this.$route.params },
+      areas,
+      description: area.description,
+      name: area.name,
+      pages: Math.ceil(area.topic_count! / 20),
     };
-  },
-
-  computed: {
-    page() {
-      return parseInt(this.$route.query.page) || 1;
-    },
-  },
+  }
 
   head() {
-    return {
-      title: this.area ? this.area.name : 'Forum',
-    };
-  },
-};
-</script>
+    return { title: this.name || 'Forum' };
+  }
 
-<style scoped></style>
+  get page() {
+    return parseInt(this.$route.query.page as string) || 1;
+  }
+
+  get route() {
+    return { name: 'forum-area', params: this.$route.params };
+  }
+}
+</script>

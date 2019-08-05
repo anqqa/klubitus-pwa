@@ -1,29 +1,81 @@
-import { Controller, Get, Param, ParseIntPipe, Query, UseInterceptors } from '@nestjs/common';
-import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger';
+import {
+  Controller,
+  NotFoundException,
+  Param,
+  Post,
+  Req,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiConsumes, ApiImplicitFile, ApiUseTags } from '@nestjs/swagger';
+import {
+  Crud,
+  CrudActions,
+  CrudController,
+  CrudRequest,
+  Override,
+  ParsedRequest,
+} from '@nestjsx/crud';
+import { User } from '../auth/user.decorator';
 
-import { TransformerInterceptor } from '../common/interceptors/transformer.interceptor';
-import { Event, EventsQuery } from './events.dto';
+import { EntityForbiddenError } from '../common/errors/entityforbidden.error';
+import { File, FileInterceptor } from '../common/interceptors/file.interceptor';
+import { GalleriesService } from '../galleries/galleries.service';
+import { GalleryImage } from '../galleries/images/image.entity';
+import { GalleryImagesService } from '../galleries/images/images.service';
+import { Event } from './event.entity';
 import { EventsService } from './events.service';
 
+@Crud({
+  model: { type: Event },
+  query: { maxLimit: 500 },
+})
 @ApiUseTags('Events')
 @Controller('events')
-export class EventsController {
-  constructor(private readonly eventsService: EventsService) {}
+export class EventsController implements CrudController<Event> {
+  constructor(
+    readonly service: EventsService,
+    readonly galleriesService: GalleriesService,
+    readonly galleryImagesService: GalleryImagesService
+  ) {}
 
-  @ApiOperation({ title: 'List events' })
-  @ApiOkResponse({ description: 'Success', type: Event, isArray: true })
-  @UseInterceptors(new TransformerInterceptor(Event))
-  @Get()
-  async getAll(@Query() query: EventsQuery) {
-    return this.eventsService.findAll(query);
+  get base(): CrudController<Event> {
+    return this;
   }
 
-  @ApiOperation({ title: 'Get an event' })
-  @ApiOkResponse({ description: 'Success', type: Event })
-  @ApiNotFoundResponse({ description: 'Event not found' })
-  @UseInterceptors(new TransformerInterceptor(Event))
-  @Get(':id')
-  async getById(@Param('id', new ParseIntPipe()) id: number) {
-    return this.eventsService.get(id);
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  @Override()
+  async deleteOne(@ParsedRequest() req: CrudRequest, @Req() { user }: any): Promise<void | Event> {
+    const model = await this.service.getOne(req);
+
+    if (!model.can(CrudActions.DeleteOne, user && user.roles)) {
+      throw new EntityForbiddenError(model);
+    }
+
+    return this.base.deleteOneBase(req);
+  }
+
+  @ApiConsumes('multipart/form-data')
+  @ApiImplicitFile({ name: 'file', required: true })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  @UseInterceptors(new FileInterceptor('file'))
+  @Post(':eventId/images')
+  async upload(
+    @Param() params: any,
+    @User() user: any,
+    @UploadedFile('file') file: File
+  ): Promise<GalleryImage> {
+    const eventId = parseInt(params.eventId, 10);
+    const gallery = await this.galleriesService.getOrCreateByEvent(eventId);
+
+    if (!gallery) {
+      throw new NotFoundException(`Gallery for event ${eventId} not found`);
+    }
+
+    return this.galleryImagesService.createToGallery(user.id, file, gallery);
   }
 }

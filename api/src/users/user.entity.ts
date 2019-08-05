@@ -5,8 +5,10 @@ import { IsFQDN } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 import { deprecatedMatch } from '../auth/password';
+import { BaseEntity } from '../common/base.entity';
+import { Roles, userRole } from '../common/utils/role.util';
 
-export class BaseUser {
+export abstract class BaseUser extends BaseEntity {
   @Column({ nullable: true })
   @IsFQDN()
   avatar_url?: string;
@@ -28,6 +30,22 @@ export class User extends BaseUser {
 
   @Column()
   password_kohana?: string;
+
+  is_authenticated = false;
+
+  get roles(): string[] {
+    const roles = [userRole(this.id)];
+
+    if (this.is_authenticated) {
+      roles.push(Roles.AUTHENTICATED);
+    }
+
+    return roles;
+  }
+
+  hasRole(role: string): boolean {
+    return this.roles.includes(role);
+  }
 
   setPassword(password: string) {
     this.password = hashSync(password, 10);

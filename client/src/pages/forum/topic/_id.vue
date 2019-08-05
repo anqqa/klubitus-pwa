@@ -1,6 +1,6 @@
 <template>
   <main class="column section">
-    <h1 class="title">{{ topic.name }}</h1>
+    <h1 class="title">{{ name }}</h1>
 
     <pagination :pages="pages" :route="route" />
 
@@ -10,37 +10,36 @@
   </main>
 </template>
 
-<script>
-import Pagination from '../../../components/Pagination';
-import ForumTopic from '../../../models/ForumTopic';
+<script lang="ts">
+import { Component, Vue } from 'nuxt-property-decorator';
 
-export default {
+import Pagination from '@/components/Pagination.vue';
+import ForumTopic from '@/models/ForumTopic';
+
+@Component({
+  components: { Pagination },
+})
+export default class SingleTopic extends Vue {
+  name = '';
+
   async asyncData({ params }) {
     const topicId = parseInt(params.id);
-    const topic = await ForumTopic.find(topicId);
-    const pages = Math.ceil(topic.post_count / 20);
+    const topic = await new ForumTopic().select(['name', 'post_count']).find(topicId);
+    const pages = Math.ceil(topic.post_count! / 20);
 
-    return { pages, topic, topicId };
-  },
+    return { name: topic.name, pages, topicId };
+  }
 
-  components: { Pagination },
+  get page() {
+    return parseInt(this.$route.query.page as string) || 1;
+  }
 
-  data() {
-    return {
-      route: { name: 'forum-topic-id', params: this.$route.params },
-    };
-  },
-
-  computed: {
-    page() {
-      return parseInt(this.$route.query.page) || 1;
-    },
-  },
+  get route() {
+    return { name: 'forum-topic-id', params: this.$route.params };
+  }
 
   head() {
-    return {
-      title: this.topic ? this.topic.name : 'Forum',
-    };
-  },
-};
+    return { title: this.name || 'Forum' };
+  }
+}
 </script>

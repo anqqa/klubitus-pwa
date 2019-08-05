@@ -1,37 +1,59 @@
-import { Controller, Get, Param, ParseIntPipe, Query, UseInterceptors } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
+import { ApiUseTags } from '@nestjs/swagger';
 import {
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiUseTags,
-} from '@nestjs/swagger';
+  Crud,
+  CrudController,
+  CrudRequest,
+  GetManyDefaultResponse,
+  Override,
+  ParsedRequest,
+} from '@nestjsx/crud';
 
-import { TransformerInterceptor } from '../../common/interceptors/transformer.interceptor';
-import { Post, PostsQuery } from './posts.dto';
+import { AreasService } from '../areas/areas.service';
+import { Post } from './post.entity';
 import { PostsService } from './posts.service';
 
+@Crud({
+  model: { type: Post },
+  params: {
+    id: { field: 'id', type: 'number', primary: true },
+    topicId: { field: 'forum_topic_id', type: 'number' },
+  },
+  query: {
+    join: {
+      area: { allow: ['id', 'name'] },
+      author: { allow: ['avatar_url', 'id', 'signature', 'title', 'username'] },
+      topic: {},
+    },
+  },
+  routes: {
+    only: ['getManyBase', 'getOneBase'],
+  },
+})
 @ApiUseTags('Forum')
-@Controller('posts')
-export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
+@Controller('/topics/:topicId/posts')
+export class PostsController implements CrudController<Post> {
+  constructor(readonly service: PostsService, readonly areasService: AreasService) {}
 
-  @ApiOperation({ title: 'List posts for topic' })
-  @ApiOkResponse({ type: Post, isArray: true })
-  @ApiNotFoundResponse({ description: 'Topic not found.' })
-  @ApiForbiddenResponse({ description: 'Topic not accessible.' })
-  @UseInterceptors(new TransformerInterceptor(Post))
-  @Get()
-  async getAll(@Query() query: PostsQuery) {
-    return await this.postsService.findAll(query);
+  get base(): CrudController<Post> {
+    return this;
   }
 
-  @ApiOperation({ title: 'Get a post' })
-  @ApiOkResponse({ type: Post })
-  @ApiNotFoundResponse({ description: 'Post not found.' })
-  @UseInterceptors(new TransformerInterceptor(Post))
-  @Get(':id')
-  async getById(@Param('id', new ParseIntPipe()) id: number) {
-    return await this.postsService.get(id);
+  @Override()
+  async getMany(@ParsedRequest() req: CrudRequest): Promise<GetManyDefaultResponse<Post> | Post[]> {
+    const accessibleAreaIds = await this.areasService.getAccessibleIds();
+
+    req.parsed.filter.push({ field: 'forum_area_id', operator: 'in', value: accessibleAreaIds });
+
+    return this.base.getManyBase(req);
+  }
+
+  @Override()
+  async getOne(@ParsedRequest() req: CrudRequest): Promise<Post> {
+    const accessibleAreaIds = await this.areasService.getAccessibleIds();
+
+    req.parsed.filter.push({ field: 'forum_area_id', operator: 'in', value: accessibleAreaIds });
+
+    return this.base.getOneBase(req);
   }
 }

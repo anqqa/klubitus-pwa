@@ -8,7 +8,9 @@
 
   "jsRules": {},
   "rules": {
-    "prettier": true,
-    "object-literal-sort-keys": false
+    "interface-name": false,
+    "member-access": false,
+    "object-literal-sort-keys": false,
+    "prettier": true
   }
 }

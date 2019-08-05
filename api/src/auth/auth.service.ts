@@ -18,7 +18,7 @@ export class AuthService {
   constructor(
     private facebookService: FacebookService,
     @InjectRepository(Token) private readonly tokenRepository: Repository<Token>,
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(User) private readonly userRepository: Repository<User>
   ) {}
 
   async deleteToken(token: string): Promise<boolean> {
@@ -50,8 +50,8 @@ export class AuthService {
     return token;
   }
 
-  async login(credentials: LoginPayload): Promise<User> {
-    const { username, password } = credentials;
+  async login(payload: LoginPayload): Promise<User> {
+    const { username, password } = payload;
     const validator = new Validator();
     const where = validator.isEmail(username) ? { email: username } : { username };
 
@@ -60,7 +60,10 @@ export class AuthService {
     if (!user) {
       Logger.log('User not found', LOG_CONTEXT, false);
 
-      throw new UnauthorizedException();
+      throw new UnauthorizedException({
+        errors: { username: ['Unknown user'] },
+        message: 'Unknown user',
+      });
     }
 
     if (!user.password) {
@@ -73,18 +76,24 @@ export class AuthService {
       } else {
         Logger.log(`Invalid old password  [user:${user.id}]`, LOG_CONTEXT, false);
 
-        throw new UnauthorizedException();
+        throw new UnauthorizedException({
+          errors: { password: ['Incorrect password'] },
+          message: 'Incorrect password',
+        });
       }
     } else if (!user.verifyPassword(password)) {
       Logger.log(`Invalid password  [user:${user.id}]`, LOG_CONTEXT, false);
 
-      throw new UnauthorizedException();
+      throw new UnauthorizedException({
+        errors: { password: ['Incorrect password'] },
+        message: 'Incorrect password',
+      });
     }
 
     return user;
   }
 
-  async validateUser(token: string): Promise<any> {
+  async validateUser(token: string): Promise<User> {
     const userToken = await this.tokenRepository.findOneOrFail({
       relations: ['user'],
       where: { token },

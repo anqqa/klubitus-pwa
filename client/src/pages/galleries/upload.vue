@@ -22,14 +22,15 @@
 
         <div v-if="!event" class="card-content">
           <vue-autosuggest
-            :input-props="inputProps"
+            :input-props="{ id: 'input-event', placeholder: 'Search...' }"
             :suggestions="suggestions"
+            @input="onInputChange"
             @selected="onSelected"
           >
             <template slot-scope="{ suggestion }">
-              <span class="has-text-tertiary">{{ suggestion.label.date }} </span>
-              <span v-html="suggestion.label.highlight" />
-              @ {{ suggestion.label.venue_name }}, {{ suggestion.label.city_name }}
+              <span class="has-text-tertiary">{{ suggestion.item.date }} </span>
+              <span v-html="suggestion.item.highlight" />
+              @ {{ suggestion.item.venue_name }}, {{ suggestion.item.city_name }}
             </template>
           </vue-autosuggest>
 
@@ -79,9 +80,9 @@
 
           <upload
             ref="upload"
-            endpoint="/galleries/upload"
+            :endpoint="uploadEndpoint"
             multiple
-            name="photos"
+            name="file"
             :metadata="metadata"
             @filesUpdated="files = $event"
           />
@@ -99,147 +100,155 @@
   </main>
 </template>
 
-<script>
+<script lang="ts">
 import format from 'date-fns/format';
 import debounce from 'lodash/debounce';
+import { Component, Vue } from 'nuxt-property-decorator';
 
-import Upload from '../../components/Upload';
-import Event from '../../models/Event';
-import Gallery from '../../models/Gallery';
-import { nFormatter } from '../../utils/text';
+import Upload from '@/components/Upload.vue';
+import Event from '@/models/Event';
+import Gallery from '@/models/Gallery';
+import { nFormatter } from '@/utils/text';
 
-export default {
-  head: {
-    title: 'Upload photos',
-  },
+const eventFields = ['begins_at', 'city_name', 'flyer_front_url', 'id', 'name', 'venue_name'];
+
+@Component({
+  components: { Upload },
+  head: { title: 'Upload photos' },
+  watchQuery: ['event', 'gallery'],
+})
+export default class GalleriesUpload extends Vue {
+  event: Event | null = null;
+  events: Event[] = [];
+  files: any[] = [];
+  gallery: Gallery | null = null;
+  suggestions: any[] = [];
+
+  onInputChange = debounce(this.fetchEvents, 250);
+
+  get eventDate() {
+    if (this.event) {
+      return new Date(this.event.begins_at!);
+    } else if (this.gallery) {
+      return new Date(this.gallery.event_date!);
+    }
+  }
+
+  get eventInfo() {
+    if (this.event) {
+      return (
+        format(this.event.begins_at!, 'MMMM D, YYYY') +
+        ' @ ' +
+        this.event.venue_name +
+        ', ' +
+        this.event.city_name
+      );
+    } else if (this.gallery) {
+      return format(this.gallery.event_date!, 'MMMM D, YYYY');
+    }
+  }
+
+  get eventName() {
+    return this.event ? this.event!.name : this.gallery!.name;
+  }
+
+  get metadata() {
+    if (this.gallery) {
+      return { gallery_id: this.gallery.id };
+    } else if (this.event) {
+      return { event_id: this.event.id };
+    }
+
+    return null;
+  }
+
+  get photosFailed() {
+    return this.files.filter(file => file.failed);
+  }
+
+  get photosRemaining() {
+    return this.files.filter(file => !file.uploaded);
+  }
+
+  get photosUploaded() {
+    return this.files.filter(file => file.uploaded);
+  }
+
+  get sizeRemaining() {
+    const totalSize = this.photosRemaining.reduce((total, file) => total + file.filesize, 0);
+
+    return nFormatter(totalSize, 2, true);
+  }
+
+  get uploadEndpoint() {
+    if (this.gallery) {
+      return '/' + this.gallery.images().endpoint();
+    } else if (this.event) {
+      return '/' + this.event.images().endpoint();
+    }
+  }
 
   async asyncData({ query }) {
     const eventId = parseInt(query.event);
     const galleryId = parseInt(query.gallery);
 
     if (eventId) {
-      const event = await Event.find(eventId);
+      const event = await new Event().select(eventFields).find(eventId);
 
       if (event) {
         return { event, gallery: null };
       }
     } else if (galleryId) {
-      const gallery = await Gallery.find(galleryId);
+      const gallery = await new Gallery()
+        .select(['event_date', 'id', 'name'])
+        .relation('event', eventFields)
+        .find(galleryId);
 
       return { event: gallery.event, gallery };
     }
 
     return { event: null, gallery: null };
-  },
+  }
 
-  components: { Upload },
+  async fetchEvents(search) {
+    if (!search || search.length < 3) {
+      this.suggestions = [];
 
-  data() {
-    return {
-      event: null,
-      events: [],
-      files: [],
-      gallery: null,
-      suggestions: [],
+      return;
+    }
 
-      inputProps: {
-        id: 'input-event',
-        onInputChange: debounce(this.fetchEvents, 250),
-        placeholder: 'Search...',
-      },
-    };
-  },
+    const events = await new Event()
+      .select(eventFields)
+      .filter('name', 'cont', search)
+      .sort('begins_at', 'DESC')
+      .get();
 
-  computed: {
-    eventDate() {
-      return new Date(this.event ? this.event.begins_at : this.gallery.event_date);
-    },
+    const data: any[] = [];
+    const highlight = new RegExp(search, 'ig');
+    const replace = match => `<em>${match}</em>`;
 
-    eventInfo() {
-      if (this.event) {
-        return (
-          format(this.event.begins_at, 'MMMM D, YYYY') +
-          ' @ ' +
-          this.event.venue_name +
-          ', ' +
-          this.event.city_name
-        );
-      } else {
-        return format(this.gallery.event_date, 'MMMM D, YYYY');
-      }
-    },
+    events.forEach(event =>
+      data.push({
+        ...event,
+        date: format(event.begins_at!, 'DD.MM.YYYY'),
+        highlight: event.name!.replace(highlight, replace),
+      })
+    );
 
-    eventName() {
-      return this.event ? this.event.name : this.gallery.name;
-    },
+    this.suggestions = [{ data }];
+  }
 
-    metadata() {
-      if (this.gallery) {
-        return { gallery_id: this.gallery.id };
-      } else if (this.event) {
-        return { event_id: this.event.id };
-      }
+  onSelected(item) {
+    const url = this.localePath('galleries-upload') + '?event=' + item.item.id;
 
-      return null;
-    },
+    this.$router.push({ path: url });
+  }
 
-    photosFailed() {
-      return this.files.filter(file => file.failed);
-    },
-
-    photosRemaining() {
-      return this.files.filter(file => !file.uploaded);
-    },
-
-    photosUploaded() {
-      return this.files.filter(file => file.uploaded);
-    },
-
-    sizeRemaining() {
-      const totalSize = this.photosRemaining.reduce((total, file) => total + file.filesize, 0);
-
-      return nFormatter(totalSize, 2, true);
-    },
-  },
-
-  methods: {
-    async fetchEvents(search) {
-      if (!search || search.length < 3) {
-        this.suggestions = [];
-
-        return;
-      }
-
-      const events = await Event.params({ search, sort: '-begins_at' }).get();
-
-      const data = [];
-      const highlight = new RegExp(search, 'ig');
-      const replace = match => `<em>${match}</em>`;
-
-      events.forEach(event =>
-        data.push({
-          ...event,
-          date: format(event.begins_at, 'DD.MM.YYYY'),
-          highlight: event.name.replace(highlight, replace),
-        })
-      );
-
-      this.suggestions = [{ data }];
-    },
-
-    onSelected(item) {
-      const url = this.localePath('galleries-upload') + '?event=' + item.item.id;
-
-      this.$router.push({ path: url });
-    },
-
-    startUpload() {
-      this.$refs.upload.upload();
-    },
-  },
-
-  watchQuery: ['event', 'gallery'],
-};
+  startUpload() {
+    // @ts-ignore
+    this.$refs.upload.upload();
+  }
+}
 </script>
 
 <style scoped>

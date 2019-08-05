@@ -1,32 +1,26 @@
 <template>
-
   <div class="labels">
     <ul>
       <LabelTree v-for="label in labels" :key="label.name" :label="label" />
     </ul>
   </div>
-
 </template>
 
+<script lang="ts">
+import { Component, Prop, Vue } from 'nuxt-property-decorator';
 
-<script>
-  import LabelTree from './LabelTree';
+import LabelTree from './LabelTree.vue';
 
-
-  export default {
-    name: 'Labels',
-
-    components: { LabelTree },
-
-    props: {
-      labels: { default: () => [], type: Array },
-    },
-  };
+@Component({
+  components: { LabelTree },
+})
+export default class Labels extends Vue {
+  @Prop({ default: [] }) labels!: any[];
+}
 </script>
 
-
 <style scoped>
-  ul {
-    list-style: none;
-  }
+ul {
+  list-style: none;
+}
 </style>

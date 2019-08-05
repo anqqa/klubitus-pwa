@@ -1,52 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
-import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
+import { Repository } from 'typeorm';
 
-import { PaginationService } from '../../common/pagination/pagination.service';
-import { Area } from '../areas/area.entity';
-import { AreasService } from '../areas/areas.service';
+import { BaseCrudService } from '../../common/basecrud.service';
 import { Topic } from './topic.entity';
-import { TopicsQuery } from './topics.dto';
 
 @Injectable()
-export class TopicsService {
-  constructor(
-    private areasService: AreasService,
-    @InjectRepository(Topic)
-    private readonly topicRepository: Repository<Topic>,
-  ) {}
-
-  async findAll(query: TopicsQuery): Promise<Topic[]> {
-    const areaIds: number[] = await this.areasService.getAccessibleIds();
-    const relations = ['author', 'last_post', 'last_post.author'];
-
-    // Filter by area
-    let areaFilter;
-    if ('area_id' in query) {
-      areaFilter = query.area_id;
-
-      if (!areaIds.includes(areaFilter)) {
-        throw new EntityNotFoundError(Area, areaFilter);
-      }
-    } else {
-      areaFilter = In(areaIds);
-      relations.push('area');
-    }
-
-    // Pagination
-    const { take, skip } = PaginationService.parseQuery(query, 20, 100);
-
-    return await this.topicRepository.find({
-      order: { last_post_at: 'DESC' },
-      relations,
-      skip,
-      take,
-      where: { forum_area_id: areaFilter },
-    });
-  }
-
-  async get(topicId: number): Promise<Topic> {
-    return await this.topicRepository.findOneOrFail(topicId, { relations: ['area', 'author'] });
+export class TopicsService extends BaseCrudService<Topic> {
+  constructor(@InjectRepository(Topic) repo: Repository<Topic>) {
+    super(repo);
   }
 }

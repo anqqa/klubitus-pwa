@@ -53,7 +53,9 @@ services:
       - "traefik.enable=false"
 
   api:
-    build: ./api
+    build:
+      context: .
+      dockerfile: ./api/Dockerfile
     container_name: klubitus-api
     restart: always
     command: yarn start
@@ -94,7 +96,9 @@ services:
       - reverse-proxy
 
   client:
-    build: ./client
+    build:
+      context: .
+      dockerfile: ./client/Dockerfile
     container_name: klubitus-client
     restart: always
     command: yarn dev

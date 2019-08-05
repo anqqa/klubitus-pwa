@@ -12,20 +12,28 @@
     "rest",
     "api"
   ],
+  "workspaces": {
+    "nohoist": [
+      "patch-package",
+      "@nestjsx/crud-typeorm"
+    ]
+  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "lint": "tslint -p tsconfig.json",
-    "precommit": "lint-staged",
+    "lint": "wotan -p tsconfig.json",
+    "postinstall": "patch-package",
     "start": "nodemon -L"
   },
   "dependencies": {
-    "@nestjs/common": "^6.3.1",
-    "@nestjs/core": "^6.3.1",
+    "@nestjs/common": "^6.5.2",
+    "@nestjs/core": "^6.5.2",
     "@nestjs/passport": "^6.1.0",
-    "@nestjs/platform-fastify": "^6.3.1",
-    "@nestjs/swagger": "^3.0.2",
-    "@nestjs/typeorm": "^6.1.2",
-    "aws-sdk": "^2.474.0",
+    "@nestjs/platform-fastify": "^6.5.2",
+    "@nestjs/swagger": "^3.1.0",
+    "@nestjs/typeorm": "^6.1.3",
+    "@nestjsx/crud": "^4.2.0",
+    "@nestjsx/crud-typeorm": "^4.2.0",
+    "aws-sdk": "^2.493.0",
     "axios": "^0.19.0",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.2.3",
@@ -33,11 +41,11 @@
     "date-fns": "^1.30.1",
     "dotenv": "^6.2.0",
     "exif-reader": "^1.0.2",
-    "fastify": "^2.5.0",
-    "fastify-multipart": "^1.0.0",
+    "fastify": "^2.7.1",
+    "fastify-multipart": "^1.0.1",
     "fastify-swagger": "^2.4.0",
-    "fs-extra": "^8.0.1",
-    "lodash": "^4.17.11",
+    "fs-extra": "^8.1.0",
+    "lodash": "^4.17.14",
     "mime-types": "^2.1.24",
     "passport": "^0.4.0",
     "passport-http-bearer": "^1.0.1",
@@ -46,28 +54,25 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.5.2",
     "sharp": "^0.22.1",
+    "ts-node": "^8.3.0",
     "typeorm": "^0.2.18",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "@nestjs/cli": "^6.5.0",
+    "@nestjs/cli": "^6.6.0",
     "@types/bcryptjs": "^2.4.2",
-    "@types/fs-extra": "^7.0.0",
-    "@types/lodash": "^4.14.134",
+    "@types/fs-extra": "^8.0.0",
+    "@types/lodash": "^4.14.136",
     "@types/mime-types": "^2.1.0",
     "@types/node": "^11.13.4",
     "@types/passport": "^1.0.0",
     "@types/passport-http-bearer": "^1.0.33",
     "@types/pump": "^1.1.0",
     "@types/sharp": "^0.22.2",
-    "@types/uuid": "^3.4.4",
-    "eslint": "^5.16.0",
-    "eslint-plugin-promise": "^4.1.1",
-    "lint-staged": "^8.2.0",
+    "@types/uuid": "^3.4.5",
     "nodemon": "^1.19.1",
+    "patch-package": "^6.1.2",
     "ts": "^0.2.2",
-    "ts-node": "^8.2.0",
-    "tslint": "^5.17.0",
-    "typescript": "^3.5.1"
+    "typescript": "^3.5.3"
   }
 }

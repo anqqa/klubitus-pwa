@@ -16,8 +16,10 @@
 
         <hr />
 
-        &copy; <span v-html="copyright" />, <nuxt-link to="/">{{ image.author.username }}</nuxt-link
-        ><br />
+        &copy;
+        <span v-html="copyright" />,
+        <nuxt-link to="/">{{ image.author.username }}</nuxt-link>
+        <br />
         <small>{{ comments }}, {{ views }}</small>
         <br />
         <button class="button is-tiny" @click="isEditing = !isEditing">
@@ -47,97 +49,101 @@
   </main>
 </template>
 
-<script>
+<script lang="ts">
 import format from 'date-fns/format';
 import sortBy from 'lodash/sortBy';
+import { Component, Vue } from 'nuxt-property-decorator';
 
-import CommentList from '../../../components/CommentList';
-import ResponsiveImage from '../../../components/ResponsiveImage';
-import Exif from '../../../components/image/Exif';
-import Labels from '../../../components/image/Labels';
-import Tags from '../../../components/image/Tags';
-import Gallery from '../../../models/Gallery';
-import { count, slug } from '../../../utils/text';
+import CommentList from '@/components/CommentList.vue';
+import Exif from '@/components/image/Exif.vue';
+import Labels from '@/components/image/Labels.vue';
+import Tags from '@/components/image/Tags.vue';
+import ResponsiveImage from '@/components/ResponsiveImage.vue';
+import Gallery from '@/models/Gallery';
+import Image from '@/models/Image';
+import { count, slug } from '@/utils/text';
 
-export default {
+@Component({
+  components: { CommentList, Exif, Labels, ResponsiveImage, Tags },
+})
+export default class SingleImage extends Vue {
+  gallery: Gallery | null = null;
+  image: Image | null = null;
+  isEditing = false;
+  showDetails = false;
+
   async asyncData({ params }) {
     const galleryId = parseInt(params.id);
     const imageId = parseInt(params.image);
-    const gallery = await Gallery.find(galleryId);
-    const image = await gallery.images().find(imageId);
+    const gallery = await new Gallery().find(galleryId);
+    const image = await gallery
+      .images()
+      .relation('author', ['username'])
+      .relation('comments')
+      .relation('notes')
+      .find(imageId);
 
     return { gallery, image };
-  },
+  }
 
-  components: { CommentList, Exif, Labels, ResponsiveImage, Tags },
+  get back() {
+    return this.localePath({
+      name: 'galleries-id',
+      params: { id: `${this.gallery!.id}-${slug(this.gallery!.name)}` },
+    });
+  }
 
-  data: () => ({
-    isEditing: false,
-    showDetails: false,
-  }),
+  get comments() {
+    return count(this.image!.comment_count!, 'comment', 'comments');
+  }
 
-  computed: {
-    back() {
-      return this.localePath({
-        name: 'galleries-id',
-        params: { id: `${this.gallery.id}-${slug(this.gallery.name)}` },
-      });
-    },
+  get copyright() {
+    const createdAt = new Date(this.image!.created_at!);
+    const copyright = [createdAt.getFullYear()];
 
-    comments() {
-      return count(this.image.comment_count, 'comment', 'comments');
-    },
+    if (copyright[0] !== new Date().getFullYear()) {
+      copyright.push(new Date().getFullYear());
+    }
 
-    copyright() {
-      const createdAt = new Date(this.image.created_at);
-      const copyright = [createdAt.getFullYear()];
+    return copyright.join(' &ndash; ');
+  }
 
-      if (copyright[0] !== new Date().getFullYear()) {
-        copyright.push(new Date().getFullYear());
-      }
+  get description() {
+    if (!this.image!.notes) {
+      return this.image!.description;
+    }
 
-      return copyright.join(' &ndash; ');
-    },
+    const description: string[] = [];
 
-    description() {
-      if (!this.image.notes) {
-        return this.image.description;
-      }
+    sortBy(this.image!.notes, ['x', 'width']).forEach(note => description.push(note.name));
 
-      const description = [];
+    return description.join(', ');
+  }
 
-      sortBy(this.image.notes, ['x', 'width']).forEach(note => description.push(note.name));
+  get eventInfo() {
+    if (this.gallery!.event) {
+      return (
+        format(this.gallery!.event.begins_at!, 'MMMM D, YYYY') +
+        ' @ ' +
+        this.gallery!.event.venue_name +
+        ', ' +
+        this.gallery!.event.city_name
+      );
+    } else {
+      return format(this.gallery!.event_date!, 'MMMM D, YYYY');
+    }
+  }
 
-      return description.join(', ');
-    },
+  get eventName() {
+    return this.gallery!.event ? this.gallery!.event.name : this.gallery!.name;
+  }
 
-    eventInfo() {
-      if (this.gallery.event) {
-        return (
-          format(this.gallery.event.begins_at, 'MMMM D, YYYY') +
-          ' @ ' +
-          this.gallery.event.venue_name +
-          ', ' +
-          this.gallery.event.city_name
-        );
-      } else {
-        return format(this.gallery.event_date, 'MMMM D, YYYY');
-      }
-    },
+  get origSize() {
+    return { width: this.image!.width, height: this.image!.height };
+  }
 
-    eventName() {
-      return this.gallery.event ? this.gallery.event.name : this.gallery.name;
-    },
-
-    origSize() {
-      return { width: this.image.width, height: this.image.height };
-    },
-
-    views() {
-      return count(this.image.view_count, 'view', 'views');
-    },
-  },
-};
+  get views() {
+    return count(this.image!.view_count!, 'view', 'views');
+  }
+}
 </script>
-
-<style scoped></style>

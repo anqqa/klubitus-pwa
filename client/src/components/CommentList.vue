@@ -1,8 +1,6 @@
 <template>
-
   <ul>
     <li v-for="comment in commentList" :key="comment.id" class="media">
-
       <div class="media-left">
         <Avatar :image-url="comment.avatar" :name="comment.author.username" />
       </div>
@@ -10,42 +8,38 @@
       <div class="media-content">
         <nuxt-link to="/">{{ comment.author.username }}</nuxt-link>
         <small :title="comment.created_at" class="pull-right">{{ comment.ago }}</small>
-        <br>
+        <br />
         {{ comment.comment }}
       </div>
     </li>
   </ul>
-
 </template>
 
+<script lang="ts">
+import { Component, Prop, Vue } from 'nuxt-property-decorator';
 
-<script>
-  import Avatar from './Avatar';
-  import { fuzzyTimeDistance } from '../utils/time';
-  import { avatarUrl } from '../utils/url';
+import { fuzzyTimeDistance } from '@/utils/time';
+import { avatarUrl } from '@/utils/url';
+import Avatar from './Avatar.vue';
 
+@Component({
+  components: { Avatar },
+})
+export default class CommentList extends Vue {
+  @Prop({ default: [] }) comments!: any[];
 
-  export default {
-    components: { Avatar },
+  get commentList() {
+    const comments: any[] = [];
 
-    props: {
-      comments: { default: () => [], type: Array },
-    },
+    this.comments.slice(0).forEach(comment => {
+      comments.push({
+        ...comment,
+        ago: fuzzyTimeDistance(new Date(comment.created_at)),
+        avatar: avatarUrl(comment.author.avatar_url),
+      });
+    });
 
-    computed: {
-      commentList() {
-        const comments = [];
-
-        this.comments.slice(0).forEach(comment => {
-          comments.push({
-            ...comment,
-            ago:    fuzzyTimeDistance(new Date(comment.created_at)),
-            avatar: avatarUrl(comment.author.avatar_url),
-          });
-        });
-
-        return comments;
-      }
-    }
-  };
+    return comments;
+  }
+}
 </script>

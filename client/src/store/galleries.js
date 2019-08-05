@@ -40,21 +40,20 @@ export const actions = {
    * @returns  {Promise<void>}
    */
   async [Actions.GET_GALLERIES_BY_DATE]({ commit }, { year, month, day, page, limit }) {
-    let params;
+    const query = new Gallery()
+      .relation('default_image')
+      .relation('event')
+      .sort('updated_at', 'DESC')
+      .limit(limit || PAGE_SIZE)
+      .page(page || 1);
 
     if (year) {
       const { from, to } = dateRange(year, month, undefined, day);
 
-      params = {
-        from: format(from, 'YYYY-MM-DD'),
-        to: format(to, 'YYYY-MM-DD'),
-      };
+      query.filter('event_date', 'between', [format(from, 'YYYY-MM-DD'), format(to, 'YYYY-MM-DD')]);
     }
 
-    const galleries = await Gallery.params(params)
-      .limit(limit || PAGE_SIZE)
-      .page(page || 1)
-      .get();
+    const galleries = await query.get();
 
     // Set galleries
     commit(Mutations.SET_GALLERIES, galleries);

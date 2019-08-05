@@ -1,100 +1,94 @@
 <template>
-  <picture :class="{'is-responsive': isResponsive}">
-    <source v-if="isResponsive && !isWebp"
-            :srcset="srcsetWebp"
-            :sizes="sizes"
-            type="image/webp">
-    <img v-if="isResponsive"
-         :alt="alt"
-         :src="defaultSrc"
-         :srcset="srcset"
-         :sizes="sizes"
-         :style="style"
-         :title="title">
-    <img v-else
-         :alt="alt"
-         :src="defaultSrc"
-         :style="style"
-         :title="title">
+  <picture :class="{ 'is-responsive': isResponsive }">
+    <source v-if="isResponsive && !isWebp" :srcset="srcsetWebp" :sizes="sizes" type="image/webp" />
+    <img
+      v-if="isResponsive"
+      :alt="alt"
+      :src="defaultSrc"
+      :srcset="srcset"
+      :sizes="sizes"
+      :style="style"
+      :title="title"
+    />
+    <img v-else :alt="alt" :src="defaultSrc" :style="style" :title="title" />
   </picture>
 </template>
 
+<script lang="ts">
+import { Component, Prop, Vue } from 'nuxt-property-decorator';
 
-<script>
-  export default {
-    name: 'ResponsiveImage',
+const availableWidths = [1920, 1600, 1440, 1024, 768, 640, 320];
+const defaultWidth = 1600;
 
-    props: {
-      alt:   { type: String, default: undefined },
-      color: { type: String, default: undefined },
-      ratio: { type: Number, default: undefined },
-      src:   { type: String, default: undefined, required: true },
-      title: { type: String, default: undefined },
+@Component({})
+export default class ResponsiveImage extends Vue {
+  @Prop() alt?: string;
+  @Prop() color?: string;
+  @Prop() ratio?: number;
+  @Prop({ default: '' }) src!: string;
+  @Prop() title?: string;
 
-      desktopSize: { type: String, default: '100vw', },
-      mobileSize:  { type: String, default: undefined, },
-      tabletSize:  { type: String, default: undefined, },
-      maxWidth:    { type: Number, default: 1600 },
-    },
+  @Prop({ default: defaultWidth }) desktopSize?: string;
+  @Prop() mobileSize?: string;
+  @Prop() tabletSize?: string;
+  @Prop({ default: 1600 }) maxWidth!: number;
 
-    data: () => ({
-      availableWidths: [1920, 1600, 1440, 1024, 768, 640, 320],
-      defaultWidth:    1600,
-    }),
+  get defaultSrc() {
+    return this.isResponsive ? this.urlWithWidth(Math.min(defaultWidth, this.maxWidth)) : this.src;
+  }
 
-    computed: {
-      defaultSrc() {
-        return this.isResponsive ? this.urlWithWidth(Math.min(this.defaultWidth, this.maxWidth)) : this.src;
-      },
+  get isResponsive() {
+    return !!(process.env.CDN_HOST && this.src.includes(process.env.CDN_HOST));
+  }
 
-      isResponsive() {
-        return !!(process.env.CDN_HOST && this.src.includes(process.env.CDN_HOST));
-      },
+  get isWebp() {
+    return this.src.toLowerCase().endsWith('webp');
+  }
 
-      isWebp() {
-        return this.src.toLowerCase().endsWith('webp');
-      },
+  get sizes() {
+    const sizes = [this.desktopSize];
 
-      sizes() {
-        const sizes = [this.desktopSize];
+    if (typeof this.tabletSize !== 'undefined' && this.tabletSize !== this.desktopSize) {
+      sizes.unshift('(max-width: 767px) ' + this.tabletSize);
+    }
 
-        if (typeof this.tabletSize !== 'undefined' && this.tabletSize !== this.desktopSize) {
-          sizes.unshift('(max-width: 767px) ' + this.tabletSize);
-        }
+    if (typeof this.mobileSize !== 'undefined' && this.mobileSize !== this.desktopSize) {
+      sizes.unshift('(max-width: 479px) ' + this.mobileSize);
+    }
 
-        if (typeof this.mobileSize !== 'undefined' && this.mobileSize !== this.desktopSize) {
-          sizes.unshift('(max-width: 479px) ' + this.mobileSize);
-        }
+    return sizes.join(', ');
+  }
 
-        return sizes.join(', ');
-      },
+  get srcset() {
+    return this.widths()
+      .map(width => this.urlWithWidth(width) + ` ${width}w`)
+      .join(', ');
+  }
 
-      srcset() {
-        return this.widths().map(width => this.urlWithWidth(width) + ` ${width}w`).join(', ');
-      },
+  get srcsetWebp() {
+    return this.widths()
+      .map(width => this.urlWithWidth(width, 'webp') + ` ${width}w`)
+      .join(', ');
+  }
 
-      srcsetWebp() {
-        return this.widths().map(width => this.urlWithWidth(width, 'webp') + ` ${width}w`).join(', ');
-      },
+  get style() {
+    return this.color && 'background: ' + this.color;
+  }
 
-      style() {
-        return this.color && 'background: ' + this.color;
-      }
-    },
+  urlWithWidth(width: number, ext?: string) {
+    const height = this.ratio ? Math.round(width / this.ratio) : 0;
+    const url = this.src.replace(
+      process.env.CDN_HOST as string,
+      `${process.env.CDN_HOST}/r/${width}x${height}`
+    );
 
-    methods: {
-      urlWithWidth(width, ext) {
-        const height = this.ratio ? Math.round(width / this.ratio) : 0;
-        const url    = this.src.replace(process.env.CDN_HOST, `${process.env.CDN_HOST}/r/${width}x${height}`);
+    return typeof ext !== 'undefined' ? `${url}.${ext}` : url;
+  }
 
-        return (typeof ext !== 'undefined') ? `${url}.${ext}` : url;
-      },
+  widths() {
+    const widths = availableWidths.filter(width => width <= this.maxWidth);
 
-      widths() {
-        const widths = this.availableWidths.filter(width => width <= this.maxWidth);
-
-        return (widths.length ? widths : [this.maxWidth]);
-      }
-    },
-  };
+    return widths.length ? widths : [this.maxWidth];
+  }
+}
 </script>

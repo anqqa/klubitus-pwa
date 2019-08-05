@@ -29,13 +29,15 @@
   </section>
 </template>
 
-<script>
+<script lang="ts">
 import format from 'date-fns/format';
+import { Component, Prop, Vue } from 'nuxt-property-decorator';
 
-import Avatar from './Avatar';
-import NewsfeedItem from '../models/NewsfeedItem';
-import { avatarUrl } from '../utils/url';
-import { slug } from '../utils/text';
+import { AsyncComputed } from '@/decorators/AsyncComputed';
+import NewsfeedItem from '@/models/NewsfeedItem';
+import { slug } from '@/utils/text';
+import { avatarUrl } from '@/utils/url';
+import Avatar from './Avatar.vue';
 
 const newsfeedTexts = {
   blog: {
@@ -78,109 +80,123 @@ const newsfeedTexts = {
   },
 };
 
-export default {
-  name: 'Newsfeed',
+interface Item {
+  id: string;
+  icon: string | null;
+  text: string;
+  url: string;
+}
 
+interface ItemGroup {
+  avatar: string;
+  created_at: string;
+  items: Item[];
+  stamp: string;
+  text: string;
+  username: string;
+}
+
+@Component({
   components: { Avatar },
+})
+export default class Newsfeed extends Vue {
+  private static newsfeedText(itemClass: string, itemType: string, multiple: boolean) {
+    if (itemClass in newsfeedTexts && itemType in newsfeedTexts[itemClass]) {
+      return newsfeedTexts[itemClass][itemType][~~multiple];
+    }
 
-  props: {
-    limit: { default: 10, type: Number },
-  },
+    return 'did something weird';
+  }
 
-  methods: {
-    newsfeedItem(item) {
-      let icon = null;
-      let model = null;
-      let text = item.class + ' ' + item.type;
-      let url = '/';
+  @Prop({ default: 10 }) limit!: number;
 
-      switch (item.class) {
-        case 'blog':
-          model = item.target_blog_entry || {};
-          icon = 'pen';
-          text = model.name || '(Untitled)';
-          break;
+  groups: ItemGroup[] = [];
 
-        case 'events':
-          model = item.target_event || {};
-          icon = item.type === 'favorite' ? 'star' : 'calendar-alt';
-          text = model.name || '(Untitled)';
-          url = this.localePath({
-            name: 'events-id',
-            params: { id: `${model.id}-${slug(model.name)}` },
-          });
-          break;
+  async mounted() {
+    const groups: ItemGroup[] = [];
 
-        case 'forum':
-          model = item.target_forum_topic || {};
-          icon = item.type === 'reply' ? 'conversation' : 'message';
-          text = model.name || '(Untitled)';
-          url = this.localePath({
-            name: 'forum-topic-id',
-            params: { id: `${model.id}-${slug(model.name)}` },
-          });
-          break;
+    // @ts-ignore
+    const data = (await new NewsfeedItem()
+      .limit(Math.min(this.limit || 10, 50))
+      .get()) as NewsfeedItem[][];
 
-        case 'galleries':
-          break;
+    data.forEach(group => {
+      const first = group[0];
+      const items: Item[] = [];
 
-        case 'music':
-          model = item.target_track || {};
-          icon = item.type === 'track' ? 'album' : 'music';
-          text = model.name || '(Untitled)';
-          break;
+      group.forEach(item => items.push(this.newsfeedItem(item)));
 
-        case 'user':
-          model = item.target_user || {};
-          icon = 'user';
-          text = model.username || '(Unknown)';
-          break;
-
-        case 'venues':
-          model = item.target_venue || {};
-          icon = 'map';
-          text = model.name || '(Untitled)';
-          break;
-      }
-
-      return { id: item.id, icon, text, url };
-    },
-
-    newsfeedText(itemClass, itemType, multiple) {
-      if (itemClass in newsfeedTexts && itemType in newsfeedTexts[itemClass]) {
-        return newsfeedTexts[itemClass][itemType][~~multiple];
-      }
-
-      return 'did something weird';
-    },
-  },
-
-  asyncComputed: {
-    async groups() {
-      const groups = [];
-
-      const data = await NewsfeedItem.limit(Math.min(this.limit || 10, 50)).get();
-
-      data.forEach(group => {
-        const first = group[0];
-        const items = [];
-
-        group.forEach(item => items.push(this.newsfeedItem(item)));
-
-        groups.push({
-          avatar: avatarUrl(first.user.avatar_url),
-          created_at: first.created_at,
-          stamp: format(first.created_at, 'HH:mm'),
-          text: this.newsfeedText(first.class, first.type, group.length > 1),
-          username: first.user.username,
-          items,
-        });
+      groups.push({
+        avatar: avatarUrl(first.user!.avatar_url),
+        created_at: first.created_at!,
+        stamp: format(first.created_at!, 'HH:mm'),
+        text: Newsfeed.newsfeedText(first.class!, first.type!, group.length > 1),
+        username: first.user!.username,
+        items,
       });
+    });
 
-      return groups;
-    },
-  },
-};
+    this.groups = groups;
+  }
+
+  private newsfeedItem(item: NewsfeedItem): Item {
+    let icon: string | null = null;
+    let model: Record<string, any>;
+    let text: string = item.class + ' ' + item.type;
+    let url: string = '/';
+
+    switch (item.class) {
+      case 'blog':
+        model = item.target_blog_entry || {};
+        icon = 'pen';
+        text = model.name || '(Untitled)';
+        break;
+
+      case 'events':
+        model = item.target_event || {};
+        icon = item.type === 'favorite' ? 'star' : 'calendar-alt';
+        text = model.name || '(Untitled)';
+        url = this.localePath({
+          name: 'events-id',
+          params: { id: `${model.id}-${slug(model.name)}` },
+        });
+        break;
+
+      case 'forum':
+        model = item.target_forum_topic || {};
+        icon = item.type === 'reply' ? 'conversation' : 'message';
+        text = model.name || '(Untitled)';
+        url = this.localePath({
+          name: 'forum-topic-id',
+          params: { id: `${model.id}-${slug(model.name)}` },
+        });
+        break;
+
+      case 'galleries':
+        break;
+
+      case 'music':
+        model = item.target_track || {};
+        icon = item.type === 'track' ? 'album' : 'music';
+        text = model.name || '(Untitled)';
+        break;
+
+      case 'user':
+        model = item.target_user || {};
+        icon = 'user';
+        text = model.username || '(Unknown)';
+        break;
+
+      case 'venues':
+        model = item.target_venue || {};
+        icon = 'map';
+        text = model.name || '(Untitled)';
+        break;
+    }
+
+    return { id: item.id, icon, text, url } as Item;
+  }
+}
 </script>
 
 <style scoped>

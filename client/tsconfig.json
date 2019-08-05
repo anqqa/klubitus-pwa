@@ -12,13 +12,14 @@
     "noEmit": true,
     "noImplicitAny": false,
     "paths": {
-      "@/*": ["*"],
-      "~/*": ["*"]
+      "@/*": ["./src/*"],
+      "~/*": ["./src/*"],
+      "*": ["./src/@types/*"]
     },
+    "sourceMap": true,
     "strict": true,
     "target": "esnext",
-    "types": ["@types/node", "@nuxt/vue-app"],
-    "sourceMap": true
+    "types": ["facebook-js-sdk", "node", "nuxt-i18n", "@nuxt/vue-app", "@nuxtjs/axios", "vue"]
   },
 
   "exclude": ["node_modules"]

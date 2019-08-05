@@ -1,30 +1,57 @@
-import { Controller, Get, Param, ParseIntPipe, Query, UseInterceptors } from '@nestjs/common';
-import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger';
+import { Controller } from '@nestjs/common';
+import { ApiUseTags } from '@nestjs/swagger';
+import {
+  Crud,
+  CrudController,
+  CrudRequest,
+  GetManyDefaultResponse,
+  Override,
+  ParsedRequest,
+} from '@nestjsx/crud';
 
-import { TransformerInterceptor } from '../../common/interceptors/transformer.interceptor';
-import { Topic, TopicsQuery } from './topics.dto';
+import { AreasService } from '../areas/areas.service';
+import { Topic } from './topic.entity';
 import { TopicsService } from './topics.service';
 
+@Crud({
+  model: { type: Topic },
+  query: {
+    join: {
+      area: { allow: ['id', 'name'] },
+      author: { allow: ['avatar_url', 'id', 'signature', 'title', 'username'] },
+    },
+    maxLimit: 500,
+  },
+  routes: {
+    only: ['getManyBase', 'getOneBase'],
+  },
+})
 @ApiUseTags('Forum')
 @Controller('topics')
-export class TopicsController {
-  constructor(private readonly topicsService: TopicsService) {}
+export class TopicsController implements CrudController<Topic> {
+  constructor(readonly service: TopicsService, readonly areasService: AreasService) {}
 
-  @ApiOperation({ title: 'List topics' })
-  @ApiOkResponse({ type: Topic, isArray: true })
-  @ApiNotFoundResponse({ description: 'Topics not found.' })
-  @UseInterceptors(new TransformerInterceptor(Topic))
-  @Get()
-  async getAll(@Query() query: TopicsQuery) {
-    return await this.topicsService.findAll(query);
+  get base(): CrudController<Topic> {
+    return this;
   }
 
-  @ApiOperation({ title: 'Get a topic' })
-  @ApiOkResponse({ type: Topic })
-  @UseInterceptors(new TransformerInterceptor(Topic))
-  @ApiNotFoundResponse({ description: 'Topic not found.' })
-  @Get(':id')
-  async getById(@Param('id', new ParseIntPipe()) id: number) {
-    return await this.topicsService.get(id);
+  @Override()
+  async getMany(
+    @ParsedRequest() req: CrudRequest
+  ): Promise<GetManyDefaultResponse<Topic> | Topic[]> {
+    const accessibleAreaIds = await this.areasService.getAccessibleIds();
+
+    req.parsed.filter.push({ field: 'forum_area_id', operator: 'in', value: accessibleAreaIds });
+
+    return this.base.getManyBase(req);
+  }
+
+  @Override()
+  async getOne(@ParsedRequest() req: CrudRequest): Promise<Topic> {
+    const accessibleAreaIds = await this.areasService.getAccessibleIds();
+
+    req.parsed.filter.push({ field: 'forum_area_id', operator: 'in', value: accessibleAreaIds });
+
+    return this.base.getOneBase(req);
   }
 }

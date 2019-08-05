@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { External } from '../users/externals/external.entity';
 import { Token } from '../users/tokens/token.entity';
 import { User } from '../users/user.entity';
-import { UsersModule } from '../users/users.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { FacebookService } from './facebook.service';
@@ -17,7 +16,6 @@ import { HttpStrategy } from './http.strategy';
   imports: [
     PassportModule.register({ defaultStrategy: 'bearer' }),
     TypeOrmModule.forFeature([External, Token, User]),
-    UsersModule,
   ],
   providers: [AuthService, FacebookService, HttpStrategy],
 })

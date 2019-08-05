@@ -1,21 +1,17 @@
 <template>
-
   <section>
     <article v-for="post in postList" :key="post.id" class="media">
       <div class="media-left">
-        <figure class="image avatar is-48x48">
-          <img v-if="post.avatar" :src="post.avatar" alt="Avatar">
-          <span v-else
-                :class="`theme-${post.avatarColor}`"
-                class="icon is-full">{{ post.username.substr(0, 2) }}</span>
-        </figure>
+        <Avatar :image-url="post.avatar" :name="post.username" />
       </div>
 
       <div class="media-content">
         <header>
           <span>
             <nuxt-link to="/">{{ post.username }}</nuxt-link>
-            <span v-if="post.author && post.author.title" class="has-text-tertiary"> &sdot; {{ post.author.title }}</span>
+            <span v-if="post.author && post.author.title" class="has-text-tertiary">
+              &sdot; {{ post.author.title }}</span
+            >
           </span>
           <span :title="post.created_at" class="pull-right">{{ post.ago }}</span>
         </header>
@@ -26,51 +22,52 @@
       </div>
     </article>
   </section>
-
 </template>
 
+<script lang="ts">
+import { Component, Prop, Vue } from 'nuxt-property-decorator';
 
-<script>
-  import { colorFromText} from '../../utils/text';
-  import { avatarUrl } from '../../utils/url';
-  import { fuzzyTimeDistance } from '../../utils/time';
+import Avatar from '@/components/Avatar.vue';
+import ForumPost from '@/models/ForumPost';
+import { colorFromText } from '@/utils/text';
+import { fuzzyTimeDistance } from '@/utils/time';
+import { avatarUrl } from '@/utils/url';
 
+@Component({
+  components: { Avatar },
+})
+export default class ForumPostList extends Vue {
+  @Prop() posts!: ForumPost[];
 
-  export default {
+  get postList() {
+    const posts: any[] = [];
 
-    props: {
-      posts: { default: () => [], type: Array },
-    },
+    this.posts.slice(0).forEach(post => {
+      const avatar =
+        post.author && post.author.avatar_url ? avatarUrl(post.author.avatar_url) : null;
+      const username = post.author ? post.author.username : post.author_name;
 
-    computed: {
-      postList() {
-        const posts = [];
+      posts.push({
+        ...post,
+        ago: fuzzyTimeDistance(new Date(post.created_at!)),
+        avatar,
+        avatarColor: colorFromText(username),
+        post: this.$md.render(post.post!),
+        signature:
+          post.author && post.author.signature
+            ? this.$md.render('--\n' + post.author.signature)
+            : null,
+        username,
+      });
+    });
 
-        this.posts.slice(0).forEach(post => {
-          const avatar   = post.author && post.author.avatar_url ? avatarUrl(post.author.avatar_url) : null;
-          const username = post.author ? post.author.username : post.author_name;
-
-          posts.push({
-            ...post,
-            ago:         fuzzyTimeDistance(new Date(post.created_at)),
-            avatar,
-            avatarColor: colorFromText(username),
-            post:        this.$md.render(post.post),
-            signature:   post.author && post.author.signature ? this.$md.render("--\n" + post.author.signature) : null,
-            username,
-          })
-        });
-
-        return posts;
-      }
-    }
-
-  };
+    return posts;
+  }
+}
 </script>
 
-
 <style scoped>
-  .signature {
-    font-family: monospace;
-  }
+.signature {
+  font-family: monospace;
+}
 </style>

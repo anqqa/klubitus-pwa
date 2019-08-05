@@ -1,0 +1,7 @@
+modules: "@fimbul/valtyr"
+
+valtyr:
+  overrides:
+    # Use Vé for .vue files
+    - files: "*.vue"
+      processor: "@fimbul/ve"

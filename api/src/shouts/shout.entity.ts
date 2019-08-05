@@ -1,29 +1,17 @@
 // tslint:disable:variable-name
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 
+import { BaseEntity } from '../common/base.entity';
 import { User } from '../users/user.entity';
 
 @Entity('shouts')
-export class Shout {
+export class Shout extends BaseEntity {
   @OneToOne(() => User)
   @JoinColumn({ name: 'author_id' })
   author: User;
 
   @Column()
   author_id: number;
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @PrimaryGeneratedColumn()
-  id: number;
 
   @Column()
   shout: string;

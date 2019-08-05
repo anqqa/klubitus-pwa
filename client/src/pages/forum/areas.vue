@@ -75,87 +75,84 @@
   </main>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
+<script lang="ts">
+import { Component, Vue } from 'nuxt-property-decorator';
 
-import Avatar from '../../components/Avatar';
-import ForumArea from '../../models/ForumArea';
-import { nFormatter, slug } from '../../utils/text';
-import { fuzzyTimeDistance } from '../../utils/time';
-import { avatarUrl } from '../../utils/url';
+import Avatar from '@/components/Avatar.vue';
+import ForumArea from '@/models/ForumArea';
+import { authStore } from '@/store/auth';
+import { nFormatter, slug } from '@/utils/text';
+import { fuzzyTimeDistance } from '@/utils/time';
+import { avatarUrl } from '@/utils/url';
 
-export default {
+@Component({
+  components: { Avatar },
+  head: { title: 'Forum areas' },
+})
+export default class ForumAreas extends Vue {
+  @authStore.Getter isAuthenticated!: boolean;
+
+  areas: ForumArea[] = [];
+
   async asyncData() {
-    const areas = await ForumArea.params({ details: true }).get();
+    const areas = await new ForumArea().getAll(true);
 
     return { areas };
-  },
+  }
 
-  components: { Avatar },
+  get groupList() {
+    const groups: Array<{ id: number; name: string; areas: any[] }> = [];
+    let areas: any[] = [];
 
-  computed: {
-    groupList() {
-      const groups = [];
-      let areas = [];
+    this.areas.slice(0).forEach((area: any) => {
+      if (!area.nest_depth) {
+        // Group
+        areas = [];
+        groups.push({ id: area.id, name: area.name, areas });
+      } else {
+        // Area
+        const hasAccess = this.isAuthenticated || !area.is_private;
+        let lastTopic = null;
 
-      this.areas.slice(0).forEach(area => {
-        if (!area.nest_depth) {
-          // Group
-          areas = [];
-          groups.push({ id: area.id, name: area.name, areas });
-        } else {
-          // Area
-          const hasAccess = this.isAuthenticated || !area.is_private;
-          let lastTopic = null;
+        if (hasAccess && area.last_topic) {
+          const last = area.last_topic.last_post || area.last_topic;
+          const avatar =
+            last.author && last.author.avatar_url ? avatarUrl(last.author.avatar_url) : null;
+          const username = last.author ? last.author.username : last.author_name;
 
-          if (hasAccess && area.last_topic) {
-            const last = area.last_topic.last_post || area.last_topic;
-            const avatar =
-              last.author && last.author.avatar_url ? avatarUrl(last.author.avatar_url) : null;
-            const username = last.author ? last.author.username : last.author_name;
-
-            lastTopic = {
-              ...area.last_topic,
-              ago: fuzzyTimeDistance(new Date(area.last_topic.last_post_at)),
-              avatar,
-              url: this.localePath({
-                name: 'forum-topic-id',
-                params: { id: `${area.last_topic_id}-${slug(area.last_topic.name)}` },
-              }),
-              username,
-              verb:
-                area.last_topic.first_post_id === area.last_topic.last_post_id
-                  ? 'started'
-                  : 'replied',
-            };
-          }
-
-          areas.push({
-            ...area,
-            lastTopic,
-            topics: nFormatter(area.topic_count, 1),
-            url: hasAccess
-              ? this.localePath({
-                  name: 'forum-area',
-                  params: { area: `${area.id}-${slug(area.name)}` },
-                })
-              : null,
-          });
+          lastTopic = {
+            ...area.last_topic,
+            ago: fuzzyTimeDistance(new Date(area.last_topic.last_post_at)),
+            avatar,
+            url: this.localePath({
+              name: 'forum-topic-id',
+              params: { id: `${area.last_topic_id}-${slug(area.last_topic.name)}` },
+            }),
+            username,
+            verb:
+              area.last_topic.first_post_id === area.last_topic.last_post_id
+                ? 'started'
+                : 'replied',
+          };
         }
-      });
 
-      return groups;
-    },
+        areas.push({
+          ...area,
+          lastTopic,
+          topics: nFormatter(area.topic_count, 1),
+          url: hasAccess
+            ? this.localePath({
+                name: 'forum-area',
+                params: { area: `${area.id}-${slug(area.name)}` },
+              })
+            : null,
+        });
+      }
+    });
 
-    ...mapGetters({
-      isAuthenticated: 'auth/isAuthenticated',
-    }),
-  },
-
-  head: {
-    title: 'Forum areas',
-  },
-};
+    return groups;
+  }
+}
 </script>
 
 <style scoped>

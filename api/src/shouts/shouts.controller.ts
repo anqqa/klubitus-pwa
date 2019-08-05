@@ -1,21 +1,27 @@
-import { Controller, Get, Param, ParseIntPipe, Query, UseInterceptors } from '@nestjs/common';
-import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger';
-import { TransformerInterceptor } from '../common/interceptors/transformer.interceptor';
-import { Pagination } from '../common/pagination/pagination.dto';
+import { Controller } from '@nestjs/common';
+import { ApiUseTags } from '@nestjs/swagger';
+import { Crud, CrudController } from '@nestjsx/crud';
 
-import { Shout } from './shouts.dto';
+import { Shout } from './shout.entity';
 import { ShoutsService } from './shouts.service';
 
+@Crud({
+  model: { type: Shout },
+  query: {
+    join: {
+      author: { allow: ['avatar_url', 'id', 'signature', 'title', 'username'] },
+    },
+  },
+  routes: {
+    only: ['getManyBase'],
+  },
+})
 @ApiUseTags('Shouts')
 @Controller('shouts')
-export class ShoutsController {
-  constructor(private readonly shoutsService: ShoutsService) {}
+export class ShoutsController implements CrudController<Shout> {
+  constructor(readonly service: ShoutsService) {}
 
-  @ApiOperation({ title: 'Get shouts' })
-  @ApiOkResponse({ type: Shout, isArray: true })
-  @UseInterceptors(new TransformerInterceptor(Shout))
-  @Get('/')
-  async getAll(@Query() query: Pagination) {
-    return await this.shoutsService.findAll(query);
+  get base(): CrudController<Shout> {
+    return this;
   }
 }

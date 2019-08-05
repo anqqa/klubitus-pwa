@@ -3,8 +3,11 @@ import {
   Controller,
   Get,
   Headers,
+  HttpCode,
+  HttpStatus,
   Post,
   Req,
+  Response,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -12,12 +15,15 @@ import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
   ApiConflictResponse,
+  ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiResponse,
   ApiUnauthorizedResponse,
   ApiUseTags,
 } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
+import { FastifyReply } from 'fastify';
 
 import { TransformerInterceptor } from '../common/interceptors/transformer.interceptor';
 import { User } from '../users/users.dto';
@@ -35,7 +41,12 @@ export class AuthController {
       'Unauthenticated user: log in if accounts connected, offer login/register if not.',
     title: 'Connect with Facebook',
   })
-  @ApiOkResponse({ description: 'Success' })
+  @ApiCreatedResponse({ description: 'Success', type: LoginResponse })
+  @ApiOkResponse({ description: 'Not yet connected', type: FacebookResponse })
+  @ApiResponse({
+    description: 'Authenticated user already connected',
+    status: HttpStatus.NO_CONTENT,
+  })
   @ApiConflictResponse({
     description: 'Facebook account mismatch, e.g. connected to another authenticated user',
   })
@@ -44,31 +55,34 @@ export class AuthController {
   async facebook(
     @Body() payload: FacebookPayload,
     @Req() { user: authenticated }: any,
-  ): Promise<LoginResponse | FacebookResponse | boolean> {
+    @Response() res: FastifyReply<any>
+  ) {
     const { access_token: fbToken, external_user_id: fbUserId } = payload;
 
-    const { email, existing, name, user } = await this.authService.facebook(
+    const { email, connected, is_new_user, name, user } = await this.authService.facebook(
       fbToken,
       fbUserId,
-      authenticated,
+      authenticated
     );
 
     if (user) {
       // Connected existing user?
-      if (existing) {
-        return true;
+      if (connected) {
+        return res.status(HttpStatus.NO_CONTENT).send();
       }
 
       const token = await this.authService.generateToken(user);
 
-      return plainToClass(LoginResponse, { token, user });
+      return res.status(HttpStatus.CREATED).send(plainToClass(LoginResponse, { token, user }));
     }
 
-    return plainToClass(FacebookResponse, { email, existing, name });
+    return res
+      .status(HttpStatus.OK)
+      .send(plainToClass(FacebookResponse, { email, name, is_new_user }));
   }
 
   @ApiOperation({ title: 'Login with email or username' })
-  @ApiOkResponse({ description: 'Success', type: LoginResponse })
+  @ApiCreatedResponse({ description: 'Success', type: LoginResponse })
   @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
   @UseInterceptors(new TransformerInterceptor(LoginResponse))
   @Post('login')
@@ -84,6 +98,7 @@ export class AuthController {
   @ApiUnauthorizedResponse({ description: 'Not authenticated' })
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
+  @HttpCode(HttpStatus.OK)
   @Post('logout')
   async logout(@Headers('authorization') authorization: string): Promise<any> {
     const [bearer, token] = authorization.split(' ');
