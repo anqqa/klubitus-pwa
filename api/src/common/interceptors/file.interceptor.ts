@@ -17,7 +17,7 @@ import { v4 as uuid } from 'uuid';
 
 const LOG_CONTEXT = 'FileInterceptor';
 
-interface File {
+export interface File {
   encoding?: string;
   fieldname?: string;
   filename?: string;

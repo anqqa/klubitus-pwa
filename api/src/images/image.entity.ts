@@ -1,5 +1,6 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:variable-name
+import { Label } from 'aws-sdk/clients/rekognition';
 import { Exclude } from 'class-transformer';
 import { isEmpty } from 'lodash';
 import { AfterLoad, Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
@@ -9,13 +10,6 @@ import { imageUrl } from '../common/helpers/url.util';
 import { User } from '../users/user.entity';
 import { Comment } from './comments/comment.entity';
 import { Note } from './notes/note.entity';
-
-interface Label {
-  Confidence: number;
-  Instances: object[];
-  Name: string;
-  Parents: Array<{ Name: string }>;
-}
 
 interface Tag {
   children?: Tag[];

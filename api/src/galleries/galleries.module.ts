@@ -13,6 +13,7 @@ import { GalleryImagesService } from './images/images.service';
 
 @Module({
   controllers: [GalleriesController, GalleryImagesController],
+  exports: [GalleriesService, GalleryImagesService],
   imports: [
     AuthModule,
     AwsModule.forRoot(
