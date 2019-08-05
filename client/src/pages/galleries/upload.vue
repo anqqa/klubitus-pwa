@@ -80,9 +80,9 @@
 
           <upload
             ref="upload"
-            endpoint="/galleries/upload"
+            :endpoint="uploadEndpoint"
             multiple
-            name="photos"
+            name="file"
             :metadata="metadata"
             @filesUpdated="files = $event"
           />
@@ -105,10 +105,10 @@ import format from 'date-fns/format';
 import debounce from 'lodash/debounce';
 import { Component, Vue } from 'nuxt-property-decorator';
 
+import Upload from '@/components/Upload.vue';
 import Event from '@/models/Event';
 import Gallery from '@/models/Gallery';
 import { nFormatter } from '@/utils/text';
-import Upload from '../../components/Upload.vue';
 
 const eventFields = ['begins_at', 'city_name', 'flyer_front_url', 'id', 'name', 'venue_name'];
 
@@ -118,6 +118,14 @@ const eventFields = ['begins_at', 'city_name', 'flyer_front_url', 'id', 'name', 
   watchQuery: ['event', 'gallery'],
 })
 export default class GalleriesUpload extends Vue {
+  event: Event | null = null;
+  events: Event[] = [];
+  files: any[] = [];
+  gallery: Gallery | null = null;
+  suggestions: any[] = [];
+
+  onInputChange = debounce(this.fetchEvents, 250);
+
   get eventDate() {
     if (this.event) {
       return new Date(this.event.begins_at!);
@@ -171,13 +179,14 @@ export default class GalleriesUpload extends Vue {
 
     return nFormatter(totalSize, 2, true);
   }
-  event: Event | null = null;
-  events: Event[] = [];
-  files: any[] = [];
-  gallery: Gallery | null = null;
-  suggestions: any[] = [];
 
-  onInputChange = debounce(this.fetchEvents, 250);
+  get uploadEndpoint() {
+    if (this.gallery) {
+      return '/' + this.gallery.images().endpoint();
+    } else if (this.event) {
+      return '/' + this.event.images().endpoint();
+    }
+  }
 
   async asyncData({ query }) {
     const eventId = parseInt(query.event);
