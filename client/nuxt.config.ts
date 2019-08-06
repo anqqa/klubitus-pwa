@@ -88,8 +88,8 @@ const config: NuxtConfiguration = {
       {
         defaultLocale: 'en',
         locales: [
-          { code: 'en', iso: 'en-US', langFile: 'en.js', name: 'English' },
-          { code: 'fi', iso: 'fi-FI', langFile: 'fi.js', name: 'suomi' },
+          { code: 'en', iso: 'en-US', langFile: 'en.ts', name: 'English' },
+          { code: 'fi', iso: 'fi-FI', langFile: 'fi.ts', name: 'suomi' },
         ],
 
         pages: {
@@ -123,6 +123,8 @@ const config: NuxtConfiguration = {
       },
     ],
   ],
+
+  devModules: [['@nuxtjs/vuetify', { optionsPath: '~/plugins/vuetify.options.ts' }]],
 
   router: {
     linkActiveClass: 'is-active',
