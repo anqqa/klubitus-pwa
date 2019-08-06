@@ -1,130 +1,97 @@
 <template>
-  <div :class="`theme-${theme} ${sidebar}`" class="layout">
-    <header class="navbar">
-      <section class="navbar-section">
-        <nuxt-link class="brand" to="/">
-          <img src="/logo.svg" align="center" /> {{ title }}
-        </nuxt-link>
+  <v-app id="klubitus" :dark="isThemeDark">
+    <v-app-bar app>
+      <v-toolbar-title class="mr-4 hidden-xs-only">Klubitus</v-toolbar-title>
 
-        <nav role="navigation" aria-label="main navigation">
-          <nuxt-link v-for="(item, index) in items" :key="index" :exact="item.exact" :to="item.url">
-            <span class="icon"><i :class="item.icon"/></span>
-            <span class="label">{{ item.title }}</span>
-          </nuxt-link>
-        </nav>
-      </section>
+      <v-divider inset vertical class="hidden-xs-only" />
 
-      <section class="navbar-section">
-        <nav class="search">
-          <div class="navbar-item is-expanded">
-            <div class="field">
-              <input type="text" placeholder="Search..." />
-            </div>
-          </div>
+      <v-toolbar-items class="mr-4 hidden-xs-only">
+        <v-btn
+          v-for="(item, index) in menu"
+          :key="index"
+          :exact="item.exact"
+          :to="item.to"
+          nuxt
+          text
+        >
+          <v-icon left>{{ item.icon }}</v-icon> {{ item.title }}
+        </v-btn>
+      </v-toolbar-items>
 
-          <section class="user">
-            <button v-if="isAuthenticated" @click="logout">Log Out</button>
-            <nuxt-link v-if="!isAuthenticated" :to="localePath('login')" class="button">
-              Log In
-            </nuxt-link>
-            <nuxt-link v-if="!isAuthenticated" :to="localePath('signup')" class="button">
-              Sign Up
-            </nuxt-link>
-          </section>
-        </nav>
-      </section>
-    </header>
+      <v-text-field class="mr-4" hide-details label="Search" prepend-inner-icon="mdi-magnify" />
 
-    <nuxt />
+      <v-divider inset vertical class="mr-4" />
 
-    <footer>
-      <nav class="navbar">
-        <div class="navbar-section hide-phone">
-          &copy; 2000 &ndash; 2018 Klubitus
-        </div>
+      <v-btn v-if="isAuthenticated" @click="logout">Log Out</v-btn>
+      <v-btn v-if="!isAuthenticated" :to="localePath('login')" nuxt>Log In</v-btn>
+      <v-btn v-if="!isAuthenticated" :to="localePath('signup')" nuxt>Sign Up</v-btn>
+    </v-app-bar>
 
-        <div class="navbar-section is-right">
-          <div class="button-group language">
-            <nuxt-link
-              v-for="loc in $i18n.locales"
-              :key="loc.code"
-              :to="switchLocalePath(loc.code)"
-              :value="loc.code"
-              active-class="is-primary"
-              class="button is-tiny"
-            >
-              {{ loc.name }}
-            </nuxt-link>
-          </div>
+    <v-bottom-navigation app shift class="hidden-sm-and-up">
+      <v-btn v-for="(item, index) in menu" :key="index" :exact="item.exact" :to="item.to" nuxt text>
+        <span>{{ item.title }}</span>
+        <v-icon>{{ item.icon }}</v-icon>
+      </v-btn>
+    </v-bottom-navigation>
 
-          <div class="theme">
-            <button
-              :class="{ 'is-hidden': theme === 'light' }"
-              class="button is-tiny"
-              @click="toggleTheme('light')"
-            >
-              <span class="icon is-small"><i class="bx bx-moon"/></span>
-            </button>
+    <v-content>
+      <nuxt />
+    </v-content>
 
-            <button
-              :class="{ 'is-hidden': theme === 'dark' }"
-              class="button is-tiny"
-              @click="toggleTheme('dark')"
-            >
-              <span class="icon is-small"><i class="bx bx-sun"/></span>
-            </button>
-          </div>
-        </div>
-      </nav>
-    </footer>
-  </div>
+    <v-footer app>
+      <div class="hidden-xs-only">
+        &copy; 2000 &ndash; 2019 Klubitus
+      </div>
+
+      <v-spacer class="hidden-xs-only" />
+
+      <v-icon class="mr-2">mdi-earth</v-icon>
+
+      <v-btn-toggle>
+        <v-btn
+          v-for="loc in $i18n.locales"
+          :key="loc.code"
+          :to="switchLocalePath(loc.code)"
+          :value="loc.code"
+          nuxt
+          x-small
+        >
+          {{ loc.name }}
+        </v-btn>
+      </v-btn-toggle>
+
+      <v-spacer class="hidden-sm-and-up" />
+
+      <v-btn @click="toggleTheme" class="ml-4" icon x-small>
+        <v-icon>mdi-theme-light-dark</v-icon>
+      </v-btn>
+    </v-footer>
+  </v-app>
 </template>
 
-<script>
-import { mapGetters, mapMutations } from 'vuex';
+<script lang="ts">
+import { Component, Vue } from 'nuxt-property-decorator';
 
-export default {
-  data() {
-    return {
-      drawer: true,
-      items: [
-        { title: 'Home', icon: 'bx bx-home-alt', url: this.localePath('index'), exact: true },
-        { title: 'Events', icon: 'bx bx-calendar', url: this.localePath('events') },
-        { title: 'Forum', icon: 'bx bx-message', url: this.localePath('forum') },
-        { title: 'Galleries', icon: 'bx bx-images', url: this.localePath('galleries') },
-        { title: 'Music', icon: 'bx bx-music', url: this.localePath('music') },
-      ],
-      title: 'Klubitus',
-    };
-  },
+import { authStore } from '@/store/auth';
+import { uiStore } from '@/store/ui';
 
-  computed: {
-    // isAuthenticated() { return !!this.$store.state.auth.user; },
-    locale: {
-      get() {
-        return this.$i18n.locale;
-      },
-      set() {},
-    },
-    sidebar() {
-      return this.$store.state.ui.sidebar ? 'has-sidebar' : '';
-    },
-    theme: {
-      get() {
-        return this.$store.state.ui.theme;
-      },
-      set(theme) {
-        this.toggleTheme(theme);
-      },
-    },
-    ...mapGetters('auth', ['isAuthenticated']),
-  },
+@Component({})
+export default class Layout extends Vue {
+  @authStore.Action logout!: () => void;
+  @authStore.Getter isAuthenticated!: boolean;
+  @uiStore.Getter isThemeDark!: boolean;
+  @uiStore.Mutation toggleTheme!: () => void;
 
-  methods: {
-    async logout() {
-      await this.$store.dispatch('auth/logout');
-    },
-    ...mapMutations('ui', ['toggleSidebar', 'toggleTheme']),
-  },
-};
+  menu = [
+    { to: this.localePath('index'), title: 'Home', icon: 'mdi-home', exact: true },
+    { to: this.localePath('events'), title: 'Events', icon: 'mdi-calendar' },
+    { to: this.localePath('forum'), title: 'Forum', icon: 'mdi-message-text' },
+    { to: this.localePath('galleries'), title: 'Galleries', icon: 'mdi-camera' },
+    { to: this.localePath('music'), title: 'Music', icon: 'mdi-music' },
+  ];
+
+  get locale() {
+    return this.$i18n.locale;
+  }
+}
 </script>

@@ -25,14 +25,14 @@ const config: NuxtConfiguration = {
     title: 'Klubitus',
     link: [
       { rel: 'icon', type: 'image/png', href: '/favicon.png' },
-      { rel: 'stylesheet', href: 'https://unpkg.com/normalize.css@8.0.0/normalize.css' },
-      { rel: 'stylesheet', href: 'https://unpkg.com/boxicons@1.7.1/css/boxicons.min.css' },
+      // { rel: 'stylesheet', href: 'https://unpkg.com/normalize.css@8.0.0/normalize.css' },
+      // { rel: 'stylesheet', href: 'https://unpkg.com/boxicons@1.7.1/css/boxicons.min.css' },
     ],
   },
   meta: {
     description: 'Clubbers guide to... Finland',
   },
-  css: ['@/assets/style/klubitus.scss'],
+  // css: ['@/assets/style/klubitus.scss'],
   plugins: ['~/plugins/axios', '~/plugins/vue-plugins'],
 
   /**
