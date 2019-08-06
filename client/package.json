@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "@nuxt/typescript": "^2.8.1",
+    "@nuxtjs/vuetify": "^1.2.0",
     "@types/facebook-js-sdk": "^3.3.0",
     "@types/js-cookie": "^2.2.2",
     "@types/lodash": "^4.14.134",
