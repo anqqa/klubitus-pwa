@@ -14,7 +14,7 @@
           v-for="(item, index) in menu"
           :exact="item.exact"
           :key="index"
-          :to="item.to"
+          :to="localePath(item.to)"
           nuxt
         >
           <v-list-item-icon>
@@ -70,13 +70,13 @@
 
     <v-content>
       <nuxt />
-    </v-content>
 
-    <v-footer app>
-      <div class="hidden-xs-only">
-        &copy; 2000 &ndash; 2019 Klubitus
-      </div>
-    </v-footer>
+      <v-footer>
+        <div class="hidden-xs-only">
+          &copy; 2000 &ndash; 2019 Klubitus
+        </div>
+      </v-footer>
+    </v-content>
   </v-app>
 </template>
 
@@ -94,11 +94,11 @@ export default class Layout extends Vue {
   @uiStore.State theme!: Theme;
 
   menu = [
-    { to: this.localePath('index'), title: 'Home', icon: 'mdi-home', exact: true },
-    { to: this.localePath('events'), title: 'Events', icon: 'mdi-calendar' },
-    { to: this.localePath('forum'), title: 'Forum', icon: 'mdi-message-text' },
-    { to: this.localePath('galleries'), title: 'Galleries', icon: 'mdi-camera' },
-    { to: this.localePath('music'), title: 'Music', icon: 'mdi-music' },
+    { to: 'index', title: 'Home', icon: 'mdi-home', exact: true },
+    { to: 'events', title: 'Events', icon: 'mdi-calendar' },
+    { to: 'forum', title: 'Forum', icon: 'mdi-message-text' },
+    { to: 'galleries', title: 'Galleries', icon: 'mdi-camera' },
+    { to: 'music', title: 'Music', icon: 'mdi-music' },
   ];
 
   sidebar: boolean | null = null;

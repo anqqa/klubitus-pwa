@@ -1,0 +1,6 @@
+@import '~vuetify/src/styles/styles.sass';
+
+$material-dark: map-merge($material-dark, (
+  'background': #212121,
+  'cards': mix(#fff, #212121, 5%),
+));

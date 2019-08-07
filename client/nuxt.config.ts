@@ -124,7 +124,16 @@ const config: NuxtConfiguration = {
     ],
   ],
 
-  devModules: [['@nuxtjs/vuetify', { optionsPath: '~/plugins/vuetify.options.ts' }]],
+  devModules: [
+    [
+      '@nuxtjs/vuetify',
+      {
+        customVariables: ['~/assets/styles/variables.scss'],
+        optionsPath: '~/plugins/vuetify.options.ts',
+        treeShake: true,
+      },
+    ],
+  ],
 
   router: {
     linkActiveClass: 'is-active',
