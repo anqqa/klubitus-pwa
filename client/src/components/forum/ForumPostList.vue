@@ -2,7 +2,7 @@
   <section>
     <article v-for="post in postList" :key="post.id" class="media">
       <div class="media-left">
-        <Avatar :image-url="post.avatar" :name="post.username" />
+        <avatar :src="post.avatar" :title="post.username" />
       </div>
 
       <div class="media-content">

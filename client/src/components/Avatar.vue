@@ -1,6 +1,6 @@
 <template>
-  <v-avatar :title="name" :color="color" :size="size">
-    <img v-if="imageUrl" :src="imageUrl" alt="Avatar" />
+  <v-avatar :color="color" v-bind="$attrs">
+    <img v-if="src" :src="src" alt="Avatar" />
     <span v-else class="white--text title">{{ initials }}</span>
   </v-avatar>
 </template>
@@ -12,16 +12,15 @@ import { colorFromText } from '@/utils/text';
 
 @Component({})
 export default class Avatar extends Vue {
-  @Prop() imageUrl!: string;
-  @Prop() name!: string;
-  @Prop() size!: number;
+  @Prop() title!: string;
+  @Prop() src!: string;
 
   get initials() {
-    return this.name ? this.name.substr(0, 2) : '??';
+    return this.title ? this.title.substr(0, 2) : '??';
   }
 
   get color() {
-    return colorFromText(this.name || '');
+    return colorFromText(this.title || '');
   }
 }
 </script>

@@ -2,7 +2,7 @@
   <ol>
     <li v-for="topic in topicList" :key="topic.id" class="media">
       <div class="media-left">
-        <Avatar :image-url="topic.avatar" :name="topic.username" />
+        <avatar :src="topic.avatar" :title="topic.username" />
       </div>
 
       <div class="media-content">

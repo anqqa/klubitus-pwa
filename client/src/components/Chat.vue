@@ -7,7 +7,7 @@
         <v-divider v-if="index > 0" :key="`${index}-divider`" inset />
         <v-list-item :key="index">
           <v-list-item-avatar>
-            <avatar :image-url="shout.avatar" :name="shout.author.username" />
+            <avatar :src="shout.avatar" :title="shout.author.username" size="40" />
           </v-list-item-avatar>
 
           <v-list-item-content>

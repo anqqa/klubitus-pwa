@@ -46,7 +46,7 @@
               <td v-if="area.lastTopic" class="hide-phone">
                 <div class="media">
                   <div class="media-left">
-                    <avatar :image-url="area.lastTopic.avatar" :name="area.lastTopic.username" />
+                    <avatar :src="area.lastTopic.avatar" :title="area.lastTopic.username" />
                   </div>
 
                   <div class="media-content">

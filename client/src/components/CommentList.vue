@@ -2,7 +2,7 @@
   <ul>
     <li v-for="comment in commentList" :key="comment.id" class="media">
       <div class="media-left">
-        <Avatar :image-url="comment.avatar" :name="comment.author.username" />
+        <avatar :src="comment.avatar" :title="comment.author.username" />
       </div>
 
       <div class="media-content">
