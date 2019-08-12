@@ -1,5 +1,22 @@
 @import '~vuetify/src/styles/styles.sass';
 
+$body-font-family: 'Lato', sans-serif;
+$heading-font-family: 'Montserrat', sans-serif;
+$font-weights: (
+  'thin': 200,
+  'light': 300,
+  'regular': 400,
+  'medium': 600,
+  'bold': 700,
+  'black': 900
+);
+
+@for $i from 1 through 6 {
+  $headings: map_merge($headings, (
+    'h' + $i: map_merge(map_get($headings, 'h' + $i), ('font-family': $heading-font-family))
+  ))
+}
+
 $material-dark: map-merge($material-dark, (
   'background': #212121,
   'cards': mix(#fff, #212121, 5%),

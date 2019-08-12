@@ -6,10 +6,15 @@ export default ({ app }) => ({
     dark: true,
     themes: {
       dark: {
-        anchor: colors.lightBlue.base,
-        primary: colors.pink.base,
+        // anchor: '#1db3cc',
+        accent: '#ffd500',
+        primary: '#ff3d99',
       },
-      light: {},
+      light: {
+        // anchor: '#229eb3',
+        accent: '#ffd500',
+        primary: '#ff3d99',
+      },
     },
   },
 });

@@ -1,15 +1,22 @@
 <template>
   <v-app id="klubitus" :dark="isDark">
     <v-navigation-drawer app v-model="sidebar">
-      <v-list-item two-line>
-        <v-list-item-content>
-          <v-list-item-title class="title">klubitus</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+      <v-toolbar flat>
+        <v-toolbar-items>
+          <v-btn class="primary mr-4 ml-n4" text>
+            <v-avatar size="28">
+              <v-img src="/logo.svg" />
+            </v-avatar>
+          </v-btn>
+        </v-toolbar-items>
+        <v-toolbar-title class="title">
+          KLUBITUS
+        </v-toolbar-title>
+      </v-toolbar>
 
       <v-divider />
 
-      <v-list nav dense>
+      <v-list dense shaped>
         <v-list-item
           v-for="(item, index) in menu"
           :exact="item.exact"
@@ -23,22 +30,6 @@
           <v-list-item-content>
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item-content>
-        </v-list-item>
-      </v-list>
-
-      <v-divider />
-
-      <v-list nav dense>
-        <v-list-item v-if="isAuthenticated" @click="logout" link>
-          <v-list-item-content>
-            <v-list-item-title>Log Out</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item v-if="!isAuthenticated" :to="localePath('login')" nuxt>
-          <v-list-item-content><v-list-item-title>Log In</v-list-item-title></v-list-item-content>
-        </v-list-item>
-        <v-list-item v-if="!isAuthenticated" :to="localePath('signup')" nuxt>
-          <v-list-item-content><v-list-item-title>Sign Up</v-list-item-title></v-list-item-content>
         </v-list-item>
       </v-list>
 
@@ -56,9 +47,14 @@
           </v-btn>
         </v-btn-toggle>
 
-        <v-btn @click.stop="isDark = !isDark" class="ml-4" icon x-small>
-          <v-icon>mdi-theme-light-dark</v-icon>
-        </v-btn>
+        <v-tooltip top>
+          <template v-slot:activator="{ on }">
+            <v-btn v-on="on" @click.stop="isDark = !isDark" class="ml-4" icon x-small>
+              <v-icon>mdi-theme-light-dark</v-icon>
+            </v-btn>
+          </template>
+          <span>Dark mode on/off</span>
+        </v-tooltip>
       </template>
     </v-navigation-drawer>
 
@@ -66,6 +62,12 @@
       <v-app-bar-nav-icon @click.stop="sidebar = !sidebar" />
 
       <v-text-field class="mr-4" hide-details label="Search" prepend-inner-icon="mdi-magnify" />
+
+      <v-btn v-if="isAuthenticated" @click.stop="logout" small>Log Out</v-btn>
+      <v-btn v-if="!isAuthenticated" :to="localePath('login')" nuxt small class="mr-2"
+        >Log In</v-btn
+      >
+      <v-btn v-if="!isAuthenticated" :to="localePath('signup')" nuxt small text>Sign Up</v-btn>
     </v-app-bar>
 
     <v-content>

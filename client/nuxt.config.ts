@@ -25,14 +25,18 @@ const config: NuxtConfiguration = {
     title: 'Klubitus',
     link: [
       { rel: 'icon', type: 'image/png', href: '/favicon.png' },
-      // { rel: 'stylesheet', href: 'https://unpkg.com/normalize.css@8.0.0/normalize.css' },
-      // { rel: 'stylesheet', href: 'https://unpkg.com/boxicons@1.7.1/css/boxicons.min.css' },
+      // { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Cairo:200,300,400,600,700,900&display=swap' },
+      {
+        rel: 'stylesheet',
+        href:
+          'https://fonts.googleapis.com/css?family=Lato:400,700|Montserrat:300,400,500&display=swap',
+      },
     ],
   },
   meta: {
     description: 'Clubbers guide to... Finland',
   },
-  // css: ['@/assets/style/klubitus.scss'],
+  css: ['@/assets/styles/klubitus.scss'],
   plugins: ['~/plugins/axios', '~/plugins/vue-plugins'],
 
   /**
@@ -129,6 +133,7 @@ const config: NuxtConfiguration = {
       '@nuxtjs/vuetify',
       {
         customVariables: ['~/assets/styles/variables.scss'],
+        defaultAssets: { font: false },
         optionsPath: '~/plugins/vuetify.options.ts',
         treeShake: true,
       },

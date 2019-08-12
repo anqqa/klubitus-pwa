@@ -1,0 +1,10 @@
+@import 'variables.scss';
+
+.user {
+  font-weight: map_get($font-weights, 'bold');
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
