@@ -20,6 +20,9 @@ import { Component, Vue } from 'nuxt-property-decorator';
 import Chat from '../components/Chat.vue';
 import Newsfeed from '../components/Newsfeed.vue';
 
-@Component({ components: { Chat, Newsfeed } })
+@Component({
+  components: { Chat, Newsfeed },
+  head: { title: 'Home' },
+})
 export default class Index extends Vue {}
 </script>
