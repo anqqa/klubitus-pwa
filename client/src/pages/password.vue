@@ -1,40 +1,37 @@
 <template>
-  <main class="is-center">
-    <section class="card">
-      <header>
-        <h1 class="h3">Forgot Password</h1>
-      </header>
+  <v-container class="fill-height" fluid>
+    <v-row align="center" justify="center">
+      <v-col cols="12" sm="8" md="4">
+        <v-card class="elevation-12">
+          <v-card-title>Forgot password</v-card-title>
 
-      <form class="card-content">
-        <p>
-          Enter your email and we will send you a password reset mail.
-        </p>
+          <v-form>
+            <v-card-text>
+              Enter your email and we will send you a password reset mail.
 
-        <div class="field">
-          <label for="input-email">Email</label>
-          <div class="control has-icon-left">
-            <input id="input-email" :value="email" name="email" required type="email" />
-            <span class="icon"><i class="bx bx-at"/></span>
-          </div>
-        </div>
+              <v-text-field
+                label="Email"
+                name="email"
+                prepend-icon="mdi-email"
+                required
+                type="email"
+              />
+            </v-card-text>
 
-        <button class="button is-primary is-full" type="submit">Reset Password</button>
-      </form>
+            <v-card-actions>
+              <v-btn color="primary" type="submit">Reset Password</v-btn>
 
-      <footer>
-        <nuxt-link :to="localePath('login')">Log In</nuxt-link>
-      </footer>
-    </section>
-  </main>
+              <v-spacer />
+
+              <nuxt-link :to="localePath('login')">Log In</nuxt-link>
+            </v-card-actions>
+          </v-form>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 export default {};
 </script>
-
-<style scoped>
-.card {
-  max-width: 300px;
-  width: 100%;
-}
-</style>
