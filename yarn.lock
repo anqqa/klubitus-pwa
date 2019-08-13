@@ -11915,6 +11915,14 @@ vuejs-datepicker@^1.5.4:
   resolved "https://registry.yarnpkg.com/vuejs-datepicker/-/vuejs-datepicker-1.6.2.tgz#83c1e8fd4108e7f1d01c061a7e344918f25e47ae"
   integrity sha512-PkC4vxzFBo7i6FSCUAJfnaWOx6VkKbOqxijSGHHlWxh8FIUKEZVtFychkonVWtK3iwWfhmYtqHcwsmgxefLpLQ==
 
+vuelidate-property-decorators@^1.0.27:
+  version "1.0.27"
+  resolved "https://registry.yarnpkg.com/vuelidate-property-decorators/-/vuelidate-property-decorators-1.0.27.tgz#2b825242a5690841df3e48b70e2259009dde5d24"
+  integrity sha512-VZ6xqNCYS1p8VOwTSwuxmxNLMaSbznY5T6IUTUX7N8fFs5iKo0C6XCnwEitBV85ieoUBy5JMW747P2VTF33Spg==
+  dependencies:
+    vue-class-component "^7.0.1"
+    vuelidate "^0.7.4"
+
 vuelidate@^0.7.4:
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/vuelidate/-/vuelidate-0.7.4.tgz#5a0e54be09ac0192f1aa3387d74b92e0945bf8aa"
