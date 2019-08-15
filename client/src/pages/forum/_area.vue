@@ -1,18 +1,24 @@
 <template>
-  <main class="row">
-    <nav class="sidebar col-2">
-      <forum-area-list :areas="areas" />
-    </nav>
+  <v-container fluid grid-list-md>
+    <v-layout wrap>
+      <v-toolbar flat color="transparent" width="100%">
+        <v-toolbar-title>
+          <h1 class="display-1" v-text="name" />
+          <h2 class="headline" v-html="description" />
+        </v-toolbar-title>
+      </v-toolbar>
 
-    <div class="col-7 main-content">
-      <h1 v-text="name" />
-      <h2 v-html="description" />
+      <v-flex md8>
+        <v-pagination :length="pages" v-model="page" total-visible="7" />
 
-      <pagination :pages="pages" :route="route" />
+        <nuxt-child :key="$route.fullPath" />
+      </v-flex>
 
-      <nuxt-child :key="$route.fullPath" />
-    </div>
-  </main>
+      <v-flex md4>
+        <forum-area-list :areas="areas" />
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -20,10 +26,9 @@ import { Component, Vue } from 'nuxt-property-decorator';
 
 import ForumAreaList from '@/components/forum/ForumAreaList.vue';
 import ForumArea from '@/models/ForumArea';
-import Pagination from '../../components/Pagination.vue';
 
 @Component({
-  components: { ForumAreaList, Pagination },
+  components: { ForumAreaList },
 })
 export default class SingleForumArea extends Vue {
   areas: ForumArea[] = [];
@@ -48,12 +53,20 @@ export default class SingleForumArea extends Vue {
     return { title: this.name || 'Forum' };
   }
 
-  get page() {
+  get page(): number {
     return parseInt(this.$route.query.page as string) || 1;
   }
 
-  get route() {
-    return { name: 'forum-area', params: this.$route.params };
+  set page(page: number) {
+    const query = { ...this.$route.query };
+
+    if (page > 1) {
+      query.page = page.toString();
+    } else if ('page' in query) {
+      delete query.page;
+    }
+
+    this.$router.push({ ...this.$route, query });
   }
 }
 </script>

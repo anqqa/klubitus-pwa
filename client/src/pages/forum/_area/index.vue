@@ -13,6 +13,8 @@ import ForumTopic from '@/models/ForumTopic';
   watchQuery: ['page'],
 })
 export default class SingleArea extends Vue {
+  topics: ForumTopic[] = [];
+
   async asyncData({ params, query }) {
     const areaId = parseInt(params.area);
     const page = parseInt(query.page) || 1;

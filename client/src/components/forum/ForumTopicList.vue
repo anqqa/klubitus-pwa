@@ -1,36 +1,38 @@
 <template>
-  <ol>
-    <li v-for="topic in topicList" :key="topic.id" class="media">
-      <div class="media-left">
-        <avatar :src="topic.avatar" :title="topic.username" />
-      </div>
+  <v-list color="transparent">
+    <v-list-item v-for="topic in topicList" :key="topic.id" two-line>
+      <v-list-item-avatar>
+        <avatar :src="topic.avatar" :title="topic.username" size="40" />
+      </v-list-item-avatar>
 
-      <div class="media-content">
-        <h4><nuxt-link :to="topic.url" v-text="topic.name" /></h4>
+      <v-list-item-content>
+        <v-list-item-title>
+          <nuxt-link :to="topic.url" v-text="topic.name" />
+        </v-list-item-title>
 
-        <span v-if="topic.first_post_id !== topic.last_post_id" class="icon"
-          ><i class="bx bx-reply"
-        /></span>
-        <nuxt-link class="user" to="/">{{ topic.poster }}</nuxt-link>
-        {{ topic.verb }} {{ topic.ago }}
+        <v-list-item-subtitle>
+          <v-icon v-if="topic.first_post_id !== topic.last_post_id" small color="secondary">
+            mdi-reply
+          </v-icon>
+          <nuxt-link class="user" to="/">{{ topic.poster }}</nuxt-link>
+          {{ topic.verb }} {{ topic.ago }}
 
-        <span v-if="topic.replies" class="has-text-tertiary" title="Replies">
-          &nbsp; <span class="icon"><i class="bx bx-conversation"/></span>&nbsp;<span
-            :class="`hotness-${topic.hotness}`"
-            >{{ topic.replies }}</span
-          >
-        </span>
+          <span v-if="topic.replies" title="Replies">
+            &nbsp; <v-icon small>mdi-message-text</v-icon>
+            <span :class="`hotness-${topic.hotness}`">{{ topic.replies }}</span>
+          </span>
 
-        <span v-if="topic.views" class="has-text-tertiary" title="Views">
-          &nbsp; <span class="icon"><i class="bx bx-show"/></span> {{ topic.views }}
-        </span>
+          <span v-if="topic.views" title="Views">
+            &nbsp; <v-icon small>mdi-eye</v-icon> {{ topic.views }}
+          </span>
 
-        <small v-if="topic.forum_area" class="has-no-breaks">
-          &nbsp; <nuxt-link :to="topic.areaUrl">{{ topic.forum_area.name }}</nuxt-link>
-        </small>
-      </div>
-    </li>
-  </ol>
+          <small v-if="topic.forum_area" class="has-no-breaks">
+            &nbsp; <nuxt-link :to="topic.areaUrl">{{ topic.forum_area.name }}</nuxt-link>
+          </small>
+        </v-list-item-subtitle>
+      </v-list-item-content>
+    </v-list-item>
+  </v-list>
 </template>
 
 <script lang="ts">

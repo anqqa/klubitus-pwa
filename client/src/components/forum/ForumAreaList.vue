@@ -1,34 +1,28 @@
 <template>
-  <section :class="{ collapsed }">
-    <header class="show-phone" @click="toggleList">
-      <h2>
-        <span>Areas</span>
-        <span class="icon has-text-secondary">
-          <i :class="`${collapsed ? 'bx-chevrons-down' : 'bx-chevrons-up'}`" class="bx" />
-        </span>
-      </h2>
-    </header>
+  <v-card>
+    <v-card-title>Areas</v-card-title>
 
-    <div v-for="group in groupList" :key="group.id" class="collapsible">
-      <h3 class="h6 has-text-tertiary">{{ group.name }}</h3>
-      <ul>
-        <template v-for="area in group.areas">
-          <li v-if="area.url" :key="area.id">
-            <nuxt-link :to="area.url">
-              <h4>{{ area.name }}</h4>
-            </nuxt-link>
-          </li>
-          <li v-else :key="area.id">
-            <a>
-              <h4>
-                <span class="icon"><i class="bx bx-lock"/></span> {{ area.name }}
-              </h4>
-            </a>
-          </li>
-        </template>
-      </ul>
-    </div>
-  </section>
+    <v-card-text>
+      <v-list nav expand>
+        <v-list-group v-for="group in groups" :key="group.id" no-action value="true">
+          <template v-slot:activator>
+            <v-list-item-title :key="group.id" class="text-uppercase">{{
+              group.name
+            }}</v-list-item-title>
+          </template>
+
+          <template v-for="area in group.areas">
+            <v-list-item v-if="area.url" :key="area.id" nuxt link :to="area.url" class="pl-2">
+              <v-list-item-title>{{ area.name }}</v-list-item-title>
+            </v-list-item>
+            <v-list-item v-else :key="area.id" class="pl-2">
+              <v-list-item-title> <v-icon>mdi-lock</v-icon> {{ area.name }} </v-list-item-title>
+            </v-list-item>
+          </template>
+        </v-list-group>
+      </v-list>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script lang="ts">
@@ -40,13 +34,13 @@ import { slug } from '@/utils/text';
 
 @Component({})
 export default class ForumAreaList extends Vue {
-  collapsed = true;
+  collapsed = false;
 
   @Prop() areas!: ForumArea[];
 
   @authStore.Getter isAuthenticated!: boolean;
 
-  get groupList() {
+  get groups() {
     const groups: any[] = [];
     let areas: any[] = [];
 
@@ -71,10 +65,6 @@ export default class ForumAreaList extends Vue {
     });
 
     return groups;
-  }
-
-  toggleList() {
-    this.collapsed = !this.collapsed;
   }
 }
 </script>
