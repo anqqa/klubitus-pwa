@@ -1,81 +1,66 @@
 <template>
-  <section>
-    <header>
-      <h2>{{ title }}</h2>
-    </header>
+  <v-card>
+    <v-card-title>{{ title }}</v-card-title>
 
-    <ul>
-      <li v-for="event in events" :key="event.id">
-        <nuxt-link :to="event.url">
-          <time class="has-text-tertiary">{{ event.stamp }}</time>
-          <span>{{ event.name }}</span>
-        </nuxt-link>
-      </li>
-    </ul>
-  </section>
+    <v-card-text>
+      <v-list>
+        <v-list-item v-for="event in events" :key="event.id" :to="event.url" nuxt>
+          <v-list-item-content>
+            <v-list-item-title v-text="event.name" />
+          </v-list-item-content>
+          <v-list-item-action>
+            <v-list-item-action-text v-text="event.stamp" />
+          </v-list-item-action>
+        </v-list-item>
+      </v-list>
+    </v-card-text>
+  </v-card>
 </template>
 
-<script>
+<script lang="ts">
 import format from 'date-fns/format';
+import { Component, Prop, Vue } from 'nuxt-property-decorator';
+import { RawLocation } from 'vue-router';
 
-import Event from '../../models/Event';
-import { slug } from '../../utils/text';
+import Event from '@/models/Event';
+import { slug } from '@/utils/text';
 
 export const EventListType = {
   LATEST: 'latest',
 };
 
-let cachedData = null;
+let cachedData: Array<Event | { stamp: string; url: RawLocation }> | null = null;
 
-export default {
-  props: {
-    limit: { default: 10, type: Number },
-    title: { default: 'Events', type: String },
-    type: { default: EventListType.LATEST, type: String },
-  },
+@Component({})
+export default class EventList extends Vue {
+  @Prop({ default: 10 }) limit!: number;
+  @Prop({ default: 'Events ' }) title!: string;
+  @Prop({ default: EventListType.LATEST }) type!: string;
 
-  asyncComputed: {
-    async events() {
-      if (cachedData) {
-        return cachedData;
-      }
+  events: typeof cachedData = null;
 
-      let order = 'ASC';
-
-      switch (this.type) {
-        case EventListType.LATEST:
-          order = 'DESC';
-          break;
-      }
+  async mounted() {
+    if (!cachedData) {
+      cachedData = [];
 
       const data = await new Event()
-        .sort('id', order)
+        .sort('id', this.type === EventListType.LATEST ? 'DESC' : 'ASC')
         .limit(Math.min(this.limit, 50))
         .get();
 
       data.forEach(event => {
-        event.stamp = format(event.begins_at, 'DD MMM');
-        event.url = this.localePath({
-          name: 'events-id',
-          params: { id: `${event.id}-${slug(event.name)}` },
+        (cachedData as any[]).push({
+          ...event,
+          stamp: format(event.begins_at!, 'DD MMM'),
+          url: this.localePath({
+            name: 'events-id',
+            params: { id: `${event.id}-${slug(event.name)}` },
+          }),
         });
       });
+    }
 
-      return (cachedData = data);
-    },
-  },
-};
+    this.events = cachedData;
+  }
+}
 </script>
-
-<style scoped>
-ul a {
-  display: flex;
-}
-ul time {
-  white-space: nowrap;
-  width: 3.5em;
-}
-ul span {
-  flex: 1;
-}
-</style>
