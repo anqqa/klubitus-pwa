@@ -9,11 +9,11 @@
       </v-toolbar>
 
       <v-flex md8>
-        <v-pagination :length="pages" v-model="page" total-visible="7" />
+        <v-pagination v-if="pages > 1" :length="pages" v-model="page" total-visible="7" />
 
         <nuxt-child :key="$route.fullPath" />
 
-        <v-pagination :length="pages" v-model="page" total-visible="7" />
+        <v-pagination v-if="pages > 1" :length="pages" v-model="page" total-visible="7" />
       </v-flex>
 
       <v-flex md4>

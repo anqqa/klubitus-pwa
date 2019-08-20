@@ -20,7 +20,7 @@ export default class Avatar extends Vue {
   }
 
   get color() {
-    return colorFromText(this.title || '');
+    return this.src ? 'transparent' : colorFromText(this.title || '');
   }
 }
 </script>

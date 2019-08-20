@@ -4,6 +4,9 @@
 .hotness-2 { color: map_get($orange, 'base'); text-shadow: 0 0 5px map_get($orange, 'base'); }
 .hotness-3 { color: map_get($red, 'base'); text-shadow: 0 0 5px map_get($red, 'base'); }
 
+.font-mono {
+  font-family: monospace;
+}
 
 .separator {
   display: block;
