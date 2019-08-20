@@ -12,6 +12,8 @@
         <v-pagination :length="pages" v-model="page" total-visible="7" />
 
         <nuxt-child :key="$route.fullPath" />
+
+        <v-pagination :length="pages" v-model="page" total-visible="7" />
       </v-flex>
 
       <v-flex md4>
@@ -22,19 +24,19 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'nuxt-property-decorator';
+import { Component, mixins } from 'nuxt-property-decorator';
 
 import ForumAreaList from '@/components/forum/ForumAreaList.vue';
+import PaginatedMixin from '@/mixins/paginated';
 import ForumArea from '@/models/ForumArea';
 
 @Component({
   components: { ForumAreaList },
 })
-export default class SingleForumArea extends Vue {
+export default class SingleForumArea extends mixins(PaginatedMixin) {
   areas: ForumArea[] = [];
   description = '';
   name = '';
-  pages: number = 0;
 
   async asyncData({ params }) {
     const areaId = parseInt(params.area);
@@ -51,22 +53,6 @@ export default class SingleForumArea extends Vue {
 
   head() {
     return { title: this.name || 'Forum' };
-  }
-
-  get page(): number {
-    return parseInt(this.$route.query.page as string) || 1;
-  }
-
-  set page(page: number) {
-    const query = { ...this.$route.query };
-
-    if (page > 1) {
-      query.page = page.toString();
-    } else if ('page' in query) {
-      delete query.page;
-    }
-
-    this.$router.push({ ...this.$route, query });
   }
 }
 </script>
