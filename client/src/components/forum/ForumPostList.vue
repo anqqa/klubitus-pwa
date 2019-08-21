@@ -10,7 +10,7 @@
           <v-list-item-title class="mb-4 text--secondary">
             <nuxt-link to="/">{{ post.username }}</nuxt-link>
             <span v-if="post.author && post.author.title"> &sdot; {{ post.author.title }} </span>
-            <span :title="post.created_at"> &sdot; {{ post.ago }} </span>
+            <span class="float-right" :title="post.created_at">{{ post.ago }} </span>
           </v-list-item-title>
 
           <div class="markdown" v-html="post.post" />

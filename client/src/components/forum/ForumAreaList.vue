@@ -1,28 +1,24 @@
 <template>
-  <v-card>
-    <v-card-title>Areas</v-card-title>
+  <v-navigation-drawer floating permanent right width="100%">
+    <v-list nav expand>
+      <v-list-group v-for="group in groups" :key="group.id" no-action value="true">
+        <template v-slot:activator>
+          <v-list-item-title :key="group.id" class="text-uppercase">{{
+            group.name
+          }}</v-list-item-title>
+        </template>
 
-    <v-card-text>
-      <v-list nav expand>
-        <v-list-group v-for="group in groups" :key="group.id" no-action value="true">
-          <template v-slot:activator>
-            <v-list-item-title :key="group.id" class="text-uppercase">{{
-              group.name
-            }}</v-list-item-title>
-          </template>
-
-          <template v-for="area in group.areas">
-            <v-list-item v-if="area.url" :key="area.id" nuxt link :to="area.url" class="pl-2">
-              <v-list-item-title>{{ area.name }}</v-list-item-title>
-            </v-list-item>
-            <v-list-item v-else :key="area.id" class="pl-2">
-              <v-list-item-title> <v-icon>mdi-lock</v-icon> {{ area.name }} </v-list-item-title>
-            </v-list-item>
-          </template>
-        </v-list-group>
-      </v-list>
-    </v-card-text>
-  </v-card>
+        <template v-for="area in group.areas">
+          <v-list-item v-if="area.url" :key="area.id" nuxt link :to="area.url" class="pl-2">
+            <v-list-item-title>{{ area.name }}</v-list-item-title>
+          </v-list-item>
+          <v-list-item v-else :key="area.id" class="pl-2">
+            <v-list-item-title> <v-icon>mdi-lock</v-icon> {{ area.name }} </v-list-item-title>
+          </v-list-item>
+        </template>
+      </v-list-group>
+    </v-list>
+  </v-navigation-drawer>
 </template>
 
 <script lang="ts">

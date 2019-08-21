@@ -41,6 +41,9 @@
   }
 }
 
+.table-fixed table {
+  table-layout: fixed;
+}
 
 .user {
   font-weight: map_get($font-weights, 'bold');

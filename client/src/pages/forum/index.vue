@@ -1,30 +1,29 @@
 <template>
-  <v-container fluid grid-list-md>
-    <v-layout wrap>
-      <v-toolbar flat color="transparent">
-        <v-toolbar-title>
-          <h1 class="display-1">Latest posts</h1>
-        </v-toolbar-title>
+  <v-container fluid>
+    <v-row justify="space-between">
+      <v-col md="6">
+        <h1 class="display-1">Latest posts</h1>
+      </v-col>
 
-        <v-spacer />
-
+      <v-col cols="auto">
         <v-btn :to="localePath({ name: 'forum-areas' })" nuxt>
           Show areas
         </v-btn>
         <v-btn to="" color="primary" nuxt class="ml-2">
-          <v-icon>mdi-message-plus</v-icon>
-          Start a new topic
+          <v-icon left>mdi-message-plus</v-icon> New topic
         </v-btn>
-      </v-toolbar>
+      </v-col>
+    </v-row>
 
-      <v-flex md8>
+    <v-row>
+      <v-col md="8">
         <forum-topic-list :topics="topics" />
-      </v-flex>
+      </v-col>
 
-      <v-flex md4>
+      <v-col md="4">
         <forum-area-list :areas="areas" />
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

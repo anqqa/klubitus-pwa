@@ -1,25 +1,25 @@
 <template>
   <v-container fluid grid-list-md>
-    <v-layout wrap>
-      <v-toolbar flat color="transparent" width="100%">
-        <v-toolbar-title>
-          <h1 class="display-1" v-text="name" />
-          <h2 class="headline" v-html="description" />
-        </v-toolbar-title>
-      </v-toolbar>
+    <v-row>
+      <v-col>
+        <h1 class="display-1" v-text="name" />
+        <h2 class="headline" v-html="description" />
+      </v-col>
+    </v-row>
 
-      <v-flex md8>
+    <v-row>
+      <v-col md="8">
         <v-pagination v-if="pages > 1" :length="pages" v-model="page" total-visible="7" />
 
         <nuxt-child :key="$route.fullPath" />
 
         <v-pagination v-if="pages > 1" :length="pages" v-model="page" total-visible="7" />
-      </v-flex>
+      </v-col>
 
-      <v-flex md4>
+      <v-col md="4">
         <forum-area-list :areas="areas" />
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
