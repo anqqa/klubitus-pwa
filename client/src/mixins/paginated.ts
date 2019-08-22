@@ -2,8 +2,6 @@ import { Component, Vue } from 'nuxt-property-decorator';
 
 @Component({})
 export default class PaginatedMixin extends Vue {
-  pages: number = 0;
-
   get page(): number {
     return parseInt(this.$route.query.page as string, 10) || 1;
   }

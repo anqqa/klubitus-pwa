@@ -1,32 +1,51 @@
 <template>
-  <section class="grid">
-    <nuxt-link v-for="gallery in galleryList" :key="gallery.id" :to="gallery.to">
-      <figure>
+  <v-row>
+    <v-col
+      cols="6"
+      md="4"
+      v-for="gallery in galleryList"
+      :key="gallery.id"
+      class="d-flex child-flex"
+    >
+      <v-card :to="gallery.to" nuxt>
         <ResponsiveImage
           v-if="gallery.imageUrl"
           :src="gallery.imageUrl"
           :color="gallery.imageColor"
-          :ratio="1"
-          class="image is-square"
+          aspect-ratio="1"
           desktop-size="20vw"
           tablet-size="33vw"
           mobile-size="50vw"
-        />
-        <div v-else class="image is-16by9" />
-        <figcaption>
-          <h3 class="h6">{{ gallery.name }}</h3>
-        </figcaption>
-      </figure>
-    </nuxt-link>
-  </section>
+        >
+          <v-card-title
+            class="fill-height align-end bottom-gradient white--text"
+            v-text="gallery.name"
+          />
+        </ResponsiveImage>
+
+        <v-card-actions class="justify-space-between caption">
+          <span v-if="gallery.date">{{ gallery.date }}</span>
+
+          <span v-if="gallery.image_count" title="Images">
+            <v-icon left x-small>mdi-camera</v-icon> {{ gallery.image_count }}
+          </span>
+
+          <span v-if="gallery.comment_count" title="Comments">
+            <v-icon right x-small>mdi-comment</v-icon> {{ gallery.comment_count }}
+          </span>
+        </v-card-actions>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 
 <script lang="ts">
+import format from 'date-fns/format';
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
 
+import ResponsiveImage from '@/components/ResponsiveImage.vue';
 import Gallery from '@/models/Gallery';
 import { slug } from '@/utils/text';
-import ResponsiveImage from '../ResponsiveImage.vue';
 
 @Component({
   components: { ResponsiveImage },
@@ -40,6 +59,7 @@ export default class GalleryList extends Vue {
     this.galleries.slice(0).forEach(gallery => {
       galleries.push({
         ...gallery,
+        date: format(gallery.event_date!, 'D MMM YYYY'),
         imageColor: gallery.default_image && gallery.default_image.color,
         imageUrl: gallery.default_image && gallery.default_image.url,
         to: this.localePath({
@@ -55,21 +75,7 @@ export default class GalleryList extends Vue {
 </script>
 
 <style scoped>
-a {
-  transition: opacity 0.1s ease-in-out;
-}
-
-figure {
-  position: relative;
-}
-
-figcaption {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
-  bottom: 0;
-  flex: 1;
-  left: 0;
-  padding: 1rem;
-  position: absolute;
-  right: 0;
+.bottom-gradient {
+  background-image: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
 }
 </style>

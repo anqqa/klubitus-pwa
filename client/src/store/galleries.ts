@@ -83,13 +83,15 @@ export const actions: ActionTree<GalleriesState, any> = {
   },
 };
 
+export type DatePayload = Partial<Record<'day' | 'month' | 'year', number>>;
+
 export const Getters = {
-  GALLERIES_BY_DATE: 'galleriesByDate',
+  GALLERIES_BY_DATE: 'getGalleriesByDate',
 };
 
 export const getters: GetterTree<GalleriesState, any> = {
-  [Getters.GALLERIES_BY_DATE]: store => (
-    date: Partial<Record<'day' | 'month' | 'year', number>>,
+  getGalleriesByDate: (store: GalleriesState) => (
+    date: DatePayload,
     page?: number
   ): FlatGallery[] => {
     const path = [date.year || 'latest'];

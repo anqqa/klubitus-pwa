@@ -27,6 +27,7 @@ import ForumTopic from '@/models/ForumTopic';
 @Component({})
 export default class SingleTopic extends mixins(PaginatedMixin) {
   name = '';
+  pages: number = 0;
   topicId: number = 0;
 
   async asyncData({ params }) {

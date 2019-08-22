@@ -37,6 +37,7 @@ export default class SingleForumArea extends mixins(PaginatedMixin) {
   areas: ForumArea[] = [];
   description = '';
   name = '';
+  pages: number = 0;
 
   async asyncData({ params }) {
     const areaId = parseInt(params.area);

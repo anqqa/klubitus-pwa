@@ -1,17 +1,13 @@
 <template>
-  <picture :class="{ 'is-responsive': isResponsive }">
-    <source v-if="isResponsive && !isWebp" :srcset="srcsetWebp" :sizes="sizes" type="image/webp" />
-    <img
-      v-if="isResponsive"
-      :alt="alt"
-      :src="defaultSrc"
-      :srcset="srcset"
-      :sizes="sizes"
-      :style="style"
-      :title="title"
-    />
-    <img v-else :alt="alt" :src="defaultSrc" :style="style" :title="title" />
-  </picture>
+  <v-img
+    :aspect-ratio="aspectRatio"
+    :src="defaultSrc"
+    :srcset="srcset"
+    :sizes="sizes"
+    :style="style"
+  >
+    <slot></slot>
+  </v-img>
 </template>
 
 <script lang="ts">
@@ -22,30 +18,36 @@ const defaultWidth = 1600;
 
 @Component({})
 export default class ResponsiveImage extends Vue {
-  @Prop() alt?: string;
+  @Prop() aspectRatio?: string | number;
   @Prop() color?: string;
-  @Prop() ratio?: number;
   @Prop({ default: '' }) src!: string;
-  @Prop() title?: string;
 
   @Prop({ default: defaultWidth }) desktopSize?: string;
   @Prop() mobileSize?: string;
   @Prop() tabletSize?: string;
   @Prop({ default: 1600 }) maxWidth!: number;
 
-  get defaultSrc() {
+  isWebpSupported = false;
+
+  async mounted() {
+    const module = await import('@/utils/image');
+
+    this.isWebpSupported = module.isWebpSupported;
+  }
+
+  get defaultSrc(): string {
     return this.isResponsive ? this.urlWithWidth(Math.min(defaultWidth, this.maxWidth)) : this.src;
   }
 
-  get isResponsive() {
+  get isResponsive(): boolean {
     return !!(process.env.CDN_HOST && this.src.includes(process.env.CDN_HOST));
   }
 
-  get isWebp() {
+  get isWebp(): boolean {
     return this.src.toLowerCase().endsWith('webp');
   }
 
-  get sizes() {
+  get sizes(): string {
     const sizes = [this.desktopSize];
 
     if (typeof this.tabletSize !== 'undefined' && this.tabletSize !== this.desktopSize) {
@@ -59,24 +61,18 @@ export default class ResponsiveImage extends Vue {
     return sizes.join(', ');
   }
 
-  get srcset() {
-    return this.widths()
-      .map(width => this.urlWithWidth(width) + ` ${width}w`)
-      .join(', ');
+  get srcset(): string {
+    const ext = this.isWebpSupported && !this.isWebp ? 'webp' : undefined;
+
+    return this.widths.map(width => this.urlWithWidth(width, ext) + ` ${width}w`).join(', ');
   }
 
-  get srcsetWebp() {
-    return this.widths()
-      .map(width => this.urlWithWidth(width, 'webp') + ` ${width}w`)
-      .join(', ');
+  get style(): string | undefined {
+    return this.color && 'background-color: ' + this.color;
   }
 
-  get style() {
-    return this.color && 'background: ' + this.color;
-  }
-
-  urlWithWidth(width: number, ext?: string) {
-    const height = this.ratio ? Math.round(width / this.ratio) : 0;
+  urlWithWidth(width: number, ext?: string): string {
+    const height = this.aspectRatio ? Math.round(width / Number(this.aspectRatio)) : 0;
     const url = this.src.replace(
       process.env.CDN_HOST as string,
       `${process.env.CDN_HOST}/r/${width}x${height}`
@@ -85,7 +81,7 @@ export default class ResponsiveImage extends Vue {
     return typeof ext !== 'undefined' ? `${url}.${ext}` : url;
   }
 
-  widths() {
+  get widths(): number[] {
     const widths = availableWidths.filter(width => width <= this.maxWidth);
 
     return widths.length ? widths : [this.maxWidth];
