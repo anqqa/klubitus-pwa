@@ -1,5 +1,6 @@
 <template>
   <v-img
+    v-bind="$attrs"
     :aspect-ratio="aspectRatio"
     :src="defaultSrc"
     :srcset="srcset"

@@ -1,38 +1,29 @@
 <template>
-  <main>
-    <div class="col main-content">
-      <breadcrumbs :breadcrumbs="breadcrumbs" />
+  <v-container fluid>
+    <v-breadcrumbs :items="breadcrumbs" />
 
-      <header>
-        <h1>
-          {{ eventName }}
-          <br />
-          <small>
-            {{ format(gallery.image_count) }} images, {{ format(commentCount) }} comments
-          </small>
-        </h1>
+    <v-row justify="space-between">
+      <v-col cols="12" md="9">
+        <h1 class="display-1" v-text="eventName" />
+        <h2 class="headline">
+          {{ format(gallery.image_count) }} images, {{ format(commentCount) }} comments
+        </h2>
+      </v-col>
+      <v-col v-if="isAuthenticated" cols="auto">
+        <v-btn :to="`${localePath('galleries-upload')}?gallery=${gallery.id}`" color="primary" nuxt>
+          <v-icon left>mdi-image-plus</v-icon> Add Photos
+        </v-btn>
+      </v-col>
+    </v-row>
 
-        <nav v-if="isAuthenticated" class="actions">
-          <nuxt-link
-            :to="`${localePath('galleries-upload')}?gallery=${gallery.id}`"
-            class="button is-primary"
-          >
-            <span class="icon"><i class="bx bx-cloud-upload"/></span>
-            Upload Photos
-          </nuxt-link>
-        </nav>
-      </header>
-
-      <ImageList :images="images" :url="url" />
-    </div>
-  </main>
+    <ImageList :images="images" :url="url" />
+  </v-container>
 </template>
 
 <script lang="ts">
 import format from 'date-fns/format';
 import { Component, Vue } from 'nuxt-property-decorator';
 
-import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import ImageList from '@/components/galleries/ImageList.vue';
 import Gallery from '@/models/Gallery';
 import Image from '@/models/Image';
@@ -41,26 +32,9 @@ import { authStore } from '@/store/auth';
 const formatter = new Intl.NumberFormat();
 
 @Component({
-  components: { Breadcrumbs, ImageList },
+  components: { ImageList },
 })
 export default class SingleGallery extends Vue {
-  @authStore.Getter isAuthenticated!: boolean;
-
-  gallery?: Gallery;
-  images?: Image[];
-
-  async asyncData({ params }) {
-    const galleryId = parseInt(params.id);
-
-    const gallery = await new Gallery().find(galleryId);
-    const images = await gallery
-      .images()
-      .sort('id', 'DESC')
-      .get();
-
-    return { gallery, images };
-  }
-
   get url() {
     return `${this.$route.path}/:imageId`;
   }
@@ -69,26 +43,26 @@ export default class SingleGallery extends Vue {
     const pathName = 'galleries-events-year-month-day';
 
     return [
-      { url: this.localePath('galleries'), title: 'Galleries' },
-      { url: this.localePath(pathName), title: 'Events' },
+      { to: this.localePath('galleries'), text: 'Galleries' },
+      { to: this.localePath(pathName), text: 'Events' },
       {
-        url: this.localePath({
+        to: this.localePath({
           name: pathName,
           params: { year: this.eventDate.getFullYear().toString() },
         }),
-        title: format(this.eventDate, 'YYYY'),
+        text: format(this.eventDate, 'YYYY'),
       },
       {
-        url: this.localePath({
+        to: this.localePath({
           name: pathName,
           params: {
             year: this.eventDate.getFullYear().toString(),
             month: (this.eventDate.getMonth() + 1).toString(),
           },
         }),
-        title: format(this.eventDate, 'MMMM'),
+        text: format(this.eventDate, 'MMMM'),
       },
-      { url: this.$route.fullPath, title: this.eventName, current: true },
+      { to: this.$route.fullPath, text: this.eventName, disabled: true },
     ];
   }
 
@@ -109,9 +83,23 @@ export default class SingleGallery extends Vue {
   get eventName() {
     return this.gallery!.event ? this.gallery!.event.name : this.gallery!.name;
   }
+  @authStore.Getter isAuthenticated!: boolean;
 
-  format(value: number) {
-    return formatter.format(value);
+  gallery?: Gallery;
+  images?: Image[];
+
+  format = formatter.format;
+
+  async asyncData({ params }) {
+    const galleryId = parseInt(params.id);
+
+    const gallery = await new Gallery().find(galleryId);
+    const images = await gallery
+      .images()
+      .sort('id', 'DESC')
+      .get();
+
+    return { gallery, images };
   }
 
   head() {

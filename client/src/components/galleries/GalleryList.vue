@@ -13,14 +13,13 @@
           :src="gallery.imageUrl"
           :color="gallery.imageColor"
           aspect-ratio="1"
+          position="center top"
+          gradient="to bottom, transparent 50%, rgba(0, 0, 0, 0.5) 100%"
           desktop-size="20vw"
           tablet-size="33vw"
           mobile-size="50vw"
         >
-          <v-card-title
-            class="fill-height align-end bottom-gradient white--text"
-            v-text="gallery.name"
-          />
+          <v-card-title class="fill-height align-end white--text title" v-text="gallery.name" />
         </ResponsiveImage>
 
         <v-card-actions class="justify-space-between caption">
@@ -73,9 +72,3 @@ export default class GalleryList extends Vue {
   }
 }
 </script>
-
-<style scoped>
-.bottom-gradient {
-  background-image: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
-}
-</style>
