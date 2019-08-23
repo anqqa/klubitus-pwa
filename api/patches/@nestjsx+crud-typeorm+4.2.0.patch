@@ -1,8 +1,14 @@
 diff --git a/node_modules/@nestjsx/crud-typeorm/lib/typeorm-crud.service.d.ts b/node_modules/@nestjsx/crud-typeorm/lib/typeorm-crud.service.d.ts
-index 4e15a74..6e21c45 100644
+index 4e15a74..078272b 100644
 --- a/node_modules/@nestjsx/crud-typeorm/lib/typeorm-crud.service.d.ts
 +++ b/node_modules/@nestjsx/crud-typeorm/lib/typeorm-crud.service.d.ts
-@@ -12,7 +12,7 @@ export declare class TypeOrmCrudService<T> extends CrudService<T> {
+@@ -7,12 +7,12 @@ export declare class TypeOrmCrudService<T> extends CrudService<T> {
+     private entityColumns;
+     private entityPrimaryColumns;
+     private entityColumnsHash;
+-    private entityRelationsHash;
++    protected entityRelationsHash;
+     constructor(repo: Repository<T>);
      readonly findOne: Repository<T>['findOne'];
      readonly find: Repository<T>['find'];
      private readonly entityType;
@@ -11,6 +17,26 @@ index 4e15a74..6e21c45 100644
      getMany(req: CrudRequest): Promise<GetManyDefaultResponse<T> | T[]>;
      getOne(req: CrudRequest): Promise<T>;
      createOne(req: CrudRequest, dto: T): Promise<T>;
+@@ -24,15 +24,15 @@ export declare class TypeOrmCrudService<T> extends CrudService<T> {
+     createBuilder(parsed: ParsedRequestParams, options: CrudRequestOptions, many?: boolean): Promise<SelectQueryBuilder<T>>;
+     private onInitMapEntityColumns;
+     private onInitMapRelations;
+-    private getJoinType;
++    protected getJoinType;
+     private getOneOrFail;
+     private prepareEntityBeforeSave;
+     private hasColumn;
+     private hasRelation;
+     private validateHasColumn;
+-    private getAllowedColumns;
+-    private getRelationMetadata;
+-    private setJoin;
++    protected getAllowedColumns;
++    protected getRelationMetadata;
++    protected setJoin;
+     private setAndWhere;
+     private setOrWhere;
+     private getSelect;
 @@ -41,5 +41,5 @@ export declare class TypeOrmCrudService<T> extends CrudService<T> {
      private getSort;
      private getFieldWithAlias;
