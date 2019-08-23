@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="6" md="3" v-for="image in imageList" :key="image.id" class="d-flex child-flex">
+    <v-col cols="6" md="3" v-for="image in imageList" :key="image.id">
       <v-card :to="image.to" nuxt>
         <ResponsiveImage
           :src="image.url"
@@ -11,8 +11,15 @@
           tablet-size="33vw"
           mobile-size="50vw"
         />
-        <v-card-actions v-if="image.description" class="caption">
+        <v-card-actions
+          v-if="image.description || image.comment_count"
+          class="justify-space-between caption"
+        >
           {{ image.description }}
+
+          <span v-if="image.comment_count" title="Comments">
+            <v-icon right x-small>mdi-comment</v-icon> {{ image.comment_count }}
+          </span>
         </v-card-actions>
       </v-card>
     </v-col>

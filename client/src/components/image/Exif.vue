@@ -1,17 +1,9 @@
 <template>
-  <p>
-    <span v-if="camera">
-      <span class="icon"><i class="bx bx-camera"/></span> {{ camera }}<br />
-    </span>
-    <span v-if="lens">
-      <span class="icon"><i class="bx bx-aperture"/></span> {{ lens }}<br />
-    </span>
-    <span v-if="settings">
-      <span class="icon"><i class="bx bx-slider"/></span> {{ settings }}<br />
-    </span>
-    <span v-if="taken">
-      <span class="icon"><i class="bx bx-watch"/></span> {{ taken }}
-    </span>
+  <p class="caption mx-2">
+    <span v-if="camera"> <v-icon left small>mdi-camera</v-icon> {{ camera }}<br /> </span>
+    <span v-if="lens"> <v-icon left small>mdi-telescope</v-icon> {{ lens }}<br /> </span>
+    <span v-if="settings"> <v-icon left small>mdi-camera-iris</v-icon> {{ settings }}<br /> </span>
+    <span v-if="taken"> <v-icon left small>mdi-calendar-clock</v-icon> {{ taken }} </span>
   </p>
 </template>
 
@@ -57,17 +49,3 @@ export default class Exif extends Vue {
   }
 }
 </script>
-
-<style scoped>
-dt {
-  display: inline-block;
-  vertical-align: top;
-  width: 50%;
-}
-
-dd {
-  display: inline-block;
-  margin: 0;
-  width: 50%;
-}
-</style>

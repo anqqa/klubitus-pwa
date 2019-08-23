@@ -1,18 +1,23 @@
 <template>
-  <ul>
-    <li v-for="comment in commentList" :key="comment.id" class="media">
-      <div class="media-left">
-        <avatar :src="comment.avatar" :title="comment.author.username" />
-      </div>
+  <v-list dense>
+    <v-list-item v-for="comment in commentList" :key="comment.id" three-line>
+      <v-list-item-avatar>
+        <avatar :src="comment.avatar" :title="comment.author.username" size="40" />
+      </v-list-item-avatar>
 
-      <div class="media-content">
-        <nuxt-link to="/">{{ comment.author.username }}</nuxt-link>
-        <small :title="comment.created_at" class="pull-right">{{ comment.ago }}</small>
-        <br />
-        {{ comment.comment }}
-      </div>
-    </li>
-  </ul>
+      <v-list-item-content>
+        <v-list-item-title>
+          <nuxt-link to="/" class="user">{{ comment.author.username }}</nuxt-link>
+        </v-list-item-title>
+
+        <div class="markdown" v-html="comment.html" />
+      </v-list-item-content>
+
+      <v-list-item-action>
+        <v-list-item-action-text :title="comment.created_at" v-text="comment.ago" />
+      </v-list-item-action>
+    </v-list-item>
+  </v-list>
 </template>
 
 <script lang="ts">
@@ -36,6 +41,7 @@ export default class CommentList extends Vue {
         ...comment,
         ago: fuzzyTimeDistance(new Date(comment.created_at)),
         avatar: avatarUrl(comment.author.avatar_url),
+        html: this.$md.render(comment.comment!),
       });
     });
 
