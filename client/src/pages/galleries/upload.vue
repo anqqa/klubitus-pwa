@@ -10,18 +10,22 @@
           </v-card-title>
 
           <v-card-text v-if="!event">
-            <vue-autosuggest
-              :input-props="{ id: 'input-event', placeholder: 'Search...' }"
-              :suggestions="suggestions"
-              @input="onInputChange"
-              @selected="onSelected"
+            <v-autocomplete
+              v-model="select"
+              :items="items"
+              :loading="isLoading"
+              :search-input.sync="search"
+              @input="onSelected"
+              cache-items
+              hide-no-data
+              hide-selected
+              item-text="label"
+              item-value="id"
+              label="Event"
+              placeholder="Start typing to search"
+              prepend-icon="mdi-calendar-search"
             >
-              <template slot-scope="{ suggestion }">
-                <span class="has-text-tertiary">{{ suggestion.item.date }} </span>
-                <span v-html="suggestion.item.highlight" />
-                @ {{ suggestion.item.venue_name }}, {{ suggestion.item.city_name }}
-              </template>
-            </vue-autosuggest>
+            </v-autocomplete>
 
             <span class="separator my-4">or</span>
 
@@ -81,7 +85,7 @@
 <script lang="ts">
 import format from 'date-fns/format';
 import debounce from 'lodash/debounce';
-import { Component, Vue } from 'nuxt-property-decorator';
+import { Component, Vue, Watch } from 'nuxt-property-decorator';
 
 import Upload from '@/components/Upload.vue';
 import Event from '@/models/Event';
@@ -100,7 +104,10 @@ export default class GalleriesUpload extends Vue {
   events: Event[] = [];
   files: any[] = [];
   gallery: Gallery | null = null;
-  suggestions: any[] = [];
+  isLoading = false;
+  items: any[] = [];
+  search = null;
+  select = null;
 
   onInputChange = debounce(this.fetchEvents, 250);
 
@@ -188,16 +195,23 @@ export default class GalleriesUpload extends Vue {
     return { event: null, gallery: null };
   }
 
-  async fetchEvents(search) {
+  async fetchEvents(search: string | null) {
+    if (search && search.match(/^\d{2}\.\d{2}\.\d{4} ·/)) {
+      return;
+    }
+
     if (!search || search.length < 3) {
-      this.suggestions = [];
+      this.items = [];
 
       return;
     }
 
+    this.isLoading = true;
+
     const events = await new Event()
       .select(eventFields)
       .filter('name', 'cont', search)
+      .limit(50)
       .sort('begins_at', 'DESC')
       .get();
 
@@ -208,16 +222,25 @@ export default class GalleriesUpload extends Vue {
     events.forEach(event =>
       data.push({
         ...event,
+        label: `${format(event.begins_at!, 'DD.MM.YYYY')} · ${event.name} @ ${event.venue_name}, ${
+          event.city_name
+        }`,
         date: format(event.begins_at!, 'DD.MM.YYYY'),
         highlight: event.name!.replace(highlight, replace),
       })
     );
 
-    this.suggestions = [{ data }];
+    this.items = data;
+    this.isLoading = false;
   }
 
-  onSelected(item) {
-    const url = this.localePath('galleries-upload') + '?event=' + item.item.id;
+  @Watch('search')
+  onSearchChanged(val: string, oldVal: string) {
+    this.onInputChange(val);
+  }
+
+  onSelected(id) {
+    const url = this.localePath('galleries-upload') + '?event=' + id;
 
     this.$router.push({ path: url });
   }
@@ -228,14 +251,3 @@ export default class GalleriesUpload extends Vue {
   }
 }
 </script>
-
-<style scoped>
-.flyer {
-  flex-basis: 120px;
-}
-
-.card.disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-</style>
