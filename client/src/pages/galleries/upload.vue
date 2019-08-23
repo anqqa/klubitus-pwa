@@ -1,103 +1,81 @@
 <template>
-  <main class="row">
-    <div class="col-3" />
+  <v-container class="fill-height" fluid>
+    <v-row align="center" justify="center">
+      <v-col cols="12" sm="8" md="6">
+        <h1 class="headline">Upload Photos</h1>
 
-    <div class="col-6 main-content">
-      <header>
-        <h1>Upload Photos</h1>
-      </header>
+        <v-card class="my-4">
+          <v-card-title class="title">
+            <v-avatar color="secondary" class="mr-2" size="40">1</v-avatar> Select event
+          </v-card-title>
 
-      <br />
+          <v-card-text v-if="!event">
+            <vue-autosuggest
+              :input-props="{ id: 'input-event', placeholder: 'Search...' }"
+              :suggestions="suggestions"
+              @input="onInputChange"
+              @selected="onSelected"
+            >
+              <template slot-scope="{ suggestion }">
+                <span class="has-text-tertiary">{{ suggestion.item.date }} </span>
+                <span v-html="suggestion.item.highlight" />
+                @ {{ suggestion.item.venue_name }}, {{ suggestion.item.city_name }}
+              </template>
+            </vue-autosuggest>
 
-      <section class="card">
-        <header>
-          <h2 class="has-text-secondary">Step 1: Select event</h2>
-          <nav v-if="event" class="actions">
-            <nuxt-link v-if="event" :to="localePath('galleries-upload')" class="button">
-              <span class="icon"><i class="bx bx-undo"/></span>
-              Change
-            </nuxt-link>
-          </nav>
-        </header>
+            <span class="separator my-4">or</span>
 
-        <div v-if="!event" class="card-content">
-          <vue-autosuggest
-            :input-props="{ id: 'input-event', placeholder: 'Search...' }"
-            :suggestions="suggestions"
-            @input="onInputChange"
-            @selected="onSelected"
-          >
-            <template slot-scope="{ suggestion }">
-              <span class="has-text-tertiary">{{ suggestion.item.date }} </span>
-              <span v-html="suggestion.item.highlight" />
-              @ {{ suggestion.item.venue_name }}, {{ suggestion.item.city_name }}
-            </template>
-          </vue-autosuggest>
-
-          <span class="separator">or</span>
-
-          <p>
             Choose from your latest favorites:
-          </p>
-        </div>
+          </v-card-text>
 
-        <div v-else class="card-content row">
-          <div v-if="event.flyer_front_url" class="col is-narrow flyer">
-            <figure class="image is-16by9">
-              <img :src="event.flyer_front_url" />
-            </figure>
-          </div>
+          <template v-else>
+            <v-img v-if="event.flyer_front_url" :src="event.flyer_front_url" aspect-ratio="16/9" />
 
-          <div class="col">
-            <h3>{{ eventName }}</h3>
-            <p>{{ eventInfo }}</p>
-          </div>
-        </div>
-      </section>
+            <v-card-title>{{ eventName }}</v-card-title>
+            <v-card-text>{{ eventInfo }}</v-card-text>
 
-      <br />
+            <v-card-actions>
+              <v-btn :to="localePath('galleries-upload')" text nuxt>
+                <v-icon left>mdi-undo</v-icon> Change event
+              </v-btn>
+            </v-card-actions>
+          </template>
+        </v-card>
 
-      <section :class="{ disabled: !event }" class="card">
-        <header>
-          <h2 class="has-text-secondary">Step 2: Add photos</h2>
-        </header>
+        <v-card :disabled="!event">
+          <v-card-title class="title">
+            <v-avatar color="secondary" class="mr-2" sie="40">2</v-avatar> Add photos
+          </v-card-title>
 
-        <div v-if="event" class="card-content">
-          <p v-if="photosRemaining.length">
-            <button class="button is-primary" @click="startUpload">
-              <span class="icon"><i class="bx bx-cloud-upload"/></span>
-              Upload {{ photosRemaining.length }} Photo(s)
-            </button>
-            {{ sizeRemaining }}
-          </p>
+          <v-card-text v-if="event">
+            <p v-if="photosRemaining.length">
+              <button class="button is-primary" @click="startUpload">
+                <span class="icon"><i class="bx bx-cloud-upload"/></span>
+                Upload {{ photosRemaining.length }} Photo(s)
+              </button>
+              {{ sizeRemaining }}
+            </p>
 
-          <p v-if="photosUploaded.length" class="notification is-success">
-            🎉 Photos ({{ photosUploaded.length }}) uploaded!
-          </p>
-          <p v-if="photosFailed.length" class="notification is-fail">
-            😭 Some photos ({{ photosFailed.length }}) failed to upload... retry?
-          </p>
+            <p v-if="photosUploaded.length" class="notification is-success">
+              🎉 Photos ({{ photosUploaded.length }}) uploaded!
+            </p>
+            <p v-if="photosFailed.length" class="notification is-fail">
+              😭 Some photos ({{ photosFailed.length }}) failed to upload... retry?
+            </p>
 
-          <upload
-            ref="upload"
-            :endpoint="uploadEndpoint"
-            multiple
-            name="file"
-            :metadata="metadata"
-            @filesUpdated="files = $event"
-          />
-        </div>
-      </section>
-    </div>
-
-    <div class="col-1" />
-
-    <aside class="sidebar col-2">
-      <header>
-        <h2>What now</h2>
-      </header>
-    </aside>
-  </main>
+            <upload
+              ref="upload"
+              :endpoint="uploadEndpoint"
+              multiple
+              name="file"
+              :metadata="metadata"
+              @filesUpdated="files = $event"
+            />
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts">

@@ -16,6 +16,7 @@ export default ({ app }) => ({
         // anchor: '#229eb3',
         accent: '#ffd500',
         primary: '#ff3d99',
+        secondary: '#eeeeee',
         facebook: '#3b66a0',
       },
     },
