@@ -11801,11 +11801,6 @@ vue-async-computed@^3.7.0:
   resolved "https://registry.yarnpkg.com/vue-async-computed/-/vue-async-computed-3.7.0.tgz#1ca3fc2743c9e3d4399b506f3e107e2141fdc34c"
   integrity sha512-TyP37QJZK8pvN14wxBcXtt9TOjkpYYdndklABZNH+X1ZjeyM/krndloiS1DeFUg95MqIi5wzjevOPu6UTcD7pg==
 
-vue-autosuggest@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/vue-autosuggest/-/vue-autosuggest-2.0.2.tgz#203612ed7317209d8c60d8e8a5968d72f3c123ec"
-  integrity sha512-rEnDmV2y2vURXMdcRSoHBPX+gkqU1irVCmDyivpJ0kRCixXnX0s2GCGBxWA1G5k/LAXAxOLpM7bThdbtpZS2sg==
-
 vue-class-component@7.1.0, vue-class-component@^7.0.1:
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/vue-class-component/-/vue-class-component-7.1.0.tgz#b33efcb10e17236d684f70b1e96f1946ec793e87"
