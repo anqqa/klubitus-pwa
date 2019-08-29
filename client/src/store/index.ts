@@ -1,7 +1,7 @@
 import cookie from 'cookie';
 
 export const actions = {
-  async nuxtServerInit({ commit, dispatch }, { req }) {
+  async nuxtServerInit({ commit, dispatch }, { $axios, req }) {
     const cookies = cookie.parse(req.headers.cookie || '');
 
     if (cookies.hasOwnProperty('auth.token')) {
@@ -9,7 +9,7 @@ export const actions = {
 
       commit('auth/setToken', token);
 
-      this.$axios.setToken(token, 'Bearer');
+      $axios.setToken(token, 'Bearer');
 
       try {
         await dispatch('auth/me');

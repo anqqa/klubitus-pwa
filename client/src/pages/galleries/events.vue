@@ -129,8 +129,8 @@ export default class EventGalleries extends mixins(PaginatedMixin) {
 
   format = formatter.format;
 
-  async asyncData({ app }) {
-    const data = await app.$axios.$get('galleries/stats');
+  async asyncData({ $axios }) {
+    const data = await $axios.$get('galleries/stats');
 
     const stats = transform(
       data,
