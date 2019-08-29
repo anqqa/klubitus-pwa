@@ -1,7 +1,7 @@
-import NuxtConfiguration from '@nuxt/config';
+import { Configuration } from '@nuxt/types';
 // import nodeExternals from 'webpack-node-externals';
 
-const config: NuxtConfiguration = {
+const config: Configuration = {
   env: {
     API_URL: process.env.API_URL_BROWSER || 'http://localhost:3001',
     BASE_URL: process.env.CLIENT_HOST || 'http://localhost:3000',
@@ -43,7 +43,7 @@ const config: NuxtConfiguration = {
   /**
    * Customize the progress bar color
    */
-  loading: { color: '#E91E63' },
+  loading: { color: '#ff3d99' },
 
   /**
    * Global modules
@@ -129,7 +129,14 @@ const config: NuxtConfiguration = {
     ],
   ],
 
-  devModules: [
+  buildModules: [
+    [
+      '@nuxt/typescript-build',
+      {
+        typeCheck: true,
+        ignoreNotFoundWarnings: true,
+      },
+    ],
     [
       '@nuxtjs/vuetify',
       {
