@@ -1,24 +1,30 @@
 <template>
-  <section class="card">
-    <header>
-      <h2>Chat</h2>
-    </header>
+  <v-card>
+    <v-card-title>Chat</v-card-title>
 
-    <ul class="card-content">
-      <li v-for="shout in shoutList" :key="shout.id" class="media">
-        <div class="media-left">
-          <avatar :image-url="shout.avatar" :name="shout.author.username" class="is-24x24" />
-        </div>
+    <v-list three-line>
+      <template v-for="(shout, index) in shoutList">
+        <v-divider v-if="index > 0" :key="`${index}-divider`" inset />
+        <v-list-item :key="index">
+          <v-list-item-avatar>
+            <avatar :src="shout.avatar" :title="shout.author.username" size="40" />
+          </v-list-item-avatar>
 
-        <div class="media-content">
-          <nuxt-link class="user" to="/">{{ shout.author.username }}</nuxt-link>
-          <time :datetime="shout.created_at" :title="shout.created_at">{{ shout.stamp }}</time>
-          <br />
-          <div class="markdown" v-html="shout.html" />
-        </div>
-      </li>
-    </ul>
-  </section>
+          <v-list-item-content>
+            <v-list-item-title>
+              <nuxt-link class="user" to="/">{{ shout.author.username }}</nuxt-link>
+            </v-list-item-title>
+
+            <div class="markdown" v-html="shout.html" />
+          </v-list-item-content>
+
+          <v-list-item-action>
+            <v-list-item-action-text :title="shout.created_at" v-text="shout.stamp" />
+          </v-list-item-action>
+        </v-list-item>
+      </template>
+    </v-list>
+  </v-card>
 </template>
 
 <script lang="ts">
@@ -29,9 +35,7 @@ import Avatar from '@/components/Avatar.vue';
 import Shout from '@/models/Shout';
 import { avatarUrl } from '@/utils/url';
 
-@Component({
-  components: { Avatar },
-})
+@Component({ components: { Avatar } })
 export default class Chat extends Vue {
   @Prop({ default: 10 }) limit!: number;
 

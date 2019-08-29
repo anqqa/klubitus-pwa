@@ -76,6 +76,6 @@ export const fuzzyTimeDistance = (since: Date): string => {
   }
 };
 
-export const hours = (from: Date, to: Date): string => {
+export const hours = (from: Date | string, to: Date | string): string => {
   return format(from, 'HH:mm') + (to ? '–' + format(to, 'HH:mm') : '→');
 };

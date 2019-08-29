@@ -1,51 +1,65 @@
 <template>
-  <main class="row">
-    <nav class="sidebar col-2">
-      <nuxt-link :to="localePath('galleries')">Galleries Home</nuxt-link>
-      <br />
+  <v-container fluid>
+    <v-row justify="space-between">
+      <v-col cols="12" md="6">
+        <h1 class="display-1">Latest in Event Photography</h1>
+      </v-col>
+      <v-col v-if="isAuthenticated" cols="auto">
+        <v-btn :to="localePath('galleries-upload')" color="primary" nuxt>
+          <v-icon left>mdi-image-plus</v-icon> Add Photos
+        </v-btn>
+      </v-col>
+    </v-row>
 
-      <h3 class="h6 has-text-tertiary">Event Photography</h3>
-      <ul>
-        <li>
-          <nuxt-link :to="localePath('galleries-events-year-month-day')"
-            >Browse Galleries</nuxt-link
-          >
-        </li>
-        <li>
-          Top 10
-        </li>
-      </ul>
+    <v-row>
+      <v-col cols="12" md="9">
+        <GalleryList :galleries="galleries" />
+      </v-col>
 
-      <h3 class="h6 has-text-tertiary">Flyers</h3>
-      <ul>
-        <li>
-          <nuxt-link :to="localePath('galleries-flyers')">Browse Flyers</nuxt-link>
-        </li>
-        <li>
-          Random Flyer
-        </li>
-      </ul>
-    </nav>
+      <v-col md="3">
+        <v-navigation-drawer floating permanent right width="100%">
+          <v-list nav>
+            <v-list-item :to="localePath('galleries')" nuxt>
+              <v-list-item-content>Galleries Home</v-list-item-content>
+            </v-list-item>
 
-    <div class="col main-content">
-      <h1>Galleries</h1>
+            <v-divider />
 
-      <header>
-        <h2>Latest in Event Photography</h2>
+            <v-subheader class="text-uppercase">Event Photography</v-subheader>
+            <v-list-item-group>
+              <v-list-item :to="localePath('galleries-events-year-month-day')" nuxt>
+                <v-list-item-content>
+                  <v-list-item-title>Browse Galleries</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
 
-        <nav v-if="isAuthenticated" class="actions">
-          <nuxt-link :to="localePath('galleries-upload')" class="button is-primary">
-            <span class="icon"><i class="bx bx-cloud-upload"/></span>
-            Upload Photos
-          </nuxt-link>
-        </nav>
-      </header>
+              <v-list-item nuxt>
+                <v-list-item-content>
+                  <v-list-item-title>Top 10</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
 
-      <GalleryList :galleries="galleries" />
+            <v-divider />
 
-      <h2>Latest in Flyers</h2>
-    </div>
-  </main>
+            <v-subheader class="text-uppercase">Flyers</v-subheader>
+            <v-list-item-group>
+              <v-list-item :to="localePath('galleries-flyers')" nuxt>
+                <v-list-item-content>
+                  <v-list-item-title>Browse Flyers</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item nuxt>
+                <v-list-item-content>
+                  <v-list-item-title>Random Flyer</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </v-navigation-drawer>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -53,14 +67,18 @@ import { Component, Vue } from 'nuxt-property-decorator';
 
 import GalleryList from '@/components/galleries/GalleryList.vue';
 import { authStore } from '@/store/auth';
-import { Actions, Getters } from '../../store/galleries';
+import { Actions, DatePayload, galleriesStore, Getters } from '@/store/galleries';
 
 @Component({
   components: { GalleryList },
   head: { title: 'Galleries' },
 })
 export default class GalleriesIndex extends Vue {
-  @authStore.Getter isAuthenticated!: boolean;
+  @authStore.Getter
+  isAuthenticated!: boolean;
+
+  @galleriesStore.Getter(Getters.GALLERIES_BY_DATE)
+  getGalleriesByDate!: (date: DatePayload, page?: number) => any;
 
   async fetch({ store }) {
     const getGalleries = store.getters[`galleries/${Getters.GALLERIES_BY_DATE}`];
@@ -72,8 +90,7 @@ export default class GalleriesIndex extends Vue {
 
   get galleries() {
     const galleriesWithRelations: any[] = [];
-    const getGalleries = this.$store.getters[`galleries/${Getters.GALLERIES_BY_DATE}`];
-    const galleries: any[] = getGalleries({});
+    const galleries: any[] = this.getGalleriesByDate({});
 
     galleries.forEach(gallery =>
       galleriesWithRelations.push({

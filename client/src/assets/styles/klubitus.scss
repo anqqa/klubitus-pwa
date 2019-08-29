@@ -1,0 +1,55 @@
+@import 'variables.scss';
+
+.hotness-1 { color: map_get($amber, 'base'); }
+.hotness-2 { color: map_get($orange, 'base'); text-shadow: 0 0 5px map_get($orange, 'base'); }
+.hotness-3 { color: map_get($red, 'base'); text-shadow: 0 0 5px map_get($red, 'base'); }
+
+.font-mono {
+  font-family: monospace;
+}
+
+.separator {
+  display: block;
+  font-variant: small-caps;
+  overflow: hidden;
+  text-align: center;
+
+  &:after,
+  &:before {
+    background-color: map_get($material_theme, 'dividers');
+    content: '';
+    display: inline-block;
+    height: 1px;
+    position: relative;
+    vertical-align: middle;
+    width: 50%;
+  }
+
+  &:after {
+    margin-right: -50%;
+    left: $spacer * 2;
+  }
+
+  &:before {
+    margin-left: -50%;
+    right: $spacer * 2;
+  }
+
+  .theme--dark &:after,
+  .theme--dark &:before {
+    background-color: map_get($material-dark, 'dividers');
+  }
+}
+
+.table-fixed table {
+  table-layout: fixed;
+}
+
+.user {
+  font-weight: map_get($font-weights, 'bold');
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

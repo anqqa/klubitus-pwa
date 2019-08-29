@@ -1,13 +1,11 @@
 <template>
-  <main>
-    <article class="container">
-      <figure v-if="item.flyer_front_url" class="image">
-        <img :src="item.flyer_front_url" alt="Flyer" />
-      </figure>
+  <v-container>
+    <v-flex md8 class="mx-auto">
+      <v-img v-if="item.flyer_front_url" :src="item.flyer_front_url" alt="Flyer" class="mb-4" />
 
-      <header class="has-text-center is-uppercase">
-        <h2 class="subtitle">{{ item.date }}</h2>
-        <h1 class="title">{{ item.name }}</h1>
+      <header class="text-center text-uppercase">
+        <h2 class="headline">{{ item.date }}</h2>
+        <h1 class="display-1">{{ item.name }}</h1>
         {{ item.venue_name }}, {{ item.city_name }}<br />
         {{ item.hours }}<br />
         <a
@@ -22,11 +20,11 @@
         </a>
       </header>
 
-      <hr />
+      <v-divider class="my-4" />
 
       <div class="markdown" v-html="item.info" />
-    </article>
-  </main>
+    </v-flex>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -40,13 +38,13 @@ import { hours } from '@/utils/time';
 export default class SingleEvent extends Vue {
   async asyncData({ app, params }) {
     const event = await new Event().find(parseInt(params.id));
-    const { begins_at, ends_at, info } = event as any;
+    const { begins_at, ends_at, info } = event;
 
     return {
       item: {
         ...event,
-        date: format(begins_at, 'dddd, MMMM D, YYYY'),
-        hours: hours(begins_at, ends_at),
+        date: format(begins_at!, 'dddd, MMMM D, YYYY'),
+        hours: hours(begins_at!, ends_at!),
         info: app.$md.render(info),
       },
     };
@@ -57,9 +55,3 @@ export default class SingleEvent extends Vue {
   }
 }
 </script>
-
-<style scoped>
-article {
-  max-width: 720px;
-}
-</style>

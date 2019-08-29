@@ -1,26 +1,24 @@
 <template>
   <section>
-    <article v-for="post in postList" :key="post.id" class="media">
-      <div class="media-left">
-        <Avatar :image-url="post.avatar" :name="post.username" />
-      </div>
+    <v-card v-for="post in postList" :key="post.id" class="mb-4">
+      <v-list-item three-line>
+        <v-list-item-avatar>
+          <avatar :src="post.avatar" :title="post.username" size="40" />
+        </v-list-item-avatar>
 
-      <div class="media-content">
-        <header>
-          <span>
+        <v-list-item-content>
+          <v-list-item-title class="mb-4 text--secondary">
             <nuxt-link to="/">{{ post.username }}</nuxt-link>
-            <span v-if="post.author && post.author.title" class="has-text-tertiary">
-              &sdot; {{ post.author.title }}</span
-            >
-          </span>
-          <span :title="post.created_at" class="pull-right">{{ post.ago }}</span>
-        </header>
+            <span v-if="post.author && post.author.title"> &sdot; {{ post.author.title }} </span>
+            <span class="float-right" :title="post.created_at">{{ post.ago }} </span>
+          </v-list-item-title>
 
-        <div class="content markdown" v-html="post.post" />
+          <div class="markdown" v-html="post.post" />
 
-        <footer class="content markdown signature" v-html="post.signature" />
-      </div>
-    </article>
+          <footer class="markdown text--secondary caption font-mono" v-html="post.signature" />
+        </v-list-item-content>
+      </v-list-item>
+    </v-card>
   </section>
 </template>
 

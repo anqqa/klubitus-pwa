@@ -22,17 +22,22 @@ const config: NuxtConfiguration = {
    * Headers of the page
    */
   head: {
-    title: 'Klubitus',
+    // title: 'Klubitus',
+    titleTemplate: title => `${title} | Klubitus`,
     link: [
       { rel: 'icon', type: 'image/png', href: '/favicon.png' },
-      { rel: 'stylesheet', href: 'https://unpkg.com/normalize.css@8.0.0/normalize.css' },
-      { rel: 'stylesheet', href: 'https://unpkg.com/boxicons@1.7.1/css/boxicons.min.css' },
+      // { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Cairo:200,300,400,600,700,900&display=swap' },
+      {
+        rel: 'stylesheet',
+        href:
+          'https://fonts.googleapis.com/css?family=Lato:400,700|Montserrat:300,400,500&display=swap',
+      },
     ],
   },
   meta: {
     description: 'Clubbers guide to... Finland',
   },
-  css: ['@/assets/style/klubitus.scss'],
+  css: ['@/assets/styles/klubitus.scss'],
   plugins: ['~/plugins/axios', '~/plugins/vue-plugins'],
 
   /**
@@ -88,8 +93,8 @@ const config: NuxtConfiguration = {
       {
         defaultLocale: 'en',
         locales: [
-          { code: 'en', iso: 'en-US', langFile: 'en.js', name: 'English' },
-          { code: 'fi', iso: 'fi-FI', langFile: 'fi.js', name: 'suomi' },
+          { code: 'en', iso: 'en-US', langFile: 'en.ts', name: 'English' },
+          { code: 'fi', iso: 'fi-FI', langFile: 'fi.ts', name: 'suomi' },
         ],
 
         pages: {
@@ -120,6 +125,18 @@ const config: NuxtConfiguration = {
         vueI18n: {
           fallbackLocale: 'en',
         },
+      },
+    ],
+  ],
+
+  devModules: [
+    [
+      '@nuxtjs/vuetify',
+      {
+        customVariables: ['~/assets/styles/variables.scss'],
+        defaultAssets: { font: false },
+        optionsPath: '~/plugins/vuetify.options.ts',
+        treeShake: true,
       },
     ],
   ],

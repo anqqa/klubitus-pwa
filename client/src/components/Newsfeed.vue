@@ -1,39 +1,39 @@
 <template>
-  <section class="card dense">
-    <header>
-      <h2>Newsfeed</h2>
-    </header>
+  <v-card>
+    <v-card-title>Newsfeed</v-card-title>
 
-    <ul class="card-content">
-      <li v-for="(group, index) in groups" :key="index" class="media">
-        <div class="media-left">
-          <avatar :image-url="group.avatar" :name="group.username" class="is-24x24" />
-        </div>
+    <v-list three-line>
+      <template v-for="(group, index) in groups">
+        <v-divider v-if="index > 0" :key="`${index}-divider`" inset />
+        <v-list-item :key="index">
+          <v-list-item-avatar>
+            <avatar :src="group.avatar" :title="group.username" size="40" />
+          </v-list-item-avatar>
 
-        <div class="media-content">
-          <nuxt-link class="user" to="/">{{ group.username }}</nuxt-link> {{ group.text }}
-          <time :datetime="group.created_at" :title="group.created_at">{{ group.stamp }}</time>
-          <ul>
-            <li v-for="item in group.items" :key="item.id">
-              <nuxt-link :to="item.url">
-                <span v-if="item.icon" class="icon">
-                  <i :class="`bx bx-${item.icon}`" />
-                </span>
-                {{ item.text }}
-              </nuxt-link>
-            </li>
-          </ul>
-        </div>
-      </li>
-    </ul>
-  </section>
+          <v-list-item-content>
+            <v-list-item-title>
+              <nuxt-link class="user" to="/">{{ group.username }}</nuxt-link> {{ group.text }}
+            </v-list-item-title>
+
+            <div v-for="item in group.items" :key="item.id">
+              <v-icon v-if="item.icon" small class="mr-1">{{ item.icon }}</v-icon>
+              <nuxt-link :to="item.url">{{ item.text }}</nuxt-link>
+            </div>
+          </v-list-item-content>
+
+          <v-list-item-action>
+            <v-list-item-action-text :title="group.created_at" v-text="group.stamp" />
+          </v-list-item-action>
+        </v-list-item>
+      </template>
+    </v-list>
+  </v-card>
 </template>
 
 <script lang="ts">
 import format from 'date-fns/format';
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
 
-import { AsyncComputed } from '@/decorators/AsyncComputed';
 import NewsfeedItem from '@/models/NewsfeedItem';
 import { slug } from '@/utils/text';
 import { avatarUrl } from '@/utils/url';
@@ -148,13 +148,13 @@ export default class Newsfeed extends Vue {
     switch (item.class) {
       case 'blog':
         model = item.target_blog_entry || {};
-        icon = 'pen';
+        icon = 'mdi-book-open';
         text = model.name || '(Untitled)';
         break;
 
       case 'events':
         model = item.target_event || {};
-        icon = item.type === 'favorite' ? 'star' : 'calendar-alt';
+        icon = item.type === 'favorite' ? 'mdi-star' : 'mdi-calendar';
         text = model.name || '(Untitled)';
         url = this.localePath({
           name: 'events-id',
@@ -164,7 +164,7 @@ export default class Newsfeed extends Vue {
 
       case 'forum':
         model = item.target_forum_topic || {};
-        icon = item.type === 'reply' ? 'conversation' : 'message';
+        icon = item.type === 'reply' ? 'mdi-message-reply-text' : 'mdi-message-text';
         text = model.name || '(Untitled)';
         url = this.localePath({
           name: 'forum-topic-id',
@@ -177,19 +177,19 @@ export default class Newsfeed extends Vue {
 
       case 'music':
         model = item.target_track || {};
-        icon = item.type === 'track' ? 'album' : 'music';
+        icon = item.type === 'track' ? 'mdi-album' : 'mdi-cassette';
         text = model.name || '(Untitled)';
         break;
 
       case 'user':
         model = item.target_user || {};
-        icon = 'user';
+        icon = 'mdi-account';
         text = model.username || '(Unknown)';
         break;
 
       case 'venues':
         model = item.target_venue || {};
-        icon = 'map';
+        icon = 'mdi-map-marker';
         text = model.name || '(Untitled)';
         break;
     }

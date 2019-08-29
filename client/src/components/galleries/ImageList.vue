@@ -1,20 +1,29 @@
 <template>
-  <section class="grid">
-    <nuxt-link v-for="image in imageList" :key="image.id" :to="image.to">
-      <figure>
+  <v-row>
+    <v-col cols="6" md="3" v-for="image in imageList" :key="image.id">
+      <v-card :to="image.to" nuxt>
         <ResponsiveImage
           :src="image.url"
           :color="image.color"
-          :ratio="1"
-          class="image is-square"
+          aspect-ratio="1"
+          position="center top"
           desktop-size="25vw"
           tablet-size="33vw"
           mobile-size="50vw"
         />
-        <figcaption v-if="image.description">{{ image.description }}</figcaption>
-      </figure>
-    </nuxt-link>
-  </section>
+        <v-card-actions
+          v-if="image.description || image.comment_count"
+          class="justify-space-between caption"
+        >
+          {{ image.description }}
+
+          <span v-if="image.comment_count" title="Comments">
+            <v-icon right x-small>mdi-comment</v-icon> {{ image.comment_count }}
+          </span>
+        </v-card-actions>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 
 <script lang="ts">
@@ -44,23 +53,3 @@ export default class ImageList extends Vue {
   }
 }
 </script>
-
-<style scoped>
-a {
-  transition: opacity 0.1s ease-in-out;
-}
-
-figure {
-  position: relative;
-}
-
-figcaption {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
-  bottom: 0;
-  flex: 1;
-  left: 0;
-  padding: 1rem;
-  position: absolute;
-  right: 0;
-}
-</style>

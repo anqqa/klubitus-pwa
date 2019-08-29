@@ -1,27 +1,30 @@
 <template>
-  <main class="row">
-    <nav class="sidebar col-2">
-      <forum-area-list :areas="areas" />
-    </nav>
+  <v-container fluid>
+    <v-row justify="space-between">
+      <v-col md="6">
+        <h1 class="display-1">Latest posts</h1>
+      </v-col>
 
-    <div class="col-7 main-content">
-      <header>
-        <h1>Forum</h1>
+      <v-col cols="auto">
+        <v-btn :to="localePath({ name: 'forum-areas' })" nuxt>
+          Show areas
+        </v-btn>
+        <v-btn to="" color="primary" nuxt class="ml-2">
+          <v-icon left>mdi-message-plus</v-icon> New topic
+        </v-btn>
+      </v-col>
+    </v-row>
 
-        <nav class="actions">
-          <nuxt-link :to="localePath({ name: 'forum-areas' })" class="button">
-            Show all areas
-          </nuxt-link>
-          <nuxt-link to="" class="button is-primary">
-            <span class="icon"><i class="bx bx-message"/></span>
-            Start a new topic
-          </nuxt-link>
-        </nav>
-      </header>
+    <v-row>
+      <v-col md="8">
+        <forum-topic-list :topics="topics" />
+      </v-col>
 
-      <forum-topic-list :topics="topics" />
-    </div>
-  </main>
+      <v-col md="4">
+        <forum-area-list :areas="areas" />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -37,6 +40,8 @@ import ForumTopic from '@/models/ForumTopic';
   head: { title: 'Forum' },
 })
 export default class ForumIndex extends Vue {
+  title = 'Forum';
+
   async asyncData() {
     const [areas, topics] = await Promise.all([
       new ForumArea().getAll(),

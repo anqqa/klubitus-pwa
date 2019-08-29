@@ -1,31 +1,39 @@
 <template>
-  <main class="row">
-    <nav class="sidebar col-2">
-      <forum-area-list :areas="areas" />
-    </nav>
+  <v-container fluid grid-list-md>
+    <v-row>
+      <v-col>
+        <h1 class="display-1" v-text="name" />
+        <h2 class="headline" v-html="description" />
+      </v-col>
+    </v-row>
 
-    <div class="col-7 main-content">
-      <h1 v-text="name" />
-      <h2 v-html="description" />
+    <v-row>
+      <v-col md="8">
+        <v-pagination v-if="pages > 1" :length="pages" v-model="page" total-visible="7" />
 
-      <pagination :pages="pages" :route="route" />
+        <nuxt-child :key="$route.fullPath" />
 
-      <nuxt-child :key="$route.fullPath" />
-    </div>
-  </main>
+        <v-pagination v-if="pages > 1" :length="pages" v-model="page" total-visible="7" />
+      </v-col>
+
+      <v-col md="4">
+        <forum-area-list :areas="areas" />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'nuxt-property-decorator';
+import { Component, mixins } from 'nuxt-property-decorator';
 
 import ForumAreaList from '@/components/forum/ForumAreaList.vue';
+import PaginatedMixin from '@/mixins/paginated';
 import ForumArea from '@/models/ForumArea';
-import Pagination from '../../components/Pagination.vue';
 
 @Component({
-  components: { ForumAreaList, Pagination },
+  components: { ForumAreaList },
 })
-export default class SingleForumArea extends Vue {
+export default class SingleForumArea extends mixins(PaginatedMixin) {
   areas: ForumArea[] = [];
   description = '';
   name = '';
@@ -46,14 +54,6 @@ export default class SingleForumArea extends Vue {
 
   head() {
     return { title: this.name || 'Forum' };
-  }
-
-  get page() {
-    return parseInt(this.$route.query.page as string) || 1;
-  }
-
-  get route() {
-    return { name: 'forum-area', params: this.$route.params };
   }
 }
 </script>

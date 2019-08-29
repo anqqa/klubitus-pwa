@@ -1,26 +1,34 @@
 <template>
-  <main class="column section">
-    <h1 class="title">{{ name }}</h1>
+  <v-container fluid grid-list-md>
+    <v-layout wrap>
+      <v-toolbar flat color="transparent" width="100%">
+        <v-toolbar-title>
+          <h1 class="display-1" v-text="name" />
+        </v-toolbar-title>
+      </v-toolbar>
 
-    <pagination :pages="pages" :route="route" />
+      <v-flex md8>
+        <v-pagination v-if="pages > 1" :length="pages" v-model="page" total-visible="7" />
 
-    <nuxt-child :key="topicId" />
+        <nuxt-child :key="topicId" />
 
-    <pagination :pages="pages" :route="route" />
-  </main>
+        <v-pagination v-if="pages > 1" :length="pages" v-model="page" total-visible="7" />
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'nuxt-property-decorator';
+import { Component, mixins } from 'nuxt-property-decorator';
 
-import Pagination from '@/components/Pagination.vue';
+import PaginatedMixin from '@/mixins/paginated';
 import ForumTopic from '@/models/ForumTopic';
 
-@Component({
-  components: { Pagination },
-})
-export default class SingleTopic extends Vue {
+@Component({})
+export default class SingleTopic extends mixins(PaginatedMixin) {
   name = '';
+  pages: number = 0;
+  topicId: number = 0;
 
   async asyncData({ params }) {
     const topicId = parseInt(params.id);
@@ -28,14 +36,6 @@ export default class SingleTopic extends Vue {
     const pages = Math.ceil(topic.post_count! / 20);
 
     return { name: topic.name, pages, topicId };
-  }
-
-  get page() {
-    return parseInt(this.$route.query.page as string) || 1;
-  }
-
-  get route() {
-    return { name: 'forum-topic-id', params: this.$route.params };
   }
 
   head() {

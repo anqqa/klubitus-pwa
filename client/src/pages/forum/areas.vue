@@ -1,78 +1,78 @@
 <template>
-  <main>
-    <div class="main-content">
-      <header>
-        <h1>Forum Areas</h1>
+  <v-container fluid>
+    <v-row justify="space-between">
+      <v-col md="6">
+        <h1 class="display-1">Forum Areas</h1>
+      </v-col>
 
-        <nav class="actions">
-          <nuxt-link :to="localePath({ name: 'forum' })" class="button">
-            Show latest posts
-          </nuxt-link>
-          <nuxt-link to="" class="button is-primary">
-            <span class="icon"><i class="bx bx-message"/></span>
-            Start a new topic
-          </nuxt-link>
-        </nav>
-      </header>
+      <v-col cols="auto">
+        <v-btn :to="localePath({ name: 'forum' })" nuxt>
+          Latest posts
+        </v-btn>
+        <v-btn to="" color="primary" nuxt class="ml-2">
+          <v-icon left>mdi-message-plus</v-icon> New topic
+        </v-btn>
+      </v-col>
+    </v-row>
 
-      <table>
-        <tbody>
-          <template v-for="group in groupList">
-            <tr :key="`header-${group.id}`" class="group-header">
-              <th width="45%">
-                <h3 class="h6">{{ group.name }}</h3>
-              </th>
-              <th align="center">Topics</th>
-              <th width="45%" class="hide-phone">Latest</th>
-            </tr>
+    <v-simple-table v-for="group in groupList" class="table-fixed my-4" :key="group.id">
+      <thead>
+        <tr>
+          <th width="100%">
+            <h3 class="title">{{ group.name }}</h3>
+          </th>
+          <th width="75px" class="text-center">Topics</th>
+          <th width="100%" class="d-none d-sm-table-cell">Latest</th>
+        </tr>
+      </thead>
 
-            <tr v-for="area in group.areas" :key="area.id">
-              <td v-if="area.url">
-                <nuxt-link :to="area.url">
-                  <h4>{{ area.name }}</h4>
-                </nuxt-link>
-                <p v-html="area.description" />
-              </td>
-              <td v-else>
-                <a>
-                  <h4>
-                    <span class="icon"><i class="bx bx-lock"/></span> {{ area.name }}
-                  </h4>
-                </a>
-              </td>
+      <tbody>
+        <tr v-for="area in group.areas" :key="area.id">
+          <td v-if="area.url">
+            <nuxt-link :to="area.url">
+              <h4 class="subtitle-1">{{ area.name }}</h4>
+            </nuxt-link>
+            <p v-html="area.description" />
+          </td>
+          <td v-else>
+            <a>
+              <h4 class="subtitle-1">
+                <v-icon class="text--secondary">mdi-lock</v-icon> {{ area.name }}
+              </h4>
+            </a>
+          </td>
 
-              <td align="center">{{ area.topics }}</td>
+          <td class="text-center">{{ area.topics }}</td>
 
-              <td v-if="area.lastTopic" class="hide-phone">
-                <div class="media">
-                  <div class="media-left">
-                    <avatar :image-url="area.lastTopic.avatar" :name="area.lastTopic.username" />
-                  </div>
+          <td class="d-none d-sm-table-cell">
+            <v-list-item v-if="area.lastTopic">
+              <v-list-item-avatar>
+                <avatar :src="area.lastTopic.avatar" :title="area.lastTopic.username" size="40" />
+              </v-list-item-avatar>
 
-                  <div class="media-content">
-                    <h4><nuxt-link :to="area.lastTopic.url" v-text="area.lastTopic.name" /></h4>
+              <v-list-item-content>
+                <v-list-item-title>
+                  <nuxt-link :to="area.lastTopic.url" v-text="area.lastTopic.name" />
+                </v-list-item-title>
 
-                    <span
-                      v-if="area.lastTopic.first_post_id !== area.lastTopic.last_post_id"
-                      class="icon"
-                    >
-                      <i class="bx bx-reply" />
-                    </span>
-                    <nuxt-link class="user" to="/">{{ area.lastTopic.username }}</nuxt-link>
-                    {{ area.lastTopic.verb }} {{ area.lastTopic.ago }}
-                  </div>
-                </div>
-              </td>
-              <td v-else-if="area.url" class="hide-phone"></td>
-              <td v-else class="hide-phone">
-                <span class="icon is-medium"><i class="bx bx-lock"/></span>
-              </td>
-            </tr>
-          </template>
-        </tbody>
-      </table>
-    </div>
-  </main>
+                <v-list-item-subtitle>
+                  <v-icon
+                    v-if="area.lastTopic.first_post_id !== area.lastTopic.last_post_id"
+                    small
+                    class="text--secondary"
+                  >
+                    mdi-message-reply-text
+                  </v-icon>
+                  <nuxt-link class="user" to="/">{{ area.lastTopic.username }}</nuxt-link>
+                  {{ area.lastTopic.verb }} {{ area.lastTopic.ago }}
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </td>
+        </tr>
+      </tbody>
+    </v-simple-table>
+  </v-container>
 </template>
 
 <script lang="ts">

@@ -1,88 +1,99 @@
 <template>
-  <main class="row">
-    <div class="sidebar col-3">
-      <datepicker
-        :full-month-name="true"
-        :highlighted="highlighted"
-        :inline="true"
-        :monday-first="true"
-        :open-date="highlighted.from"
-        wrapper-class="calendar"
-        @selected="dateSelected"
-      />
-    </div>
+  <v-container fluid grid-list-md>
+    <v-layout wrap>
+      <v-flex md8>
+        <header>
+          <h1 class="display-1">{{ title }}</h1>
+        </header>
 
-    <div class="col main-content">
-      <header>
-        <h1>{{ title }}</h1>
-      </header>
+        <nav class="text-center" role="navigation" aria-label="pagination">
+          <v-btn :to="localePath(pagination.previous.url)" nuxt text>
+            &laquo; {{ pagination.previous.title }}
+          </v-btn>
+          <v-btn :to="localePath(pagination.next.url)" nuxt text>
+            {{ pagination.next.title }} &raquo;
+          </v-btn>
+        </nav>
 
-      <nav class="pagination" role="navigation" aria-label="pagination">
-        <nuxt-link :to="localePath(pagination.previous.url)" class="button pagination-previous">
-          &laquo; {{ pagination.previous.title }}
-        </nuxt-link>
-        <nuxt-link :to="localePath(pagination.next.url)" class="button pagination-next">
-          {{ pagination.next.title }} &raquo;
-        </nuxt-link>
-      </nav>
+        <section v-for="(day, dayIndex) in days" :key="dayIndex">
+          <v-subheader class="title" v-text="day.header" />
 
-      <section v-for="(day, dayIndex) in days" :key="dayIndex">
-        <h2>{{ day.header }}</h2>
+          <v-divider />
 
-        <hr />
+          <v-row v-for="(event, eventIndex) in day.events" :key="eventIndex">
+            <v-col style="max-width: 200px">
+              <v-card>
+                <v-img
+                  v-if="event.flyer_front_url"
+                  :aspect-ratio="16 / 9"
+                  :src="event.flyer_front_url"
+                />
+                <v-responsive v-else :aspect-ratio="16 / 9" class="d-flex align-center text-center">
+                  <v-icon large disabled>mdi-image-off</v-icon>
+                </v-responsive>
+              </v-card>
+            </v-col>
 
-        <div v-for="(event, eventIndex) in day.events" :key="eventIndex" class="row">
-          <div class="col is-narrow flyer">
-            <figure class="image is-16by9">
-              <img :src="event.flyer_front_url" />
-            </figure>
-          </div>
+            <v-col>
+              <nuxt-link :to="localePath(event.url)">{{ event.name }}</nuxt-link>
+              <br />
+              <span>{{ event.venue_name }} &sdot; {{ event.city_name }}</span>
+              <br />
+              <span class="has-text-tertiary">
+                {{ event.hours }}
+              </span>
+            </v-col>
+          </v-row>
+        </section>
 
-          <div class="col">
-            <nuxt-link :to="localePath(event.url)">{{ event.name }}</nuxt-link>
-            <br />
-            <!--            <span class="icon"><i class="bx bxs-map" /></span>-->
-            <span>{{ event.venue_name }} &sdot; {{ event.city_name }}</span>
-            <br />
-            <span class="has-text-tertiary">
-              <!--              <span class="icon"><i class="bx bx-time" /></span>-->
-              {{ event.hours }}
-            </span>
-          </div>
-        </div>
-      </section>
+        <nav class="text-center" role="navigation" aria-label="pagination">
+          <v-btn :to="localePath(pagination.previous.url)" nuxt text>
+            &laquo; {{ pagination.previous.title }}
+          </v-btn>
+          <v-btn :to="localePath(pagination.next.url)" nuxt text>
+            {{ pagination.next.title }} &raquo;
+          </v-btn>
+        </nav>
+      </v-flex>
 
-      <nav class="pagination" role="navigation" aria-label="pagination">
-        <nuxt-link :to="localePath(pagination.previous.url)" class="button pagination-previous">
-          &laquo; {{ pagination.previous.title }}
-        </nuxt-link>
-        <nuxt-link :to="localePath(pagination.next.url)" class="button pagination-next">
-          {{ pagination.next.title }} &raquo;
-        </nuxt-link>
-      </nav>
-    </div>
+      <v-flex md4>
+        <v-date-picker
+          v-model="selectedDate"
+          first-day-of-week="1"
+          full-width
+          no-title
+          show-week
+          @input="dateSelected"
+          class="mb-4"
+        />
 
-    <div class="col-3 sidebar">
-      <keep-alive>
-        <event-list title="New events" type="latest" />
-      </keep-alive>
-    </div>
-  </main>
+        <keep-alive>
+          <event-list title="New events" type="latest" />
+        </keep-alive>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
-<script>
+<script lang="ts">
 import addDays from 'date-fns/add_days';
 import addMonths from 'date-fns/add_months';
 import format from 'date-fns/format';
 import getISOWeek from 'date-fns/get_iso_week';
-import Datepicker from 'vuejs-datepicker';
+import { Component, Vue } from 'nuxt-property-decorator';
+import { RawLocation } from 'vue-router';
 
-import EventList from '../../components/events/EventList';
-import Event from '../../models/Event';
-import { pad, slug } from '../../utils/text';
-import { dateRange, hours } from '../../utils/time';
+import EventList from '@/components/events/EventList.vue';
+import Event from '@/models/Event';
+import { pad, slug } from '@/utils/text';
+import { dateRange, hours } from '@/utils/time';
 
-const buildPagination = (from, to, range) => {
+interface DayGroup {
+  header: string;
+  events: Array<Event | { hours: string; url: RawLocation }>;
+}
+
+const buildPagination = (from: Date, to: Date, range: string) => {
   let previousDate, nextDate, previousTitle, nextTitle;
 
   switch (range) {
@@ -114,8 +125,8 @@ const buildPagination = (from, to, range) => {
   };
 };
 
-const buildTitle = (from, to) => {
-  let dates = [];
+const buildTitle = (from: Date, to: Date): string => {
+  let dates: string[] = [];
 
   if (from.getFullYear() === to.getFullYear()) {
     if (from.getMonth() === to.getMonth()) {
@@ -131,39 +142,42 @@ const buildTitle = (from, to) => {
     dates = [format(from, 'D MMM YYYY'), format(to, 'D MMM YYYY')]; // Nothing same
   }
 
-  return `Events, ${dates.join('–')}`;
+  return dates.join('–');
 };
 
-const getRoute = (range, date) => {
-  const route = { name: 'events-year-month-day', params: { year: date.getFullYear() } };
+const getRoute = (range: string, date: Date): RawLocation => {
+  const route: RawLocation = {
+    name: 'events-year-month-day',
+    params: { year: date.getFullYear().toString() },
+  };
 
   switch (range) {
     case 'day':
       route.name = 'events-year-month-day';
-      route.params.month = pad(date.getMonth() + 1, 2);
-      route.params.day = pad(date.getDate(), 2);
+      route.params!.month = pad(date.getMonth() + 1, 2);
+      route.params!.day = pad(date.getDate(), 2);
       break;
 
     case 'week':
       route.name = 'events-year-wk-week';
-      route.params.week = pad(getISOWeek(date), 2);
+      route.params!.week = pad(getISOWeek(date), 2);
       break;
 
     case 'month':
       route.name = 'events-year-month';
-      route.params.month = pad(date.getMonth() + 1, 2);
+      route.params!.month = pad(date.getMonth() + 1, 2);
   }
 
   return route;
 };
 
-const groupByDate = data => {
-  const days = [];
-  let events = [];
+const groupByDate = (data: Event[]): DayGroup[] => {
+  const days: DayGroup[] = [];
+  let events: any[] = [];
   let today;
 
   data.forEach(event => {
-    const header = format(event.begins_at, 'dddd, MMMM Do');
+    const header = format(event.begins_at!, 'dddd, MMMM Do');
 
     if (header !== today) {
       today = header;
@@ -176,7 +190,7 @@ const groupByDate = data => {
 
     events.push({
       ...event,
-      hours: hours(event.begins_at, event.ends_at),
+      hours: hours(event.begins_at!, event.ends_at!),
       url: {
         name: 'events-id',
         params: { id: `${event.id}-${slug(event.name)}` },
@@ -187,7 +201,17 @@ const groupByDate = data => {
   return days;
 };
 
-export default {
+@Component({
+  components: { EventList },
+  head: { title: 'Events' },
+})
+export default class EventsIndex extends Vue {
+  days: DayGroup[] = [];
+  highlighted: { from: Date; to: Date } | null = null;
+  range: string = 'week';
+  selectedDate: string = format(new Date(), 'YYYY-MM-DD');
+  title: string = 'Events';
+
   async asyncData({ params }) {
     const { year, month, week, day } = params;
 
@@ -208,22 +232,21 @@ export default {
     const title = buildTitle(from, to);
     const pagination = buildPagination(from, to, range);
 
-    return { days, highlighted: { from, to }, pagination, range, title };
-  },
+    return {
+      days,
+      highlighted: { from, to },
+      pagination,
+      range,
+      selectedDate: format(from, 'YYYY-MM-DD'),
+      title,
+    };
+  }
 
-  components: { Datepicker, EventList },
+  dateSelected(date: string) {
+    const route = this.localePath(getRoute(this.range, new Date(date)));
 
-  methods: {
-    dateSelected(date) {
-      const route = this.localePath(getRoute(this.range, date));
-
-      this.$router.push(route);
-    },
-  },
-
-  head: {
-    title: 'Events',
-  },
+    this.$router.push(route);
+  }
 
   validate({ params }) {
     const year = !params.year || /^\d{4}$/.test(params.year);
@@ -232,19 +255,6 @@ export default {
     const day = !params.day || /^[0-3]?\d$/.test(params.day);
 
     return year && month && week && day;
-  },
-};
+  }
+}
 </script>
-
-<style scoped>
-.flyer {
-  flex-basis: 120px;
-}
-.pagination {
-  margin: var(--grid-gutter) 0;
-}
-
-section + section {
-  margin-top: var(--grid-gutter);
-}
-</style>

@@ -1,116 +1,107 @@
 <template>
-  <main class="is-center">
-    <section class="card">
-      <header class="tabs">
-        <nuxt-link class="tab" :to="localePath('login')">Log In</nuxt-link>
-        <nuxt-link class="tab" :to="localePath('signup')">Sign Up</nuxt-link>
-      </header>
+  <v-container class="fill-height" fluid>
+    <v-row align="center" justify="center">
+      <v-col cols="12" sm="8" md="4">
+        <v-card class="elevation-12">
+          <v-toolbar>
+            <v-tabs grow>
+              <v-tab :to="localePath('login')" nuxt>Login</v-tab>
+              <v-tab :to="localePath('signup')" nuxt>Sign Up</v-tab>
+            </v-tabs>
+          </v-toolbar>
 
-      <form class="card-content" :disabled="submitting" @submit.prevent="submit">
-        <no-ssr>
-          <button slot="placeholder" class="button fb is-full" disabled>
-            <i class="bx bx-loader-alt bx-spin" /> Just a moment...
-          </button>
+          <v-form :disabled="submitting" @submit.prevent="submit">
+            <v-card-text>
+              <no-ssr>
+                <v-btn slot="placeholder" block color="facebook" disabled loading>
+                  Just a moment...
+                </v-btn>
 
-          <div v-if="!fbProcessing">
-            <fb-login :params="fbParams" @success="onFbSuccess" @error="onFbError"></fb-login>
-          </div>
-          <div v-else>
-            <button class="button fb is-full" disabled>
-              <i class="bx bx-loader-alt bx-spin" /> Logging in...
-            </button>
-          </div>
+                <div v-if="!fbConnected && !fbProcessing">
+                  <fb-login :params="fbParams" @success="onFbSuccess" @error="onFbError"></fb-login>
+                </div>
+                <div v-else-if="!fbConnected">
+                  <v-btn block color="facebook" disabled loading>
+                    Logging in...
+                  </v-btn>
+                </div>
 
-          <div v-if="fbError" class="field has-error" v-html="fbError" />
+                <v-alert v-if="fbError" type="error" v-html="fbError" />
 
-          <p v-if="fbConnected && isLogin">
-            You haven't connected your Facebook account to your klubitus account yet. Log in to
-            klubitus to automagically connect them, after that you may log in with your Facebook
-            account!
-          </p>
-          <p v-else-if="fbConnected && !isLogin">
-            Welcome to klubitus! Choose a username or use your Facebook name and sign up, your
-            accounts will be connected.
-          </p>
-          <span v-else class="separator">or</span>
-        </no-ssr>
+                <v-alert v-if="fbConnected" icon="mdi-facebook-box" border="left" color="facebook">
+                  <span v-if="isLogin">
+                    You haven't connected your Facebook account to your klubitus account yet. Log in
+                    to klubitus to automagically connect them, after that you may log in with your
+                    Facebook account!
+                  </span>
+                  <span v-else>
+                    Welcome to klubitus!<br /><br />
+                    Choose a username or use your Facebook name and sign up, your accounts will be
+                    connected.
+                  </span>
+                </v-alert>
+                <span v-else class="separator my-4">or</span>
+              </no-ssr>
 
-        <div
-          v-if="!isLogin"
-          :class="{ 'has-error': (errors && errors.email) || $v.form.email.$error }"
-          class="field"
-        >
-          <label for="input-email">Email *</label>
-          <div class="control has-icon-left">
-            <input
-              id="input-email"
-              v-model.trim="$v.form.email.$model"
-              name="email"
-              required
-              type="email"
-            />
-            <span class="icon"><i class="bx bx-at"/></span>
-          </div>
-          <p v-if="errors && errors.email" class="help">{{ errors.email.join(', ') }}</p>
-        </div>
+              <v-text-field
+                v-if="!isLogin"
+                v-model.trim="$v.email.$model"
+                :error-messages="emailErrors"
+                label="Email *"
+                name="email"
+                prepend-icon="mdi-email"
+                required
+                type="email"
+              />
 
-        <div
-          :class="{ 'has-error': (errors && errors.username) || $v.form.username.$error }"
-          class="field"
-        >
-          <label for="input-username" v-text="isLogin ? 'Email or username *' : 'Username *'" />
-          <div class="control has-icon-left">
-            <input
-              id="input-username"
-              v-model.trim="$v.form.username.$model"
-              name="username"
-              required
-              type="text"
-            />
-            <span class="icon"><i class="bx bx-user"/></span>
-          </div>
-          <p v-if="errors && errors.username" class="help">{{ errors.username.join(', ') }}</p>
-        </div>
+              <v-text-field
+                v-model.trim="$v.username.$model"
+                :error-messages="usernameErrors"
+                :label="isLogin ? 'Email or username *' : 'Username *'"
+                name="username"
+                prepend-icon="mdi-account"
+                required
+                type="text"
+              />
 
-        <div
-          :class="{ 'has-error': (errors && errors.password) || $v.form.password.$error }"
-          class="field"
-        >
-          <label for="input-password">Password *</label>
-          <div class="control has-icon-left">
-            <input
-              id="input-password"
-              v-model.trim="$v.form.password.$model"
-              name="password"
-              required
-              type="password"
-            />
-            <span class="icon"><i :class="isLogin ? 'bx bx-lock' : 'bx bx-lock-open'"/></span>
-          </div>
-          <p v-if="errors && errors.password" class="help">{{ errors.password.join(', ') }}</p>
-        </div>
+              <v-text-field
+                v-model.trim="$v.password.$model"
+                :error-messages="passwordErrors"
+                label="Password *"
+                name="password"
+                :prepend-icon="isLogin ? 'mdi-lock' : 'mdi-lock-open'"
+                required
+                type="password"
+              />
 
-        <div v-if="error" class="field has-error" v-html="error" />
+              <v-alert v-model="error" type="error" v-html="error" />
+            </v-card-text>
 
-        <button
-          :disabled="submitting"
-          class="button is-primary is-full"
-          type="submit"
-          v-text="isLogin ? 'Log In' : 'Sign Up'"
-        />
-      </form>
+            <v-card-actions>
+              <v-btn
+                :disabled="submitting"
+                :loading="submitting"
+                color="primary"
+                type="submit"
+                v-text="isLogin ? 'Log In' : 'Sign Up'"
+              />
 
-      <footer v-if="isLogin">
-        <nuxt-link :to="localePath('password')">Forgot password</nuxt-link>
-      </footer>
-    </section>
-  </main>
+              <v-spacer />
+
+              <nuxt-link v-if="isLogin" :to="localePath('password')">Forgot password?</nuxt-link>
+            </v-card-actions>
+          </v-form>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts">
 import get from 'lodash/get';
 import { Component, Vue } from 'nuxt-property-decorator';
 import { validationMixin } from 'vuelidate';
+import { Validate, Validations } from 'vuelidate-property-decorators';
 import { required } from 'vuelidate/lib/validators';
 
 import FbLogin from '@/components/FBLogin.vue';
@@ -126,28 +117,41 @@ import {
 @Component({
   components: { FbLogin },
   mixins: [validationMixin],
-  validations: {
-    form: {
-      email: {},
-      username: { required },
-      password: { required },
-    },
-  },
 })
 export default class Login extends Vue {
-  error: string | null = null;
-  errors: Record<string, string[]> | null = null;
+  get isLogin() {
+    return this.tab !== 'signup' && this.$route.name!.startsWith('login');
+  }
+
+  get emailErrors() {
+    return this.getErrors('email');
+  }
+
+  get passwordErrors() {
+    return this.getErrors('password');
+  }
+
+  get usernameErrors() {
+    return this.getErrors('username');
+  }
   fbConnected = false;
   fbError: string | null = null;
   fbParams = { return_scopes: true, scope: 'email' };
   fbProcessing = false;
-  form: Record<string, string> = {
-    email: '',
-    password: '',
-    username: '',
-  };
+
+  error: string | null = null;
+  errors: Record<string, string[]> = {};
   submitting = false;
   tab: string | null = null;
+
+  @Validate({})
+  email = '';
+
+  @Validate({ required })
+  password = '';
+
+  @Validate({ required })
+  username = '';
 
   @authStore.Action(Actions.FB_LOGIN)
   actionFBLogin!: (payload: FBLoginPayload) => Promise<FBLoginResponse>;
@@ -158,14 +162,8 @@ export default class Login extends Vue {
   @authStore.Action(Actions.REGISTER)
   actionRegister!: (payload: RegisterPayload) => Promise<void>;
 
-  get isLogin() {
-    return this.tab !== 'signup' && this.$route.name!.startsWith('login');
-  }
-
   async submit() {
     this.$v.$touch();
-
-    console.log(this.$v);
 
     if (this.$v.$invalid) {
       return;
@@ -176,19 +174,19 @@ export default class Login extends Vue {
     try {
       if (this.isLogin) {
         await this.actionLogin({
-          username: this.form.username,
-          password: this.form.password,
+          username: this.username,
+          password: this.password,
         });
       } else {
         await this.actionRegister({
-          email: this.form.email,
-          username: this.form.username,
-          password: this.form.password,
+          email: this.email,
+          username: this.username,
+          password: this.password,
         });
       }
 
       this.error = null;
-      this.errors = null;
+      this.errors = {};
 
       this.$router.push('/');
     } catch (error) {
@@ -197,9 +195,9 @@ export default class Login extends Vue {
       if (!this.errors) {
         this.error = get(error, 'response.data.message', 'Fail');
       }
+    } finally {
+      this.submitting = false;
     }
-
-    this.submitting = false;
   }
 
   onFbError(error) {
@@ -209,7 +207,7 @@ export default class Login extends Vue {
 
   async onFbSuccess(response: facebook.StatusResponse) {
     this.error = null;
-    this.errors = null;
+    this.errors = {};
     this.fbProcessing = true;
 
     const { accessToken: access_token, userID: external_user_id } = response.authResponse;
@@ -221,11 +219,11 @@ export default class Login extends Vue {
         const { email, is_new_user, name } = apiResponse;
 
         if (!this.isLogin || is_new_user) {
-          this.form.email = email || '';
-          this.form.username = name || '';
+          this.email = email || '';
+          this.username = name || '';
           this.tab = 'signup';
         } else {
-          this.form.username = email || '';
+          this.username = email || '';
           this.tab = 'login';
         }
 
@@ -237,16 +235,22 @@ export default class Login extends Vue {
       this.fbProcessing = false;
     }
   }
+
+  @Validations()
+  validations() {
+    return !this.isLogin ? { email: { required } } : {};
+  }
+
+  private getErrors(field: string): string[] {
+    const errors = this.errors[field] || [];
+
+    if (!this.$v[field].$dirty) {
+      return errors;
+    }
+
+    !this.$v[field].required && errors.push('Please fill me');
+
+    return errors;
+  }
 }
 </script>
-
-<style scoped>
-.card {
-  max-width: 300px;
-  width: 100%;
-}
-
-.separator {
-  margin: 1rem 0;
-}
-</style>

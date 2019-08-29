@@ -180,7 +180,7 @@ export default class Tags extends Vue {
 
 <style scoped>
 .tags {
-  display: inline-block;
+  display: block;
   position: relative;
 }
 .tags.is-editable {
