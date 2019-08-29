@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   NotFoundException,
   Param,
@@ -29,6 +28,7 @@ import { GalleryImagesService } from './images.service';
     join: {
       author: { allow: ['avatar_url', 'id', 'signature', 'title', 'username'] },
       comments: {},
+      'comments.author': { allow: ['avatar_url', 'id', 'signature', 'title', 'username'] },
       gallery: { allow: ['id'], eager: true },
       notes: {},
     },
