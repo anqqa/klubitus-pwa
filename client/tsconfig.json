@@ -23,7 +23,7 @@
       "facebook-js-sdk",
       "node",
       "nuxt-i18n",
-      "@nuxt/vue-app",
+      "@nuxt/types",
       "@nuxtjs/axios",
       "@nuxtjs/vuetify",
       "vue"
