@@ -36,20 +36,20 @@
     "vue-template-compiler": "^2.6.10",
     "vuelidate": "^0.7.4",
     "vuelidate-property-decorators": "^1.0.27",
-    "vuetify": "^2.0.5",
     "vuex": "^3.1.1"
   },
   "devDependencies": {
     "@nuxt/typescript": "^2.8.1",
-    "@nuxtjs/vuetify": "^1.2.1",
+    "@nuxtjs/vuetify": "^1.5.0",
     "@types/facebook-js-sdk": "^3.3.0",
     "@types/js-cookie": "^2.2.2",
     "@types/lodash": "^4.14.134",
     "@types/markdown-it": "^0.0.7",
-    "@types/vuelidate": "^0.7.5",
+    "@types/vuelidate": "^0.7.7",
     "node-sass": "^4.12.0",
     "nuxt-property-decorator": "^2.3.0",
-    "sass-loader": "^7.1.0",
-    "typescript": "^3.5.2"
+    "sass-loader": "^7.3.1",
+    "typescript": "^3.5.2",
+    "vuetify": "^2.0.11"
   }
 }
