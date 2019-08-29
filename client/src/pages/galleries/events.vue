@@ -98,30 +98,6 @@ type Stats = Record<number, Record<number, { name: string; galleries: number; im
   head: { title: 'Galleries' },
 })
 export default class EventGalleries extends mixins(PaginatedMixin) {
-  get day(): number {
-    return parseInt(this.$route.params.day);
-  }
-  get month(): number {
-    return parseInt(this.$route.params.month);
-  }
-  get year(): number {
-    return parseInt(this.$route.params.year);
-  }
-  get galleries(): number {
-    return this.getStat('galleries', this.year, this.month);
-  }
-  get pages() {
-    return Math.ceil(this.galleries / 20);
-  }
-  get images(): number {
-    return this.getStat('images', this.year, this.month);
-  }
-
-  get title(): string | number {
-    return this.month
-      ? format(new Date(this.year, this.month - 1), 'MMMM YYYY')
-      : this.year || 'Event Photography';
-  }
   @authStore.Getter
   isAuthenticated!: boolean;
 
@@ -150,6 +126,30 @@ export default class EventGalleries extends mixins(PaginatedMixin) {
     return { stats };
   }
 
+  get day(): number {
+    return parseInt(this.$route.params.day);
+  }
+  get month(): number {
+    return parseInt(this.$route.params.month);
+  }
+  get year(): number {
+    return parseInt(this.$route.params.year);
+  }
+  get galleries(): number {
+    return this.getStat('galleries', this.year, this.month);
+  }
+  get pages() {
+    return Math.ceil(this.galleries / 20);
+  }
+  get images(): number {
+    return this.getStat('images', this.year, this.month);
+  }
+
+  get title(): string | number {
+    return this.month
+      ? format(new Date(this.year, this.month - 1), 'MMMM yyyy')
+      : this.year || 'Event Photography';
+  }
   getStat(stat: string, year: number, month: number): number {
     if (month) {
       return get(this.stats, [year, month, stat].join('.'), 0);

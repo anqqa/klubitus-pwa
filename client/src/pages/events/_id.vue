@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import format from 'date-fns/format';
+import { format, parseISO } from 'date-fns';
 import { Component, Vue } from 'nuxt-property-decorator';
 
 import Event from '@/models/Event';
@@ -43,8 +43,8 @@ export default class SingleEvent extends Vue {
     return {
       item: {
         ...event,
-        date: format(begins_at!, 'dddd, MMMM D, YYYY'),
-        hours: hours(begins_at!, ends_at!),
+        date: format(parseISO(begins_at!), 'eeee, MMMM d, yyyy'),
+        hours: hours(parseISO(begins_at!), parseISO(ends_at!)),
         info: app.$md.render(info),
       },
     };

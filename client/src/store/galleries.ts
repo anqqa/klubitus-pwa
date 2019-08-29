@@ -63,7 +63,7 @@ export const actions: ActionTree<GalleriesState, any> = {
     if (year) {
       const { from, to } = dateRange(year, month, undefined, day);
 
-      query.filter('event_date', 'between', [format(from, 'YYYY-MM-DD'), format(to, 'YYYY-MM-DD')]);
+      query.filter('event_date', 'between', [format(from, 'yyyy-MM-dd'), format(to, 'yyyy-MM-dd')]);
     }
 
     const galleries = await query.get();

@@ -76,10 +76,7 @@
 </template>
 
 <script lang="ts">
-import addDays from 'date-fns/add_days';
-import addMonths from 'date-fns/add_months';
-import format from 'date-fns/format';
-import getISOWeek from 'date-fns/get_iso_week';
+import { addDays, addMonths, format, getISOWeek, parseISO } from 'date-fns';
 import { Component, Vue } from 'nuxt-property-decorator';
 import { RawLocation } from 'vue-router';
 
@@ -131,15 +128,15 @@ const buildTitle = (from: Date, to: Date): string => {
   if (from.getFullYear() === to.getFullYear()) {
     if (from.getMonth() === to.getMonth()) {
       if (from.getDate() === to.getDate()) {
-        dates = [format(from, 'MMMM Do YYYY')]; // Same date
+        dates = [format(from, 'MMMM do yyyy')]; // Same date
       } else {
-        dates = [format(from, 'D'), format(to, 'D MMM YYYY')]; // Same month
+        dates = [format(from, 'd'), format(to, 'd MMM yyyy')]; // Same month
       }
     } else {
-      dates = [format(from, 'D MMM'), format(to, 'D MMM YYYY')]; // Same year
+      dates = [format(from, 'd MMM'), format(to, 'd MMM yyyy')]; // Same year
     }
   } else {
-    dates = [format(from, 'D MMM YYYY'), format(to, 'D MMM YYYY')]; // Nothing same
+    dates = [format(from, 'd MMM yyyy'), format(to, 'd MMM yyyy')]; // Nothing same
   }
 
   return dates.join('–');
@@ -177,7 +174,7 @@ const groupByDate = (data: Event[]): DayGroup[] => {
   let today;
 
   data.forEach(event => {
-    const header = format(event.begins_at!, 'dddd, MMMM Do');
+    const header = format(parseISO(event.begins_at!), 'EEEE, MMMM do');
 
     if (header !== today) {
       today = header;
@@ -190,7 +187,7 @@ const groupByDate = (data: Event[]): DayGroup[] => {
 
     events.push({
       ...event,
-      hours: hours(event.begins_at!, event.ends_at!),
+      hours: hours(parseISO(event.begins_at!), parseISO(event.ends_at!)),
       url: {
         name: 'events-id',
         params: { id: `${event.id}-${slug(event.name)}` },
@@ -209,7 +206,7 @@ export default class EventsIndex extends Vue {
   days: DayGroup[] = [];
   highlighted: { from: Date; to: Date } | null = null;
   range: string = 'week';
-  selectedDate: string = format(new Date(), 'YYYY-MM-DD');
+  selectedDate: string = format(new Date(), 'yyyy-MM-dd');
   title: string = 'Events';
 
   async asyncData({ params }) {
@@ -222,8 +219,8 @@ export default class EventsIndex extends Vue {
 
     // Fetch events
     const events = await new Event()
-      .filter('ends_at', 'gte', format(from, 'YYYY-MM-DD'))
-      .filter('begins_at', 'lte', format(to, 'YYYY-MM-DDT23:59:59'))
+      .filter('ends_at', 'gte', format(from, 'yyyy-MM-dd'))
+      .filter('begins_at', 'lte', format(to, "yyyy-MM-dd'T'23:59:59"))
       .limit(10)
       .sort('begins_at', 'ASC')
       .get();
@@ -237,7 +234,7 @@ export default class EventsIndex extends Vue {
       highlighted: { from, to },
       pagination,
       range,
-      selectedDate: format(from, 'YYYY-MM-DD'),
+      selectedDate: format(from, 'yyyy-MM-dd'),
       title,
     };
   }

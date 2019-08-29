@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { format, parse } from 'date-fns';
+import { format } from 'date-fns';
 import { groupBy, values } from 'lodash';
 import { getRepository, Repository } from 'typeorm';
 
@@ -19,12 +19,11 @@ export class NewsfeedService {
     // Group by user's action type per day
     const grouped = groupBy(
       items,
-      item =>
-        `${item.user_id}:${format(parse(item.created_at), dateFormat)}-${item.class}.${item.type}`,
+      item => `${item.user_id}:${format(item.created_at, dateFormat)}-${item.class}.${item.type}`
     );
 
     // Return as array of arrays
-    return values(grouped);
+    return values(grouped) as Item[][];
   }
 
   async fillRelations(items: Item[]): Promise<void> {

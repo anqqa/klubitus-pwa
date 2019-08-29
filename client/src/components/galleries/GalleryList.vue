@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import format from 'date-fns/format';
+import { format, parseISO } from 'date-fns';
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
 
 import ResponsiveImage from '@/components/ResponsiveImage.vue';
@@ -58,7 +58,7 @@ export default class GalleryList extends Vue {
     this.galleries.slice(0).forEach(gallery => {
       galleries.push({
         ...gallery,
-        date: format(gallery.event_date!, 'D MMM YYYY'),
+        date: format(parseISO(gallery.event_date!), 'd MMM yyyy'),
         imageColor: gallery.default_image && gallery.default_image.color,
         imageUrl: gallery.default_image && gallery.default_image.url,
         to: this.localePath({
