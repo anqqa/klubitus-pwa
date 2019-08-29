@@ -14,7 +14,7 @@
     "member-access": [false],
     "ordered-imports": [true],
     "prettier": true,
-    "quotemark": [true, "single"]
+    "quotemark": [true, "single", "avoid-escape"]
   },
   "rulesDirectory": ["tslint-plugin-prettier"]
 }
