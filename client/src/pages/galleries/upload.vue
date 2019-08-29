@@ -83,7 +83,7 @@
 </template>
 
 <script lang="ts">
-import format from 'date-fns/format';
+import { format, parseISO } from 'date-fns';
 import debounce from 'lodash/debounce';
 import { Component, Vue, Watch } from 'nuxt-property-decorator';
 
@@ -122,14 +122,14 @@ export default class GalleriesUpload extends Vue {
   get eventInfo() {
     if (this.event) {
       return (
-        format(this.event.begins_at!, 'MMMM D, YYYY') +
+        format(parseISO(this.event.begins_at!), 'MMMM d, yyyy') +
         ' @ ' +
         this.event.venue_name +
         ', ' +
         this.event.city_name
       );
     } else if (this.gallery) {
-      return format(this.gallery.event_date!, 'MMMM D, YYYY');
+      return format(parseISO(this.gallery.event_date!), 'MMMM d, yyyy');
     }
   }
 
@@ -222,10 +222,10 @@ export default class GalleriesUpload extends Vue {
     events.forEach(event =>
       data.push({
         ...event,
-        label: `${format(event.begins_at!, 'DD.MM.YYYY')} · ${event.name} @ ${event.venue_name}, ${
-          event.city_name
-        }`,
-        date: format(event.begins_at!, 'DD.MM.YYYY'),
+        label: `${format(parseISO(event.begins_at!), 'dd.MM.yyyy')} · ${event.name} @ ${
+          event.venue_name
+        }, ${event.city_name}`,
+        date: format(parseISO(event.begins_at!), 'dd.MM.yyyy'),
         highlight: event.name!.replace(highlight, replace),
       })
     );

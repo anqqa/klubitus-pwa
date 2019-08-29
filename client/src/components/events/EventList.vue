@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import format from 'date-fns/format';
+import { format, parseISO } from 'date-fns';
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
 import { RawLocation } from 'vue-router';
 
@@ -51,7 +51,7 @@ export default class EventList extends Vue {
       data.forEach(event => {
         (cachedData as any[]).push({
           ...event,
-          stamp: format(event.begins_at!, 'DD MMM'),
+          stamp: format(parseISO(event.begins_at!), 'dd MMM'),
           url: this.localePath({
             name: 'events-id',
             params: { id: `${event.id}-${slug(event.name)}` },

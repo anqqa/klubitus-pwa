@@ -77,7 +77,7 @@
 </template>
 
 <script lang="ts">
-import format from 'date-fns/format';
+import { format, parseISO } from 'date-fns';
 import sortBy from 'lodash/sortBy';
 import uniqBy from 'lodash/uniqBy';
 import { Component, Vue } from 'nuxt-property-decorator';
@@ -151,14 +151,14 @@ export default class SingleImage extends Vue {
   get eventInfo() {
     if (this.gallery!.event) {
       return (
-        format(this.gallery!.event.begins_at!, 'MMMM D, YYYY') +
+        format(parseISO(this.gallery!.event.begins_at!), 'MMMM d, yyyy') +
         ' @ ' +
         this.gallery!.event.venue_name +
         ', ' +
         this.gallery!.event.city_name
       );
     } else {
-      return format(this.gallery!.event_date!, 'MMMM D, YYYY');
+      return format(parseISO(this.gallery!.event_date!), 'MMMM d, yyyy');
     }
   }
 

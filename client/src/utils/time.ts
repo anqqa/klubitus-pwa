@@ -1,8 +1,4 @@
-import endOfISOWeek from 'date-fns/end_of_iso_week';
-import endOfMonth from 'date-fns/end_of_month';
-import format from 'date-fns/format';
-import setISOWeek from 'date-fns/set_iso_week';
-import startOfISOWeek from 'date-fns/start_of_iso_week';
+import { endOfISOWeek, endOfMonth, format, setISOWeek, startOfISOWeek } from 'date-fns';
 
 const MINUTE = 60;
 const HOUR = 60 * MINUTE;
@@ -70,12 +66,12 @@ export const fuzzyTimeDistance = (since: Date): string => {
   } else if (distance < MONTH) {
     return `${Math.round(distance / DAY)}d`;
   } else if (now.getFullYear() === since.getFullYear()) {
-    return format(since, 'MMM D');
+    return format(since, 'MMM d');
   } else {
-    return format(since, "MMM 'YY");
+    return format(since, "MMM ''yy");
   }
 };
 
-export const hours = (from: Date | string, to: Date | string): string => {
+export const hours = (from: Date, to?: Date): string => {
   return format(from, 'HH:mm') + (to ? '–' + format(to, 'HH:mm') : '→');
 };

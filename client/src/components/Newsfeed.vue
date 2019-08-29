@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import format from 'date-fns/format';
+import { format, parseISO } from 'date-fns';
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
 
 import NewsfeedItem from '@/models/NewsfeedItem';
@@ -129,7 +129,7 @@ export default class Newsfeed extends Vue {
       groups.push({
         avatar: avatarUrl(first.user!.avatar_url),
         created_at: first.created_at!,
-        stamp: format(first.created_at!, 'HH:mm'),
+        stamp: format(parseISO(first.created_at!), 'HH:mm'),
         text: Newsfeed.newsfeedText(first.class!, first.type!, group.length > 1),
         username: first.user!.username,
         items,

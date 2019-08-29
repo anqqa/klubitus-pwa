@@ -35,55 +35,8 @@ const formatter = new Intl.NumberFormat();
   components: { ImageList },
 })
 export default class SingleGallery extends Vue {
-  get url() {
-    return `${this.$route.path}/:imageId`;
-  }
-
-  get breadcrumbs() {
-    const pathName = 'galleries-events-year-month-day';
-
-    return [
-      { to: this.localePath('galleries'), text: 'Galleries' },
-      { to: this.localePath(pathName), text: 'Events' },
-      {
-        to: this.localePath({
-          name: pathName,
-          params: { year: this.eventDate.getFullYear().toString() },
-        }),
-        text: format(this.eventDate, 'YYYY'),
-      },
-      {
-        to: this.localePath({
-          name: pathName,
-          params: {
-            year: this.eventDate.getFullYear().toString(),
-            month: (this.eventDate.getMonth() + 1).toString(),
-          },
-        }),
-        text: format(this.eventDate, 'MMMM'),
-      },
-      { to: this.$route.fullPath, text: this.eventName, disabled: true },
-    ];
-  }
-
-  get commentCount() {
-    let count = 0;
-
-    this.images!.forEach(image => (count += image.comment_count!));
-
-    return count;
-  }
-
-  get eventDate() {
-    return new Date(
-      this.gallery!.event ? this.gallery!.event.begins_at! : this.gallery!.event_date!
-    );
-  }
-
-  get eventName() {
-    return this.gallery!.event ? this.gallery!.event.name : this.gallery!.name;
-  }
-  @authStore.Getter isAuthenticated!: boolean;
+  @authStore.Getter
+  isAuthenticated!: boolean;
 
   gallery?: Gallery;
   images?: Image[];
@@ -100,6 +53,55 @@ export default class SingleGallery extends Vue {
       .get();
 
     return { gallery, images };
+  }
+
+  get url() {
+    return `${this.$route.path}/:imageId`;
+  }
+
+  get breadcrumbs() {
+    const pathName = 'galleries-events-year-month-day';
+
+    return [
+      { to: this.localePath('galleries'), text: 'Galleries' },
+      { to: this.localePath(pathName), text: 'Events' },
+      {
+        to: this.localePath({
+          name: pathName,
+          params: { year: this.eventDate.getFullYear().toString() },
+        }),
+        text: format(this.eventDate, 'yyyy'),
+      },
+      {
+        to: this.localePath({
+          name: pathName,
+          params: {
+            year: this.eventDate.getFullYear().toString(),
+            month: (this.eventDate.getMonth() + 1).toString(),
+          },
+        }),
+        text: format(this.eventDate, 'MMMM'),
+      },
+      { to: this.$route.fullPath, text: this.eventName, disabled: true },
+    ];
+  }
+
+  get commentCount(): number {
+    let count = 0;
+
+    this.images!.forEach(image => (count += image.comment_count!));
+
+    return count;
+  }
+
+  get eventDate(): Date {
+    return new Date(
+      this.gallery!.event ? this.gallery!.event.begins_at! : this.gallery!.event_date!
+    );
+  }
+
+  get eventName(): string | undefined {
+    return this.gallery!.event ? this.gallery!.event.name : this.gallery!.name;
   }
 
   head() {

@@ -44,7 +44,7 @@ export default class Exif extends Vue {
 
   get taken() {
     return this.exif.created_at
-      ? format(new Date(this.exif.created_at), 'MMMM D, YYYY HH:mm:ss')
+      ? format(new Date(this.exif.created_at), 'MMMM d, yyyy HH:mm:ss')
       : null;
   }
 }

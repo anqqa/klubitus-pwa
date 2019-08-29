@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import format from 'date-fns/format';
+import { format, parseISO } from 'date-fns';
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
 
 import Avatar from '@/components/Avatar.vue';
@@ -61,7 +61,7 @@ export default class Chat extends Vue {
         ...shout,
         avatar: avatarUrl(shout.author!.avatar_url),
         html: this.$md.render(shout.shout!),
-        stamp: format(shout.created_at!, 'HH:mm'),
+        stamp: format(parseISO(shout.created_at!), 'HH:mm'),
       });
     });
 
