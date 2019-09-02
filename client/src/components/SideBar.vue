@@ -64,7 +64,7 @@ import { Component, Vue } from 'nuxt-property-decorator';
 import { Theme, uiStore } from '@/store/ui';
 
 @Component({})
-export default class Sidebar extends Vue {
+export default class SideBar extends Vue {
   @uiStore.Mutation toggleSidebar!: (isOpen: boolean | null) => void;
   @uiStore.Mutation toggleTheme!: () => void;
   @uiStore.State sidebar!: boolean | null;

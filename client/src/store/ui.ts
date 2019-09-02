@@ -1,5 +1,5 @@
 import { namespace } from 'nuxt-property-decorator';
-import { MutationTree } from 'vuex';
+import { GetterTree, MutationTree } from 'vuex';
 
 export type Theme = 'dark' | 'light';
 
@@ -12,6 +12,10 @@ export const state = (): UIState => ({
   sidebar: null,
   theme: 'dark',
 });
+
+export const getters: GetterTree<UIState, any> = {
+  isDarkTheme: (store: UIState): boolean => store.theme === 'dark',
+};
 
 export const mutations: MutationTree<UIState> = {
   toggleSidebar(store: UIState, sidebar: boolean | null = null): void {
