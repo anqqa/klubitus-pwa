@@ -14,8 +14,8 @@ export const state = (): UIState => ({
 });
 
 export const mutations: MutationTree<UIState> = {
-  toggleSidebar(store: UIState, sidebar: boolean): void {
-    store.sidebar = sidebar;
+  toggleSidebar(store: UIState, sidebar: boolean | null = null): void {
+    store.sidebar = typeof sidebar === 'boolean' ? sidebar : !store.sidebar;
   },
 
   toggleTheme(store: UIState): void {
