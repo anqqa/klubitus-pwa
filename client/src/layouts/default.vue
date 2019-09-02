@@ -1,6 +1,6 @@
 <template>
   <v-app id="klubitus" :dark="isDark">
-    <v-navigation-drawer app v-model="sidebar">
+    <v-navigation-drawer app v-model="isSidebarOpen">
       <v-toolbar flat>
         <v-toolbar-items>
           <v-btn class="primary mr-4 ml-n4" text>
@@ -59,7 +59,7 @@
     </v-navigation-drawer>
 
     <v-app-bar app>
-      <v-app-bar-nav-icon @click.stop="sidebar = !sidebar" />
+      <v-app-bar-nav-icon @click.stop="isSidebarOpen = !isSidebarOpen" />
 
       <v-toolbar-title class="mr-4 page-title" v-text="title" />
 
@@ -101,7 +101,9 @@ import { Theme, uiStore } from '@/store/ui';
 export default class Layout extends Vue {
   @authStore.Action logout!: () => void;
   @authStore.Getter isAuthenticated!: boolean;
+  @uiStore.Mutation toggleSidebar!: (isOpen: boolean | null) => void;
   @uiStore.Mutation toggleTheme!: () => void;
+  @uiStore.State sidebar!: boolean | null;
   @uiStore.State theme!: Theme;
 
   title = '';
@@ -114,9 +116,7 @@ export default class Layout extends Vue {
     { to: 'music', title: 'Music', icon: 'mdi-music' },
   ];
 
-  sidebar: boolean | null = null;
-
-  get isDark() {
+  get isDark(): boolean {
     return this.theme === 'dark';
   }
 
@@ -127,8 +127,14 @@ export default class Layout extends Vue {
     }
   }
 
-  get locale() {
-    return this.$i18n.locale;
+  get isSidebarOpen(): boolean | null {
+    return this.sidebar;
+  }
+
+  set isSidebarOpen(isOpen: boolean | null) {
+    if (isOpen !== this.isSidebarOpen) {
+      this.toggleSidebar(isOpen);
+    }
   }
 
   head() {
