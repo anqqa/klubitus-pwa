@@ -114,6 +114,8 @@ const config: Configuration = {
           'galleries/upload': { fi: '/kuvastot/upload' },
           'galleries/_id': { fi: '/kuvastot/:id' },
 
+          'users/_id': { fi: '/kayttajat/:id' },
+
           login: { fi: '/kirjaudu' },
           password: { fi: '/salasana' },
           signup: { fi: '/liity' },

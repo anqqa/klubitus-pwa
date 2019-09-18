@@ -1,33 +1,37 @@
 <template>
-  <v-card>
-    <v-card-title>Newsfeed</v-card-title>
+  <section>
+    <h2 class="title" v-text="title" />
 
-    <v-list three-line>
-      <template v-for="(group, index) in groups">
-        <v-divider v-if="index > 0" :key="`${index}-divider`" inset />
-        <v-list-item :key="index">
-          <v-list-item-avatar>
-            <avatar :src="group.avatar" :title="group.username" size="40" />
-          </v-list-item-avatar>
+    <v-timeline align-top dense>
+      <v-timeline-item
+        v-for="(group, index) in groups"
+        :key="index"
+        color="transparent"
+        large
+        right
+      >
+        <avatar :user="group.user" slot="icon" />
 
-          <v-list-item-content>
-            <v-list-item-title>
-              <nuxt-link class="user" to="/">{{ group.username }}</nuxt-link> {{ group.text }}
-            </v-list-item-title>
+        <v-card>
+          <v-card-text>
+            <v-row dense justify="space-between">
+              <v-col cols="auto">
+                <nuxt-link class="user" to="/">{{ group.username }}</nuxt-link> {{ group.text }}
+              </v-col>
+              <v-col class="text-right">
+                <span :title="group.created_at" v-text="group.stamp" />
+              </v-col>
+            </v-row>
 
             <div v-for="item in group.items" :key="item.id">
               <v-icon v-if="item.icon" small class="mr-1">{{ item.icon }}</v-icon>
               <nuxt-link :to="item.url">{{ item.text }}</nuxt-link>
             </div>
-          </v-list-item-content>
-
-          <v-list-item-action>
-            <v-list-item-action-text :title="group.created_at" v-text="group.stamp" />
-          </v-list-item-action>
-        </v-list-item>
-      </template>
-    </v-list>
-  </v-card>
+          </v-card-text>
+        </v-card>
+      </v-timeline-item>
+    </v-timeline>
+  </section>
 </template>
 
 <script lang="ts">
@@ -35,8 +39,8 @@ import { format, parseISO } from 'date-fns';
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
 
 import NewsfeedItem from '@/models/NewsfeedItem';
+import User from '@/models/User';
 import { slug } from '@/utils/text';
-import { avatarUrl } from '@/utils/url';
 import Avatar from './Avatar.vue';
 
 const newsfeedTexts = {
@@ -88,11 +92,11 @@ interface Item {
 }
 
 interface ItemGroup {
-  avatar: string;
   created_at: string;
   items: Item[];
   stamp: string;
   text: string;
+  user: User;
   username: string;
 }
 
@@ -108,17 +112,25 @@ export default class Newsfeed extends Vue {
     return 'did something weird';
   }
 
+  @Prop() aggregate?: string;
   @Prop({ default: 10 }) limit!: number;
+  @Prop({ default: 'Newsfeed' }) title!: string;
+  @Prop() user?: number;
 
   groups: ItemGroup[] = [];
 
   async mounted() {
     const groups: ItemGroup[] = [];
+    const query = new NewsfeedItem().limit(Math.min(this.limit || 10, 50));
+
+    if (this.user) {
+      query.filter('user_id', 'eq', this.user);
+    }
 
     // @ts-ignore
-    const data = (await new NewsfeedItem()
-      .limit(Math.min(this.limit || 10, 50))
-      .get()) as NewsfeedItem[][];
+    const data = (await query.get(
+      this.aggregate ? { aggregate: this.aggregate } : undefined
+    )) as NewsfeedItem[][];
 
     data.forEach(group => {
       const first = group[0];
@@ -127,10 +139,10 @@ export default class Newsfeed extends Vue {
       group.forEach(item => items.push(this.newsfeedItem(item)));
 
       groups.push({
-        avatar: avatarUrl(first.user!.avatar_url),
         created_at: first.created_at!,
         stamp: format(parseISO(first.created_at!), 'HH:mm'),
         text: Newsfeed.newsfeedText(first.class!, first.type!, group.length > 1),
+        user: new User(first.user),
         username: first.user!.username,
         items,
       });

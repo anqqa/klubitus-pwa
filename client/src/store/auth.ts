@@ -11,10 +11,16 @@ interface FacebookState {
   userId?: number;
 }
 
+export interface UserState {
+  avatar_url?: string;
+  id: number;
+  username: string;
+}
+
 export interface AuthState {
   facebook: FacebookState | null;
   token: string | null;
-  user: any | null;
+  user: UserState | null;
 }
 
 export const state = (): AuthState => ({
@@ -180,7 +186,7 @@ export const mutations: MutationTree<AuthState> = {
     store.token = token;
   },
 
-  [Mutations.SET_USER](store: AuthState, data: any | null): void {
+  [Mutations.SET_USER](store: AuthState, data: UserState | null): void {
     store.user = data;
   },
 };
