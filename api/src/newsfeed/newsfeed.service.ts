@@ -1,17 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CrudRequest } from '@nestjsx/crud';
 import { format } from 'date-fns';
 import { groupBy, values } from 'lodash';
 import { getRepository, Repository } from 'typeorm';
+import { BaseCrudService } from '../common/basecrud.service';
 
-import { PaginationService } from '../common/pagination/pagination.service';
 import { Item, Relations } from './items/item.entity';
 import { DATE_FORMATS } from './newsfeed.constants';
-import { NewsfeedQuery } from './newsfeed.dto';
 
 @Injectable()
-export class NewsfeedService {
-  constructor(@InjectRepository(Item) private readonly itemRepository: Repository<Item>) {}
+export class NewsfeedService extends BaseCrudService<Item> {
+  constructor(@InjectRepository(Item) repo: Repository<Item>) {
+    super(repo);
+  }
 
   aggregate(items: Item[], datePart: string = 'day'): Item[][] {
     const dateFormat = DATE_FORMATS[datePart];
@@ -66,11 +68,11 @@ export class NewsfeedService {
     });
   }
 
-  async findAll(query: NewsfeedQuery, datePart = 'day'): Promise<Item[]> {
-    const { take, skip } = PaginationService.parseQuery(query, 100, 100);
+  async findAll(req: CrudRequest, datePart = 'day'): Promise<Item[]> {
+    const { filter, limit, offset } = req.parsed;
 
     // Item ids, aggregate similar events per user daily
-    const groupedQuery = await this.itemRepository
+    const groupedQuery = await this.repo
       .createQueryBuilder()
       .select('ARRAY_AGG(id)', 'ids')
       .addSelect(`DATE_TRUNC('${datePart}', created_at)`)
@@ -79,13 +81,20 @@ export class NewsfeedService {
       .addGroupBy('type')
       .addGroupBy('2')
       .orderBy('2', 'DESC')
-      .take(take)
-      .skip(skip);
+      .take(limit)
+      .skip(offset);
+
+    if (filter && filter.length) {
+      for (let i = 0; i < filter.length; i++) {
+        // @ts-ignore
+        this.setAndWhere(filter[i], i, groupedQuery);
+      }
+    }
 
     // Fetch all items, can be more than requested limit if aggregating
-    const itemQuery = this.itemRepository
-      .createQueryBuilder('item')
-      .select('item')
+    const itemQuery = this.repo
+      .createQueryBuilder('items')
+      .select('items')
       // .leftJoinAndSelect('item.target_event', 'target_event')
       // .leftJoinAndSelect('item.target_forum_post', 'target_post')
       // .leftJoinAndSelect('item.target_forum_topic', 'target_topic')
@@ -97,11 +106,12 @@ export class NewsfeedService {
         const subquery = qb
           .subQuery()
           .select('UNNEST(grouped.ids)')
-          .from('(' + groupedQuery.getQuery() + ')', 'grouped');
+          .from('(' + groupedQuery.getQuery() + ')', 'grouped')
+          .setParameters(groupedQuery.getParameters());
 
-        return 'item.id IN ' + subquery.getQuery();
+        return 'items.id IN ' + subquery.getQuery();
       })
-      .orderBy('item.id', 'DESC');
+      .orderBy('items.id', 'DESC');
 
     return await itemQuery.getMany();
   }
