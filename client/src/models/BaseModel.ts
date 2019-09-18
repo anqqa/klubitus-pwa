@@ -51,8 +51,8 @@ export class BaseModel extends ModelQueryBuilder {
     return id ? `${endpoint}/${id}` : endpoint;
   }
 
-  async get(): Promise<this[]> {
-    const query = this.query();
+  async get(extraParams?: Record<string, string>): Promise<this[]> {
+    const query = this.query(extraParams);
     const endpoint = this.endpoint();
 
     const data = await BaseModel.$http.$get(query ? `${endpoint}?${query}` : endpoint);

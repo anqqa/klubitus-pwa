@@ -1,9 +1,4 @@
-import {
-  ComparisonOperator,
-  QueryFields,
-  QueryJoin,
-  RequestQueryBuilder,
-} from '@nestjsx/crud-request';
+import { ComparisonOperator, QueryFields, RequestQueryBuilder } from '@nestjsx/crud-request';
 
 RequestQueryBuilder.setOptions({
   paramNamesMap: {
@@ -56,8 +51,16 @@ export class ModelQueryBuilder {
     return this;
   }
 
-  query(): string {
-    return this._builder.query().replace(/\[]/g, '');
+  query(extraParams?: Record<string, string>): string {
+    const builderQuery = this._builder.query().replace(/\[]/g, '');
+
+    if (!extraParams) {
+      return builderQuery;
+    }
+
+    const extraQuery = new URLSearchParams(extraParams).toString();
+
+    return builderQuery ? `${builderQuery}&${extraQuery}` : extraQuery;
   }
 
   select(fields: QueryFields): this {
