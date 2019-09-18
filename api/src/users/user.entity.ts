@@ -1,12 +1,16 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:variable-name
 import { compareSync, hashSync } from 'bcryptjs';
+import { Exclude } from 'class-transformer';
 import { IsFQDN } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 import { deprecatedMatch } from '../auth/password';
 import { BaseEntity } from '../common/base.entity';
 import { Roles, userRole } from '../common/utils/role.util';
+
+export const allow = ['avatar_url', 'created_at', 'id', 'username'];
+export const exclude = ['email', 'password', 'password_kohana'];
 
 export abstract class BaseUser extends BaseEntity {
   @Column({ nullable: true })
@@ -23,12 +27,15 @@ export abstract class BaseUser extends BaseEntity {
 @Entity('users')
 export class User extends BaseUser {
   @Column()
+  @Exclude()
   email: string;
 
   @Column()
+  @Exclude()
   password?: string;
 
   @Column()
+  @Exclude()
   password_kohana?: string;
 
   is_authenticated = false;
