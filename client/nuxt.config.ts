@@ -115,6 +115,9 @@ const config: Configuration = {
           'galleries/_id': { fi: '/kuvastot/:id' },
 
           'users/_id': { fi: '/kayttajat/:id' },
+          'users/_id/favorites': { fi: '/kayttajat/:id/suosikit' },
+          'users/_id/friends': { fi: '/kayttajat/:id/kaverit' },
+          'users/_id/settings': { fi: '/kayttajat/:id/asetukset' },
 
           login: { fi: '/kirjaudu' },
           password: { fi: '/salasana' },

@@ -19,9 +19,14 @@ export default class User extends BaseModel {
   }
 
   get path(): RawLocation {
-    return {
-      name: 'users-id',
-      params: { id: `${this.id!}-${slug(this.username!)}` },
-    };
+    return this.url('users-id');
+  }
+
+  get pathParams() {
+    return { id: `${this.id!}-${slug(this.username!)}` };
+  }
+
+  url(name: string) {
+    return { name, params: this.pathParams };
   }
 }
