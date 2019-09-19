@@ -1,5 +1,5 @@
 <template>
-  <nuxt-link v-if="link" :to="localePath(link)">
+  <nuxt-link v-if="path" :to="localePath(path)">
     <v-avatar :color="color" v-bind="$attrs">
       <img v-if="url" :src="url" alt="Avatar" />
       <span v-else class="white--text title">{{ initials }}</span>
@@ -21,7 +21,7 @@ import { colorFromText } from '@/utils/text';
 
 @Component({})
 export default class Avatar extends Vue {
-  @Prop() link!: RawLocation;
+  @Prop() link!: RawLocation | boolean;
   @Prop() title!: string;
   @Prop() src!: string;
   @Prop() user!: User;
@@ -36,6 +36,14 @@ export default class Avatar extends Vue {
     const title = this.title || (this.user && this.user.username);
 
     return title ? title.substr(0, 2) : '??';
+  }
+
+  get path(): RawLocation | undefined {
+    if (this.link === true) {
+      return this.user && this.user.path;
+    }
+
+    return this.link || undefined;
   }
 
   get url(): string | undefined {

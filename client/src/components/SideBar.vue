@@ -2,7 +2,7 @@
   <v-navigation-drawer app v-model="isSidebarOpen">
     <v-toolbar flat>
       <v-toolbar-items>
-        <v-btn class="primary mr-4 ml-n4" text>
+        <v-btn class="primary mr-4 ml-n4" nuxt text to="/">
           <v-avatar size="28">
             <v-img src="/logo.svg" />
           </v-avatar>
@@ -12,6 +12,47 @@
         KLUBITUS
       </v-toolbar-title>
     </v-toolbar>
+
+    <v-divider />
+
+    <v-list-item v-if="isAuthenticated">
+      <v-list-item-icon>
+        <avatar :link="true" :user="user" />
+      </v-list-item-icon>
+      <v-list-item-title>
+        <nuxt-link class="user" :to="user.path" v-text="user.username" />
+
+        <v-menu offset-y>
+          <template v-slot:activator="{ on }">
+            <v-btn icon text v-on="on">
+              <v-icon small>mdi-menu-down</v-icon>
+            </v-btn>
+          </template>
+          <v-list dense>
+            <v-list-item nuxt :to="localePath(user.path)">
+              <v-list-item-icon><v-icon>mdi-account</v-icon></v-list-item-icon>
+              <v-list-item-title>Profile</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item nuxt to="" disabled>
+              <v-list-item-icon><v-icon>mdi-settings</v-icon></v-list-item-icon>
+              <v-list-item-title>Settings</v-list-item-title>
+            </v-list-item>
+
+            <v-divider />
+
+            <v-list-item @click.stop="logout">
+              <v-list-item-icon><v-icon>mdi-logout</v-icon></v-list-item-icon>
+              <v-list-item-title>Log Out</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-list-item-title>
+    </v-list-item>
+    <div v-else class="text-center py-4">
+      <v-btn :to="localePath('login')" nuxt class="mr-2">Log In</v-btn>
+      <v-btn :to="localePath('signup')" nuxt class="primary">Sign Up</v-btn>
+    </div>
 
     <v-divider />
 
@@ -61,10 +102,16 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
 
+import Avatar from '@/components/Avatar.vue';
+import User from '@/models/User';
+import { authStore, UserState } from '@/store/auth';
 import { Theme, uiStore } from '@/store/ui';
 
-@Component({})
+@Component({ components: { Avatar } })
 export default class SideBar extends Vue {
+  @authStore.Action logout!: () => void;
+  @authStore.Getter isAuthenticated!: boolean;
+  @authStore.State('user') userState!: UserState | null;
   @uiStore.Mutation toggleSidebar!: (isOpen: boolean | null) => void;
   @uiStore.Mutation toggleTheme!: () => void;
   @uiStore.State sidebar!: boolean | null;
@@ -97,6 +144,10 @@ export default class SideBar extends Vue {
     if (isOpen !== this.isSidebarOpen) {
       this.toggleSidebar(isOpen);
     }
+  }
+
+  get user(): User | null {
+    return this.userState && new User(this.userState);
   }
 }
 </script>
