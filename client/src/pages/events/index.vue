@@ -20,30 +20,7 @@
 
           <v-divider />
 
-          <v-row v-for="(event, eventIndex) in day.events" :key="eventIndex">
-            <v-col style="max-width: 200px">
-              <v-card>
-                <v-img
-                  v-if="event.flyer_front_url"
-                  :aspect-ratio="16 / 9"
-                  :src="event.flyer_front_url"
-                />
-                <v-responsive v-else :aspect-ratio="16 / 9" class="d-flex align-center text-center">
-                  <v-icon large disabled>mdi-image-off</v-icon>
-                </v-responsive>
-              </v-card>
-            </v-col>
-
-            <v-col>
-              <nuxt-link :to="localePath(event.url)">{{ event.name }}</nuxt-link>
-              <br />
-              <span>{{ event.venue_name }} &sdot; {{ event.city_name }}</span>
-              <br />
-              <span class="has-text-tertiary">
-                {{ event.hours }}
-              </span>
-            </v-col>
-          </v-row>
+          <event-card v-for="(event, eventIndex) in day.events" :key="eventIndex" :event="event" />
         </section>
 
         <nav class="text-center" role="navigation" aria-label="pagination">
@@ -80,10 +57,11 @@ import { addDays, addMonths, format, getISOWeek, parseISO } from 'date-fns';
 import { Component, Vue } from 'nuxt-property-decorator';
 import { RawLocation } from 'vue-router';
 
+import EventCard from '@/components/events/EventCard.vue';
 import EventList from '@/components/events/EventList.vue';
 import Event from '@/models/Event';
-import { pad, slug } from '@/utils/text';
-import { dateRange, hours } from '@/utils/time';
+import { pad } from '@/utils/text';
+import { dateRange } from '@/utils/time';
 
 interface DayGroup {
   header: string;
@@ -185,21 +163,14 @@ const groupByDate = (data: Event[]): DayGroup[] => {
       }
     }
 
-    events.push({
-      ...event,
-      hours: hours(parseISO(event.begins_at!), parseISO(event.ends_at!)),
-      url: {
-        name: 'events-id',
-        params: { id: `${event.id}-${slug(event.name)}` },
-      },
-    });
+    events.push(event);
   });
 
   return days;
 };
 
 @Component({
-  components: { EventList },
+  components: { EventCard, EventList },
   head: { title: 'Events' },
 })
 export default class EventsIndex extends Vue {

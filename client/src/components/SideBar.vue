@@ -20,7 +20,7 @@
         <avatar :link="true" :user="user" />
       </v-list-item-icon>
       <v-list-item-title>
-        <nuxt-link class="user" :to="user.path" v-text="user.username" />
+        <nuxt-link class="user" :to="localePath(user.path)" v-text="user.username" />
 
         <v-menu offset-y>
           <template v-slot:activator="{ on }">
