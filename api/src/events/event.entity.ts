@@ -2,10 +2,12 @@
 import { CrudActions, CrudValidationGroups } from '@nestjsx/crud';
 import { Type } from 'class-transformer';
 import { IsDateString, IsFQDN, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+
 import { BaseEntity } from '../common/base.entity';
 import { Roles, userRole } from '../common/utils/role.util';
 import { User } from '../users/user.entity';
+import { Favorite } from './favorites/favorite.entity';
 
 const { CREATE, UPDATE } = CrudValidationGroups;
 
@@ -31,6 +33,9 @@ export class Event extends BaseEntity {
   @IsInt({ always: true })
   @Column('bigint', { nullable: true })
   facebook_id?: number;
+
+  @OneToMany(type => Favorite, favorite => favorite.event)
+  favorites?: Favorite[];
 
   @IsOptional({ always: true })
   @IsFQDN(undefined, { always: true })
