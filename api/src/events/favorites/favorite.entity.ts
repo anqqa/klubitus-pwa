@@ -1,4 +1,5 @@
 // tslint:disable:variable-name
+import { IsNotEmpty } from 'class-validator';
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 
 import { BaseEntity } from '../../common/base.entity';
@@ -9,15 +10,17 @@ import { Event } from '../event.entity';
 export class Favorite extends BaseEntity {
   @OneToOne(() => Event, { nullable: true })
   @JoinColumn({ name: 'event_id' })
-  event: Event | null;
+  event: Event;
 
-  @Column({ nullable: true })
-  event_id: number | null;
+  @IsNotEmpty({ always: true })
+  @Column({ nullable: false })
+  event_id: number;
 
   @OneToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'user_id' })
-  user: User | null;
+  user: User;
 
-  @Column({ nullable: true })
-  user_id: number | null;
+  @IsNotEmpty({ always: true })
+  @Column({ nullable: false })
+  user_id: number;
 }
