@@ -28,14 +28,8 @@ export class BaseModel extends ModelQueryBuilder {
     return 'id';
   }
 
-  async find(identifier: number | string): Promise<this> {
-    this.id = identifier;
-
-    return this.first();
-  }
-
-  async first(): Promise<this> {
-    return (await this.get())[0];
+  async delete() {
+    return await BaseModel.$http.$delete(this._url(this.data()));
   }
 
   endpoint(): string {
@@ -51,11 +45,18 @@ export class BaseModel extends ModelQueryBuilder {
     return id ? `${endpoint}/${id}` : endpoint;
   }
 
-  async get(extraParams?: Record<string, string>): Promise<this[]> {
-    const query = this.query(extraParams);
-    const endpoint = this.endpoint();
+  async find(identifier: number | string): Promise<this> {
+    this.id = identifier;
 
-    const data = await BaseModel.$http.$get(query ? `${endpoint}?${query}` : endpoint);
+    return this.first();
+  }
+
+  async first(): Promise<this> {
+    return (await this.get())[0];
+  }
+
+  async get(extraParams?: Record<string, string>): Promise<this[]> {
+    const data = await BaseModel.$http.$get(this._url(extraParams));
     const collection = Array.isArray(data) ? data : [data];
 
     return this.parseCollection(collection);
@@ -72,6 +73,47 @@ export class BaseModel extends ModelQueryBuilder {
 
   _parent(endpoint: string) {
     this._parentEndpoint = endpoint;
+  }
+
+  async save(): Promise<this> {
+    return this.id ? this._update() : this._create();
+  }
+
+  async _create(): Promise<this> {
+    const data = await BaseModel.$http.$post(this._url(), this.data());
+
+    // @ts-ignore
+    return new this.constructor(data);
+  }
+
+  async _update(): Promise<this> {
+    const data = await BaseModel.$http.$patch(this._url(), this.data());
+
+    // @ts-ignore
+    return new this.constructor(data);
+  }
+
+  _url(extraParams?: Record<string, string>): string {
+    const query = this.query(extraParams);
+    const endpoint = this.endpoint();
+
+    return query ? `${endpoint}?${query}` : endpoint;
+  }
+
+  protected data(): Record<string, any> {
+    const data = {};
+
+    Object.entries(this).forEach(([key, value]) => {
+      console.log({ key, value });
+
+      if (!key.startsWith('_')) {
+        data[key] = value;
+      }
+    });
+
+    console.log({ data });
+
+    return data;
   }
 
   protected parseCollection(collection: any[]): this[] {
