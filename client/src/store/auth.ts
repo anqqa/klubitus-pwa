@@ -161,7 +161,8 @@ export const actions: ActionTree<AuthState, any> = {
 };
 
 export const getters: GetterTree<AuthState, any> = {
-  isAuthenticated: (store: AuthState): boolean => !!store.user,
+  isAuthenticated: (store): boolean => !!store.user,
+  userId: (store): number | null => store.user && store.user.id,
 };
 
 export const Mutations = {
