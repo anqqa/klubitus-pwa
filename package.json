@@ -20,6 +20,7 @@
     "client:exec": "docker-compose exec client",
     "client:shell": "docker-compose run --rm client sh",
     "client:up": "docker-compose up client",
+    "db:dump": "docker-compose exec db pg_dump -C -n public -U klubitus klubitus > dump.sql",
     "db:psql": "docker-compose exec db psql -U klubitus klubitus",
     "db:up": "docker-compose up db"
   },
