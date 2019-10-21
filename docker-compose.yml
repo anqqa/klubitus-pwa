@@ -30,7 +30,7 @@ services:
 
   db:
     container_name: klubitus-db
-    image: postgres:9.6.3-alpine
+    image: postgres:11-alpine
 #    command: postgres -c logging_collector=on -c log_destination=stderr -c log_directory=/logs
     environment:
       - POSTGRES_DB=${DB_NAME}
@@ -49,6 +49,7 @@ services:
       - ./db/logs:/logs
       - ./db/logs:/var/log/postgresql
       - db-data:/var/lib/postgresql/data
+#      - ./dump.sql:/tmp/dump.sql
     labels:
       - "traefik.enable=false"
 
