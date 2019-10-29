@@ -19,13 +19,11 @@ services:
       - web
     restart: always
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./traefik/traefik.toml:/traefik.toml
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - ./traefik/traefik.yml:/traefik.yml
       - ./traefik/acme.json:/acme.json
     labels:
-      - "traefik.backend=dashboard"
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:${DASHBOARD_HOST}"
+      - "traefik.http.routers.dashboard.rule=Host(`${DASHBOARD_HOST}`)"
       - "traefik.port=${DASHBOARD_PORT}"
 
   db:
@@ -88,10 +86,10 @@ services:
     expose:
       - ${API_PORT}
     labels:
-      - "traefik.backend=api"
       - "traefik.docker.network=web"
       - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:${API_HOST}"
+      - "traefik.http.routers.api.rule=Host(`${API_HOST}`)"
+#      - "traefik.http.routers.default.tls.certresolver=default"
       - "traefik.port=${API_PORT}"
     depends_on:
       - reverse-proxy
@@ -111,7 +109,8 @@ services:
     environment:
       - API_HOST
       - API_PORT
-      - "API_URL_BROWSER=https://${API_HOST}"
+      - API_PROTOCOL
+      - "API_URL_BROWSER=${API_PROTOCOL}://${API_HOST}"
       - AWS_BUCKET
       - CLIENT_HOST
       - CLIENT_PORT
@@ -125,10 +124,9 @@ services:
     expose:
       - ${CLIENT_PORT}
     labels:
-      - "traefik.backend=client"
       - "traefik.docker.network=web"
       - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:${CLIENT_HOST}"
+      - "traefik.http.routers.client.rule=Host(`${CLIENT_HOST}`)"
       - "traefik.port=${CLIENT_PORT}"
     depends_on:
       - reverse-proxy

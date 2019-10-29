@@ -1,0 +1,45 @@
+global:
+  checkNewVersion: true
+
+log:
+  level: INFO
+
+
+entryPoints:
+  http:
+    address: :80
+  https:
+    address: :443
+
+http:
+  routers:
+    dashboard:
+      service: api@internal
+
+    api:
+      entryPoints:
+        - http
+    #        - https
+
+    client:
+      entryPoints:
+        - http
+#        - https
+
+
+providers:
+  docker:
+    exposedByDefault: false
+
+# Dashboard
+api:
+  insecure: true
+
+# Let's Encrypt
+certificatesResolvers:
+  default:
+    acme:
+      email: anqqa@klubitus.org
+      storage: acme.json
+      httpChallenge:
+        entryPoint: http

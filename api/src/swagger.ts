@@ -4,7 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 export const setupSwagger = (app: INestApplication) => {
   const options = new DocumentBuilder()
     .setTitle('Klubitus API')
-    .setSchemes('https')
+    // .setSchemes('https')
     .addTag('Events', 'Event calendar')
     .addTag('Forum', 'Discussion forums')
     .addTag('Images', 'Image galleries')
