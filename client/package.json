@@ -39,16 +39,16 @@
     "vuex": "^3.1.1"
   },
   "devDependencies": {
-    "@nuxt/typescript-build": "^0.2.9",
-    "@nuxtjs/vuetify": "^1.8.5",
+    "@nuxt/typescript-build": "^0.3.2",
+    "@nuxtjs/vuetify": "^1.9.0",
     "@types/facebook-js-sdk": "^3.3.0",
-    "@types/js-cookie": "^2.2.2",
-    "@types/lodash": "^4.14.138",
+    "@types/js-cookie": "^2.2.4",
+    "@types/lodash": "^4.14.144",
     "@types/markdown-it": "^0.0.8",
-    "@types/vuelidate": "^0.7.7",
-    "node-sass": "^4.12.0",
-    "nuxt-property-decorator": "^2.4.0",
+    "@types/vuelidate": "^0.7.8",
+    "node-sass": "^4.13.0",
+    "nuxt-property-decorator": "^2.5.0",
     "sass-loader": "^8.0.0",
-    "vuetify": "^2.0.18"
+    "vuetify": "^2.1.7"
   }
 }
