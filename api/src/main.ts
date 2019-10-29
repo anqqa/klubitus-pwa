@@ -1,5 +1,5 @@
 import { ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { CrudConfigService } from '@nestjsx/crud';
 import { useContainer } from 'class-validator';
@@ -19,6 +19,7 @@ CrudConfigService.load({
 
 import { ApplicationModule } from './app.module';
 import { ValidationException } from './common/errors/validation.exception';
+import { HttpExceptionFilter } from './common/filters/httpexception.filter';
 import { ErrorsInterceptor } from './common/interceptors/errors.interceptor';
 import { RequestLoggerInterceptor } from './common/interceptors/requestlogger.interceptor';
 import { TrimPipe } from './common/pipes/TrimPipe';
@@ -37,6 +38,8 @@ async function bootstrap() {
   // Security
   app.enableCors();
 
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new HttpExceptionFilter(httpAdapter));
   app.useGlobalInterceptors(new RequestLoggerInterceptor(), new ErrorsInterceptor());
 
   app.useGlobalPipes(
