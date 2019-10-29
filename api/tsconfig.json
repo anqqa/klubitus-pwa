@@ -5,14 +5,17 @@
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "incremental": true,
     "lib": ["es2017"],
     "module": "commonjs",
     "noImplicitAny": true,
     "outDir": "./dist",
     "removeComments": true,
+    "skipLibCheck": true,
     "sourceMap": true,
-    "target": "es6",
+    "target": "es2017",
     "types": ["fastify-multipart", "node"]
   },
-  "exclude": ["node_modules"]
+  "exclude": ["dist", "node_modules", "**/*spec.ts"],
+  "include": ["src/**/*"]
 }

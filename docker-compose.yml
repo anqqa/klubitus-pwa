@@ -57,12 +57,12 @@ services:
       dockerfile: ./api/Dockerfile
     container_name: klubitus-api
     restart: always
-    command: yarn start
+    command: yarn start:dev
     volumes:
       - ./api/src:/srv/api/src
-      - ./api/nodemon.json:/srv/api/nodemon.json
       - ./api/package.json:/srv/api/package.json
       - ./api/tsconfig.json:/srv/api/tsconfig.json
+      - ./api/tsconfig.build.json:/srv/api/tsconfig.build.json
       - ./api/upload:/srv/api/upload
 #      - /srv/api/node_modules
     environment:

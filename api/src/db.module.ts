@@ -12,5 +12,5 @@ export default TypeOrmModule.forRoot({
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
 
-  entities: [__dirname + '/**/*.entity.ts'],
+  entities: ['dist/**/*.entity{.ts,.js}'],
 });
