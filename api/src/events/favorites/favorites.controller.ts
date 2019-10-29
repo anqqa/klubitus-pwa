@@ -2,6 +2,7 @@ import { Controller, HttpStatus, Response, UseGuards, UseInterceptors } from '@n
 import { AuthGuard } from '@nestjs/passport';
 import { ApiUseTags } from '@nestjs/swagger';
 import {
+  BaseRouteName,
   Crud,
   CrudController,
   CrudRequest,
@@ -28,7 +29,7 @@ import { FavoritesService } from './favorites.service';
     maxLimit: 500,
   },
   routes: {
-    only: ['createOneBase', 'deleteOne', 'getManyBase'],
+    only: ['createOneBase', 'deleteOne', 'getManyBase'] as BaseRouteName[],
   },
 })
 @ApiUseTags('Events')
