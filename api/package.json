@@ -59,20 +59,20 @@
     "uuid": "^3.3.3"
   },
   "devDependencies": {
-    "@nestjs/cli": "^6.7.2",
+    "@nestjs/cli": "^6.11.1",
     "@types/bcryptjs": "^2.4.2",
-    "@types/fs-extra": "^8.0.0",
-    "@types/lodash": "^4.14.138",
+    "@types/fs-extra": "^8.0.1",
+    "@types/lodash": "^4.14.144",
     "@types/mime-types": "^2.1.0",
     "@types/node": "^11.13.4",
     "@types/passport": "^1.0.1",
-    "@types/passport-http-bearer": "^1.0.33",
+    "@types/passport-http-bearer": "^1.0.34",
     "@types/pump": "^1.1.0",
     "@types/sharp": "^0.22.2",
     "@types/uuid": "^3.4.5",
-    "nodemon": "^1.19.2",
+    "nodemon": "^1.19.4",
     "patch-package": "^6.2.0",
     "ts": "^0.2.2",
-    "typescript": "^3.6.3"
+    "typescript": "^3.6.4"
   }
 }
