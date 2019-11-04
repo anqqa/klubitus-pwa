@@ -28,14 +28,6 @@ export class RequestLoggerInterceptor implements NestInterceptor {
         const { res } = context.switchToHttp().getResponse();
 
         logRequest(res.statusCode);
-      }),
-      catchError((error: any) => {
-        const status =
-          error instanceof HttpException ? error.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
-
-        logRequest(status);
-
-        return throwError(error);
       })
     );
   }
