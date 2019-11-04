@@ -24,10 +24,9 @@ index a8e9028..a045455 100644
      private prepareEntityBeforeSave;
 -    private getAllowedColumns;
 -    private getRelationMetadata;
--    private setJoin;
 +    protected getAllowedColumns;
 +    protected getRelationMetadata;
-+    protected setJoin;
+     private setJoin;
      private setAndWhere;
      private setOrWhere;
      private setSearchCondition;
