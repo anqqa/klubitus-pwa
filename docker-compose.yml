@@ -17,7 +17,7 @@ services:
       - 8080:8080
     networks:
       - web
-    restart: always
+    restart: unless-stopped
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - ./traefik/traefik.yml:/traefik.yml
@@ -39,7 +39,7 @@ services:
       - internal
     ports:
       - "127.0.0.1:${DB_PORT}:${DB_PORT}"
-    restart: always
+    restart: unless-stopped
     tmpfs:
       - /tmp
       - /var/run/postgresql
@@ -56,13 +56,13 @@ services:
       context: .
       dockerfile: ./api/Dockerfile
     container_name: klubitus-api
-    restart: always
+    restart: unless-stopped
     command: yarn start:dev
     volumes:
-      - ./api/src:/srv/api/src
+      - ./api/src:/srv/api/src:delegated
       - ./api/package.json:/srv/api/package.json
-      - ./api/tsconfig.json:/srv/api/tsconfig.json
-      - ./api/tsconfig.build.json:/srv/api/tsconfig.build.json
+      - ./api/tsconfig.json:/srv/api/tsconfig.json:delegated
+      - ./api/tsconfig.build.json:/srv/api/tsconfig.build.json:delegated
       - ./api/upload:/srv/api/upload
 #      - /srv/api/node_modules
     environment:
@@ -99,12 +99,12 @@ services:
       context: .
       dockerfile: ./client/Dockerfile
     container_name: klubitus-client
-    restart: always
+    restart: unless-stopped
     command: yarn dev
     volumes:
-      - ./client/src:/srv/client/src
-      - ./client/nuxt.config.ts:/srv/client/nuxt.config.ts
-      - ./client/tsconfig.json:/srv/client/tsconfig.json
+      - ./client/src:/srv/client/src:delegated
+      - ./client/nuxt.config.ts:/srv/client/nuxt.config.ts:delegated
+      - ./client/tsconfig.json:/srv/client/tsconfig.json:delegated
       - ./client/package.json:/srv/client/package.json
     environment:
       - API_HOST
