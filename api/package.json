@@ -27,19 +27,19 @@
     "start:debug": "nest start --watch --debug"
   },
   "dependencies": {
-    "@nestjs/common": "^6.8.5",
-    "@nestjs/core": "^6.8.5",
+    "@nestjs/common": "^6.9.0",
+    "@nestjs/core": "^6.9.0",
     "@nestjs/passport": "^6.1.0",
-    "@nestjs/platform-fastify": "^6.8.5",
+    "@nestjs/platform-fastify": "^6.9.0",
     "@nestjs/swagger": "^3.1.0",
     "@nestjs/typeorm": "^6.2.0",
     "@nestjsx/crud": "^4.3.0-alpha.0",
     "@nestjsx/crud-typeorm": "^4.3.0-alpha.0",
-    "aws-sdk": "^2.558.0",
+    "aws-sdk": "^2.562.0",
     "axios": "^0.19.0",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.2.3",
-    "class-validator": "^0.10.2",
+    "class-validator": "^0.11.0",
     "date-fns": "^2.6.0",
     "dotenv": "^8.2.0",
     "exif-reader": "^1.0.3",
@@ -61,7 +61,7 @@
     "uuid": "^3.3.3"
   },
   "devDependencies": {
-    "@nestjs/cli": "^6.11.1",
+    "@nestjs/cli": "^6.11.3",
     "@types/bcryptjs": "^2.4.2",
     "@types/fs-extra": "^8.0.1",
     "@types/lodash": "^4.14.144",
@@ -71,7 +71,7 @@
     "@types/passport-http-bearer": "^1.0.34",
     "@types/pump": "^1.1.0",
     "@types/sharp": "^0.22.2",
-    "@types/uuid": "^3.4.5",
+    "@types/uuid": "^3.4.6",
     "patch-package": "^6.2.0",
     "ts": "^0.2.2",
     "typescript": "^3.6.4"
