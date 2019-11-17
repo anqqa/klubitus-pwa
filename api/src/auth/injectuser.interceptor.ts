@@ -16,6 +16,8 @@ export class InjectUserInterceptor implements NestInterceptor {
     if (req.user) {
       if (['PATCH', 'POST', 'PUT'].includes(req.raw.method)) {
         req.body[this.key || DEFAULT_KEY] = req.user.id;
+      } else {
+        req.query.filter = `${this.key || DEFAULT_KEY}||eq||${req.user.id}`;
       }
     }
 

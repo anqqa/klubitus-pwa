@@ -58,7 +58,7 @@ export class AuthService {
     let user = await this.userRepository.findOne({ where });
 
     if (!user) {
-      Logger.log('User not found', LOG_CONTEXT, false);
+      Logger.log('RequestUser not found', LOG_CONTEXT, false);
 
       throw new UnauthorizedException({
         errors: { username: ['Unknown user'] },
@@ -99,6 +99,7 @@ export class AuthService {
       where: { token },
     });
 
-    return userToken.user;
+    // Return stripped user, remove password etc. fields
+    return User.fromData(User, userToken.user);
   }
 }

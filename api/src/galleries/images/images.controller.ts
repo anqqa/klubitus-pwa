@@ -11,7 +11,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiConsumes, ApiImplicitFile, ApiUseTags } from '@nestjs/swagger';
 import { Crud, CrudController } from '@nestjsx/crud';
 
-import { User } from '../../auth/user.decorator';
+import { RequestUser } from '../../auth/requestuser.decorator';
 import { File, FileInterceptor } from '../../common/interceptors/file.interceptor';
 import { TransformerInterceptor } from '../../common/interceptors/transformer.interceptor';
 import { GalleriesService } from '../galleries.service';
@@ -66,7 +66,7 @@ export class GalleryImagesController implements CrudController<GalleryImage> {
   @Post()
   async upload(
     @Param() params: any,
-    @User() user: any,
+    @RequestUser() user: any,
     @UploadedFile('file') file: File
   ): Promise<GalleryImage> {
     const galleryId = parseInt(params.galleryId, 10);

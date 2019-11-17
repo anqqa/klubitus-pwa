@@ -19,6 +19,9 @@ export class HttpStrategy extends PassportStrategy(Strategy) {
 
     user.is_authenticated = true;
 
-    return user;
+    return {
+      ...user,
+      roles: user.roles, // Getters need to be triggered manually
+    };
   }
 }
