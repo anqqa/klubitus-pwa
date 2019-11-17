@@ -4,20 +4,22 @@ import { ActionContext, ActionTree, GetterTree, MutationTree } from 'vuex';
 import Favorite from '@/models/Favorite';
 
 interface EventsState {
-  favoriteIds: number[] | null;
+  favorites: Record<number, number>;
+  favoritesLoaded: boolean;
 }
 
 export const state = (): EventsState => ({
-  favoriteIds: null,
+  favorites: {},
+  favoritesLoaded: false,
 });
 
 interface EventsActionContext extends ActionContext<EventsState, any> {}
 
 export const actions: ActionTree<EventsState, any> = {
-  async addFavorite({ commit }: EventsActionContext, eventId: number) {
-    await new Favorite({ event_id: eventId }).save();
+  async addFavorite({ commit }: EventsActionContext, { eventId, userId }: Record<string, number>) {
+    const { id } = await new Favorite({ event_id: eventId, user_id: userId }).save();
 
-    commit('addFavorite', eventId);
+    commit('addFavorite', { eventId, id });
   },
 
   async loadFavorites(
@@ -28,59 +30,50 @@ export const actions: ActionTree<EventsState, any> = {
       return;
     }
 
+    const eventIds = {};
     const data = await new Favorite()
-      .select(['event_id'])
       .filter('user_id', 'eq', userId)
+      .select(['event_id'])
       .get();
-    const eventIds = data.map(favorite => favorite.event_id);
+    data.map(favorite => (eventIds[favorite.event_id!] = favorite.id));
 
     commit('setFavorites', eventIds);
   },
 
-  async removeFavorite({ commit }: EventsActionContext, eventId: number) {
-    await new Favorite({ event_id: eventId }).delete();
+  async removeFavorite({ commit, state: store }: EventsActionContext, eventId: number) {
+    const id = store.favorites[eventId];
 
-    commit('removeFavorite', eventId);
+    if (id) {
+      await new Favorite({ id }).delete();
+
+      commit('removeFavorite', eventId);
+    }
   },
 };
 
 export const getters: GetterTree<EventsState, any> = {
-  favoritesLoaded: store => store.favoriteIds !== null,
-  isFavorite: (store: EventsState) => (eventId: number): boolean => {
-    return store.favoriteIds !== null && store.favoriteIds.includes(eventId);
-  },
+  favoriteIdByEventId: (store: EventsState) => (eventId: number): number | undefined =>
+    store.favorites[eventId],
+  favoritesLoaded: store => store.favoritesLoaded,
+  isFavorite: (store: EventsState) => (eventId: number): boolean => eventId in store.favorites,
 };
 
 export const mutations: MutationTree<EventsState> = {
-  addFavorite(store: EventsState, eventId: number) {
-    if (store.favoriteIds === null) {
-      store.favoriteIds = [];
-    }
-
-    if (!store.favoriteIds.includes(eventId)) {
-      store.favoriteIds.push(eventId);
-    }
+  addFavorite(store: EventsState, { eventId, id }: Record<string, number>) {
+    store.favorites[eventId] = id;
   },
 
   removeFavorite(store: EventsState, eventId: number) {
-    if (store.favoriteIds === null) {
+    if (!store.favorites[eventId]) {
       return;
     }
 
-    const index = store.favoriteIds.indexOf(eventId);
-
-    if (index >= 0) {
-      store.favoriteIds.splice(index, 1);
-    }
+    delete store.favorites[eventId];
   },
 
-  setFavorites(store: EventsState, eventIds: number[]) {
-    if (store.favoriteIds === null) {
-      store.favoriteIds = eventIds;
-    } else {
-      store.favoriteIds.length = 0;
-      store.favoriteIds.push(...eventIds);
-    }
+  setFavorites(store: EventsState, eventIds: Record<number, number>) {
+    store.favorites = eventIds;
+    store.favoritesLoaded = true;
   },
 };
 

@@ -29,7 +29,9 @@ export class BaseModel extends ModelQueryBuilder {
   }
 
   async delete() {
-    return await BaseModel.$http.$delete(this._url(this.data()));
+    const { id, ...data } = this.data();
+
+    return await BaseModel.$http.$delete(this._url(data));
   }
 
   endpoint(): string {
@@ -104,14 +106,10 @@ export class BaseModel extends ModelQueryBuilder {
     const data = {};
 
     Object.entries(this).forEach(([key, value]) => {
-      console.log({ key, value });
-
       if (!key.startsWith('_')) {
         data[key] = value;
       }
     });
-
-    console.log({ data });
 
     return data;
   }

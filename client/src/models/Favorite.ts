@@ -10,6 +10,6 @@ export default class Favorite extends BaseModel {
   user_id?: number;
 
   resource() {
-    return 'events/favorites';
+    return 'favorites';
   }
 }

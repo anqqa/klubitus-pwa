@@ -18,10 +18,10 @@
           <v-icon left>mdi-facebook</v-icon> Facebook event
         </v-btn>
         <template v-if="isAuthenticated">
-          <v-btn v-if="isFavorite" outlined @click="toggleFavorite">
+          <v-btn v-if="isFavorited" outlined @click="unsetFavorite">
             <v-icon left>mdi-star</v-icon> Remove favorite
           </v-btn>
-          <v-btn v-else color="primary" @click="toggleFavorite">
+          <v-btn v-else color="primary" @click="setFavorite">
             <v-icon left>mdi-star</v-icon> Add to Favorites
           </v-btn>
         </template>
@@ -49,7 +49,7 @@ export default class SingleEvent extends Vue {
 
   @authStore.Getter isAuthenticated!: boolean;
   @authStore.Getter userId!: number | undefined;
-  @eventsStore.Action addFavorite!: (eventId: number) => Promise<any>;
+  @eventsStore.Action addFavorite!: ({ eventId, userId }: Record<string, number>) => Promise<any>;
   @eventsStore.Action removeFavorite!: (eventId: number) => Promise<any>;
   @eventsStore.Getter isFavorite!: (eventId: number) => boolean;
 
@@ -70,17 +70,23 @@ export default class SingleEvent extends Vue {
   }
 
   async fetch({ store }) {
-    if (!store.getters['events/favoritesLoaded']) {
-      const userId = store.getters['auth/userId'];
+    const userId = store.getters['auth/userId'];
 
+    if (userId && !store.getters['events/favoritesLoaded']) {
       await store.dispatch('events/loadFavorites', userId);
     }
   }
 
-  async toggleFavorite() {
-    this.isFavorite(this.eventId)
-      ? this.removeFavorite(this.eventId)
-      : this.addFavorite(this.eventId);
+  get isFavorited(): boolean {
+    return this.isFavorite(this.eventId);
+  }
+
+  async setFavorite() {
+    await this.addFavorite({ eventId: this.eventId, userId: this.userId! });
+  }
+
+  async unsetFavorite() {
+    await this.removeFavorite(this.eventId);
   }
 
   validate({ params }) {
