@@ -18,7 +18,7 @@ import {
   Override,
   ParsedRequest,
 } from '@nestjsx/crud';
-import { User } from '../auth/user.decorator';
+import { RequestUser } from '../auth/requestuser.decorator';
 
 import { EntityForbiddenError } from '../common/errors/entityforbidden.error';
 import { File, FileInterceptor } from '../common/interceptors/file.interceptor';
@@ -66,7 +66,7 @@ export class EventsController implements CrudController<Event> {
   @Post(':eventId/images')
   async upload(
     @Param() params: any,
-    @User() user: any,
+    @RequestUser() user: any,
     @UploadedFile('file') file: File
   ): Promise<GalleryImage> {
     const eventId = parseInt(params.eventId, 10);

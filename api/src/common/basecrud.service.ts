@@ -1,8 +1,7 @@
 // tslint:disable:object-literal-sort-keys
-import { JoinOptions } from '@nestjsx/crud';
-import { QueryFilter, QueryJoin } from '@nestjsx/crud-request';
+import { QueryFilter } from '@nestjsx/crud-request';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
-import { ObjectLiteral, SelectQueryBuilder } from 'typeorm';
+import { ObjectLiteral } from 'typeorm';
 
 export class BaseCrudService<T> extends TypeOrmCrudService<T> {
   public decidePagination(parsed: any, options: any): boolean {

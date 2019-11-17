@@ -1,9 +1,10 @@
-import { Controller, HttpStatus, Response, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, ForbiddenException, HttpStatus, Response, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiUseTags } from '@nestjs/swagger';
 import {
   BaseRouteName,
   Crud,
+  CrudActions,
   CrudController,
   CrudRequest,
   Override,
@@ -12,10 +13,10 @@ import {
 } from '@nestjsx/crud';
 import { FastifyReply } from 'fastify';
 import { QueryFailedError } from 'typeorm';
-import { InjectUserInterceptor } from '../../auth/injectuser.interceptor';
-import { PG_UNIQUE_CONSTRAINT_VIOLATION } from '../../common/interceptors/errors.interceptor';
 
-import { allow } from '../../users/user.entity';
+import { RequestUser } from '../../auth/requestuser.decorator';
+import { PG_UNIQUE_CONSTRAINT_VIOLATION } from '../../common/interceptors/errors.interceptor';
+import { allow, User } from '../../users/user.entity';
 import { Favorite } from './favorite.entity';
 import { FavoritesService } from './favorites.service';
 
@@ -29,11 +30,11 @@ import { FavoritesService } from './favorites.service';
     maxLimit: 500,
   },
   routes: {
-    only: ['createOneBase', 'deleteOne', 'getManyBase'] as BaseRouteName[],
+    only: ['createOneBase', 'deleteOneBase', 'getManyBase'] as BaseRouteName[],
   },
 })
 @ApiUseTags('Events')
-@Controller('events/favorites')
+@Controller('favorites')
 export class FavoritesController implements CrudController<Favorite> {
   constructor(readonly service: FavoritesService) {}
 
@@ -42,22 +43,28 @@ export class FavoritesController implements CrudController<Favorite> {
   }
 
   @UseGuards(AuthGuard())
-  @UseInterceptors(new InjectUserInterceptor())
   @Override()
   async createOne(
     @ParsedRequest() req: CrudRequest,
     @ParsedBody() dto: Favorite,
-    @Response() res: FastifyReply<any>
+    @RequestUser() user: User
+    //    @Response() res: FastifyReply<any>
   ) {
+    const favorite = Favorite.fromData(Favorite, dto);
+
+    if (!favorite.can(CrudActions.CreateOne, user.roles)) {
+      throw new ForbiddenException();
+    }
+
     try {
-      await this.base.createOneBase(req, dto);
+      return await this.base.createOneBase(req, dto);
     } catch (error) {
       // Return OK if already added to favorites
       if (
         error instanceof QueryFailedError &&
         (error as any).code === PG_UNIQUE_CONSTRAINT_VIOLATION
       ) {
-        return res.status(HttpStatus.OK).send();
+        return; // res.status(HttpStatus.OK).send();
       }
 
       throw error;
@@ -65,9 +72,14 @@ export class FavoritesController implements CrudController<Favorite> {
   }
 
   @UseGuards(AuthGuard())
-  @UseInterceptors(new InjectUserInterceptor())
   @Override()
-  async deleteOne(@ParsedRequest() req: CrudRequest, @Response() res: FastifyReply<any>) {
-    // @TODO
+  async deleteOne(@ParsedRequest() req: CrudRequest, @RequestUser() user: User) {
+    const favorite = await this.service.getOne(req);
+
+    if (!favorite.can(CrudActions.DeleteOne, user.roles)) {
+      throw new ForbiddenException();
+    }
+
+    return await this.base.deleteOneBase(req);
   }
 }
