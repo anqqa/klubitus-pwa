@@ -1,3 +1,5 @@
+import format from 'date-fns/format';
+
 const colors = [
   'amber',
   'blue',
@@ -34,6 +36,26 @@ const formatter = new Intl.NumberFormat();
 
 export const count = (value: number, singular: string, plural: string): string => {
   return `${formatter.format(value)} ${value === 1 ? singular : plural}`;
+};
+
+export const dateRange = (from: Date, to: Date): string => {
+  let dates: string[] = [];
+
+  if (from.getFullYear() === to.getFullYear()) {
+    if (from.getMonth() === to.getMonth()) {
+      if (from.getDate() === to.getDate()) {
+        dates = [format(from, 'MMMM do yyyy')]; // Same date
+      } else {
+        dates = [format(from, 'd'), format(to, 'd MMM yyyy')]; // Same month
+      }
+    } else {
+      dates = [format(from, 'd MMM'), format(to, 'd MMM yyyy')]; // Same year
+    }
+  } else {
+    dates = [format(from, 'd MMM yyyy'), format(to, 'd MMM yyyy')]; // Nothing same
+  }
+
+  return dates.join('–');
 };
 
 export const nFormatter = (value: number, digits: number, bytes?: boolean): string => {

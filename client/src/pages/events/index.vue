@@ -53,22 +53,23 @@
 </template>
 
 <script lang="ts">
-import { addDays, addMonths, format, getISOWeek, parseISO } from 'date-fns';
+import { addDays, addMonths, format, parseISO } from 'date-fns';
 import { Component, Vue } from 'nuxt-property-decorator';
 import { RawLocation } from 'vue-router';
 
 import EventCard from '@/components/events/EventCard.vue';
 import EventList from '@/components/events/EventList.vue';
 import Event from '@/models/Event';
-import { pad } from '@/utils/text';
-import { dateRange } from '@/utils/time';
+import { dateRange as buildTitle } from '@/utils/text';
+import { DateRange, dateRange } from '@/utils/time';
+import { eventCalendarRoute } from '@/utils/url';
 
 interface DayGroup {
   header: string;
   events: Array<Event | { hours: string; url: RawLocation }>;
 }
 
-const buildPagination = (from: Date, to: Date, range: string) => {
+const buildPagination = (from: Date, to: Date, range: DateRange) => {
   let previousDate, nextDate, previousTitle, nextTitle;
 
   switch (range) {
@@ -95,55 +96,9 @@ const buildPagination = (from: Date, to: Date, range: string) => {
   }
 
   return {
-    previous: { title: previousTitle, url: getRoute(range, previousDate) },
-    next: { title: nextTitle, url: getRoute(range, nextDate) },
+    previous: { title: previousTitle, url: eventCalendarRoute(range, previousDate) },
+    next: { title: nextTitle, url: eventCalendarRoute(range, nextDate) },
   };
-};
-
-const buildTitle = (from: Date, to: Date): string => {
-  let dates: string[] = [];
-
-  if (from.getFullYear() === to.getFullYear()) {
-    if (from.getMonth() === to.getMonth()) {
-      if (from.getDate() === to.getDate()) {
-        dates = [format(from, 'MMMM do yyyy')]; // Same date
-      } else {
-        dates = [format(from, 'd'), format(to, 'd MMM yyyy')]; // Same month
-      }
-    } else {
-      dates = [format(from, 'd MMM'), format(to, 'd MMM yyyy')]; // Same year
-    }
-  } else {
-    dates = [format(from, 'd MMM yyyy'), format(to, 'd MMM yyyy')]; // Nothing same
-  }
-
-  return dates.join('–');
-};
-
-const getRoute = (range: string, date: Date): RawLocation => {
-  const route: RawLocation = {
-    name: 'events-year-month-day',
-    params: { year: date.getFullYear().toString() },
-  };
-
-  switch (range) {
-    case 'day':
-      route.name = 'events-year-month-day';
-      route.params!.month = pad(date.getMonth() + 1, 2);
-      route.params!.day = pad(date.getDate(), 2);
-      break;
-
-    case 'week':
-      route.name = 'events-year-wk-week';
-      route.params!.week = pad(getISOWeek(date), 2);
-      break;
-
-    case 'month':
-      route.name = 'events-year-month';
-      route.params!.month = pad(date.getMonth() + 1, 2);
-  }
-
-  return route;
 };
 
 const groupByDate = (data: Event[]): DayGroup[] => {
@@ -176,7 +131,7 @@ const groupByDate = (data: Event[]): DayGroup[] => {
 export default class EventsIndex extends Vue {
   days: DayGroup[] = [];
   highlighted: { from: Date; to: Date } | null = null;
-  range: string = 'week';
+  range: DateRange = 'week';
   selectedDate: string = format(new Date(), 'yyyy-MM-dd');
   title: string = 'Events';
 
@@ -211,7 +166,7 @@ export default class EventsIndex extends Vue {
   }
 
   dateSelected(date: string) {
-    const route = this.localePath(getRoute(this.range, new Date(date)));
+    const route = this.localePath(eventCalendarRoute(this.range, new Date(date)));
 
     this.$router.push(route);
   }

@@ -1,6 +1,8 @@
 <template>
   <v-container>
     <v-flex md8 class="mx-auto">
+      <v-breadcrumbs :items="breadcrumbs" />
+
       <v-img v-if="item.flyer_front_url" :src="item.flyer_front_url" alt="Flyer" class="mb-4" />
 
       <header class="text-center text-uppercase">
@@ -18,7 +20,7 @@
           <v-icon left>mdi-facebook</v-icon> Facebook event
         </v-btn>
         <template v-if="isAuthenticated">
-          <v-btn v-if="isFavorited" outlined @click="unsetFavorite">
+          <v-btn v-if="isFavorite(eventId)" outlined @click="unsetFavorite">
             <v-icon left>mdi-star</v-icon> Remove favorite
           </v-btn>
           <v-btn v-else color="primary" @click="setFavorite">
@@ -35,17 +37,22 @@
 </template>
 
 <script lang="ts">
-import { format, parseISO } from 'date-fns';
+import { endOfISOWeek, format, parseISO, startOfISOWeek } from 'date-fns';
 import { Component, Vue } from 'nuxt-property-decorator';
 
 import Event from '@/models/Event';
 import { authStore } from '@/store/auth';
 import { eventsStore } from '@/store/events';
+import { dateRange } from '@/utils/text';
 import { hours } from '@/utils/time';
+import { eventCalendarRoute } from '@/utils/url';
 
-@Component({})
+@Component({
+  head: { title: 'Events' },
+})
 export default class SingleEvent extends Vue {
   eventId: number = 0;
+  item?: Event & { date: string; hours: string; info: string } = undefined;
 
   @authStore.Getter isAuthenticated!: boolean;
   @authStore.Getter userId!: number | undefined;
@@ -69,16 +76,27 @@ export default class SingleEvent extends Vue {
     };
   }
 
+  get breadcrumbs() {
+    const eventDate = parseISO(this.item!.begins_at!);
+    const monday = startOfISOWeek(eventDate);
+    const sunday = endOfISOWeek(eventDate);
+
+    return [
+      { to: this.localePath('events'), text: 'Events', exact: true },
+      {
+        to: this.localePath(eventCalendarRoute('week', eventDate)),
+        text: dateRange(monday, sunday),
+      },
+      { to: this.$route.fullPath, text: this.item!.name, disabled: true },
+    ];
+  }
+
   async fetch({ store }) {
     const userId = store.getters['auth/userId'];
 
     if (userId && !store.getters['events/favoritesLoaded']) {
       await store.dispatch('events/loadFavorites', userId);
     }
-  }
-
-  get isFavorited(): boolean {
-    return this.isFavorite(this.eventId);
   }
 
   async setFavorite() {

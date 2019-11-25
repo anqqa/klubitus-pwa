@@ -5,6 +5,8 @@ const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
 const MONTH = 30 * DAY;
 
+export type DateRange = 'day' | 'week' | 'month' | 'year';
+
 /**
  * Build a date range from given arguments, returning first and last date.
  *
@@ -19,7 +21,7 @@ export const dateRange = (
   month?: number,
   week?: number,
   day?: number
-): { from: Date; to: Date; range: 'day' | 'week' | 'month' | 'year' } => {
+): { from: Date; to: Date; range: DateRange } => {
   let from;
   let to;
   let range;
