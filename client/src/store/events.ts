@@ -1,4 +1,5 @@
 import { namespace } from 'nuxt-property-decorator';
+import Vue from 'vue';
 import { ActionContext, ActionTree, GetterTree, MutationTree } from 'vuex';
 
 import Favorite from '@/models/Favorite';
@@ -60,15 +61,11 @@ export const getters: GetterTree<EventsState, any> = {
 
 export const mutations: MutationTree<EventsState> = {
   addFavorite(store: EventsState, { eventId, id }: Record<string, number>) {
-    store.favorites[eventId] = id;
+    Vue.set(store.favorites, eventId, id);
   },
 
   removeFavorite(store: EventsState, eventId: number) {
-    if (!store.favorites[eventId]) {
-      return;
-    }
-
-    delete store.favorites[eventId];
+    Vue.delete(store.favorites, eventId);
   },
 
   setFavorites(store: EventsState, eventIds: Record<number, number>) {
