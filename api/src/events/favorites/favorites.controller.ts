@@ -48,7 +48,6 @@ export class FavoritesController implements CrudController<Favorite> {
     @ParsedRequest() req: CrudRequest,
     @ParsedBody() dto: Favorite,
     @RequestUser() user: User
-    //    @Response() res: FastifyReply<any>
   ) {
     const favorite = Favorite.fromData(Favorite, dto);
 
@@ -59,12 +58,13 @@ export class FavoritesController implements CrudController<Favorite> {
     try {
       return await this.base.createOneBase(req, dto);
     } catch (error) {
-      // Return OK if already added to favorites
       if (
         error instanceof QueryFailedError &&
         (error as any).code === PG_UNIQUE_CONSTRAINT_VIOLATION
       ) {
-        return; // res.status(HttpStatus.OK).send();
+        const { event_id, user_id } = favorite;
+
+        return this.service.findOne({ where: { event_id, user_id } });
       }
 
       throw error;
