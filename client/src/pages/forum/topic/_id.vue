@@ -13,6 +13,8 @@
         <nuxt-child :key="topicId" />
 
         <v-pagination v-if="pages > 1" :length="pages" v-model="page" total-visible="7" />
+
+        <post-edit v-if="isAuthenticated" :user="user" class="mt-4" title="Reply to topic" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -21,14 +23,22 @@
 <script lang="ts">
 import { Component, mixins } from 'nuxt-property-decorator';
 
+import PostEdit from '@/components/forum/PostEdit.vue';
 import PaginatedMixin from '@/mixins/paginated';
 import ForumTopic from '@/models/ForumTopic';
+import User from '@/models/User';
+import { authStore, UserState } from '@/store/auth';
 
-@Component({})
+@Component({
+  components: { PostEdit },
+})
 export default class SingleTopic extends mixins(PaginatedMixin) {
   name = '';
   pages: number = 0;
   topicId: number = 0;
+
+  @authStore.Getter isAuthenticated!: boolean;
+  @authStore.State('user') userState!: UserState | null;
 
   async asyncData({ params }) {
     const topicId = parseInt(params.id);
@@ -40,6 +50,10 @@ export default class SingleTopic extends mixins(PaginatedMixin) {
 
   head() {
     return { title: this.name || 'Forum' };
+  }
+
+  get user(): User | null {
+    return this.userState && new User(this.userState);
   }
 }
 </script>
