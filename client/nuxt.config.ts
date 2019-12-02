@@ -1,7 +1,10 @@
 import { Configuration } from '@nuxt/types';
 // import nodeExternals from 'webpack-node-externals';
 
+const isDev = process.env.NODE_ENV !== 'production';
+
 const config: Configuration = {
+  dev: isDev,
   env: {
     API_URL: process.env.API_URL_BROWSER || 'http://localhost:3001',
     BASE_URL: process.env.CLIENT_HOST || 'http://localhost:3000',
@@ -52,7 +55,7 @@ const config: Configuration = {
     [
       '@nuxtjs/axios',
       {
-        debug: process.env.NODE_ENV === 'development',
+        debug: isDev,
       },
     ],
 
@@ -96,7 +99,6 @@ const config: Configuration = {
           { code: 'en', iso: 'en-US', langFile: 'en.ts', name: 'English' },
           { code: 'fi', iso: 'fi-FI', langFile: 'fi.ts', name: 'suomi' },
         ],
-
         pages: {
           'events/index': { fi: '/tapahtumat' },
           'events/_id': { fi: '/tapahtumat/:id' },
@@ -125,6 +127,7 @@ const config: Configuration = {
         },
         parsePages: false,
         rootRedirect: 'en',
+        seo: false,
         strategy: 'prefix',
 
         vueI18n: {
@@ -174,6 +177,11 @@ const config: Configuration = {
     /**
      * Run ESLint on save
      */
+    extend(conf, ctx) {
+      if (ctx.isClient && isDev) {
+        conf.devtool = 'source-map';
+      }
+    },
     // extend (config, ctx) {
     // if (ctx.isDev && ctx.isClient) {
     //   config.module.rules.push({
@@ -193,12 +201,22 @@ const config: Configuration = {
     // }
     // },
 
+    devtools: isDev,
     extractCSS: true,
+    //    parallel: true,
+    terser: true,
 
     postcss: {
       preset: {
         features: { customProperties: false },
       },
+    },
+  },
+
+  vue: {
+    config: {
+      productionTip: true,
+      devtools: isDev,
     },
   },
 };

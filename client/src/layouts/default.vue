@@ -29,7 +29,10 @@ export default class Layout extends Vue {
   title = '';
 
   head() {
-    return { changed: ({ titleChunk }) => (this.title = titleChunk) };
+    return {
+      changed: ({ titleChunk }) => (this.title = titleChunk),
+      ...this.$nuxtI18nSeo(),
+    };
   }
 }
 </script>

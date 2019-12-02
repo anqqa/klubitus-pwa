@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@nestjsx/crud-request": "^4.2.0",
-    "@nuxt/typescript-runtime": "^0.2.2",
+    "@nuxt/typescript-runtime": "^0.2.7",
     "@nuxtjs/axios": "^5.8.0",
     "@nuxtjs/markdownit": "^1.2.7",
     "@nuxtjs/pwa": "^3.0.0-beta.19",
@@ -27,7 +27,7 @@
     "lodash": "^4.17.11",
     "markdown-it-link-attributes": "^2.1.0",
     "nuxt": "^2.10.2",
-    "nuxt-i18n": "^6.3.0",
+    "nuxt-i18n": "^6.4.0",
     "vue": "^2.6.10",
     "vue-async-computed": "^3.7.0",
     "vue-filepond": "^5.1.3",
@@ -36,19 +36,19 @@
     "vue-template-compiler": "^2.6.10",
     "vuelidate": "^0.7.4",
     "vuelidate-property-decorators": "^1.0.28",
-    "vuex": "^3.1.1"
+    "vuex": "^3.1.2"
   },
   "devDependencies": {
-    "@nuxt/typescript-build": "^0.3.2",
+    "@nuxt/typescript-build": "^0.3.7",
     "@nuxtjs/vuetify": "^1.9.0",
     "@types/facebook-js-sdk": "^3.3.0",
     "@types/js-cookie": "^2.2.4",
-    "@types/lodash": "^4.14.144",
-    "@types/markdown-it": "^0.0.8",
-    "@types/vuelidate": "^0.7.8",
+    "@types/lodash": "^4.14.149",
+    "@types/markdown-it": "^0.0.9",
+    "@types/vuelidate": "^0.7.9",
     "node-sass": "^4.13.0",
     "nuxt-property-decorator": "^2.5.0",
     "sass-loader": "^8.0.0",
-    "vuetify": "^2.1.7"
+    "vuetify": "^2.1.12"
   }
 }
