@@ -1,11 +1,13 @@
-FROM node:11-alpine
+FROM node:13-alpine
 
 WORKDIR /srv/client
 
 COPY client/package.json yarn.lock ./
-RUN apk --no-cache --virtual build-dependencies add python make g++ \
-    && yarn install --pure-lockfile && yarn cache clean --force \
-    && apk del build-dependencies
+
+RUN apk --no-cache --virtual .gyp add python make g++ \
+    && yarn install --pure-lockfile \
+    && yarn cache clean --force \
+    && apk del .gyp
 
 # COPY . .
 
