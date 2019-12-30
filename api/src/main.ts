@@ -3,8 +3,10 @@ import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { CrudConfigService } from '@nestjsx/crud';
 import { useContainer } from 'class-validator';
+import { parse as querystringParser } from 'qs';
 
 CrudConfigService.load({
+  auth: { property: 'user' },
   query: { maxLimit: 500 },
   queryParser: {
     paramNamesMap: {
@@ -26,7 +28,7 @@ import { TrimPipe } from './common/pipes/TrimPipe';
 import { setupSwagger } from './swagger';
 
 async function bootstrap() {
-  const fastify = new FastifyAdapter();
+  const fastify = new FastifyAdapter({ querystringParser });
   fastify.register(require('fastify-multipart'));
 
   const app = await NestFactory.create<NestFastifyApplication>(ApplicationModule, fastify);
