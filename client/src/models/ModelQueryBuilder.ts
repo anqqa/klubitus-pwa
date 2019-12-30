@@ -52,7 +52,7 @@ export class ModelQueryBuilder {
   }
 
   query(extraParams?: Record<string, string>): string {
-    const builderQuery = this._builder.query().replace(/\[]/g, '');
+    const builderQuery = this._builder.query();
 
     if (!extraParams) {
       return builderQuery;
