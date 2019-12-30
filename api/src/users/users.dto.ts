@@ -1,6 +1,6 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:variable-name
-import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 import { IsEmail, IsNotEmpty, Validate } from 'class-validator';
 
@@ -9,30 +9,30 @@ import { User as UserEntity } from './user.entity';
 
 @Exclude()
 export class User {
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   avatar_url?: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   id: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   username: string;
 }
 
 export class CreatePayload {
-  @ApiModelProperty()
+  @ApiProperty()
   @IsEmail()
   @Validate(IsUnique, [UserEntity])
   readonly email: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @IsNotEmpty()
   readonly password: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @IsNotEmpty()
   @Validate(IsUnique, [UserEntity])
   readonly username: string;

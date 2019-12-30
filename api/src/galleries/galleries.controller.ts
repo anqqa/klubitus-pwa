@@ -1,5 +1,5 @@
 import { Controller, Get, UseInterceptors } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Crud, CrudController } from '@nestjsx/crud';
 
 import { TransformerInterceptor } from '../common/interceptors/transformer.interceptor';
@@ -20,7 +20,7 @@ import { Gallery } from './gallery.entity';
     only: ['getManyBase', 'getOneBase'],
   },
 })
-@ApiUseTags('Images')
+@ApiTags('Images')
 @Controller('galleries')
 export class GalleriesController implements CrudController<Gallery> {
   constructor(readonly service: GalleriesService) {}
@@ -29,7 +29,7 @@ export class GalleriesController implements CrudController<Gallery> {
     return this;
   }
 
-  @ApiOperation({ title: 'Get gallery statistics' })
+  @ApiOperation({ summary: 'Get gallery statistics' })
   @ApiOkResponse({ type: Stats, isArray: true })
   @UseInterceptors(new TransformerInterceptor(Stats))
   @Get('/stats')

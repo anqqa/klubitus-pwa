@@ -1,5 +1,5 @@
 import { Controller, Query } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiUseTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Crud, CrudRequest, Override, ParsedRequest } from '@nestjsx/crud';
 import { CrudController } from '@nestjsx/crud/lib/interfaces/crud-controller.interface';
 import { plainToClass } from 'class-transformer';
@@ -13,7 +13,7 @@ import { NewsfeedService } from './newsfeed.service';
   query: { maxLimit: 100 },
   routes: { only: ['getManyBase'] },
 })
-@ApiUseTags('Newsfeed')
+@ApiTags('Newsfeed')
 @Controller('newsfeed')
 export class NewsfeedController implements CrudController<Item> {
   constructor(readonly service: NewsfeedService) {}
@@ -22,7 +22,7 @@ export class NewsfeedController implements CrudController<Item> {
     return this;
   }
 
-  @ApiOperation({ title: 'Get news feed items aggregated user/timespan/action' })
+  @ApiOperation({ summary: 'Get news feed items aggregated user/timespan/action' })
   @ApiOkResponse({ description: 'List of list of items.', type: Item })
   @Override()
   async getMany(@ParsedRequest() req: CrudRequest, @Query() query: any) {

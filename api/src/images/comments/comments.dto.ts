@@ -1,47 +1,47 @@
 // tslint:disable:variable-name
-import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 
 import { User } from '../../users/users.dto';
 import { Image } from '../images.dto';
 
 export class Comment {
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   @Type(() => User)
   author?: User;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   author_id: number;
 
-  @ApiModelProperty({ type: String, format: 'date-time' })
+  @ApiProperty({ type: String, format: 'date-time' })
   @Expose()
   created_at: Date;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   id: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   @Type(() => Image)
   image: Image;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   image_id: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   comment: string;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   @Type(() => User)
   user?: User;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   user_id?: number;
 }

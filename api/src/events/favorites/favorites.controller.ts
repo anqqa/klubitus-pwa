@@ -1,6 +1,6 @@
 import { Controller, ForbiddenException, HttpStatus, Response, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiUseTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import {
   BaseRouteName,
   Crud,
@@ -33,7 +33,7 @@ import { FavoritesService } from './favorites.service';
     only: ['createOneBase', 'deleteOneBase', 'getManyBase'] as BaseRouteName[],
   },
 })
-@ApiUseTags('Events')
+@ApiTags('Events')
 @Controller('favorites')
 export class FavoritesController implements CrudController<Favorite> {
   constructor(readonly service: FavoritesService) {}

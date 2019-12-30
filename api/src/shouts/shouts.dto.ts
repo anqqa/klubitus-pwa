@@ -1,24 +1,24 @@
 // tslint:disable:variable-name
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 
 import { User } from '../users/users.dto';
 
 @Expose()
 export class Shout {
-  @ApiModelProperty()
+  @ApiProperty()
   @Type(() => User)
   author: User;
 
-  @ApiModelProperty()
+  @ApiProperty()
   author_id: number;
 
-  @ApiModelProperty({ type: String, format: 'date-time' })
+  @ApiProperty({ type: String, format: 'date-time' })
   created_at: Date;
 
-  @ApiModelProperty()
+  @ApiProperty()
   id: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   shout: string;
 }

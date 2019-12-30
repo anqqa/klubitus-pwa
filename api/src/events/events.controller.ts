@@ -9,7 +9,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiConsumes, ApiImplicitFile, ApiUseTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import {
   Crud,
   CrudActions,
@@ -21,7 +21,7 @@ import {
 import { RequestUser } from '../auth/requestuser.decorator';
 
 import { EntityForbiddenError } from '../common/errors/entityforbidden.error';
-import { File, FileInterceptor } from '../common/interceptors/file.interceptor';
+import { File, FileInterceptor, FileUploadDto } from '../common/interceptors/file.interceptor';
 import { GalleriesService } from '../galleries/galleries.service';
 import { GalleryImage } from '../galleries/images/image.entity';
 import { GalleryImagesService } from '../galleries/images/images.service';
@@ -32,7 +32,7 @@ import { EventsService } from './events.service';
   model: { type: Event },
   query: { maxLimit: 500 },
 })
-@ApiUseTags('Events')
+@ApiTags('Events')
 @Controller('events')
 export class EventsController implements CrudController<Event> {
   constructor(
@@ -59,7 +59,7 @@ export class EventsController implements CrudController<Event> {
   }
 
   @ApiConsumes('multipart/form-data')
-  @ApiImplicitFile({ name: 'file', required: true })
+  @ApiBody({ type: FileUploadDto })
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
   @UseInterceptors(new FileInterceptor('file'))

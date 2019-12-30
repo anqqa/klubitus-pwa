@@ -1,51 +1,51 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:variable-name
-import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
 
 import { User } from '../users/users.dto';
 
 export class FacebookPayload {
-  @ApiModelProperty()
+  @ApiProperty()
   @IsNotEmpty()
   readonly access_token: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @IsNotEmpty()
   readonly external_user_id: number;
 }
 
 export class FacebookResponse {
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   email?: string;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   is_new_user?: boolean;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   name?: string;
 }
 
 export class LoginPayload {
-  @ApiModelProperty()
+  @ApiProperty()
   @IsNotEmpty()
   readonly password: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @IsNotEmpty()
   readonly username: string;
 }
 
 export class LoginResponse {
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   token: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   @Type(() => User)
   user: User;

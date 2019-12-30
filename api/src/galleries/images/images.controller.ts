@@ -8,11 +8,11 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiConsumes, ApiImplicitFile, ApiUseTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Crud, CrudController } from '@nestjsx/crud';
 
 import { RequestUser } from '../../auth/requestuser.decorator';
-import { File, FileInterceptor } from '../../common/interceptors/file.interceptor';
+import { File, FileInterceptor, FileUploadDto } from '../../common/interceptors/file.interceptor';
 import { TransformerInterceptor } from '../../common/interceptors/transformer.interceptor';
 import { GalleriesService } from '../galleries.service';
 import { GalleryImage } from './image.entity';
@@ -46,7 +46,7 @@ import { GalleryImagesService } from './images.service';
     only: ['getManyBase', 'getOneBase'],
   },
 })
-@ApiUseTags('Images')
+@ApiTags('Images')
 @Controller('/galleries/:galleryId/images')
 export class GalleryImagesController implements CrudController<GalleryImage> {
   constructor(
@@ -59,7 +59,7 @@ export class GalleryImagesController implements CrudController<GalleryImage> {
   }
 
   @ApiConsumes('multipart/form-data')
-  @ApiImplicitFile({ name: 'file', required: true })
+  @ApiBody({ type: FileUploadDto })
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
   @UseInterceptors(new FileInterceptor('file'))

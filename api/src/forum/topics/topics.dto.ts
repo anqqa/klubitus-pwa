@@ -1,6 +1,6 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:variable-name
-import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose, Transform, Type } from 'class-transformer';
 import { IsNumber, IsOptional } from 'class-validator';
 
@@ -10,76 +10,76 @@ import { Post } from '../posts/posts.dto';
 import { User } from '../users/users.dto';
 
 export class Topic {
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   @Type(() => Area)
   area?: Area;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   @Type(() => User)
   author?: User;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   author_name: string;
 
-  @ApiModelProperty({ type: String, format: 'date-time' })
+  @ApiProperty({ type: String, format: 'date-time' })
   @Expose()
   created_at: Date;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   first_post_id: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   forum_area_id: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   id: number;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   is_locked?: boolean;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   is_sinking?: boolean;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   is_sticky?: boolean;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   @Type(() => Post)
   last_post?: Post;
 
-  @ApiModelProperty({ type: String, format: 'date-time' })
+  @ApiProperty({ type: String, format: 'date-time' })
   @Expose()
   last_post_at: Date;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   last_post_id: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   name: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   post_count: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   read_count: number;
 }
 
 export class TopicsQuery extends Pagination {
-  @ApiModelPropertyOptional({ description: 'Filter topics by an area.' })
+  @ApiPropertyOptional({ description: 'Filter topics by an area.' })
   @Transform((area_id: string) => parseInt(area_id, 10))
   @IsOptional()
   @IsNumber()

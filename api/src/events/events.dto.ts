@@ -1,6 +1,6 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:variable-name
-import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { IsISO8601, IsOptional } from 'class-validator';
 
@@ -8,49 +8,49 @@ import { Pagination } from '../common/pagination/pagination.dto';
 import { IsSortString } from '../common/validators/IsSortString';
 
 export class Event {
-  @ApiModelProperty({ type: String, format: 'date-time' })
+  @ApiProperty({ type: String, format: 'date-time' })
   @Expose()
   begins_at: Date;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   city_name?: string;
 
-  @ApiModelProperty({ type: String, format: 'date-time' })
+  @ApiProperty({ type: String, format: 'date-time' })
   @Expose()
   created_at: Date;
 
-  @ApiModelProperty({ type: String, format: 'date-time' })
+  @ApiProperty({ type: String, format: 'date-time' })
   @Expose()
   ends_at: Date;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   facebook_id?: number;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   flyer_front_url?: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   id: number;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   info?: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   name: string;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   venue_name?: string;
 }
 
 export class EventsQuery extends Pagination {
-  @ApiModelPropertyOptional({
+  @ApiPropertyOptional({
     description: 'List events starting after date.',
     format: 'date',
     type: String,
@@ -59,7 +59,7 @@ export class EventsQuery extends Pagination {
   @IsISO8601()
   from?: Date;
 
-  @ApiModelPropertyOptional({
+  @ApiPropertyOptional({
     description: 'List events ending before date.',
     format: 'date',
     type: String,
@@ -68,11 +68,11 @@ export class EventsQuery extends Pagination {
   @IsISO8601()
   to?: Date;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @IsOptional()
   search?: string;
 
-  @ApiModelPropertyOptional({
+  @ApiPropertyOptional({
     description: 'Sort events by column.',
     pattern: '^[+-]?(begins_at|created_at|id|updated_at)$',
   })

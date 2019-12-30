@@ -1,5 +1,5 @@
 // tslint:disable:variable-name
-import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 
 import { Event } from '../../events/events.dto';
@@ -11,76 +11,76 @@ import { User } from '../../users/users.dto';
 
 @Expose()
 export class Item {
-  @ApiModelProperty()
+  @ApiProperty()
   class: string;
 
-  @ApiModelProperty({ type: String, format: 'date-time' })
+  @ApiProperty({ type: String, format: 'date-time' })
   created_at: Date;
 
-  @ApiModelProperty()
+  @ApiProperty()
   id: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Type(() => User)
   user: User;
 
-  @ApiModelProperty()
+  @ApiProperty()
   user_id: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   type: string;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   target_blog_entry_id?: number;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Type(() => Event)
   target_event?: Event;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   target_event_id?: number;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   target_flyer_id?: number;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Type(() => Post)
   target_forum_post?: Post;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   target_forum_post_id?: number;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Type(() => Topic)
   target_forum_topic?: Topic;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   target_forum_topic_id?: number;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Type(() => Gallery)
   target_gallery?: Gallery;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   target_gallery_id?: number;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Type(() => Image)
   target_image?: Image;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   target_image_id?: number;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   target_track_id?: number;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Type(() => User)
   target_user?: User;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   target_user_id?: number;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   target_venue_id?: number;
 }

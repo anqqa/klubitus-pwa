@@ -1,5 +1,5 @@
 import { Controller } from '@nestjs/common';
-import { ApiUseTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { Crud, CrudController } from '@nestjsx/crud';
 
 import { Shout } from './shout.entity';
@@ -16,7 +16,7 @@ import { ShoutsService } from './shouts.service';
     only: ['getManyBase'],
   },
 })
-@ApiUseTags('Shouts')
+@ApiTags('Shouts')
 @Controller('shouts')
 export class ShoutsController implements CrudController<Shout> {
   constructor(readonly service: ShoutsService) {}

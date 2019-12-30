@@ -1,6 +1,6 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:variable-name
-import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import { IsISO8601, IsOptional } from 'class-validator';
 
@@ -10,48 +10,48 @@ import { Image } from '../images/images.dto';
 
 @Expose()
 export class Gallery {
-  @ApiModelProperty()
+  @ApiProperty()
   copyright: string;
 
-  @ApiModelProperty({ type: String, format: 'date-time' })
+  @ApiProperty({ type: String, format: 'date-time' })
   created_at: Date;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Type(() => Image)
   default_image?: Image;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   default_image_id?: number;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Type(() => Event)
   event?: Event;
 
-  @ApiModelProperty({ type: String, format: 'date' })
+  @ApiProperty({ type: String, format: 'date' })
   event_date: Date;
 
-  @ApiModelProperty()
+  @ApiProperty()
   event_id: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   id: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   image_count: number;
 
-  @ApiModelPropertyOptional({ type: Image, isArray: true })
+  @ApiPropertyOptional({ type: Image, isArray: true })
   @Type(() => Image)
   images: Image[];
 
-  @ApiModelProperty()
+  @ApiProperty()
   name: string;
 
-  @ApiModelProperty({ type: String, format: 'date-time' })
+  @ApiProperty({ type: String, format: 'date-time' })
   updated_at: Date;
 }
 
 export class GalleriesQuery extends Pagination {
-  @ApiModelPropertyOptional({
+  @ApiPropertyOptional({
     description: 'List galleries starting after date.',
     format: 'date',
     type: String,
@@ -60,7 +60,7 @@ export class GalleriesQuery extends Pagination {
   @IsISO8601()
   from?: Date;
 
-  @ApiModelPropertyOptional({
+  @ApiPropertyOptional({
     description: 'List galleries ending before date.',
     format: 'date',
     type: String,
@@ -69,26 +69,26 @@ export class GalleriesQuery extends Pagination {
   @IsISO8601()
   to?: Date;
 
-  @ApiModelPropertyOptional({ description: 'Filter galleries by event ID.' })
+  @ApiPropertyOptional({ description: 'Filter galleries by event ID.' })
   @IsOptional()
   event_id?: number;
 }
 
 @Expose()
 export class Stats {
-  @ApiModelProperty()
+  @ApiProperty()
   @Type(() => Number)
   gallery_count: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Type(() => Number)
   image_count: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Type(() => Number)
   month: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Type(() => Number)
   year: number;
 }

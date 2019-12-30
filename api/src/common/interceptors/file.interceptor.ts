@@ -1,3 +1,4 @@
+// tslint:disable:max-classes-per-file
 import {
   BadRequestException,
   CallHandler,
@@ -6,6 +7,7 @@ import {
   Logger,
   NestInterceptor,
 } from '@nestjs/common';
+import { ApiProperty } from '@nestjs/swagger';
 import { FastifyRequest } from 'fastify';
 import * as fs from 'fs-extra';
 import { extension } from 'mime-types';
@@ -132,4 +134,9 @@ export class FileInterceptor implements NestInterceptor {
       })
     );
   }
+}
+
+export class FileUploadDto {
+  @ApiProperty({ type: 'string', format: 'binary' })
+  file: any;
 }

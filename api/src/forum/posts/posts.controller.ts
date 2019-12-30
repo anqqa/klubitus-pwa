@@ -1,5 +1,5 @@
 import { Controller } from '@nestjs/common';
-import { ApiUseTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import {
   Crud,
   CrudController,
@@ -30,7 +30,7 @@ import { PostsService } from './posts.service';
     only: ['getManyBase', 'getOneBase'],
   },
 })
-@ApiUseTags('Forum')
+@ApiTags('Forum')
 @Controller('/topics/:topicId/posts')
 export class PostsController implements CrudController<Post> {
   constructor(readonly service: PostsService, readonly areasService: AreasService) {}

@@ -1,6 +1,6 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:variable-name
-import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose, Transform, Type } from 'class-transformer';
 import { isEmpty } from 'lodash';
 
@@ -20,152 +20,152 @@ class Label {
 @Expose()
 class Tag {
   children?: Tag[];
-  @ApiModelProperty()
+  @ApiProperty()
   confidence: number;
-  @ApiModelProperty()
+  @ApiProperty()
   name: string;
   parents?: string[];
 }
 
 @Expose()
 export class Exif {
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   altitude?: number;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   altitude_ref?: string;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   aperture?: number;
 
-  @ApiModelPropertyOptional({ type: String, format: 'date-time' })
+  @ApiPropertyOptional({ type: String, format: 'date-time' })
   @Expose()
   created_at: Date;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   exposure?: string;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   flash?: string;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   focal?: number;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   iso?: number;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   latitude?: number;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   latitude_ref?: string;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   lens_make?: string;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   lens_model?: string;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   longitude?: string;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   longitude_ref?: string;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   make?: string;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   metering?: string;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   model?: string;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   program?: string;
 }
 
 export class Image {
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   @Type(() => User)
   author?: User;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   author_id?: number;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   color?: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   comment_count: number;
 
-  @ApiModelPropertyOptional({ type: Comment, isArray: true })
+  @ApiPropertyOptional({ type: Comment, isArray: true })
   @Expose()
   @Type(() => Comment)
   comments: Comment[];
 
-  @ApiModelProperty({ type: String, format: 'date-time' })
+  @ApiProperty({ type: String, format: 'date-time' })
   @Expose()
   created_at: Date;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   description?: string;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   @Type(() => Exif)
   exif?: Exif;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   height?: number;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   id: number;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   mime_type?: string;
 
-  @ApiModelPropertyOptional({ type: Note, isArray: true })
+  @ApiPropertyOptional({ type: Note, isArray: true })
   @Expose()
   @Type(() => Note)
   notes: Note[];
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   path?: string;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   postfix?: string;
 
-  @ApiModelPropertyOptional({ type: Tag, isArray: true })
+  @ApiPropertyOptional({ type: Tag, isArray: true })
   @Expose({ name: 'labels' })
   @Type(() => Label)
   @Transform(labelsToTags)
   tags: Tag[];
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   @Transform((id: number, image: ImageEntity) => buildUrl(image.id, image.path, image.postfix))
   url: string;
 
-  @ApiModelPropertyOptional({ format: 'uuid' })
+  @ApiPropertyOptional({ format: 'uuid' })
   @Expose()
   uuid?: string;
 
-  @ApiModelProperty()
+  @ApiProperty()
   @Expose()
   view_count: number;
 
-  @ApiModelPropertyOptional()
+  @ApiPropertyOptional()
   @Expose()
   width?: number;
 }

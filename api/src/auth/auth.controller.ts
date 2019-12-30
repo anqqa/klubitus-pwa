@@ -19,8 +19,8 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiResponse,
+  ApiTags,
   ApiUnauthorizedResponse,
-  ApiUseTags,
 } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 import { FastifyReply } from 'fastify';
@@ -30,7 +30,7 @@ import { User } from '../users/users.dto';
 import { FacebookPayload, FacebookResponse, LoginPayload, LoginResponse } from './auth.dto';
 import { AuthService } from './auth.service';
 
-@ApiUseTags('Users')
+@ApiTags('Users')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -39,7 +39,7 @@ export class AuthController {
     description:
       'Authenticated user: connect accounts.\n' +
       'Unauthenticated user: log in if accounts connected, offer login/register if not.',
-    title: 'Connect with Facebook',
+    summary: 'Connect with Facebook',
   })
   @ApiCreatedResponse({ description: 'Success', type: LoginResponse })
   @ApiOkResponse({ description: 'Not yet connected', type: FacebookResponse })
@@ -81,7 +81,7 @@ export class AuthController {
       .send(plainToClass(FacebookResponse, { email, name, is_new_user }));
   }
 
-  @ApiOperation({ title: 'Login with email or username' })
+  @ApiOperation({ summary: 'Login with email or username' })
   @ApiCreatedResponse({ description: 'Success', type: LoginResponse })
   @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
   @UseInterceptors(new TransformerInterceptor(LoginResponse))
@@ -93,7 +93,7 @@ export class AuthController {
     return { token, user };
   }
 
-  @ApiOperation({ title: 'Logout' })
+  @ApiOperation({ summary: 'Logout' })
   @ApiOkResponse({ description: 'Success' })
   @ApiUnauthorizedResponse({ description: 'Not authenticated' })
   @ApiBearerAuth()
@@ -106,7 +106,7 @@ export class AuthController {
     await this.authService.deleteToken(token);
   }
 
-  @ApiOperation({ title: 'Get authenticated user info' })
+  @ApiOperation({ summary: 'Get authenticated user info' })
   @ApiOkResponse({ description: 'Success', type: User })
   @ApiUnauthorizedResponse({ description: 'Not authenticated' })
   @ApiBearerAuth()
