@@ -201,9 +201,9 @@ const config: Configuration = {
     // }
     // },
 
-    devtools: isDev,
+    // analyze: true,
     extractCSS: true,
-    //    parallel: true,
+    // parallel: true,
     terser: true,
 
     postcss: {
@@ -216,7 +216,6 @@ const config: Configuration = {
   vue: {
     config: {
       productionTip: true,
-      devtools: isDev,
     },
   },
 };

@@ -18,7 +18,7 @@
     },
     "sourceMap": true,
     "strict": true,
-    "target": "esnext",
+    "target": "es2018",
     "types": [
       "facebook-js-sdk",
       "node",
