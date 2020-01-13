@@ -14,8 +14,7 @@
   ],
   "workspaces": {
     "nohoist": [
-      "patch-package",
-      "@nestjsx/crud-typeorm"
+      "patch-package"
     ]
   },
   "scripts": {
