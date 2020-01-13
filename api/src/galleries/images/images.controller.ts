@@ -11,7 +11,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Crud, CrudController } from '@nestjsx/crud';
 
-import { RequestUser } from '../../auth/requestuser.decorator';
+import { RequestUser } from '../../common/decorators';
 import { File, FileInterceptor, FileUploadDto } from '../../common/interceptors/file.interceptor';
 import { TransformerInterceptor } from '../../common/interceptors/transformer.interceptor';
 import { GalleriesService } from '../galleries.service';

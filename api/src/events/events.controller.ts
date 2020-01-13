@@ -18,8 +18,8 @@ import {
   Override,
   ParsedRequest,
 } from '@nestjsx/crud';
-import { RequestUser } from '../auth/requestuser.decorator';
 
+import { RequestUser } from '../common/decorators';
 import { EntityForbiddenError } from '../common/errors/entityforbidden.error';
 import { File, FileInterceptor, FileUploadDto } from '../common/interceptors/file.interceptor';
 import { GalleriesService } from '../galleries/galleries.service';
@@ -51,7 +51,7 @@ export class EventsController implements CrudController<Event> {
   async deleteOne(@ParsedRequest() req: CrudRequest, @Req() { user }: any): Promise<void | Event> {
     const model = await this.service.getOne(req);
 
-    if (!model.can(CrudActions.DeleteOne, user && user.roles)) {
+    if (!model.allows(CrudActions.DeleteOne, user && user.roles)) {
       throw new EntityForbiddenError(model);
     }
 

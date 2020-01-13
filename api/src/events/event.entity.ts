@@ -34,7 +34,10 @@ export class Event extends BaseEntity {
   @Column('bigint', { nullable: true })
   facebook_id?: number;
 
-  @OneToMany(type => Favorite, favorite => favorite.event)
+  @OneToMany(
+    type => Favorite,
+    favorite => favorite.event
+  )
   favorites?: Favorite[];
 
   @IsOptional({ always: true })
@@ -68,7 +71,7 @@ export class Event extends BaseEntity {
   @Column({ nullable: true })
   venue_name?: string;
 
-  can(doAction: string, withRoles: string[] = []): boolean {
+  allows(doAction: string, withRoles: string[] = []): boolean {
     const owner = userRole(this.user_id);
 
     let hasAccess = true;
@@ -85,6 +88,6 @@ export class Event extends BaseEntity {
         break;
     }
 
-    return hasAccess && super.can(doAction, withRoles);
+    return hasAccess && super.allows(doAction, withRoles);
   }
 }

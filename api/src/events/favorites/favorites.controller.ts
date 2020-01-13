@@ -1,4 +1,4 @@
-import { Controller, ForbiddenException, HttpStatus, Response, UseGuards } from '@nestjs/common';
+import { Controller, ForbiddenException, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import {
@@ -11,10 +11,9 @@ import {
   ParsedBody,
   ParsedRequest,
 } from '@nestjsx/crud';
-import { FastifyReply } from 'fastify';
 import { QueryFailedError } from 'typeorm';
 
-import { RequestUser } from '../../auth/requestuser.decorator';
+import { RequestUser } from '../../common/decorators';
 import { PG_UNIQUE_CONSTRAINT_VIOLATION } from '../../common/interceptors/errors.interceptor';
 import { allow, User } from '../../users/user.entity';
 import { Favorite } from './favorite.entity';
@@ -51,7 +50,7 @@ export class FavoritesController implements CrudController<Favorite> {
   ) {
     const favorite = Favorite.fromData(Favorite, dto);
 
-    if (!favorite.can(CrudActions.CreateOne, user.roles)) {
+    if (!favorite.allows(CrudActions.CreateOne, user.roles)) {
       throw new ForbiddenException();
     }
 
@@ -76,7 +75,7 @@ export class FavoritesController implements CrudController<Favorite> {
   async deleteOne(@ParsedRequest() req: CrudRequest, @RequestUser() user: User) {
     const favorite = await this.service.getOne(req);
 
-    if (!favorite.can(CrudActions.DeleteOne, user.roles)) {
+    if (!favorite.allows(CrudActions.DeleteOne, user.roles)) {
       throw new ForbiddenException();
     }
 
