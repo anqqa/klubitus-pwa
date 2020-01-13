@@ -1,18 +1,14 @@
 import { ValidationPipe } from '@nestjs/common';
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory, Reflector } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { CrudConfigService } from '@nestjsx/crud';
 import { useContainer } from 'class-validator';
 import { parse as querystringParser } from 'qs';
 
 CrudConfigService.load({
-  auth: { property: 'user' },
   query: { maxLimit: 500 },
   queryParser: {
-    paramNamesMap: {
-      join: 'include',
-      limit: 'limit',
-    },
+    paramNamesMap: { join: 'include', limit: 'limit' },
   },
   routes: {
     exclude: ['createManyBase', 'replaceOneBase'],
@@ -22,6 +18,8 @@ CrudConfigService.load({
 import { ApplicationModule } from './app.module';
 import { ValidationException } from './common/errors/validation.exception';
 import { HttpExceptionFilter } from './common/filters/httpexception.filter';
+import { PrivateGuard } from './common/guards/private.guard';
+import { RolesGuard } from './common/guards/roles.guard';
 import { ErrorsInterceptor } from './common/interceptors/errors.interceptor';
 import { RequestLoggerInterceptor } from './common/interceptors/requestlogger.interceptor';
 import { TrimPipe } from './common/pipes/TrimPipe';
@@ -43,6 +41,9 @@ async function bootstrap() {
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new HttpExceptionFilter(httpAdapter));
   app.useGlobalInterceptors(new RequestLoggerInterceptor(), new ErrorsInterceptor());
+
+  const reflector = app.get(Reflector);
+  app.useGlobalGuards(new PrivateGuard(reflector), new RolesGuard(reflector));
 
   app.useGlobalPipes(
     new TrimPipe(),
