@@ -11,7 +11,7 @@
           <Editor :value="text" @input="val => (draft = val)" />
 
           <footer>
-            <v-btn color="primary" class="mr-4" @click="save">Save</v-btn>
+            <v-btn color="primary" class="mr-4" @click="$emit('save', draft)">Save</v-btn>
           </footer>
         </v-list-item-content>
       </v-list-item>
@@ -36,9 +36,7 @@ export default class PostEdit extends Vue {
 
   draft = this.text;
 
-  save() {
-    console.log('save', this.text, this.draft);
-  }
+  save() {}
 }
 </script>
 

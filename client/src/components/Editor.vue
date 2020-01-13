@@ -20,7 +20,7 @@
       </v-btn>
     </header>
 
-    <v-textarea auto-grow filled ref="textarea" :value="draft" @input="update" />
+    <v-textarea auto-grow filled ref="textarea" solo :value="draft" @input="update" />
   </div>
 </template>
 
@@ -36,8 +36,6 @@ interface ButtonConfig {
   text?: string;
 }
 
-const isMac = navigator.platform.toUpperCase().indexOf('MAC') > -1;
-
 @Component({})
 export default class Editor extends Vue {
   get markdown(): string {
@@ -45,7 +43,7 @@ export default class Editor extends Vue {
   }
 
   get shortcutKey(): string {
-    return isMac ? '⌘' : '⌃';
+    return this.isMac ? '⌘' : '⌃';
   }
   buttons: ButtonConfig[] = [
     { icon: 'mdi-format-bold', pre: '**', post: '**', text: 'Bold', shortcut: 'b' },
@@ -78,6 +76,10 @@ export default class Editor extends Vue {
 
   format(button: ButtonConfig) {
     this.wrap(button.pre, button.post);
+  }
+
+  get isMac() {
+    return navigator?.platform.toUpperCase().indexOf('MAC') > -1;
   }
 
   mounted() {

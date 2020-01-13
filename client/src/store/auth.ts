@@ -2,6 +2,8 @@ import cookies from 'js-cookie';
 import { namespace } from 'nuxt-property-decorator';
 import { ActionContext, ActionTree, GetterTree, MutationTree } from 'vuex';
 
+import User from '@/models/User';
+
 const EXPIRES = 30;
 
 interface FacebookState {
@@ -52,14 +54,14 @@ export interface RegisterPayload extends LoginPayload {
 
 interface AuthActionContext extends ActionContext<AuthState, any> {}
 
-export const Actions = {
-  FB_LOGIN: 'fbLogin',
-  LOGIN: 'login',
-  LOGOUT: 'logout',
-  ME: 'me',
-  REGISTER: 'register',
-  RESET: 'reset',
-};
+export const enum Actions {
+  FB_LOGIN = 'fbLogin',
+  LOGIN = 'login',
+  LOGOUT = 'logout',
+  ME = 'me',
+  REGISTER = 'register',
+  RESET = 'reset',
+}
 
 export const actions: ActionTree<AuthState, any> = {
   async [Actions.FB_LOGIN](
@@ -160,17 +162,24 @@ export const actions: ActionTree<AuthState, any> = {
   },
 };
 
+export const enum Getters {
+  IS_AUTHENTICATED = 'isAuthenticated',
+  USER = 'user',
+  USER_ID = 'userId',
+}
+
 export const getters: GetterTree<AuthState, any> = {
-  isAuthenticated: (store): boolean => !!store.user,
-  userId: (store): number | null => store.user && store.user.id,
+  [Getters.IS_AUTHENTICATED]: store => !!store.user,
+  [Getters.USER]: store => store.user && new User(store.user),
+  [Getters.USER_ID]: store => store.user && store.user.id,
 };
 
-export const Mutations = {
-  RESET: 'reset',
-  SET_FACEBOOK: 'setFacebook',
-  SET_TOKEN: 'setToken',
-  SET_USER: 'setUser',
-};
+export const enum Mutations {
+  RESET = 'reset',
+  SET_FACEBOOK = 'setFacebook',
+  SET_TOKEN = 'setToken',
+  SET_USER = 'setUser',
+}
 
 export const mutations: MutationTree<AuthState> = {
   [Mutations.RESET](store: AuthState): void {
