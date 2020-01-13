@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "@nestjsx/crud-request": "^4.4.1",
-    "@nuxt/typescript-runtime": "^0.3.5",
-    "@nuxtjs/axios": "^5.9.0",
+    "@nuxt/typescript-runtime": "^0.3.7",
+    "@nuxtjs/axios": "^5.9.3",
     "@nuxtjs/markdownit": "^1.2.7",
     "@nuxtjs/pwa": "^3.0.0-beta.19",
     "cookie": "^0.4.0",
@@ -39,16 +39,16 @@
     "vuex": "^3.1.2"
   },
   "devDependencies": {
-    "@nuxt/typescript-build": "^0.5.4",
+    "@nuxt/typescript-build": "^0.5.6",
     "@nuxtjs/vuetify": "^1.9.1",
     "@types/facebook-js-sdk": "^3.3.0",
     "@types/js-cookie": "^2.2.4",
     "@types/lodash": "^4.14.149",
     "@types/markdown-it": "^0.0.9",
-    "@types/vuelidate": "^0.7.9",
+    "@types/vuelidate": "^0.7.10",
     "node-sass": "^4.13.0",
     "nuxt-property-decorator": "^2.5.0",
-    "sass-loader": "^8.0.0",
-    "vuetify": "^2.1.15"
+    "sass-loader": "^8.0.1",
+    "vuetify": "^2.2.3"
   }
 }
