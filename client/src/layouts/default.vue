@@ -1,5 +1,7 @@
 <template>
   <v-app id="klubitus" :dark="isDarkTheme">
+    <snack-bar />
+
     <side-bar />
     <app-bar :title="title" />
 
@@ -20,11 +22,13 @@ import { Component, Vue } from 'nuxt-property-decorator';
 
 import AppBar from '@/components/AppBar.vue';
 import SideBar from '@/components/SideBar.vue';
-import { uiStore } from '@/store/ui';
+import SnackBar from '@/components/SnackBar.vue';
+import { Getters, uiStore } from '@/store/ui';
 
-@Component({ components: { AppBar, SideBar } })
+@Component({ components: { SnackBar, AppBar, SideBar } })
 export default class Layout extends Vue {
-  @uiStore.Getter isDarkTheme!: boolean;
+  @uiStore.Getter(Getters.IS_DARK_THEME)
+  isDarkTheme!: boolean;
 
   title = '';
 
