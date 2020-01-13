@@ -1,19 +1,17 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import {
-  Crud,
-  CrudController,
-  CrudRequest,
-  GetManyDefaultResponse,
-  Override,
-  ParsedRequest,
-} from '@nestjsx/crud';
+import { Crud, CrudAuth, CrudController, Feature } from '@nestjsx/crud';
 
-import { AreasService } from '../areas/areas.service';
+import { authDecorators } from '../../common/decorators';
+import { User } from '../../users/user.entity';
+import { ForumGuard } from '../forum.guard';
+import { Topic } from '../topics/topic.entity';
+import { dto } from './dto';
 import { Post } from './post.entity';
 import { PostsService } from './posts.service';
 
 @Crud({
+  dto,
   model: { type: Post },
   params: {
     id: { field: 'id', type: 'number', primary: true },
@@ -27,33 +25,25 @@ import { PostsService } from './posts.service';
     },
   },
   routes: {
-    only: ['getManyBase', 'getOneBase'],
+    createOneBase: { decorators: [...authDecorators()] },
+    only: ['createOneBase', 'getManyBase', 'getOneBase'],
   },
 })
+@CrudAuth({
+  persist: (req: { topic: Topic; user: User }) => ({
+    area: req.topic.area,
+    author: req.user,
+    author_name: req.user.username,
+  }),
+})
 @ApiTags('Forum')
+@Feature('Posts')
+@UseGuards(ForumGuard)
 @Controller('/topics/:topicId/posts')
 export class PostsController implements CrudController<Post> {
-  constructor(readonly service: PostsService, readonly areasService: AreasService) {}
+  constructor(readonly service: PostsService) {}
 
   get base(): CrudController<Post> {
     return this;
-  }
-
-  @Override()
-  async getMany(@ParsedRequest() req: CrudRequest): Promise<GetManyDefaultResponse<Post> | Post[]> {
-    const accessibleAreaIds = await this.areasService.getAccessibleIds();
-
-    req.parsed.filter.push({ field: 'forum_area_id', operator: 'in', value: accessibleAreaIds });
-
-    return this.base.getManyBase(req);
-  }
-
-  @Override()
-  async getOne(@ParsedRequest() req: CrudRequest): Promise<Post> {
-    const accessibleAreaIds = await this.areasService.getAccessibleIds();
-
-    req.parsed.filter.push({ field: 'forum_area_id', operator: 'in', value: accessibleAreaIds });
-
-    return this.base.getOneBase(req);
   }
 }

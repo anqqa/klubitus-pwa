@@ -1,9 +1,16 @@
 // tslint:disable:variable-name
+import { CrudActions } from '@nestjsx/crud';
 import { Type } from 'class-transformer';
 import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 
 import { BaseEntity } from '../../common/base.entity';
+import { Roles, userRole } from '../../common/utils/role.util';
 import { Topic } from '../topics/topic.entity';
+
+export const AreaActions = {
+  ...CrudActions,
+  CreateTopic: 'Create-Topic',
+};
 
 @Entity('forum_areas')
 export class Area extends BaseEntity {
@@ -50,4 +57,16 @@ export class Area extends BaseEntity {
 
   @OneToMany(() => Topic, topic => topic.area)
   topics: Topic[];
+
+  protected acl(): Record<string, string[]> {
+    // No access to hidden areas
+    if (this.is_hidden) {
+      return {};
+    }
+
+    return {
+      [AreaActions.CreateTopic]: this.is_moderated ? [Roles.ADMIN] : [Roles.AUTHENTICATED],
+      [AreaActions.ReadOne]: this.is_private ? [Roles.AUTHENTICATED] : [],
+    };
+  }
 }

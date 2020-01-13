@@ -9,16 +9,6 @@ import { User } from '../users/user.entity';
 
 @Entity('forum_posts')
 export class Post extends BaseEntity {
-  @Type(() => Area)
-  @ManyToOne(() => Area)
-  @JoinColumn({ name: 'forum_area_id' })
-  area: Area;
-
-  @Type(() => User)
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'author_id' })
-  author: User;
-
   @Column()
   author_name: string;
 
@@ -34,8 +24,22 @@ export class Post extends BaseEntity {
   @Column()
   post: string;
 
-  @Type(() => Topic)
-  @ManyToOne(() => Topic, topic => topic.posts)
+  /**
+   * Relations
+   */
+
+  @Type(type => Area)
+  @ManyToOne(type => Area)
+  @JoinColumn({ name: 'forum_area_id' })
+  area: Area;
+
+  @Type(type => User)
+  @ManyToOne(type => User)
+  @JoinColumn({ name: 'author_id' })
+  author: User;
+
+  @Type(type => Topic)
+  @ManyToOne(type => Topic, topic => topic.posts)
   @JoinColumn({ name: 'forum_topic_id' })
   topic: Topic;
 }

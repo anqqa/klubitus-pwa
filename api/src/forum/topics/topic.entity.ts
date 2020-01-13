@@ -1,16 +1,23 @@
 // tslint:disable:variable-name
+import { CrudActions } from '@nestjsx/crud';
 import { Type } from 'class-transformer';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 
 import { BaseEntity } from '../../common/base.entity';
-import { Area } from '../areas/area.entity';
+import { Roles } from '../../common/utils/role.util';
+import { Area, AreaActions } from '../areas/area.entity';
 import { Post } from '../posts/post.entity';
 import { User } from '../users/user.entity';
+
+export const TopicActions = {
+  ...CrudActions,
+  CreatePost: 'Create-Post',
+};
 
 @Entity('forum_topics')
 export class Topic extends BaseEntity {
   @Type(() => Area)
-  @ManyToOne(() => Area)
+  @ManyToOne(() => Area, area => area.topics)
   @JoinColumn({ name: 'forum_area_id' })
   area: Area;
 
@@ -59,4 +66,15 @@ export class Topic extends BaseEntity {
 
   @Column()
   read_count: number;
+
+  allows(action: string, roles?: string[]): boolean {
+    return this.area.allows(AreaActions.ReadOne, roles) && super.allows(action, roles);
+  }
+
+  protected acl(): Record<string, string[]> {
+    return {
+      [TopicActions.CreatePost]: this.is_locked ? [Roles.NOBODY] : [Roles.AUTHENTICATED],
+      [TopicActions.ReadOne]: [],
+    };
+  }
 }
