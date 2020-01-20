@@ -20,7 +20,15 @@
       </v-btn>
     </header>
 
-    <v-textarea auto-grow filled ref="textarea" solo :value="draft" @input="update" />
+    <v-textarea
+      :error-messages="errors"
+      :value="draft"
+      auto-grow
+      filled
+      ref="textarea"
+      solo
+      @input="update"
+    />
   </div>
 </template>
 
@@ -38,6 +46,12 @@ interface ButtonConfig {
 
 @Component({})
 export default class Editor extends Vue {
+  @Prop() errors?: string[];
+  @Prop() value?: string;
+
+  draft = this.value || '';
+  preview = false;
+
   get markdown(): string {
     return this.$md.render(this.draft || '###### *Empty*');
   }
@@ -45,6 +59,7 @@ export default class Editor extends Vue {
   get shortcutKey(): string {
     return this.isMac ? '⌘' : '⌃';
   }
+
   buttons: ButtonConfig[] = [
     { icon: 'mdi-format-bold', pre: '**', post: '**', text: 'Bold', shortcut: 'b' },
     { icon: 'mdi-format-italic', pre: '*', post: '*', text: 'Italic', shortcut: 'i' },
@@ -53,11 +68,6 @@ export default class Editor extends Vue {
     { icon: 'mdi-format-header-2', pre: '## ', post: '', text: 'Heading 2', shortcut: '2' },
     { icon: 'mdi-format-header-3', pre: '### ', post: '', text: 'Heading 3', shortcut: '3' },
   ];
-
-  @Prop() value?: string;
-
-  draft = this.value || '';
-  preview = false;
 
   update = debounce(this.setValue, 250);
 
@@ -109,11 +119,13 @@ export default class Editor extends Vue {
     const end = textarea.selectionEnd;
 
     this.setValue(
-      textarea.value.substring(0, start) +
-        pre +
-        textarea.value.substring(start, end) +
-        post +
-        textarea.value.substring(end)
+      [
+        textarea.value.substring(0, start),
+        pre,
+        textarea.value.substring(start, end),
+        post,
+        textarea.value.substring(end),
+      ].join('')
     );
     textarea.focus();
 

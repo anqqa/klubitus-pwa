@@ -8,7 +8,7 @@
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <Editor :value="text" @input="val => (draft = val)" />
+          <Editor :errors="errors" :value="text" @input="val => (draft = val)" />
 
           <footer>
             <v-btn color="primary" class="mr-4" @click="$emit('save', draft)">Save</v-btn>
@@ -30,13 +30,12 @@ import { UserState } from '@/store/auth';
   components: { Avatar, Editor },
 })
 export default class PostEdit extends Vue {
+  @Prop() errors?: string[];
   @Prop() text?: string;
   @Prop() title?: string;
   @Prop() user?: UserState | null;
 
   draft = this.text;
-
-  save() {}
 }
 </script>
 

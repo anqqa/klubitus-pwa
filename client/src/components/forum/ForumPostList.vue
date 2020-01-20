@@ -50,7 +50,7 @@ export default class ForumPostList extends Vue {
         ago: fuzzyTimeDistance(new Date(post.created_at!)),
         avatar,
         avatarColor: colorFromText(username),
-        post: this.$md.render(post.post!),
+        post: this.$md.render(post.post || ''),
         signature:
           post.author && post.author.signature
             ? this.$md.render('--\n' + post.author.signature)

@@ -15,7 +15,14 @@
         <v-pagination v-if="pages > 1" :length="pages" v-model="page" total-visible="7" />
 
         <no-ssr>
-          <post-edit v-if="user" :user="user" class="mt-4" title="Reply to topic" @save="reply" />
+          <post-edit
+            v-if="user"
+            :errors="errors"
+            :user="user"
+            class="mt-4"
+            title="Reply to topic"
+            @save="reply"
+          />
         </no-ssr>
       </v-flex>
     </v-layout>
@@ -27,10 +34,10 @@ import { Component, mixins } from 'nuxt-property-decorator';
 
 import PostEdit from '@/components/forum/PostEdit.vue';
 import PaginatedMixin from '@/mixins/paginated';
-import ForumPost from '@/models/ForumPost';
 import ForumTopic from '@/models/ForumTopic';
 import User from '@/models/User';
-import { authStore, Getters } from '@/store/auth';
+import { authStore, Getters as AuthGetters } from '@/store/auth';
+import { Getters as UIGetters, Mutations as UIMutations, uiStore } from '@/store/ui';
 
 @Component({
   components: { PostEdit },
@@ -39,9 +46,14 @@ export default class SingleTopic extends mixins(PaginatedMixin) {
   name = '';
   pages: number = 0;
   topic?: ForumTopic;
-  topicId: number = 0;
 
-  @authStore.Getter(Getters.USER)
+  @uiStore.Mutation(UIMutations.CLEAR_ERRORS)
+  clearErrors!: () => void;
+
+  @uiStore.Getter(UIGetters.ERRORS_FOR_FIELD)
+  getErrors!: (field: string) => string[] | undefined;
+
+  @authStore.Getter(AuthGetters.USER)
   user?: User;
 
   async asyncData({ params }) {
@@ -52,17 +64,29 @@ export default class SingleTopic extends mixins(PaginatedMixin) {
     return { pages, topic };
   }
 
+  beforeDestroy() {
+    this.clearErrors();
+  }
+
+  get errors() {
+    return this.getErrors('post');
+  }
+
   head() {
     return { title: this.topic?.name || 'Forum' };
   }
 
   async reply(text: string) {
+    this.clearErrors();
+
     const post = new ForumTopic({ id: this.topic?.id }).posts();
     post.post = text;
 
     try {
       const result = await post.save();
-    } catch {}
+    } catch (error) {
+      console.log({ error });
+    }
 
     console.log({ post });
   }
