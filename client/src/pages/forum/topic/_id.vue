@@ -44,7 +44,6 @@ import { Getters as UIGetters, Mutations as UIMutations, uiStore } from '@/store
 })
 export default class SingleTopic extends mixins(PaginatedMixin) {
   name = '';
-  pages: number = 0;
   topic?: ForumTopic;
 
   @uiStore.Mutation(UIMutations.CLEAR_ERRORS)
@@ -59,9 +58,8 @@ export default class SingleTopic extends mixins(PaginatedMixin) {
   async asyncData({ params }) {
     const topicId = parseInt(params.id);
     const topic = await new ForumTopic().select(['name', 'post_count']).find(topicId);
-    const pages = Math.ceil(topic.post_count! / 20);
 
-    return { pages, topic };
+    return { topic };
   }
 
   beforeDestroy() {
@@ -76,6 +74,10 @@ export default class SingleTopic extends mixins(PaginatedMixin) {
     return { title: this.topic?.name || 'Forum' };
   }
 
+  get pages() {
+    return Math.ceil((this.topic?.post_count || 0) / 20);
+  }
+
   async reply(text: string) {
     this.clearErrors();
 
@@ -83,12 +85,19 @@ export default class SingleTopic extends mixins(PaginatedMixin) {
     post.post = text;
 
     try {
-      const result = await post.save();
-    } catch (error) {
-      console.log({ error });
-    }
+      const newPost = await post.save();
+      const lastPage = Math.ceil((this.topic!.post_count! + 1) / 20);
+      const hash = `#post-${newPost.id}`;
+      const query = { ...this.$route.query };
 
-    console.log({ post });
+      if (lastPage > 1) {
+        query.page = lastPage.toString();
+      } else if ('page' in query) {
+        delete query.page;
+      }
+
+      this.$router.push({ ...this.$route, query, hash });
+    } catch {}
   }
 }
 </script>

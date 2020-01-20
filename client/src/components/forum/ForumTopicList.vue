@@ -8,6 +8,9 @@
       <v-list-item-content>
         <v-list-item-title>
           <nuxt-link :to="topic.url" v-text="topic.name" />
+          <small v-if="topic.pages > 1">
+            <nuxt-link :to="`${topic.url}?page=${topic.pages}`">[last page]</nuxt-link>
+          </small>
         </v-list-item-title>
 
         <v-list-item-subtitle>
@@ -48,7 +51,7 @@ import { avatarUrl } from '@/utils/url';
   components: { Avatar },
 })
 export default class ForumTopicList extends Vue {
-  @Prop() area!: boolean;
+  @Prop(Boolean) area?: boolean;
   @Prop() topics!: ForumTopic[];
 
   get topicList() {
@@ -77,6 +80,7 @@ export default class ForumTopicList extends Vue {
           : null,
         avatar,
         hotness: this.hotness(topic.post_count! - 1),
+        pages: Math.ceil(topic.post_count! / 20),
         poster,
         replies: topic.post_count! > 1 ? nFormatter(topic.post_count! - 1, 1) : null,
         url: this.localePath({

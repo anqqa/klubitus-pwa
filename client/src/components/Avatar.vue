@@ -21,33 +21,37 @@ import { colorFromText } from '@/utils/text';
 
 @Component({})
 export default class Avatar extends Vue {
-  @Prop() link!: RawLocation | boolean;
-  @Prop() title!: string;
-  @Prop() src!: string;
-  @Prop() user!: User;
+  @Prop() link?: RawLocation | boolean;
+  @Prop() title?: string;
+  @Prop() src?: string;
+  @Prop() user?: User;
 
   get color(): string {
-    return this.url
-      ? 'transparent'
-      : colorFromText(this.title || (this.user && this.user.username) || '');
+    return this.url ? 'transparent' : colorFromText(this.initials);
   }
 
   get initials(): string {
-    const title = this.title || (this.user && this.user.username);
+    const title = this.user?.username || this.title;
 
     return title ? title.substr(0, 2) : '??';
   }
 
   get path(): RawLocation | undefined {
     if (this.link === true) {
-      return this.user && this.user.path;
+      return this.user?.path;
     }
 
     return this.link || undefined;
   }
 
   get url(): string | undefined {
-    return this.src || (this.user && this.user.avatar);
+    return this.user?.avatar || this.src;
   }
 }
 </script>
+
+<style scoped>
+a {
+  text-decoration: none;
+}
+</style>
