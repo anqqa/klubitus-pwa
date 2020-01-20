@@ -10,15 +10,23 @@ export default ({ $axios, route, store: { commit } }) => {
 
   $axios.onError(error => {
     const code = parseInt(error.response && error.response.status, 10);
-    const message = error.response?.data?.message || 'Error happens';
 
-    commit(NAMESPACE + Mutations.SET_ERROR, message);
+    // Set form errors
+    const { errors, message } = error.response?.data || {};
+
+    commit(NAMESPACE + Mutations.SET_ERROR, message || 'Error happens');
+    commit(NAMESPACE + Mutations.SET_ERRORS, errors || {});
 
     // Remove auth information on Unauthorized
     if ([401, 403].includes(code) && !route.name.match(/login|password|register/)) {
       // app.$auth.logout();
       // app.$auth.setToken('local', undefined);
       // redirect(app.localePath('login'));
+    }
+
+    // Return error on form fails (Bad Request)
+    if (code === 400) {
+      return;
     }
 
     // Silently ignore
