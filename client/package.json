@@ -36,7 +36,6 @@
     "vue-template-compiler": "^2.6.11",
     "vuelidate": "^0.7.5",
     "vuelidate-property-decorators": "^1.0.28",
-    "vuetify": "^2.2.11",
     "vuex": "^3.1.2"
   },
   "devDependencies": {
@@ -50,6 +49,6 @@
     "node-sass": "^4.13.1",
     "nuxt-property-decorator": "^2.5.0",
     "sass-loader": "^8.0.2",
-    "vuetify": "^2.2.3"
+    "vuetify": "^2.2.11"
   }
 }
