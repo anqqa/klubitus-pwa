@@ -55,7 +55,7 @@ async function bootstrap() {
     })
   );
 
-  await app.listen(process.env.API_PORT, '0.0.0.0');
+  await app.listen(Number(process.env.API_PORT), '0.0.0.0');
 }
 
 bootstrap();
