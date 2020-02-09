@@ -10,6 +10,7 @@
   "rules": {
     "interface-name": false,
     "member-access": false,
+    "no-console": true,
     "object-literal-sort-keys": false,
     "prettier": true
   }
