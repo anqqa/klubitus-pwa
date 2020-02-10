@@ -21,7 +21,7 @@
       </v-col>
 
       <v-col md="4">
-        <forum-area-list :areas="areas" />
+        <forum-area-list />
       </v-col>
     </v-row>
   </v-container>
@@ -32,28 +32,24 @@ import { Component, Vue } from 'nuxt-property-decorator';
 
 import ForumAreaList from '@/components/forum/ForumAreaList.vue';
 import ForumTopicList from '@/components/forum/ForumTopicList.vue';
-import ForumArea from '@/models/ForumArea';
 import ForumTopic from '@/models/ForumTopic';
 
 @Component({
-  components: { ForumTopicList, ForumAreaList },
+  components: { ForumAreaList, ForumTopicList },
   head: { title: 'Forum' },
 })
 export default class ForumIndex extends Vue {
   title = 'Forum';
 
   async asyncData() {
-    const [areas, topics] = await Promise.all([
-      new ForumArea().getAll(),
-      new ForumTopic()
-        .relation('area')
-        .relation('author')
-        .sort('last_post_at', 'DESC')
-        .limit(20)
-        .get(),
-    ]);
+    const topics = await new ForumTopic()
+      .relation('area')
+      .relation('author')
+      .sort('last_post_at', 'DESC')
+      .limit(20)
+      .get();
 
-    return { areas, topics };
+    return { topics };
   }
 }
 </script>
