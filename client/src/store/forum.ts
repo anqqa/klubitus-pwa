@@ -7,7 +7,6 @@ import ForumPost from '@/models/ForumPost';
 import ForumTopic from '@/models/ForumTopic';
 
 interface ForumState {
-  activeTopicId?: number;
   areas: ForumArea[];
   latestTopicIds?: number[];
   postPages: Record<number, Record<number, number[]>>;
@@ -84,11 +83,8 @@ export const actions: ActionTree<ForumState, any> = {
     commit(Mutations.SET_POST_PAGES, { page, postIds, topicId });
   },
 
-  async [Actions.LOAD_TOPIC](
-    { commit, state },
-    payload: { activate?: boolean; force?: boolean; topicId: number }
-  ) {
-    const { activate, force, topicId } = payload;
+  async [Actions.LOAD_TOPIC]({ commit, state }, payload: { force?: boolean; topicId: number }) {
+    const { force, topicId } = payload;
 
     if (force || !(topicId in state.topics)) {
       const topic = await new ForumTopic()
@@ -98,23 +94,17 @@ export const actions: ActionTree<ForumState, any> = {
 
       commit(Mutations.SET_TOPICS, [topic.data()]);
     }
-
-    if (activate) {
-      commit(Mutations.SET_ACTIVE_TOPIC, topicId);
-    }
   },
 };
 
 export const enum Getters {
-  ACTIVE_TOPIC = 'activeTopic',
   GROUPED_AREAS = 'groupedAreas',
   LATEST_TOPICS = 'latestTopics',
   POSTS_FOR_PAGE = 'postsForPage',
+  TOPIC_BY_ID = 'topicById',
 }
 
 export const getters: GetterTree<ForumState, any> = {
-  [Getters.ACTIVE_TOPIC]: state => state.activeTopicId && state.topics[state.activeTopicId],
-
   [Getters.GROUPED_AREAS]: state => {
     const groups: any[] = [];
     let areas: any[] = [];
@@ -144,10 +134,11 @@ export const getters: GetterTree<ForumState, any> = {
 
     return posts;
   },
+
+  [Getters.TOPIC_BY_ID]: state => (id: number) => state.topics[id],
 };
 
 export const enum Mutations {
-  SET_ACTIVE_TOPIC = 'setActiveTopic',
   SET_AREAS = 'setAreas',
   SET_LATEST_TOPICS = 'setLatestTopics',
   SET_POST_PAGES = 'setPostPages',
@@ -156,10 +147,6 @@ export const enum Mutations {
 }
 
 export const mutations: MutationTree<ForumState> = {
-  [Mutations.SET_ACTIVE_TOPIC]: (state, id?: number) => {
-    state.activeTopicId = id;
-  },
-
   [Mutations.SET_AREAS]: (state, areas: ForumArea[]) => (state.areas = areas),
 
   [Mutations.SET_LATEST_TOPICS]: (state, ids: number[]) => (state.latestTopicIds = ids),
