@@ -33,23 +33,20 @@ import { Component, Vue } from 'nuxt-property-decorator';
 import ForumAreaList from '@/components/forum/ForumAreaList.vue';
 import ForumTopicList from '@/components/forum/ForumTopicList.vue';
 import ForumTopic from '@/models/ForumTopic';
+import { Actions, forumNamespace, Getters, NAMESPACE } from '@/store/forum';
 
 @Component({
   components: { ForumAreaList, ForumTopicList },
   head: { title: 'Forum' },
 })
 export default class ForumIndex extends Vue {
+  @forumNamespace.Getter(Getters.LATEST_TOPICS)
+  topics!: ForumTopic[];
+
   title = 'Forum';
 
-  async asyncData() {
-    const topics = await new ForumTopic()
-      .relation('area')
-      .relation('author')
-      .sort('last_post_at', 'DESC')
-      .limit(20)
-      .get();
-
-    return { topics };
+  async fetch({ store }) {
+    await store.dispatch(`${NAMESPACE}${Actions.LOAD_LATEST_TOPICS}`, 20);
   }
 }
 </script>
