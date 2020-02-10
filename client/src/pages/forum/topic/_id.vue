@@ -40,6 +40,13 @@ import PaginatedMixin from '@/mixins/paginated';
 import ForumTopic from '@/models/ForumTopic';
 import User from '@/models/User';
 import { authStore, Getters as AuthGetters } from '@/store/auth';
+import {
+  Actions as ForumActions,
+  forumNamespace,
+  Getters as ForumGetters,
+  Mutations as ForumMutations,
+  NAMESPACE,
+} from '@/store/forum';
 import { Getters as UIGetters, Mutations as UIMutations, uiStore } from '@/store/ui';
 import { nFormatter } from '@/utils/text';
 
@@ -48,7 +55,6 @@ import { nFormatter } from '@/utils/text';
 })
 export default class SingleTopic extends mixins(PaginatedMixin) {
   name = '';
-  topic?: ForumTopic;
 
   @uiStore.Mutation(UIMutations.CLEAR_ERRORS)
   clearErrors!: () => void;
@@ -56,22 +62,28 @@ export default class SingleTopic extends mixins(PaginatedMixin) {
   @uiStore.Getter(UIGetters.ERRORS_FOR_FIELD)
   getErrors!: (field: string) => string[] | undefined;
 
+  @forumNamespace.Mutation(ForumMutations.SET_ACTIVE_TOPIC)
+  setTopic!: (id: number | undefined) => void;
+
+  @forumNamespace.Getter(ForumGetters.ACTIVE_TOPIC)
+  topic!: ForumTopic;
+
   @authStore.Getter(AuthGetters.USER)
   user?: User;
 
-  async asyncData({ params }) {
-    const topicId = parseInt(params.id);
-    const topic = await new ForumTopic().select(['name', 'post_count']).find(topicId);
-
-    return { topic };
-  }
-
   beforeDestroy() {
     this.clearErrors();
+    this.setTopic(undefined);
   }
 
   get errors() {
     return this.getErrors('post');
+  }
+
+  async fetch({ params, store }) {
+    const topicId = parseInt(params.id);
+
+    await store.dispatch(`${NAMESPACE}${ForumActions.LOAD_TOPIC}`, { activate: true, topicId });
   }
 
   head() {
@@ -115,6 +127,10 @@ export default class SingleTopic extends mixins(PaginatedMixin) {
 
       this.$router.push({ ...this.$route, query, hash });
     } catch {}
+  }
+
+  get topicId(): number {
+    return parseInt(this.$route.params.id);
   }
 }
 </script>

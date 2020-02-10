@@ -102,7 +102,7 @@ export class BaseModel extends ModelQueryBuilder {
     return query ? `${endpoint}?${query}` : endpoint;
   }
 
-  protected data(): Record<string, any> {
+  data(): Record<string, any> {
     const data = {};
 
     Object.entries(this).forEach(([key, value]) => {
