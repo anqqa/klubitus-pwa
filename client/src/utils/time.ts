@@ -55,6 +55,17 @@ export const dateRange = (
   return { from, to, range };
 };
 
+export const fuzzyTime = (time: Date): string => {
+  const now: Date = new Date();
+  const distance: number = now.valueOf() - time.valueOf();
+
+  if (distance < DAY) {
+    return format(time, 'HH.mm');
+  } else {
+    return format(time, 'd MMM yyyy');
+  }
+};
+
 export const fuzzyTimeDistance = (since: Date): string => {
   const now: Date = new Date();
   const distance: number = now.valueOf() - since.valueOf();
@@ -70,7 +81,7 @@ export const fuzzyTimeDistance = (since: Date): string => {
   } else if (now.getFullYear() === since.getFullYear()) {
     return format(since, 'MMM d');
   } else {
-    return format(since, "MMM ''yy");
+    return format(since, 'd MMM yyyy');
   }
 };
 

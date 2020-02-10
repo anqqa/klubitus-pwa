@@ -1,10 +1,13 @@
 <template>
   <v-container fluid grid-list-md>
     <v-layout wrap>
-      <v-toolbar flat color="transparent" width="100%">
+      <v-toolbar extended flat color="transparent" width="100%">
         <v-toolbar-title>
           <h1 class="display-1" v-text="topic.name" />
         </v-toolbar-title>
+        <template slot="extension">
+          {{ replies }}
+        </template>
       </v-toolbar>
 
       <v-flex md8>
@@ -38,6 +41,7 @@ import ForumTopic from '@/models/ForumTopic';
 import User from '@/models/User';
 import { authStore, Getters as AuthGetters } from '@/store/auth';
 import { Getters as UIGetters, Mutations as UIMutations, uiStore } from '@/store/ui';
+import { nFormatter } from '@/utils/text';
 
 @Component({
   components: { PostEdit },
@@ -76,6 +80,19 @@ export default class SingleTopic extends mixins(PaginatedMixin) {
 
   get pages() {
     return Math.ceil((this.topic?.post_count || 0) / 20);
+  }
+
+  get replies() {
+    const replies = this.topic?.post_count! > 1 ? nFormatter(this.topic!.post_count! - 1, 1) : 0;
+
+    switch (replies) {
+      case 0:
+        return 'No replies';
+      case 1:
+        return '1 reply';
+      default:
+        return `${replies} replies`;
+    }
   }
 
   async reply(text: string) {

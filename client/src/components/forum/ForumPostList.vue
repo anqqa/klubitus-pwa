@@ -29,7 +29,7 @@
 
           <div class="markdown" v-html="post.post" />
 
-          <footer class="markdown text--secondary caption font-mono" v-html="post.signature" />
+          <footer class="markdown text--secondary caption" v-html="post.signature" />
         </v-list-item-content>
       </v-list-item>
     </v-card>
@@ -44,7 +44,7 @@ import PaginatedMixin from '@/mixins/paginated';
 import ForumPost from '@/models/ForumPost';
 import User from '@/models/User';
 import { colorFromText, slug } from '@/utils/text';
-import { fuzzyTimeDistance } from '@/utils/time';
+import { fuzzyTime } from '@/utils/time';
 import { avatarUrl } from '@/utils/url';
 
 @Component({
@@ -65,7 +65,7 @@ export default class ForumPostList extends mixins(PaginatedMixin) {
 
       posts.push({
         ...post,
-        ago: fuzzyTimeDistance(new Date(post.created_at!)),
+        ago: fuzzyTime(new Date(post.created_at!)),
         author,
         avatar,
         avatarColor: colorFromText(username),
@@ -85,7 +85,11 @@ export default class ForumPostList extends mixins(PaginatedMixin) {
 </script>
 
 <style scoped>
-.signature {
-  font-family: monospace;
+.v-list-item__title {
+  overflow: visible;
+}
+
+footer.caption {
+  font-family: monospace !important;
 }
 </style>
