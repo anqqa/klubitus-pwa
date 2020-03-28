@@ -1,11 +1,17 @@
 module.exports = {
   root: true,
-  env: { node: true },
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint', 'prettier'],
+
   extends: [
     'eslint:recommended',
-    'plugin:prettier/recommended'
+    'plugin:prettier/recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+    'prettier/@typescript-eslint',
   ],
-  // add your custom rules here
+
   rules: {
+    'prettier/prettier': 'error'
   },
 };
