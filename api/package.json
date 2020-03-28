@@ -12,15 +12,9 @@
     "rest",
     "api"
   ],
-  "workspaces": {
-    "nohoist": [
-      "patch-package"
-    ]
-  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "lint": "wotan -p tsconfig.json",
-    "postinstall": "patch-package",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --watch --debug"
@@ -34,47 +28,46 @@
     "@nestjs/typeorm": "^6.2.0",
     "@nestjsx/crud": "^4.4.1",
     "@nestjsx/crud-typeorm": "^4.4.1",
-    "aws-sdk": "^2.614.0",
+    "aws-sdk": "^2.648.0",
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.2.3",
-    "class-validator": "^0.11.0",
-    "date-fns": "^2.9.0",
+    "class-validator": "^0.12.0-rc.0",
+    "date-fns": "^2.11.1",
     "dotenv": "^8.2.0",
     "exif-reader": "^1.0.3",
-    "fastify": "^2.12.0",
-    "fastify-multipart": "^1.0.4",
+    "fastify": "^2.13.0",
+    "fastify-multipart": "^1.0.5",
     "fastify-swagger": "^2.5.0",
-    "fs-extra": "^8.1.0",
+    "fs-extra": "^9.0.0",
     "lodash": "^4.17.14",
     "mime-types": "^2.1.26",
     "passport": "^0.4.1",
     "passport-http-bearer": "^1.0.1",
-    "pg": "^7.18.1",
+    "pg": "^7.18.2",
     "pump": "^3.0.0",
-    "qs": "^6.9.1",
+    "qs": "^6.9.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.5.4",
     "sharp": "^0.23.4",
-    "ts-node": "^8.6.2",
-    "typeorm": "^0.2.22",
-    "uuid": "^3.4.0"
+    "ts-node": "^8.8.1",
+    "typeorm": "^0.2.24",
+    "uuid": "^7.0.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^6.14.2",
     "@types/bcryptjs": "^2.4.2",
-    "@types/fs-extra": "^8.0.1",
+    "@types/fs-extra": "^8.1.0",
     "@types/lodash": "^4.14.149",
     "@types/mime-types": "^2.1.0",
-    "@types/node": "^13.7.0",
-    "@types/passport": "^1.0.2",
+    "@types/node": "^13.9.5",
+    "@types/passport": "^1.0.3",
     "@types/passport-http-bearer": "^1.0.34",
     "@types/pump": "^1.1.0",
     "@types/qs": "^6.9.1",
     "@types/sharp": "^0.23.1",
-    "@types/uuid": "^3.4.7",
-    "patch-package": "^6.2.0",
+    "@types/uuid": "^7.0.2",
     "ts": "^0.2.2",
-    "typescript": "^3.7.5"
+    "typescript": "^3.8.3"
   }
 }
