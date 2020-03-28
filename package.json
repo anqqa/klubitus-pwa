@@ -37,15 +37,11 @@
     "@fimbul/ve": "^0.21.0",
     "@fimbul/wotan": "^0.21.1",
     "babel-cli": "^6.26.0",
-    "husky": "^4.2.1",
-    "lint-staged": "^10.0.7",
-    "patch-package": "^6.2.0",
-    "prettier": "^1.19.1",
+    "husky": "^4.2.3",
+    "lint-staged": "^10.0.9",
+    "prettier": "^2.0.2",
     "tslint-config-prettier": "^1.18.0",
     "tslint-plugin-prettier": "^2.1.0",
-    "typescript": "^3.7.5"
-  },
-  "resolutions": {
-    "prettier": "^1.19.1"
+    "typescript": "^3.8.3"
   }
 }
