@@ -12,6 +12,11 @@ module.exports = {
   ],
 
   rules: {
-    'prettier/prettier': 'error'
+    'prettier/prettier': ['error', {
+      'arrowParens': 'avoid',
+      'jsxBracketSameLine': true,
+      'printWidth': 100,
+      'singleQuote': true,
+    }],
   },
 };
