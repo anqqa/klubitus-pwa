@@ -1,4 +1,6 @@
 {
+  "extends": "../tsconfig.json",
+
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
@@ -16,6 +18,7 @@
     "target": "es2017",
     "types": ["fastify-multipart", "node"]
   },
+
   "exclude": ["dist", "node_modules", "**/*spec.ts"],
   "include": ["src/**/*"]
 }

@@ -1,3 +1,3 @@
 {
-  "*.{ts,js,vue,json}": ["eslint --fix"]
+  "*.{ts,js,vue}": ["eslint --fix"]
 }
