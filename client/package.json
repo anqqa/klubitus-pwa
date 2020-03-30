@@ -13,6 +13,9 @@
     "generate": "nuxt-ts generate"
   },
   "dependencies": {
+    "@bugsnag/js": "^6.5.2",
+    "@bugsnag/plugin-express": "^6.5.1",
+    "@bugsnag/plugin-vue": "^6.5.0",
     "@nestjsx/crud-request": "^4.4.2",
     "@nuxt/typescript-runtime": "^0.4.1",
     "@nuxtjs/axios": "^5.9.6",

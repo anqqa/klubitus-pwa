@@ -53,6 +53,14 @@ const config: Configuration = {
    */
   modules: [
     [
+      'modules/bugsnag',
+      {
+        browserApiKey: process.env.BUGSNAG_CLIENT_API_KEY || '',
+        serverApiKey: process.env.BUGSNAG_SERVER_API_KEY || ''
+      },
+    ],
+
+    [
       '@nuxtjs/axios',
       {
         debug: isDev,

@@ -112,6 +112,8 @@ services:
       - API_PROTOCOL
       - "API_URL_BROWSER=${API_PROTOCOL}://${API_HOST}"
       - AWS_BUCKET
+      - BUGSNAG_CLIENT_API_KEY
+      - BUGSNAG_SERVER_API_KEY
       - CLIENT_HOST
       - CLIENT_PORT
       - FB_APP_ID
