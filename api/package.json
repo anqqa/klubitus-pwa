@@ -40,7 +40,7 @@
     "fastify-multipart": "^1.0.5",
     "fastify-swagger": "^2.5.0",
     "fs-extra": "^9.0.0",
-    "lodash": "^4.17.14",
+    "lodash": "^4.17.19",
     "mime-types": "^2.1.26",
     "passport": "^0.4.1",
     "passport-http-bearer": "^1.0.1",
