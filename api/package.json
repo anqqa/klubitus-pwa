@@ -28,7 +28,7 @@
     "@nestjs/typeorm": "^7.0.0",
     "@nestjsx/crud": "^4.4.2",
     "@nestjsx/crud-typeorm": "^4.4.2",
-    "aws-sdk": "^2.648.0",
+    "aws-sdk": "^2.814.0",
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.2.3",
