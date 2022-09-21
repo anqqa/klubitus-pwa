@@ -56,6 +56,6 @@
     "node-sass": "^4.13.1",
     "nuxt-property-decorator": "^2.5.1",
     "sass-loader": "^8.0.2",
-    "vuetify": "^2.2.19"
+    "vuetify": "^2.6.10"
   }
 }
