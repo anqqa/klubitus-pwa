@@ -46,7 +46,7 @@
     "passport-http-bearer": "^1.0.1",
     "pg": "^7.18.2",
     "pump": "^3.0.0",
-    "qs": "^6.9.3",
+    "qs": "^6.9.7",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.5.4",
     "sharp": "^0.23.4",
